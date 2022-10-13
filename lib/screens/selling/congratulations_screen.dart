@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
 import '../../screens/main_screen.dart';
-import '../my_ads_screen.dart';
 
 class CongratulationsScreen extends StatefulWidget {
   static const String routeName = '/congratulations-screen';
@@ -95,6 +94,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   },
                   icon: FontAwesomeIcons.house,
                   bgColor: blackColor,
+                  borderColor: blackColor,
                   textIconColor: Colors.white,
                 ),
               ],

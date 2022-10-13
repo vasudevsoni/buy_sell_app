@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,119 +31,108 @@ class LandingScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'BestDeal - Buy & Sell Used Stuff',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 20,
+                horizontal: 15,
               ),
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.width * 0.9,
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  'https://previews.123rf.com/images/mykate/mykate1702/mykate170200215/72113541-hand-drawn-vector-illustrations-save-money-doodle-design-elements-money-finance-payments-banks-cash-.jpg',
+              child: Text(
+                'BestDeal - Buy & Sell Used Stuff',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 30,
+                  color: blackColor,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                child: CustomButton(
-                  text: 'Continue with Mobile',
-                  icon: FontAwesomeIcons.phone,
-                  bgColor: blackColor,
-                  textIconColor: Colors.white,
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    PhoneAuthScreen.routeName,
-                  ),
-                ),
+            Container(
+              color: greyColor,
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+                top: 15,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                child: CustomButton(
-                  text: 'Continue with Email',
-                  icon: FontAwesomeIcons.solidEnvelope,
-                  bgColor: blueColor,
-                  textIconColor: Colors.white,
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    EmailLoginScreen.routeName,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                child: CustomButton(
-                  text: 'Continue with Google',
-                  icon: FontAwesomeIcons.google,
-                  bgColor: Colors.white,
-                  textIconColor: blackColor,
-                  onPressed: () async {
-                    User? user = await GoogleAuthentication.signinWithGoogle(
+              child: Column(
+                children: [
+                  CustomButton(
+                    text: 'Continue with Mobile',
+                    icon: FontAwesomeIcons.phone,
+                    bgColor: blackColor,
+                    borderColor: blackColor,
+                    textIconColor: Colors.white,
+                    onPressed: () => Navigator.pushNamed(
                       context,
-                    );
-                    if (user != null) {
-                      //login successful, add user to db and proceed
-                      PhoneAuthService auth = PhoneAuthService();
-                      // ignore: use_build_context_synchronously
-                      auth.addUser(context, user);
-                    } else {
-                      return;
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  bottom: 10,
-                ),
-                child: Text(
-                  'By continuing, you are accepting the Terms & conditions and Privacy policy.',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
+                      PhoneAuthScreen.routeName,
+                    ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButton(
+                    text: 'Continue with Email',
+                    icon: FontAwesomeIcons.solidEnvelope,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: Colors.white,
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      EmailLoginScreen.routeName,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButton(
+                    text: 'Continue with Google',
+                    icon: FontAwesomeIcons.google,
+                    bgColor: Colors.white,
+                    borderColor: blueColor,
+                    textIconColor: blackColor,
+                    onPressed: () async {
+                      User? user = await GoogleAuthentication.signinWithGoogle(
+                        context,
+                      );
+                      if (user != null) {
+                        //login successful, add user to db and proceed
+                        PhoneAuthService auth = PhoneAuthService();
+                        // ignore: use_build_context_synchronously
+                        auth.addUser(context, user);
+                      } else {
+                        return;
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      bottom: 10,
+                    ),
+                    child: Text(
+                      'By continuing, you are accepting the Terms & conditions and Privacy policy.',
+                      maxLines: 3,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: fadedColor,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
-      )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

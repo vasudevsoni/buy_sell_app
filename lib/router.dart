@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'auth/screens/email_register_screen.dart';
 // import 'auth/screens/location_manual_screen.dart';
@@ -9,6 +10,7 @@ import 'auth/screens/otp_screen.dart';
 import 'auth/screens/forgot_password_screen.dart';
 import 'auth/screens/location_screen.dart';
 import 'screens/categories/categories_list_screen.dart';
+import 'screens/my_profile_screen.dart';
 import 'screens/product_details_screen.dart';
 import 'screens/selling/congratulations_screen.dart';
 import 'screens/selling/seller_categories_list_screen.dart';
@@ -16,89 +18,105 @@ import 'screens/home_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/chats_screen.dart';
-import 'screens/profile_screen.dart';
 import 'screens/my_ads_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case MainScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const MainScreen(),
+      return PageTransition(
+        child: const MainScreen(),
+        type: PageTransitionType.fade,
       );
     case HomeScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+      return PageTransition(
+        child: const HomeScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case LandingScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const LandingScreen(),
+      return PageTransition(
+        child: const LandingScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case EmailLoginScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const EmailLoginScreen(),
+      return PageTransition(
+        child: const EmailLoginScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case EmailRegisterScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const EmailRegisterScreen(),
+      return PageTransition(
+        child: const EmailRegisterScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case ForgotPasswordScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const ForgotPasswordScreen(),
+      return PageTransition(
+        child: const ForgotPasswordScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case PhoneAuthScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const PhoneAuthScreen(),
+      return PageTransition(
+        child: const PhoneAuthScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case OTPScreen.routeName:
       final verificationId = settings.arguments as String;
       final mobileNumber = settings.arguments as String;
-      return MaterialPageRoute(
-        builder: (context) => OTPScreen(
-          verificationId: verificationId,
+      return PageTransition(
+        child: OTPScreen(
           mobileNumber: mobileNumber,
+          verificationId: verificationId,
         ),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case LocationScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const LocationScreen(),
+      return PageTransition(
+        child: const LocationScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     // case LocationManualScreen.routeName:
     //   return MaterialPageRoute(
     //     builder: (context) => const LocationManualScreen(),
     //   );
     case CategoriesListScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const CategoriesListScreen(),
+      return PageTransition(
+        child: const CategoriesListScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case SellerCategoriesListScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const SellerCategoriesListScreen(),
+      return PageTransition(
+        child: const SellerCategoriesListScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case CongratulationsScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const CongratulationsScreen(),
+      return PageTransition(
+        child: const CongratulationsScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case ProductDetailsScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const ProductDetailsScreen(),
+      return PageTransition(
+        child: const ProductDetailsScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case ChatsScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const ChatsScreen(),
+      return PageTransition(
+        child: const ChatsScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     case MyAdsScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const MyAdsScreen(),
+      return PageTransition(
+        child: const MyAdsScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
-    case ProfileScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const ProfileScreen(),
+    case MyProfileScreen.routeName:
+      return PageTransition(
+        child: const MyProfileScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
       );
     default:
-      return MaterialPageRoute(
-        builder: (context) => const Scaffold(
-          body: ErrorScreen(error: 'Uh-oh! Looks like you are lost in space!'),
+      return PageTransition(
+        child: const ErrorScreen(
+          error: 'Uh-oh! Looks like you are lost in space!',
         ),
+        type: PageTransitionType.rightToLeftWithFade,
       );
   }
 }

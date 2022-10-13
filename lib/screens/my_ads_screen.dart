@@ -63,7 +63,11 @@ class MyAdsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      top: 15,
+                    ),
                     child: Text(
                       'My Products',
                       maxLines: 1,
@@ -72,9 +76,6 @@ class MyAdsScreen extends StatelessWidget {
                         fontSize: 22,
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
                   ),
                   const MyAdsScreenProductsList(),
                 ],

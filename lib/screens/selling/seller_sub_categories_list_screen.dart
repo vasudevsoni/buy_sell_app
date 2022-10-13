@@ -1,3 +1,7 @@
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:page_transition/page_transition.dart';
+
+import '../../utils/utils.dart';
 import '../../widgets/custom_list_tile_no_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,8 +50,15 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Text('Loading...'),
+              return const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Center(
+                  child: SpinKitFadingCube(
+                    color: blueColor,
+                    size: 30,
+                    duration: Duration(milliseconds: 1000),
+                  ),
+                ),
               );
             }
             var data = snapshot.data!['subCat'];
@@ -62,21 +73,23 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
                   icon: FontAwesomeIcons.chevronRight,
                   onTap: () {
                     if (doc['catName'] == 'Vehicles') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => VehicleAdPostScreen(
-                            subCatName: data[index],
-                          ),
+                      Navigator.of(context).pushAndRemoveUntil(
+                        PageTransition(
+                          child: VehicleAdPostScreen(subCatName: data[index]),
+                          type: PageTransitionType.bottomToTop,
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AdPostScreen(
+                      Navigator.of(context).pushAndRemoveUntil(
+                        PageTransition(
+                          child: AdPostScreen(
                             catName: doc['catName'],
                             subCatName: data[index],
                           ),
+                          type: PageTransitionType.bottomToTop,
                         ),
+                        (Route<dynamic> route) => false,
                       );
                     }
                   },

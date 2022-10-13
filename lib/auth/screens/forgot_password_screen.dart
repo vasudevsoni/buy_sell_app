@@ -119,6 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       text: 'Loading...',
                       icon: FontAwesomeIcons.spinner,
                       bgColor: blackColor,
+                      borderColor: blackColor,
                       textIconColor: Colors.white,
                       onPressed: () {},
                       isDisabled: isLoading,
@@ -126,7 +127,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   : CustomButton(
                       text: 'Send',
                       icon: FontAwesomeIcons.arrowRight,
-                      bgColor: Colors.black,
+                      bgColor: blackColor,
+                      borderColor: blackColor,
                       textIconColor: Colors.white,
                       onPressed: () {
                         _validateEmail();

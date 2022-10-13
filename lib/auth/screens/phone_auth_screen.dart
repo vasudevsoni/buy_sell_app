@@ -94,6 +94,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               text: 'Send code',
               icon: FontAwesomeIcons.arrowRight,
               bgColor: blackColor,
+              borderColor: blackColor,
               textIconColor: Colors.white,
               onPressed: () {
                 if (mobileNumberController.text.length == 10) {

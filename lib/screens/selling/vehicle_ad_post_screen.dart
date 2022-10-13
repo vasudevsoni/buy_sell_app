@@ -1,6 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:flutter/services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +119,96 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     '1992',
     '1991',
     '1990',
-    'Older than 1990',
+    '1989',
+    '1988',
+    '1987',
+    '1986',
+    '1985',
+    '1984',
+    '1983',
+    '1982',
+    '1981',
+    '1980',
+    '1979',
+    '1978',
+    '1977',
+    '1976',
+    '1975',
+    '1974',
+    '1973',
+    '1972',
+    '1971',
+    '1970',
+    '1969',
+    '1968',
+    '1967',
+    '1966',
+    '1965',
+    '1964',
+    '1963',
+    '1962',
+    '1961',
+    '1960',
+    '1959',
+    '1958',
+    '1957',
+    '1956',
+    '1955',
+    '1954',
+    '1953',
+    '1952',
+    '1951',
+    '1950',
+    '1949',
+    '1948',
+    '1947',
+    '1946',
+    '1945',
+    '1944',
+    '1943',
+    '1942',
+    '1941',
+    '1940',
+    '1939',
+    '1938',
+    '1937',
+    '1936',
+    '1935',
+    '1934',
+    '1933',
+    '1932',
+    '1931',
+    '1930',
+    '1929',
+    '1928',
+    '1927',
+    '1926',
+    '1925',
+    '1924',
+    '1923',
+    '1922',
+    '1921',
+    '1920',
+    '1919',
+    '1918',
+    '1917',
+    '1916',
+    '1915',
+    '1914',
+    '1913',
+    '1912',
+    '1911',
+    '1910',
+    '1909',
+    '1908',
+    '1907',
+    '1906',
+    '1905',
+    '1904',
+    '1903',
+    '1902',
+    '1901',
+    '1900',
   ];
   final List<String> noOfOwners = ['1st', '2nd', '3rd', '4th', '5th +'];
 
@@ -219,6 +308,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.file(
                                     provider.imagePaths[0],
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        FontAwesomeIcons.triangleExclamation,
+                                        size: 20,
+                                        color: redColor,
+                                      );
+                                    },
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -243,7 +339,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${brandNameController.text} ${modelNameController.text}',
+                                  '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -421,7 +517,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   top: 5,
                 ),
                 actions: [
-                  CustomButton(
+                  CustomButtonWithoutIcon(
                     text: 'Confirm & Post',
                     onPressed: () async {
                       setState(() {
@@ -434,7 +530,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         'catName': 'Vehicles',
                         'subCat': widget.subCatName,
                         'title':
-                            '${brandNameController.text} ${modelNameController.text}',
+                            '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
                         'brandName': brandNameController.text,
                         'modelName': modelNameController.text,
                         'fuelType': fuelTypeSelectedValue,
@@ -449,21 +545,21 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       });
                       publishProductToFirebase(provider);
                     },
-                    icon: FontAwesomeIcons.check,
                     bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: Colors.white,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
+                  CustomButtonWithoutIcon(
                     text: 'Go Back & Check',
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: FontAwesomeIcons.reply,
-                    bgColor: blackColor,
-                    textIconColor: Colors.white,
+                    bgColor: Colors.white,
+                    borderColor: blueColor,
+                    textIconColor: blueColor,
                   ),
                 ],
               );
@@ -535,7 +631,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               top: 5,
             ),
             actions: [
-              CustomButton(
+              CustomButtonWithoutIcon(
                 text: 'Yes, Reset all',
                 onPressed: () {
                   setState(() {
@@ -552,21 +648,21 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   });
                   Navigator.pop(context);
                 },
-                icon: FontAwesomeIcons.solidTrashCan,
-                bgColor: Colors.red,
+                bgColor: redColor,
+                borderColor: redColor,
                 textIconColor: Colors.white,
               ),
               const SizedBox(
                 height: 10,
               ),
-              CustomButton(
+              CustomButtonWithoutIcon(
                 text: 'No, Cancel',
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: FontAwesomeIcons.xmark,
-                bgColor: blackColor,
-                textIconColor: Colors.white,
+                bgColor: Colors.white,
+                borderColor: blackColor,
+                textIconColor: blackColor,
               ),
             ],
           );
@@ -574,710 +670,815 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: isLoading ? null : resetAll,
-            child: Text(
-              'Reset All',
+    closePageAndGoToHome() {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Warning',
               style: GoogleFonts.poppins(
+                fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: blueColor,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: greyColor,
+              ),
+              child: Text(
+                'Are you sure you want to cancel your listing creation? All details will be lost.',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-        ],
-        title: Text(
-          'Create your listing',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 15,
-          ),
-        ),
-      ),
-      body: Scrollbar(
-        interactive: true,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blueColor,
-                  child: Text(
-                    'Step 1 - Vehicle Details',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: subCatNameController,
-                    keyboardType: TextInputType.text,
-                    label: 'Category',
-                    hint: '',
-                    isEnabled: false,
-                    maxLength: 80,
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: brandNameController,
-                    keyboardType: TextInputType.text,
-                    label: 'Brand Name*',
-                    hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
-                    maxLength: 30,
-                    textInputAction: TextInputAction.next,
-                    isEnabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter brand name';
-                      }
-                      setState(() {});
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: modelNameController,
-                    keyboardType: TextInputType.text,
-                    label: 'Model*',
-                    hint: 'Enter the model name. Ex: Swift, Activa',
-                    maxLength: 40,
-                    textInputAction: TextInputAction.next,
-                    isEnabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter model name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Text(
-                        'Fuel type*',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 235, 239, 243),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
-                        size: 20,
-                      ),
-                      iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
-                        size: 20,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      items: fuelType
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: fuelTypeSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          fuelTypeSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
-                      searchController: fuelTypeSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: fuelTypeSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an item...',
-                            hintStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          fuelTypeSearchController.clear();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Text(
-                        'Year of Registration*',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 235, 239, 243),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
-                        size: 20,
-                      ),
-                      iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
-                        size: 20,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      items: yor
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: yorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          yorSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
-                      searchController: yorSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: yorSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an item...',
-                            hintStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          yorSearchController.clear();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFormField(
-                    controller: kmDrivenController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    maxLength: 7,
-                    enabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter kilometres driven';
-                      }
-                      return null;
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Kms Driven*',
-                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      fillColor: greyColor,
-                      filled: true,
-                      counterText: '',
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      errorStyle: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.red,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                      ),
-                      labelStyle: GoogleFonts.poppins(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
-                      ),
-                      floatingLabelStyle: GoogleFonts.poppins(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Text(
-                        'Number of Owners*',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 235, 239, 243),
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
-                      ),
-                      icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
-                        size: 20,
-                      ),
-                      iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
-                        size: 20,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      items: noOfOwners
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: noOfOwnersSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          noOfOwnersSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
-                      searchController: noOfOwnersSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: noOfOwnersSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an item...',
-                            hintStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          noOfOwnersSearchController.clear();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blueColor,
-                  child: Text(
-                    'Step 2 - Listing Details',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: descriptionController,
-                    keyboardType: TextInputType.text,
-                    label: 'Description*',
-                    hint:
-                        'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                    maxLength: 1000,
-                    maxLines: 3,
-                    showCounterText: true,
-                    isEnabled: isLoading ? false : true,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a description';
-                      }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFormField(
-                    controller: priceController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    maxLength: 10,
-                    enabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the price for your listing';
-                      }
-                      return null;
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'Price*',
-                      hintText: 'Set a price for your listing',
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      counterText: '',
-                      fillColor: greyColor,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      errorStyle: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.red,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintStyle: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                      ),
-                      labelStyle: GoogleFonts.poppins(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
-                      ),
-                      floatingLabelStyle: GoogleFonts.poppins(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blueColor,
-                  child: Text(
-                    'Step 3 - Upload Product Images',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ImagePickerWidget(
-                  isButtonDisabled: isLoading ? true : false,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
+            actionsPadding: const EdgeInsets.all(15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: const Color.fromARGB(255, 244, 241, 241),
-        padding: const EdgeInsets.only(
-          left: 15,
-          right: 15,
-          bottom: 10,
-          top: 10,
-        ),
-        child: isLoading
-            ? CustomButton(
-                text: 'Loading..',
-                onPressed: () {},
-                isDisabled: isLoading,
-                icon: FontAwesomeIcons.spinner,
-                bgColor: blackColor,
-                textIconColor: Colors.white,
-              )
-            : CustomButton(
-                text: 'Proceed',
+            titlePadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 15,
+              bottom: 10,
+            ),
+            contentPadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 5,
+              top: 5,
+            ),
+            actions: [
+              CustomButtonWithoutIcon(
+                text: 'Yes, Cancel',
                 onPressed: () {
-                  validateForm();
+                  setState(() {
+                    brandNameController.text = '';
+                    modelNameController.text = '';
+                    fuelTypeSelectedValue = null;
+                    yorSelectedValue = null;
+                    kmDrivenController.text = '';
+                    noOfOwnersSelectedValue = null;
+                    descriptionController.text = '';
+                    priceController.text = '';
+                    provider.imagePaths.clear();
+                    provider.clearImagesCount();
+                  });
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    MainScreen.routeName,
+                    (route) => false,
+                  );
+                  showSnackBar(
+                    context: context,
+                    content: 'Listing creation cancelled',
+                  );
                 },
-                icon: FontAwesomeIcons.arrowRight,
-                bgColor: blackColor,
+                bgColor: redColor,
+                borderColor: redColor,
                 textIconColor: Colors.white,
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomButtonWithoutIcon(
+                text: 'No, Continue',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                bgColor: Colors.white,
+                borderColor: blackColor,
+                textIconColor: blackColor,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0.2,
+          backgroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Colors.black),
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: closePageAndGoToHome,
+            enableFeedback: true,
+            icon: const Icon(FontAwesomeIcons.xmark),
+          ),
+          actions: [
+            TextButton(
+              onPressed: isLoading ? null : resetAll,
+              child: Text(
+                'Reset All',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w700,
+                  color: blueColor,
+                ),
+              ),
+            ),
+          ],
+          title: Text(
+            'Create your listing',
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 15,
+            ),
+          ),
+        ),
+        body: Scrollbar(
+          interactive: true,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 1 - Vehicle Details',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: subCatNameController,
+                      keyboardType: TextInputType.text,
+                      label: 'Category',
+                      hint: '',
+                      isEnabled: false,
+                      maxLength: 80,
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: brandNameController,
+                      keyboardType: TextInputType.text,
+                      label: 'Brand Name*',
+                      hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
+                      maxLength: 30,
+                      textInputAction: TextInputAction.next,
+                      isEnabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter brand name';
+                        }
+                        setState(() {});
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: modelNameController,
+                      keyboardType: TextInputType.text,
+                      label: 'Model*',
+                      hint: 'Enter the model name. Ex: Swift, Activa',
+                      maxLength: 40,
+                      textInputAction: TextInputAction.next,
+                      isEnabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter model name';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          'Fuel type*',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        buttonDecoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 239, 243),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronDown,
+                          size: 20,
+                        ),
+                        iconOnClick: const Icon(
+                          FontAwesomeIcons.chevronUp,
+                          size: 20,
+                        ),
+                        buttonPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        items: fuelType
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: fuelTypeSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            fuelTypeSelectedValue = value as String;
+                          });
+                        },
+                        buttonHeight: 50,
+                        buttonWidth: MediaQuery.of(context).size.width,
+                        itemHeight: 50,
+                        dropdownMaxHeight: MediaQuery.of(context).size.width,
+                        searchController: fuelTypeSearchController,
+                        searchInnerWidget: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
+                          ),
+                          child: TextFormField(
+                            controller: fuelTypeSearchController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: 'Search for an item...',
+                              hintStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 12,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        searchMatchFn: (item, searchValue) {
+                          return (item.value
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchValue));
+                        },
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            fuelTypeSearchController.clear();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          'Year of Registration*',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        buttonDecoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 239, 243),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronDown,
+                          size: 20,
+                        ),
+                        iconOnClick: const Icon(
+                          FontAwesomeIcons.chevronUp,
+                          size: 20,
+                        ),
+                        buttonPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        items: yor
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: yorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            yorSelectedValue = value as String;
+                          });
+                        },
+                        buttonHeight: 50,
+                        buttonWidth: MediaQuery.of(context).size.width,
+                        itemHeight: 50,
+                        dropdownMaxHeight: MediaQuery.of(context).size.width,
+                        searchController: yorSearchController,
+                        searchInnerWidget: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
+                          ),
+                          child: TextFormField(
+                            controller: yorSearchController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: 'Search for an item...',
+                              hintStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 12,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        searchMatchFn: (item, searchValue) {
+                          return (item.value
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchValue));
+                        },
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            yorSearchController.clear();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: TextFormField(
+                      controller: kmDrivenController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      maxLength: 7,
+                      enabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter kilometres driven';
+                        }
+                        return null;
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Kms Driven*',
+                        hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        fillColor: greyColor,
+                        filled: true,
+                        counterText: '',
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                        floatingLabelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          'Number of Owners*',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        buttonDecoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 239, 243),
+                          borderRadius: BorderRadius.circular(
+                            10,
+                          ),
+                        ),
+                        icon: const Icon(
+                          FontAwesomeIcons.chevronDown,
+                          size: 20,
+                        ),
+                        iconOnClick: const Icon(
+                          FontAwesomeIcons.chevronUp,
+                          size: 20,
+                        ),
+                        buttonPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        items: noOfOwners
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: noOfOwnersSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            noOfOwnersSelectedValue = value as String;
+                          });
+                        },
+                        buttonHeight: 50,
+                        buttonWidth: MediaQuery.of(context).size.width,
+                        itemHeight: 50,
+                        dropdownMaxHeight: MediaQuery.of(context).size.width,
+                        searchController: noOfOwnersSearchController,
+                        searchInnerWidget: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
+                          ),
+                          child: TextFormField(
+                            controller: noOfOwnersSearchController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: 'Search for an item...',
+                              hintStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 12,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        searchMatchFn: (item, searchValue) {
+                          return (item.value
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchValue));
+                        },
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            noOfOwnersSearchController.clear();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 2 - Listing Details',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
+                      label: 'Description*',
+                      hint:
+                          'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
+                      maxLength: 1000,
+                      maxLines: 3,
+                      showCounterText: true,
+                      isEnabled: isLoading ? false : true,
+                      textInputAction: TextInputAction.newline,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a description';
+                        }
+                        if (value.length < 30) {
+                          return 'Please enter 30 or more characters';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: TextFormField(
+                      controller: priceController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      enabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the price for your listing';
+                        }
+                        return null;
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Price*',
+                        hintText: 'Set a price for your listing',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        counterText: '',
+                        fillColor: greyColor,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                        floatingLabelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 3 - Upload Product Images',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ImagePickerWidget(
+                    isButtonDisabled: isLoading ? true : false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          color: const Color.fromARGB(255, 244, 241, 241),
+          padding: const EdgeInsets.only(
+            left: 15,
+            right: 15,
+            bottom: 10,
+            top: 10,
+          ),
+          child: isLoading
+              ? CustomButton(
+                  text: 'Loading..',
+                  onPressed: () {},
+                  isDisabled: isLoading,
+                  icon: FontAwesomeIcons.spinner,
+                  bgColor: blackColor,
+                  borderColor: blackColor,
+                  textIconColor: Colors.white,
+                )
+              : CustomButton(
+                  text: 'Proceed',
+                  onPressed: () {
+                    validateForm();
+                  },
+                  icon: FontAwesomeIcons.arrowRight,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
+                  textIconColor: Colors.white,
+                ),
+        ),
       ),
     );
   }

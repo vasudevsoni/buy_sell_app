@@ -1,3 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +38,44 @@ class _MyAdsScreenProductsListState extends State<MyAdsScreenProductsList> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text('Some error occurred. Please try again');
+        } else if (snapshot.hasData && snapshot.data!.size == 0) {
+          return Padding(
+            padding: const EdgeInsets.all(15),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    FontAwesomeIcons.heartCrack,
+                    size: 60,
+                    color: redColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Your products will show here.\nStart by clicking the + button below.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Center(
+              child: SpinKitFadingCube(
+                color: blueColor,
+                size: 30,
+                duration: Duration(milliseconds: 1000),
+              ),
+            ),
           );
         }
         return ListView.builder(
@@ -65,18 +102,32 @@ class _MyAdsScreenProductsListState extends State<MyAdsScreenProductsList> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image(
-                                image: NetworkImage(
-                                  data['images'][0],
-                                ),
-                                fit: BoxFit.cover,
+                              child: CachedNetworkImage(
+                                imageUrl: data['images'][0],
                                 width: MediaQuery.of(context).size.width * 0.25,
                                 height:
                                     MediaQuery.of(context).size.width * 0.25,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    FontAwesomeIcons.triangleExclamation,
+                                    size: 20,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Center(
+                                    child: SpinKitFadingCube(
+                                      color: blueColor,
+                                      size: 30,
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.67,
+                              width: MediaQuery.of(context).size.width * 0.60,
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +176,7 @@ class _MyAdsScreenProductsListState extends State<MyAdsScreenProductsList> {
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 10,
-                                      color: blueColor,
+                                      color: blackColor,
                                     ),
                                   ),
                                 ],

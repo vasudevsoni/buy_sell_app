@@ -1,10 +1,14 @@
+import 'package:buy_sell_app/screens/category_products_screen.dart';
 import 'package:buy_sell_app/widgets/custom_list_tile_no_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../services/firebase_services.dart';
+import '../../utils/utils.dart';
 
 class SubCategoriesListScreen extends StatelessWidget {
   static const String routeName = '/sub-categories-list-screen';
@@ -44,8 +48,15 @@ class SubCategoriesListScreen extends StatelessWidget {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Text('Loading...'),
+              return const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Center(
+                  child: SpinKitFadingCube(
+                    color: blueColor,
+                    size: 30,
+                    duration: Duration(milliseconds: 1000),
+                  ),
+                ),
               );
             }
             var data = snapshot.data!['subCat'];
@@ -58,7 +69,17 @@ class SubCategoriesListScreen extends StatelessWidget {
                 return CustomListTileNoImage(
                   text: data[index],
                   icon: FontAwesomeIcons.chevronRight,
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: CategoryProductsScreen(
+                          catName: doc['catName'],
+                          subCatName: data[index],
+                        ),
+                        type: PageTransitionType.rightToLeftWithFade,
+                      ),
+                    ),
+                  },
                 );
               },
             );

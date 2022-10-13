@@ -68,146 +68,155 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       ),
       body: Form(
         key: _loginformKey,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CustomTextField(
-                    controller: emailController,
-                    label: 'Email address',
-                    hint: 'Enter your email address',
-                    keyboardType: TextInputType.emailAddress,
-                    maxLength: 40,
-                    textInputAction: TextInputAction.next,
-                    isEnabled: isLoading ? false : true,
-                    validator: (value) {
-                      final bool isValid =
-                          EmailValidator.validate(emailController.text);
-                      if (value == null || value.isEmpty) {
-                        showSnackBar(
-                          context: context,
-                          content: 'Please enter your email address',
-                        );
-                      }
-                      if (value!.isNotEmpty && isValid == false) {
-                        showSnackBar(
-                          context: context,
-                          content: 'Please enter a valid email address',
-                        );
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 6,
-                        child: CustomTextField(
-                          controller: passwordController,
-                          keyboardType: TextInputType.text,
-                          label: 'Password',
-                          hint: 'Enter your password',
-                          maxLength: 15,
-                          textInputAction: TextInputAction.go,
-                          isObscured: isObscured ? true : false,
-                          isEnabled: isLoading ? false : true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              showSnackBar(
-                                context: context,
-                                content: 'Please enter your password',
-                              );
-                            } else if (value.length < 6) {
-                              showSnackBar(
-                                context: context,
-                                content:
-                                    'Password must be 6 to 15 characters long',
-                              );
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isObscured = !isObscured;
-                            });
-                          },
-                          icon: isObscured
-                              ? const Icon(
-                                  FontAwesomeIcons.solidEyeSlash,
-                                  size: 20,
-                                )
-                              : const Icon(
-                                  FontAwesomeIcons.solidEye,
-                                  size: 20,
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        ForgotPasswordScreen.routeName,
-                      );
-                    },
-                    child: Text(
-                      'Forgot password?',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        color: blueColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .popAndPushNamed(EmailRegisterScreen.routeName);
-                },
-                child: Text(
-                  'Don\'t have an account? Create one',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    color: blueColor,
-                  ),
-                ),
-              ),
-              isLoading
-                  ? CustomButton(
-                      text: 'Loading...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: blackColor,
-                      textIconColor: Colors.white,
-                      onPressed: () {},
-                      isDisabled: isLoading,
-                    )
-                  : CustomButton(
-                      text: 'Login',
-                      icon: FontAwesomeIcons.rightToBracket,
-                      bgColor: Colors.black,
-                      textIconColor: Colors.white,
-                      onPressed: () {
-                        _validateEmail();
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Container(
+            height: MediaQuery.of(context).size.height -
+                56 -
+                MediaQuery.of(context).viewPadding.top,
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CustomTextField(
+                      controller: emailController,
+                      label: 'Email address',
+                      hint: 'Enter your email address',
+                      keyboardType: TextInputType.emailAddress,
+                      maxLength: 40,
+                      textInputAction: TextInputAction.next,
+                      isEnabled: isLoading ? false : true,
+                      validator: (value) {
+                        final bool isValid =
+                            EmailValidator.validate(emailController.text);
+                        if (value == null || value.isEmpty) {
+                          showSnackBar(
+                            context: context,
+                            content: 'Please enter your email address',
+                          );
+                        }
+                        if (value!.isNotEmpty && isValid == false) {
+                          showSnackBar(
+                            context: context,
+                            content: 'Please enter a valid email address',
+                          );
+                        }
+                        return null;
                       },
                     ),
-            ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: CustomTextField(
+                            controller: passwordController,
+                            keyboardType: TextInputType.text,
+                            label: 'Password',
+                            hint: 'Enter your password',
+                            maxLength: 15,
+                            textInputAction: TextInputAction.go,
+                            isObscured: isObscured ? true : false,
+                            isEnabled: isLoading ? false : true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                showSnackBar(
+                                  context: context,
+                                  content: 'Please enter your password',
+                                );
+                              } else if (value.length < 6) {
+                                showSnackBar(
+                                  context: context,
+                                  content:
+                                      'Password must be 6 to 15 characters long',
+                                );
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isObscured = !isObscured;
+                              });
+                            },
+                            icon: isObscured
+                                ? const Icon(
+                                    FontAwesomeIcons.solidEyeSlash,
+                                    size: 20,
+                                  )
+                                : const Icon(
+                                    FontAwesomeIcons.solidEye,
+                                    size: 20,
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          ForgotPasswordScreen.routeName,
+                        );
+                      },
+                      child: Text(
+                        'Forgot password?',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          color: blueColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(EmailRegisterScreen.routeName);
+                  },
+                  child: Text(
+                    'Don\'t have an account? Create one',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      color: blueColor,
+                    ),
+                  ),
+                ),
+                isLoading
+                    ? CustomButton(
+                        text: 'Loading...',
+                        icon: FontAwesomeIcons.spinner,
+                        bgColor: blackColor,
+                        borderColor: blackColor,
+                        textIconColor: Colors.white,
+                        onPressed: () {},
+                        isDisabled: isLoading,
+                      )
+                    : CustomButton(
+                        text: 'Login',
+                        icon: FontAwesomeIcons.rightToBracket,
+                        bgColor: blackColor,
+                        borderColor: blackColor,
+                        textIconColor: Colors.white,
+                        onPressed: () {
+                          _validateEmail();
+                        },
+                      ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,13 +1,16 @@
 import 'package:buy_sell_app/provider/product_provider.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -47,6 +50,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       name: '',
     );
 
+    void handleClick(String value) {
+      switch (value) {
+        case 'Share':
+          break;
+        case 'Report this item':
+          break;
+        case 'Help & Contact':
+          break;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -54,52 +68,55 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onTap: () {},
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              FontAwesomeIcons.share,
-              color: blueColor,
-              size: 20,
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          LikeButton(
-            circleColor: const CircleColor(
-              start: Color.fromARGB(255, 255, 0, 0),
-              end: Color.fromARGB(255, 237, 34, 34),
-            ),
-            bubblesColor: const BubblesColor(
-              dotPrimaryColor: Color(0xff33b5e5),
-              dotSecondaryColor: Color(0xff0099cc),
-            ),
-            animationDuration: const Duration(milliseconds: 1000),
-            likeBuilder: (bool isLiked) {
-              return isLiked
-                  ? const Icon(
-                      FontAwesomeIcons.solidHeart,
-                      color: Colors.red,
-                      size: 20,
-                    )
-                  : const Icon(
-                      FontAwesomeIcons.heart,
-                      color: Colors.red,
-                      size: 20,
-                    );
-            },
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          GestureDetector(
-            onTap: () {},
-            behavior: HitTestBehavior.opaque,
-            child: const Icon(
-              FontAwesomeIcons.ellipsis,
+              FontAwesomeIcons.arrowUpFromBracket,
               color: blackColor,
               size: 20,
             ),
           ),
           const SizedBox(
-            width: 10,
+            width: 5,
+          ),
+          PopupMenuButton(
+            onSelected: handleClick,
+            icon: const Icon(
+              FontAwesomeIcons.ellipsis,
+              size: 20,
+            ),
+            splashRadius: 1,
+            padding: const EdgeInsets.all(0),
+            enableFeedback: true,
+            position: PopupMenuPosition.under,
+            tooltip: 'Options',
+            color: Colors.white,
+            offset: const Offset(-10, 10),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: const BorderSide(
+                width: 1,
+                color: blackColor,
+                strokeAlign: StrokeAlign.inside,
+                style: BorderStyle.solid,
+              ),
+            ),
+            itemBuilder: (BuildContext context) {
+              return {'Share', 'Report this item', 'Help & Contact'}
+                  .map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  textStyle: GoogleFonts.poppins(
+                    color: blackColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 5,
+                  ),
+                  child: Text(choice),
+                );
+              }).toList();
+            },
           ),
         ],
         elevation: 0.2,
@@ -124,33 +141,44 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 showDialog(
                   context: context,
                   builder: (context) {
+                    PageController pageController =
+                        PageController(initialPage: currentImage);
                     return Material(
                       color: Colors.black,
                       child: Stack(
                         children: [
-                          CarouselSlider.builder(
+                          PhotoViewGallery.builder(
+                            scrollPhysics: const BouncingScrollPhysics(),
                             itemCount: images.length,
-                            itemBuilder: (context, index, realIndex) {
-                              return Image.network(
-                                images[index],
+                            pageController: pageController,
+                            builder: (BuildContext context, int index) {
+                              return PhotoViewGalleryPageOptions(
+                                imageProvider: NetworkImage(
+                                  images[index],
+                                ),
+                                filterQuality: FilterQuality.high,
+                                initialScale:
+                                    PhotoViewComputedScale.contained * 1,
+                                minScale: PhotoViewComputedScale.contained * 1,
+                                maxScale: PhotoViewComputedScale.contained * 5,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    FontAwesomeIcons.triangleExclamation,
+                                    size: 20,
+                                    color: redColor,
+                                  );
+                                },
                               );
                             },
-                            options: CarouselOptions(
-                              viewportFraction: 1,
-                              height: MediaQuery.of(context).size.height,
-                              enlargeCenterPage: true,
-                              enableInfiniteScroll:
-                                  images.length == 1 ? false : true,
-                              reverse: false,
-                              initialPage: currentImage,
-                              scrollDirection: Axis.horizontal,
-                              scrollPhysics: const BouncingScrollPhysics(),
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  currentImage = index;
-                                });
-                              },
-                            ),
+                            loadingBuilder: (context, event) {
+                              return const Center(
+                                child: SpinKitFadingCube(
+                                  color: blueColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              );
+                            },
                           ),
                           Positioned(
                             top: 15,
@@ -158,6 +186,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             child: IconButton(
                               onPressed: () {
                                 Navigator.pop(context);
+                                pageController.dispose();
                               },
                               splashColor: blueColor,
                               splashRadius: 30,
@@ -191,8 +220,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       carouselController: controller,
                       itemCount: images.length,
                       itemBuilder: (context, index, realIndex) {
-                        return Image.network(
-                          images[index],
+                        return CachedNetworkImage(
+                          imageUrl: images[index],
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return const Icon(
+                              FontAwesomeIcons.triangleExclamation,
+                              size: 20,
+                              color: redColor,
+                            );
+                          },
+                          placeholder: (context, url) {
+                            return const Center(
+                              child: SpinKitFadingCube(
+                                color: blueColor,
+                                size: 30,
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            );
+                          },
                         );
                       },
                       options: CarouselOptions(
@@ -202,6 +248,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         enableInfiniteScroll: images.length == 1 ? false : true,
                         initialPage: currentImage,
                         reverse: false,
+                        autoPlay: true,
+                        autoPlayCurve: Curves.linear,
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 1000),
+                        pauseAutoPlayOnManualNavigate: true,
+                        pauseAutoPlayOnTouch: true,
                         scrollDirection: Axis.horizontal,
                         scrollPhysics: const BouncingScrollPhysics(),
                         onPageChanged: (index, reason) {
@@ -216,10 +268,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     top: 7,
                     right: 7,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(3),
                         color: greyColor,
@@ -233,7 +282,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -244,12 +293,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 return Container(
                   width: 8.0,
                   height: 8.0,
-                  margin: const EdgeInsets.only(
-                    left: 2,
-                    right: 2,
-                    top: 10,
-                    bottom: 0,
-                  ),
+                  margin: const EdgeInsets.only(left: 2, right: 2, top: 10),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: currentImage == index ? blackColor : fadedColor,
@@ -264,12 +308,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   Text(
                     provider.productData['title'],
-                    maxLines: 2,
+                    maxLines: 3,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
                     ),
                   ),
                   Text(
@@ -282,8 +326,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w700,
                       color: blueColor,
-                      fontSize: 23,
+                      fontSize: 22,
                     ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                    text: 'Contact Seller',
+                    onPressed: () {},
+                    icon: FontAwesomeIcons.solidMessage,
+                    bgColor: Colors.white,
+                    borderColor: blueColor,
+                    textIconColor: blueColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -292,17 +347,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     text: 'Add to favorites',
                     onPressed: () {},
                     icon: FontAwesomeIcons.solidHeart,
-                    bgColor: Colors.red,
-                    textIconColor: Colors.white,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButton(
-                    text: 'Contact Seller',
-                    onPressed: () {},
-                    icon: FontAwesomeIcons.solidMessage,
-                    bgColor: blackColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: Colors.white,
                   ),
                   const SizedBox(
@@ -354,7 +400,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.65,
+                                                0.60,
                                         child: Text(
                                           provider.productData['brandName'],
                                           softWrap: true,
@@ -388,7 +434,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.65,
+                                                0.60,
                                         child: Text(
                                           provider.productData['modelName'],
                                           softWrap: true,
@@ -535,6 +581,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         kmFormat.format(
                                           provider.productData['kmsDriven'],
                                         ),
+                                        maxLines: 2,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w600,
                                           color: blackColor,
@@ -552,7 +601,49 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       const Icon(
-                                        FontAwesomeIcons.solidClock,
+                                        FontAwesomeIcons.list,
+                                        size: 15,
+                                        color: lightBlackColor,
+                                      ),
+                                      const SizedBox(
+                                        width: 7,
+                                      ),
+                                      Text(
+                                        'Category - ',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          color: lightBlackColor,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        child: Text(
+                                          '${provider.productData['catName']} > ${provider.productData['subCat']}',
+                                          maxLines: 3,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            color: blackColor,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        FontAwesomeIcons.clock,
                                         size: 15,
                                         color: lightBlackColor,
                                       ),
@@ -585,8 +676,115 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ],
                         )
-                      : const SizedBox(
-                          height: 0,
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'About this item',
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w700,
+                                color: blackColor,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: greyColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        FontAwesomeIcons.list,
+                                        size: 15,
+                                        color: lightBlackColor,
+                                      ),
+                                      const SizedBox(
+                                        width: 7,
+                                      ),
+                                      Text(
+                                        'Category - ',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          color: lightBlackColor,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        child: Text(
+                                          '${provider.productData['catName']} > ${provider.productData['subCat']}',
+                                          maxLines: 3,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            color: blackColor,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        FontAwesomeIcons.clock,
+                                        size: 15,
+                                        color: lightBlackColor,
+                                      ),
+                                      const SizedBox(
+                                        width: 7,
+                                      ),
+                                      Text(
+                                        'Posted - ',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          color: lightBlackColor,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      Text(
+                                        timeago.format(productCreatedTime),
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          color: blackColor,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
                   Text(
                     'Item description from the seller',
@@ -657,57 +855,102 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: blueColor,
-                        child: Text(
-                          'AB',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {},
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      const SizedBox(
-                        width: 10,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          provider.sellerData['name'] == null
-                              ? Text(
-                                  'no name',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                    fontSize: 15,
+                          CircleAvatar(
+                            backgroundColor: blueColor,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  'https://img.icons8.com/fluency/48/000000/user-male-circle.png',
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  FontAwesomeIcons.triangleExclamation,
+                                  size: 20,
+                                  color: redColor,
+                                );
+                              },
+                              placeholder: (context, url) {
+                                return const Center(
+                                  child: SpinKitFadingCube(
+                                    color: blueColor,
+                                    size: 30,
+                                    duration: Duration(milliseconds: 1000),
                                   ),
-                                )
-                              : Text(
-                                  provider.sellerData['name'],
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                          Text(
-                            'Joined - ${timeago.format(sellerJoinTime)}',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w500,
-                              color: lightBlackColor,
-                              fontSize: 13,
+                                );
+                              },
                             ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              provider.sellerData['name'] == null
+                                  ? Text(
+                                      'Name not disclosed',
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 15,
+                                      ),
+                                    )
+                                  : Text(
+                                      provider.sellerData['name'],
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                              Text(
+                                'Joined - ${timeago.format(sellerJoinTime)}',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w500,
+                                  color: lightBlackColor,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            FontAwesomeIcons.chevronRight,
+                            color: blackColor,
+                            size: 13,
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
+                  ),
+                  Text(
+                    'More like this',
+                    maxLines: 1,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w700,
+                      color: blackColor,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),

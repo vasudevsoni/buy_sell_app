@@ -4,20 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class CustomButton extends StatelessWidget {
+class CustomButtonWithoutIcon extends StatelessWidget {
   String text;
   final VoidCallback onPressed;
-  IconData icon;
   Color bgColor;
   Color borderColor;
   bool isDisabled;
   Color textIconColor;
 
-  CustomButton({
+  CustomButtonWithoutIcon({
     Key? key,
     required this.text,
     required this.onPressed,
-    required this.icon,
     this.isDisabled = false,
     required this.bgColor,
     required this.borderColor,
@@ -44,32 +42,19 @@ class CustomButton extends StatelessWidget {
           50,
         ),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 15,
-            child: AutoSizeText(
-              text,
-              maxLines: 2,
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: textIconColor,
-              ),
-            ),
+      child: SizedBox(
+        child: AutoSizeText(
+          text,
+          maxLines: 2,
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: textIconColor,
           ),
-          Expanded(
-            flex: 1,
-            child: Icon(
-              icon,
-              color: textIconColor,
-              size: 18,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

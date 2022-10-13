@@ -112,8 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(PhoneAuthScreen.routeName),
+              onPressed: () => Navigator.of(context).pop(),
               child: Text(
                 'Change mobile number',
                 style: GoogleFonts.poppins(

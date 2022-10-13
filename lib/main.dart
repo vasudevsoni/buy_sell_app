@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'router.dart';
-import 'screens/landing_screen.dart';
 import 'provider/product_provider.dart';
 import 'provider/seller_form_provider.dart';
 
@@ -58,7 +57,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) => generateRoute(settings),
       // home: const LandingScreen(),
       // home: MyAdsScreen(),
-      home: MainScreen(),
+      home: const MainScreen(),
       // home: CongratulationsScreen(),
       // home: const VehicleAdPostScreen(subCatName: 'test'),
     );

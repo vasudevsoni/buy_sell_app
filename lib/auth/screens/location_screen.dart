@@ -95,6 +95,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     text: 'Use my current location',
                     icon: FontAwesomeIcons.locationArrow,
                     bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: Colors.white,
                     onPressed: () {
                       getUserLocation().then((value) {
@@ -121,7 +122,8 @@ class _LocationScreenState extends State<LocationScreen> {
                     text: 'Skip',
                     icon: FontAwesomeIcons.arrowRight,
                     bgColor: Colors.white,
-                    textIconColor: Colors.black,
+                    borderColor: blueColor,
+                    textIconColor: blackColor,
                     onPressed: () {
                       Navigator.pushNamed(
                         context,

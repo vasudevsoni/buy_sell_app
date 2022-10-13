@@ -1,123 +1,50 @@
-import 'dart:math';
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/utils/utils.dart';
-import 'package:buy_sell_app/widgets/custom_text_field.dart';
+import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
-// import 'package:geocode/geocode.dart';
-import 'package:location/location.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../provider/product_provider.dart';
-import 'categories/sub_categories_list_screen.dart';
 import '../services/firebase_services.dart';
-import 'categories/categories_list_screen.dart';
+import '../utils/utils.dart';
 import 'product_details_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home-screen';
-  final LocationData? locationData;
-  const HomeScreen({
+class CategoryProductsScreen extends StatefulWidget {
+  final String catName;
+  final String subCatName;
+  const CategoryProductsScreen({
     super.key,
-    this.locationData,
+    required this.catName,
+    required this.subCatName,
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController searchController = TextEditingController();
-  String defaultAddress = 'India';
-  User? user = FirebaseAuth.instance.currentUser;
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-//TODO: video 5 and 9 for location
-  // Future<String> getAddress() async {
-  //   GeoCode geoCode = GeoCode();
-  //   try {
-  //     Address getAddress = await geoCode.reverseGeocoding(
-  //       latitude: widget.locationData!.latitude as double,
-  //       longitude: widget.locationData!.longitude as double,
-  //     );
-  //     setState(() {
-  //       defaultAddress = getAddress.toString();
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return defaultAddress;
-  // }
-
-  @override
-  void initState() {
-    // getAddress();
-    super.initState();
-  }
-
+class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   @override
   Widget build(BuildContext context) {
-    FirebaseServices service = FirebaseServices();
-
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         elevation: 0.2,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: Text(
-          'BestDeal',
-          style: GoogleFonts.poppins(
-            color: blackColor,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
         centerTitle: true,
-        leading: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Icon(
-            FontAwesomeIcons.piedPiper,
-            size: 20,
+        title: Text(
+          widget.subCatName,
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 15,
           ),
         ),
-        actions: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              showSearch(
-                context: context,
-                delegate: MySearchDelegate(),
-              );
-            },
-            child: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              size: 20,
-              color: lightBlackColor,
-            ),
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -130,109 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 right: 15,
                 top: 15,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: AutoSizeText(
-                      'What are you looking for today?',
-                      maxLines: 2,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: TextButton(
-                      onPressed: () {
-                        HapticFeedback.mediumImpact();
-                        Navigator.of(context)
-                            .pushNamed(CategoriesListScreen.routeName);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'See all',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: blueColor,
-                            ),
-                          ),
-                          const Icon(
-                            FontAwesomeIcons.circleArrowRight,
-                            size: 13,
-                            color: blueColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.12,
-              child: FutureBuilder<QuerySnapshot>(
-                future: service.categories
-                    .orderBy('sortId', descending: false)
-                    .get(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text('Some error occurred. Please try again.'),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCube(
-                          color: blueColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      var doc = snapshot.data!.docs[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            PageTransition(
-                              child: SubCategoriesListScreen(doc: doc),
-                              type: PageTransitionType.rightToLeftWithFade,
-                            ),
-                          );
-                        },
-                        child: CategoryContainer(
-                          text: doc['catName'],
-                          url: doc['image'],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'Latest Products',
+                'Results',
                 maxLines: 1,
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w700,
@@ -240,7 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const HomeScreenProductsList(),
+            CategoryScreenProductsList(
+              catName: widget.catName,
+              subCatName: widget.subCatName,
+            ),
           ],
         ),
       ),
@@ -248,75 +77,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class MySearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    [
-      IconButton(
-        onPressed: () {
-          if (query.isEmpty) {
-            close(context, null);
-          } else {
-            query = '';
-          }
-        },
-        icon: const Icon(
-          FontAwesomeIcons.xmark,
-          size: 20,
-        ),
-      )
-    ];
-    return null;
-  }
+class CategoryScreenProductsList extends StatefulWidget {
+  final String catName;
+  final String subCatName;
+  const CategoryScreenProductsList({
+    super.key,
+    required this.catName,
+    required this.subCatName,
+  });
 
   @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(
-        FontAwesomeIcons.chevronLeft,
-        size: 20,
-        color: lightBlackColor,
-      ),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text(query),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> suggestions = [];
-
-    return ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          final suggestion = suggestions[index];
-          return ListTile(
-            title: Text(suggestion),
-            onTap: () {
-              query = suggestion;
-              showResults(context);
-            },
-          );
-        });
-  }
+  State<CategoryScreenProductsList> createState() =>
+      _CategoryScreenProductsListState();
 }
 
-class HomeScreenProductsList extends StatefulWidget {
-  const HomeScreenProductsList({super.key});
-
-  @override
-  State<HomeScreenProductsList> createState() => _HomeScreenProductsListState();
-}
-
-class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
+class _CategoryScreenProductsListState
+    extends State<CategoryScreenProductsList> {
   final FirebaseServices _services = FirebaseServices();
 
   @override
@@ -336,6 +112,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
             'postedAt',
             descending: true,
           )
+          .where('subCat', isEqualTo: widget.subCatName)
           .get(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -356,11 +133,41 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
                     height: 10,
                   ),
                   Text(
-                    'No products here',
+                    'No products in this category.',
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(MainScreen.routeName);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Go to Home',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: blueColor,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        const Icon(
+                          FontAwesomeIcons.house,
+                          size: 13,
+                          color: blueColor,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -383,7 +190,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
         return ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          itemCount: snapshot.data!.docs.length,
+          itemCount: snapshot.data!.size,
           itemBuilder: (context, index) {
             var data = snapshot.data!.docs[index];
             var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
@@ -397,7 +204,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
               time: time,
             );
           },
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
         );
       },
     );
@@ -563,7 +370,7 @@ class _ProductCardState extends State<ProductCard> {
           color: fadedColor,
           indent: 15,
           endIndent: 15,
-        )
+        ),
       ],
     );
   }
@@ -580,51 +387,44 @@ class CategoryContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.08,
-          width: MediaQuery.of(context).size.height * 0.08,
-          margin: const EdgeInsets.only(
-            right: 10,
-            left: 15,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.11,
+      width: MediaQuery.of(context).size.height * 0.11,
+      margin: const EdgeInsets.only(right: 15),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: greyColor,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image(
+            height: MediaQuery.of(context).size.height * 0.05,
+            width: MediaQuery.of(context).size.height * 0.05,
+            image: NetworkImage(
+              url,
+            ),
+            fit: BoxFit.cover,
           ),
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: greyColor,
+          const SizedBox(
+            height: 3,
           ),
-          child: SvgPicture.network(
-            url,
-            fit: BoxFit.contain,
-            color: lightBlackColor,
-            placeholderBuilder: (context) {
-              return const Center(
-                child: SpinKitFadingCube(
-                  color: blueColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
-              );
-            },
+          AutoSizeText(
+            text,
+            maxLines: 1,
+            minFontSize: 10,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: fadedColor,
+            ),
           ),
-        ),
-        AutoSizeText(
-          text,
-          maxLines: 1,
-          minFontSize: 8,
-          softWrap: true,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: lightBlackColor,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -27,6 +27,7 @@ void showSnackBar({
   );
 }
 
+const redColor = Color(0xffe5383b);
 const blueColor = Color(0xff4361ee);
 const blackColor = Color(0xff190101);
 const lightBlackColor = Colors.black54;

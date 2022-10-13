@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/utils.dart';
@@ -39,11 +41,21 @@ class CustomListTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.width * 0.10,
-              width: MediaQuery.of(context).size.width * 0.10,
-              child: Image(
-                image: NetworkImage(url),
-                fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.width * 0.08,
+              width: MediaQuery.of(context).size.width * 0.08,
+              child: SvgPicture.network(
+                url,
+                fit: BoxFit.contain,
+                color: fadedColor,
+                placeholderBuilder: (context) {
+                  return const Center(
+                    child: SpinKitFadingCube(
+                      color: blueColor,
+                      size: 30,
+                      duration: Duration(milliseconds: 1000),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(

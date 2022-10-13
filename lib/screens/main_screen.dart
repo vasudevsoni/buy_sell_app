@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/utils.dart';
 import 'home_screen.dart';
-import 'package:flutter/material.dart';
 import '../screens/chats_screen.dart';
-import '../screens/profile_screen.dart';
 import 'my_ads_screen.dart';
 import '../screens/selling/seller_categories_list_screen.dart';
+import 'my_profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static const String routeName = '/main-screen';
@@ -25,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     ChatsScreen(),
     MyAdsScreen(),
-    ProfileScreen(),
+    MyProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,52 +42,46 @@ class _MainScreenState extends State<MainScreen> {
         index: _selectedIndex,
         children: _widgetOptions,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        elevation: 1,
-        backgroundColor: greyColor,
-        iconSize: 20,
+      extendBody: false,
+      bottomNavigationBar: DotNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: blueColor,
-        unselectedItemColor: fadedColor,
-        selectedLabelStyle: GoogleFonts.poppins(
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
-        unselectedLabelStyle: GoogleFonts.poppins(
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house),
-            label: 'HOME',
-            activeIcon: Icon(FontAwesomeIcons.house),
+        enableFloatingNavBar: false,
+        borderRadius: 10,
+        enablePaddingAnimation: false,
+        backgroundColor: greyColor,
+        margin: const EdgeInsets.symmetric(horizontal: 15),
+        marginR: const EdgeInsets.all(0),
+        paddingR: const EdgeInsets.all(0),
+        items: [
+          DotNavigationBarItem(
+            icon: const Icon(FontAwesomeIcons.house),
+            selectedColor: blueColor,
+            unselectedColor: fadedColor,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidMessage),
-            activeIcon: Icon(FontAwesomeIcons.solidMessage),
-            label: 'CHATS',
+          DotNavigationBarItem(
+            icon: const Icon(FontAwesomeIcons.solidMessage),
+            selectedColor: blueColor,
+            unselectedColor: fadedColor,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidHeart),
-            activeIcon: Icon(FontAwesomeIcons.solidHeart),
-            label: 'MY ADS',
+          DotNavigationBarItem(
+            icon: const Icon(FontAwesomeIcons.solidHeart),
+            selectedColor: blueColor,
+            unselectedColor: fadedColor,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.solidUser),
-            activeIcon: Icon(FontAwesomeIcons.solidUser),
-            label: 'MY PROFILE',
+          DotNavigationBarItem(
+            icon: const Icon(FontAwesomeIcons.solidUser),
+            selectedColor: blueColor,
+            unselectedColor: fadedColor,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          HapticFeedback.mediumImpact();
           Navigator.of(context).pushNamed(SellerCategoriesListScreen.routeName);
         },
+        tooltip: 'Create a listing',
         backgroundColor: blueColor,
         child: const Icon(FontAwesomeIcons.plus),
       ),
