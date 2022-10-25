@@ -1,4 +1,5 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../utils/utils.dart';
@@ -54,47 +55,50 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
                 padding: EdgeInsets.all(15.0),
                 child: Center(
                   child: SpinKitFadingCube(
-                    color: blueColor,
-                    size: 30,
+                    color: lightBlackColor,
+                    size: 20,
                     duration: Duration(milliseconds: 1000),
                   ),
                 ),
               );
             }
             var data = snapshot.data!['subCat'];
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              itemCount: data.length,
-              padding: const EdgeInsets.all(15),
-              itemBuilder: (context, index) {
-                return CustomListTileNoImage(
-                  text: data[index],
-                  icon: FontAwesomeIcons.chevronRight,
-                  onTap: () {
-                    if (doc['catName'] == 'Vehicles') {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        PageTransition(
-                          child: VehicleAdPostScreen(subCatName: data[index]),
-                          type: PageTransitionType.bottomToTop,
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    } else {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        PageTransition(
-                          child: AdPostScreen(
-                            catName: doc['catName'],
-                            subCatName: data[index],
+            return Scrollbar(
+              interactive: true,
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                itemCount: data.length,
+                padding: const EdgeInsets.all(15),
+                itemBuilder: (context, index) {
+                  return CustomListTileNoImage(
+                    text: data[index],
+                    icon: Iconsax.arrow_circle_right4,
+                    onTap: () {
+                      if (doc['catName'] == 'Vehicles') {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          PageTransition(
+                            child: VehicleAdPostScreen(subCatName: data[index]),
+                            type: PageTransitionType.bottomToTop,
                           ),
-                          type: PageTransitionType.bottomToTop,
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    }
-                  },
-                );
-              },
+                          (Route<dynamic> route) => false,
+                        );
+                      } else {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          PageTransition(
+                            child: AdPostScreen(
+                              catName: doc['catName'],
+                              subCatName: data[index],
+                            ),
+                            type: PageTransitionType.bottomToTop,
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
             );
           },
         ),

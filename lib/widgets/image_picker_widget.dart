@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -34,32 +33,35 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Widget build(BuildContext context) {
     final provider = Provider.of<SellerFormProvider>(context);
 
-    Future getImageFromCamera() async {
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 90,
+    showMaximumError() {
+      showSnackBar(
+        context: context,
+        content: 'Maximum images allowed is 15',
+        color: redColor,
       );
-      if (File(pickedFile!.path) != null) {
-        provider.addToImagePaths(File(pickedFile.path));
-        provider.imagesCount += 1;
-        setState(() {});
-      }
+    }
+
+    Future getImageFromCamera() async {
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
+      provider.addImageToPaths(File(pickedFile!.path));
+      provider.imagesCount += 1;
+      setState(() {});
     }
 
     Future getImageFromGallery() async {
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 90,
-      );
-      if (File(pickedFile!.path) != null) {
-        provider.addToImagePaths(File(pickedFile.path));
-        provider.imagesCount += 1;
-        setState(() {});
+      final List<XFile>? pickedFiles =
+          await picker.pickMultiImage(imageQuality: 100);
+      if (pickedFiles!.length > 15) {
+        showMaximumError();
+        return null;
+      } else {
+        for (var i in pickedFiles) {
+          provider.addImageToPaths(File(i.path));
+        }
       }
-    }
-
-    showMaximumError() {
-      showSnackBar(context: context, content: 'Maximum images allowed is 15');
+      provider.imagesCount += pickedFiles.length;
+      setState(() {});
     }
 
     return Column(
@@ -67,7 +69,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         Container(
           decoration: BoxDecoration(
             color: greyColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
           padding: const EdgeInsets.all(15.0),
           margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -99,95 +101,100 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return Material(
-                                        color: Colors.black,
-                                        child: Stack(
-                                          children: [
-                                            PhotoViewGallery.builder(
-                                              scrollPhysics:
-                                                  const BouncingScrollPhysics(),
-                                              itemCount:
-                                                  provider.imagePaths.length,
-                                              pageController: pageController,
-                                              builder: (BuildContext context,
-                                                  int index) {
-                                                return PhotoViewGalleryPageOptions(
-                                                  imageProvider: FileImage(
-                                                    provider.imagePaths[index],
-                                                  ),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  initialScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  minScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  maxScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          5,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    return const Icon(
-                                                      FontAwesomeIcons
-                                                          .triangleExclamation,
-                                                      size: 20,
-                                                      color: redColor,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              loadingBuilder: (context, event) {
-                                                return const Center(
-                                                  child: SpinKitFadingCube(
-                                                    color: blueColor,
-                                                    size: 30,
-                                                    duration: Duration(
-                                                        milliseconds: 1000),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            Positioned(
-                                              top: 15,
-                                              right: 15,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  pageController.dispose();
-                                                },
-                                                splashColor: Colors.blue,
-                                                splashRadius: 30,
-                                                icon: const Icon(
-                                                  FontAwesomeIcons.xmark,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 15,
-                                                      spreadRadius: 15,
+                                      return Dismissible(
+                                        key: const Key('addPhotosKey'),
+                                        direction: DismissDirection.down,
+                                        onDismissed: (direction) {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Material(
+                                          color: Colors.black,
+                                          child: Stack(
+                                            children: [
+                                              PhotoViewGallery.builder(
+                                                scrollPhysics:
+                                                    const BouncingScrollPhysics(),
+                                                itemCount:
+                                                    provider.imagePaths.length,
+                                                pageController: pageController,
+                                                builder: (BuildContext context,
+                                                    int index) {
+                                                  return PhotoViewGalleryPageOptions(
+                                                    imageProvider: FileImage(
+                                                      provider
+                                                          .imagePaths[index],
                                                     ),
-                                                  ],
+                                                    filterQuality:
+                                                        FilterQuality.high,
+                                                    initialScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            1,
+                                                    minScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            1,
+                                                    maxScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            5,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Icon(
+                                                        Iconsax.warning_24,
+                                                        size: 20,
+                                                        color: redColor,
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                loadingBuilder:
+                                                    (context, event) {
+                                                  return const Icon(
+                                                    Iconsax.image4,
+                                                    size: 20,
+                                                    color: lightBlackColor,
+                                                  );
+                                                },
+                                              ),
+                                              Positioned(
+                                                top: 15,
+                                                left: 15,
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    pageController.dispose();
+                                                  },
+                                                  splashColor: Colors.blue,
+                                                  splashRadius: 30,
+                                                  icon: const Icon(
+                                                    Iconsax.close_square4,
+                                                    size: 30,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      BoxShadow(
+                                                        offset: Offset(0, 0),
+                                                        blurRadius: 15,
+                                                        spreadRadius: 15,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },
                                   );
                                 },
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(15),
                                   child: Image.file(
                                     provider.imagePaths[index],
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        FontAwesomeIcons.triangleExclamation,
+                                        Iconsax.warning_24,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -210,7 +217,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                           });
                                   },
                                   icon: const Icon(
-                                    FontAwesomeIcons.xmark,
+                                    Iconsax.close_circle4,
                                     size: 14,
                                     color: Colors.white,
                                     shadows: [
@@ -288,7 +295,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             onPressed: provider.imagesCount >= 15
                 ? showMaximumError
                 : getImageFromCamera,
-            icon: FontAwesomeIcons.camera,
+            icon: Iconsax.camera4,
             bgColor: blackColor,
             borderColor: blackColor,
             textIconColor: Colors.white,
@@ -301,11 +308,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: CustomButton(
-            text: 'Choose Photo',
+            text: 'Choose Photos',
             onPressed: provider.imagesCount >= 15
                 ? showMaximumError
                 : getImageFromGallery,
-            icon: FontAwesomeIcons.images,
+            icon: Iconsax.gallery4,
             bgColor: Colors.white,
             borderColor: blackColor,
             textIconColor: blackColor,

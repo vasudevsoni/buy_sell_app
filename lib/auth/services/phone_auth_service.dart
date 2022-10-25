@@ -20,6 +20,7 @@ class PhoneAuthService {
         showSnackBar(
           context: context,
           content: e.message!,
+          color: redColor,
         );
       },
       codeSent: ((String verificationId, int? resendToken) async {
@@ -53,8 +54,11 @@ class PhoneAuthService {
         'mobile': user.phoneNumber,
         'email': null,
         'name': null,
+        'bio': null,
         'location': null,
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
+        'dob': null,
+        'profileImage': null,
       }).then((value) {
         Navigator.pushReplacementNamed(context, LocationScreen.routeName);
       }).catchError(
@@ -62,6 +66,7 @@ class PhoneAuthService {
         (err) => showSnackBar(
           context: context,
           content: 'Some error occurred. Please try again.',
+          color: redColor,
         ),
       );
     }

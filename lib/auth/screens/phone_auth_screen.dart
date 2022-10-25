@@ -2,6 +2,7 @@ import 'package:buy_sell_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
@@ -92,7 +93,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
             const Spacer(),
             CustomButton(
               text: 'Send code',
-              icon: FontAwesomeIcons.arrowRight,
+              icon: Iconsax.arrow_circle_right4,
               bgColor: blackColor,
               borderColor: blackColor,
               textIconColor: Colors.white,
@@ -106,6 +107,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   showSnackBar(
                     context: context,
                     content: 'Please enter a valid mobile number',
+                    color: redColor,
                   );
                 }
               },

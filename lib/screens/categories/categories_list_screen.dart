@@ -53,34 +53,42 @@ class CategoriesListScreen extends StatelessWidget {
                 padding: EdgeInsets.all(15.0),
                 child: Center(
                   child: SpinKitFadingCube(
-                    color: blueColor,
-                    size: 30,
+                    color: lightBlackColor,
+                    size: 20,
                     duration: Duration(milliseconds: 1000),
                   ),
                 ),
               );
             }
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              itemCount: snapshot.data!.docs.length,
-              padding: const EdgeInsets.all(15),
-              itemBuilder: (context, index) {
-                var doc = snapshot.data!.docs[index];
-                return CustomListTile(
-                  text: doc['catName'],
-                  url: doc['image'],
-                  icon: FontAwesomeIcons.chevronRight,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      PageTransition(
-                        child: SubCategoriesListScreen(doc: doc),
-                        type: PageTransitionType.rightToLeftWithFade,
-                      ),
-                    );
-                  },
-                );
-              },
+            return Scrollbar(
+              interactive: true,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 1 / 1,
+                ),
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                padding: const EdgeInsets.all(10),
+                itemBuilder: (context, index) {
+                  var doc = snapshot.data!.docs[index];
+                  return CustomListTile(
+                    text: doc['catName'],
+                    url: doc['image'],
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: SubCategoriesListScreen(doc: doc),
+                          type: PageTransitionType.rightToLeftWithFade,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             );
           },
         ),

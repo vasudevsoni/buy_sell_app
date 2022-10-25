@@ -11,6 +11,7 @@ class SellerFormProvider with ChangeNotifier {
   int imagesCount = 0;
   final List<File> imagePaths = [];
   Map<String, dynamic> dataToFirestore = {};
+  Map<String, dynamic> updatedDataToFirestore = {};
   var uuid = const Uuid();
 
   Future<String> uploadFile(File image) async {
@@ -32,8 +33,8 @@ class SellerFormProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  addToImagePaths(path) {
-    imagePaths.add(path);
+  addImageToPaths(File image) {
+    imagePaths.add(image);
     notifyListeners();
   }
 
@@ -48,6 +49,11 @@ class SellerFormProvider with ChangeNotifier {
     imagesCount = 0;
     imagePaths.clear();
     dataToFirestore.clear();
+    notifyListeners();
+  }
+
+  clearDataAfterUpdateListing() {
+    updatedDataToFirestore.clear();
     notifyListeners();
   }
 }

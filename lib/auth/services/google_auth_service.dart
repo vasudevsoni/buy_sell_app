@@ -28,17 +28,20 @@ class GoogleAuthentication {
           showSnackBar(
             context: context,
             content: 'Account exists with different sign in method.',
+            color: redColor,
           );
         } else if (err.code == 'invalid-credentials') {
           showSnackBar(
             context: context,
             content: 'Invalid credentials. Please try again.',
+            color: redColor,
           );
         }
       } catch (e) {
         showSnackBar(
           context: context,
           content: 'Some error occurred. Please try again.',
+          color: redColor,
         );
       }
     }

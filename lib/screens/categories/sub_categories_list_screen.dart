@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../services/firebase_services.dart';
@@ -52,36 +53,39 @@ class SubCategoriesListScreen extends StatelessWidget {
                 padding: EdgeInsets.all(15.0),
                 child: Center(
                   child: SpinKitFadingCube(
-                    color: blueColor,
-                    size: 30,
+                    color: lightBlackColor,
+                    size: 20,
                     duration: Duration(milliseconds: 1000),
                   ),
                 ),
               );
             }
             var data = snapshot.data!['subCat'];
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              itemCount: data.length,
-              padding: const EdgeInsets.all(15),
-              itemBuilder: (context, index) {
-                return CustomListTileNoImage(
-                  text: data[index],
-                  icon: FontAwesomeIcons.chevronRight,
-                  onTap: () => {
-                    Navigator.of(context).push(
-                      PageTransition(
-                        child: CategoryProductsScreen(
-                          catName: doc['catName'],
-                          subCatName: data[index],
+            return Scrollbar(
+              interactive: true,
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                itemCount: data.length,
+                padding: const EdgeInsets.all(15),
+                itemBuilder: (context, index) {
+                  return CustomListTileNoImage(
+                    text: data[index],
+                    icon: Iconsax.arrow_circle_right4,
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: CategoryProductsScreen(
+                            catName: doc['catName'],
+                            subCatName: data[index],
+                          ),
+                          type: PageTransitionType.rightToLeftWithFade,
                         ),
-                        type: PageTransitionType.rightToLeftWithFade,
                       ),
-                    ),
-                  },
-                );
-              },
+                    },
+                  );
+                },
+              ),
             );
           },
         ),

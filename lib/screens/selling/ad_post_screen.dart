@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 import '../../provider/seller_form_provider.dart';
@@ -46,7 +46,6 @@ class _AdPostScreenState extends State<AdPostScreen> {
     super.dispose();
   }
 
-  var uuid = const Uuid();
   var priceFormat = NumberFormat.currency(
     locale: 'HI',
     decimalDigits: 0,
@@ -62,9 +61,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
     TextEditingController subCatNameController =
         TextEditingController(text: '${widget.catName} > ${widget.subCatName}');
 
-    publishProductToFirebase(SellerFormProvider provider) async {
+    publishProductToFirebase(SellerFormProvider provider, String uid) async {
       return await _services.listings
-          .doc(uuid.v1())
+          .doc(uid)
           .set(provider.dataToFirestore)
           .then((value) {
         Navigator.pushReplacementNamed(
@@ -77,6 +76,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
         showSnackBar(
           context: context,
           content: 'Some error occurred. Please try again.',
+          color: redColor,
         );
         setState(() {
           isLoading = false;
@@ -107,7 +107,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   padding: const EdgeInsets.all(15),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     color: greyColor,
                   ),
@@ -125,13 +125,13 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                 width: MediaQuery.of(context).size.width * 0.2,
                                 height: MediaQuery.of(context).size.width * 0.2,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(15),
                                   child: Image.file(
                                     provider.imagePaths[0],
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        FontAwesomeIcons.triangleExclamation,
+                                        Iconsax.warning_24,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -217,7 +217,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 actionsPadding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 titlePadding: const EdgeInsets.only(
                   left: 15,
@@ -241,6 +241,21 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       Navigator.pop(context);
                       List<String> urls =
                           await provider.uploadFiles(provider.imagePaths);
+                      var uid = DateTime.now().millisecondsSinceEpoch;
+                      setSearchParams(String s, int n) {
+                        List<String> searchQueries = [];
+                        for (int i = 0; i < n; i++) {
+                          String temp = '';
+                          for (int j = i; j < n; j++) {
+                            temp += s[j];
+                            if (temp.length >= 3) {
+                              searchQueries.add(temp);
+                            }
+                          }
+                        }
+                        return searchQueries;
+                      }
+
                       provider.dataToFirestore.addAll({
                         'catName': widget.catName,
                         'subCat': widget.subCatName,
@@ -249,9 +264,14 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         'price': int.parse(priceController.text),
                         'sellerUid': _services.user!.uid,
                         'images': urls,
-                        'postedAt': DateTime.now().millisecondsSinceEpoch,
+                        'postedAt': uid,
+                        'favorites': [],
+                        'searchQueries': setSearchParams(
+                          titleController.text.toLowerCase(),
+                          titleController.text.length,
+                        ),
                       });
-                      publishProductToFirebase(provider);
+                      publishProductToFirebase(provider, uid.toString());
                     },
                     bgColor: blueColor,
                     borderColor: blueColor,
@@ -278,17 +298,20 @@ class _AdPostScreenState extends State<AdPostScreen> {
           showSnackBar(
             context: context,
             content: 'Please upload some images of the product',
+            color: redColor,
           );
         } else {
           showSnackBar(
             context: context,
             content: 'Please fill all the fields marked with *',
+            color: redColor,
           );
         }
       } else {
         showSnackBar(
           context: context,
           content: 'Please fill all the fields marked with *',
+          color: redColor,
         );
       }
     }
@@ -310,7 +333,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 color: greyColor,
               ),
@@ -324,7 +347,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -390,7 +413,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 color: greyColor,
               ),
@@ -404,7 +427,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -436,6 +459,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   showSnackBar(
                     context: context,
                     content: 'Listing creation cancelled',
+                    color: redColor,
                   );
                 },
                 bgColor: redColor,
@@ -472,7 +496,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(FontAwesomeIcons.xmark),
+            icon: const Icon(Iconsax.close_circle4),
           ),
           actions: [
             TextButton(
@@ -542,8 +566,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       keyboardType: TextInputType.text,
                       label: 'Title*',
                       hint: 'Enter the title',
-                      maxLength: 30,
+                      maxLength: 40,
                       textInputAction: TextInputAction.next,
+                      showCounterText: true,
                       isEnabled: isLoading ? false : true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -623,7 +648,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -631,7 +656,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -639,7 +664,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         errorStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -652,7 +677,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -660,7 +685,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         hintStyle: GoogleFonts.poppins(
@@ -734,7 +759,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   onPressed: () {
                     validateForm();
                   },
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Iconsax.arrow_circle_right4,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:location/location.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -93,7 +94,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                   child: CustomButton(
                     text: 'Use my current location',
-                    icon: FontAwesomeIcons.locationArrow,
+                    icon: Iconsax.location5,
                     bgColor: blueColor,
                     borderColor: blueColor,
                     textIconColor: Colors.white,
@@ -120,7 +121,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                   child: CustomButton(
                     text: 'Skip',
-                    icon: FontAwesomeIcons.arrowRight,
+                    icon: Iconsax.arrow_circle_right4,
                     bgColor: Colors.white,
                     borderColor: blueColor,
                     textIconColor: blackColor,

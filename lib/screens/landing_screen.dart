@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../auth/services/google_auth_service.dart';
 import '../auth/services/phone_auth_service.dart';
@@ -61,7 +61,7 @@ class LandingScreen extends StatelessWidget {
                 children: [
                   CustomButton(
                     text: 'Continue with Mobile',
-                    icon: FontAwesomeIcons.phone,
+                    icon: Iconsax.call5,
                     bgColor: blackColor,
                     borderColor: blackColor,
                     textIconColor: Colors.white,
@@ -75,7 +75,7 @@ class LandingScreen extends StatelessWidget {
                   ),
                   CustomButton(
                     text: 'Continue with Email',
-                    icon: FontAwesomeIcons.solidEnvelope,
+                    icon: Iconsax.login4,
                     bgColor: blueColor,
                     borderColor: blueColor,
                     textIconColor: Colors.white,

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -33,13 +34,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         showSnackBar(
           context: context,
           content: 'Link to reset password sent on your email',
+          color: redColor,
         );
       }).then((value) {
         Navigator.pop(context);
       }).catchError((onError) {
         showSnackBar(
           context: context,
-          content: 'Some error has occurred. Please try again',
+          content: 'Some error occurred. Please try again',
+          color: redColor,
         );
       });
       setState(() {
@@ -92,12 +95,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     showSnackBar(
                       context: context,
                       content: 'Enter email address',
+                      color: redColor,
                     );
                   }
                   if (value!.isNotEmpty && isValid == false) {
                     showSnackBar(
                       context: context,
                       content: 'Please enter a valid email address',
+                      color: redColor,
                     );
                   }
                   return null;
@@ -126,7 +131,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     )
                   : CustomButton(
                       text: 'Send',
-                      icon: FontAwesomeIcons.arrowRight,
+                      icon: Iconsax.arrow_circle_right4,
                       bgColor: blackColor,
                       borderColor: blackColor,
                       textIconColor: Colors.white,

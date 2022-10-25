@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
@@ -88,7 +89,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                   keyboardType: TextInputType.name,
                   label: 'Name',
                   hint: 'Enter your Name',
-                  maxLength: 50,
+                  maxLength: 80,
                   textInputAction: TextInputAction.next,
                   isEnabled: isLoading ? false : true,
                   validator: (value) {
@@ -96,12 +97,14 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       showSnackBar(
                         context: context,
                         content: 'Please enter your name',
+                        color: redColor,
                       );
                     }
                     if (value!.length == 1) {
                       showSnackBar(
                         context: context,
                         content: 'Please enter a valid name',
+                        color: redColor,
                       );
                     }
                     return null;
@@ -115,7 +118,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   label: 'Email address',
                   hint: 'Enter your Email address',
-                  maxLength: 40,
+                  maxLength: 100,
                   textInputAction: TextInputAction.next,
                   isEnabled: isLoading ? false : true,
                   validator: (value) {
@@ -125,12 +128,14 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       showSnackBar(
                         context: context,
                         content: 'Please enter your email address',
+                        color: redColor,
                       );
                     }
                     if (value!.isNotEmpty && isValid == false) {
                       showSnackBar(
                         context: context,
                         content: 'Please enter a valid email address',
+                        color: redColor,
                       );
                     }
                     return null;
@@ -157,12 +162,14 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                             showSnackBar(
                               context: context,
                               content: 'Please enter a password',
+                              color: redColor,
                             );
                           } else if (value.length < 6) {
                             showSnackBar(
                               context: context,
                               content:
                                   'Password must be 6 to 15 characters long',
+                              color: redColor,
                             );
                           }
                           return null;
@@ -179,11 +186,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                         },
                         icon: isObscured
                             ? const Icon(
-                                FontAwesomeIcons.solidEyeSlash,
+                                Iconsax.eye_slash4,
                                 size: 20,
                               )
                             : const Icon(
-                                FontAwesomeIcons.solidEye,
+                                Iconsax.eye,
                                 size: 20,
                               ),
                       ),
@@ -216,7 +223,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       )
                     : CustomButton(
                         text: 'Create account',
-                        icon: FontAwesomeIcons.check,
+                        icon: Iconsax.tick_circle4,
                         bgColor: blackColor,
                         borderColor: blackColor,
                         textIconColor: Colors.white,

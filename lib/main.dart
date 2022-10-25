@@ -1,15 +1,18 @@
+import 'package:buy_sell_app/screens/chats/conversation_screen.dart';
 import 'package:buy_sell_app/screens/main_screen.dart';
-import 'package:buy_sell_app/screens/my_ads_screen.dart';
-import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
-import 'package:buy_sell_app/screens/selling/vehicle_ad_post_screen.dart';
+import 'package:buy_sell_app/screens/my_listings_screen.dart';
+import 'package:buy_sell_app/screens/my_profile_screen.dart';
+import 'package:buy_sell_app/screens/update_profile_screen.dart';
+import 'package:buy_sell_app/utils/utils.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'router.dart';
-import 'provider/product_provider.dart';
 import 'provider/seller_form_provider.dart';
+import 'screens/selling/vehicle_ad_post_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +27,7 @@ Future<void> main() async {
       //   measurementId: "G-BBG34MXPLN",
       // ),
       );
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -33,9 +37,6 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => SellerFormProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ProductProvider(),
         ),
       ],
       child: const MyApp(),
@@ -51,15 +52,29 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       onGenerateRoute: (settings) => generateRoute(settings),
       // home: const LandingScreen(),
-      // home: MyAdsScreen(),
-      home: const MainScreen(),
-      // home: CongratulationsScreen(),
-      // home: const VehicleAdPostScreen(subCatName: 'test'),
+      // home: Scaffold(
+      //   body: DoubleBackToCloseApp(
+      //     snackBar: SnackBar(
+      //       content: Text(
+      //         'Press back again to leave',
+      //         textAlign: TextAlign.center,
+      //         style: GoogleFonts.poppins(
+      //           fontSize: 15,
+      //           fontWeight: FontWeight.w600,
+      //         ),
+      //       ),
+      //       elevation: 0,
+      //       backgroundColor: redColor,
+      //       dismissDirection: DismissDirection.horizontal,
+      //       duration: const Duration(seconds: 2),
+      //       behavior: SnackBarBehavior.floating,
+      //     ),
+      //     child: const MainScreen(),
+      //   ),
+      // ),
+      home: MainScreen(),
     );
   }
 }

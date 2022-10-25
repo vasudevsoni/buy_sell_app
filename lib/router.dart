@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/search_field_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -10,15 +11,18 @@ import 'auth/screens/otp_screen.dart';
 import 'auth/screens/forgot_password_screen.dart';
 import 'auth/screens/location_screen.dart';
 import 'screens/categories/categories_list_screen.dart';
+import 'screens/my_listings_screen.dart';
 import 'screens/my_profile_screen.dart';
-import 'screens/product_details_screen.dart';
+import 'screens/search_results_screen.dart';
 import 'screens/selling/congratulations_screen.dart';
 import 'screens/selling/seller_categories_list_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/main_screen.dart';
-import 'screens/chats_screen.dart';
-import 'screens/my_ads_screen.dart';
+import 'screens/chats/my_chats_screen.dart';
+import 'screens/my_favorites_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/update_profile_image_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -91,25 +95,40 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: const CongratulationsScreen(),
         type: PageTransitionType.rightToLeftWithFade,
       );
-    case ProductDetailsScreen.routeName:
+    case MyChatsScreen.routeName:
       return PageTransition(
-        child: const ProductDetailsScreen(),
+        child: const MyChatsScreen(),
         type: PageTransitionType.rightToLeftWithFade,
       );
-    case ChatsScreen.routeName:
+    case SearchFieldScreen.routeName:
       return PageTransition(
-        child: const ChatsScreen(),
+        child: const SearchFieldScreen(),
+        type: PageTransitionType.fade,
+      );
+    case MyFavoritesScreen.routeName:
+      return PageTransition(
+        child: const MyFavoritesScreen(),
         type: PageTransitionType.rightToLeftWithFade,
       );
-    case MyAdsScreen.routeName:
+    case MyListingsScreen.routeName:
       return PageTransition(
-        child: const MyAdsScreen(),
+        child: const MyListingsScreen(),
+        type: PageTransitionType.rightToLeftWithFade,
+      );
+    case SettingsScreen.routeName:
+      return PageTransition(
+        child: const SettingsScreen(),
         type: PageTransitionType.rightToLeftWithFade,
       );
     case MyProfileScreen.routeName:
       return PageTransition(
         child: const MyProfileScreen(),
         type: PageTransitionType.rightToLeftWithFade,
+      );
+    case UpdateProfileImageScreen.routeName:
+      return PageTransition(
+        child: const UpdateProfileImageScreen(),
+        type: PageTransitionType.fade,
       );
     default:
       return PageTransition(

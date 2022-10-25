@@ -2,6 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
@@ -46,7 +47,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   );
                 },
                 icon: const Icon(
-                  FontAwesomeIcons.xmark,
+                  Iconsax.close_circle4,
                   color: blackColor,
                   size: 30,
                 ),
@@ -92,7 +93,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                       MainScreen.routeName,
                     );
                   },
-                  icon: FontAwesomeIcons.house,
+                  icon: Iconsax.home4,
                   bgColor: blackColor,
                   borderColor: blackColor,
                   textIconColor: Colors.white,

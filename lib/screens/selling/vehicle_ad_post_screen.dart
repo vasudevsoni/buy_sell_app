@@ -6,8 +6,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 import '../../provider/seller_form_provider.dart';
@@ -30,8 +30,6 @@ class VehicleAdPostScreen extends StatefulWidget {
 
 class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  TextEditingController titleController = TextEditingController();
   TextEditingController brandNameController = TextEditingController();
   TextEditingController modelNameController = TextEditingController();
   TextEditingController kmDrivenController = TextEditingController();
@@ -40,6 +38,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   TextEditingController fuelTypeSearchController = TextEditingController();
   TextEditingController yorSearchController = TextEditingController();
   TextEditingController noOfOwnersSearchController = TextEditingController();
+  TextEditingController colorsSearchController = TextEditingController();
 
   final FirebaseServices _services = FirebaseServices();
 
@@ -64,7 +63,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
 
   @override
   void dispose() {
-    titleController.dispose();
     brandNameController.dispose();
     modelNameController.dispose();
     kmDrivenController.dispose();
@@ -73,6 +71,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     fuelTypeSearchController.dispose();
     yorSearchController.dispose();
     noOfOwnersSearchController.dispose();
+    colorsSearchController.dispose();
     super.dispose();
   }
 
@@ -211,11 +210,27 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     '1900',
   ];
   final List<String> noOfOwners = ['1st', '2nd', '3rd', '4th', '5th +'];
+  final List<String> colors = [
+    'White',
+    'Silver',
+    'Grey',
+    'Black',
+    'Red',
+    'Blue',
+    'Green',
+    'Yellow',
+    'Purple',
+    'Brown',
+    'Orange',
+    'Gold',
+    'Others',
+  ];
 
   String? fuelTypeSelectedValue;
   String? yorSelectedValue;
   String? noOfOwnersSelectedValue;
-  var uuid = const Uuid();
+  String? colorSelectedValue;
+
   var priceFormat = NumberFormat.currency(
     locale: 'HI',
     decimalDigits: 0,
@@ -237,9 +252,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     TextEditingController subCatNameController =
         TextEditingController(text: 'Vehicles > ${widget.subCatName}');
 
-    publishProductToFirebase(SellerFormProvider provider) async {
+    publishProductToFirebase(SellerFormProvider provider, String uid) async {
       return await _services.listings
-          .doc(uuid.v1())
+          .doc(uid)
           .set(provider.dataToFirestore)
           .then((value) {
         Navigator.pushReplacementNamed(
@@ -252,6 +267,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
         showSnackBar(
           context: context,
           content: 'Some error occurred. Please try again.',
+          color: redColor,
         );
         setState(() {
           isLoading = false;
@@ -269,6 +285,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
             descriptionController.text.isNotEmpty &&
             priceController.text.isNotEmpty &&
             kmDrivenController.text.isNotEmpty &&
+            colorSelectedValue != null &&
             provider.imagePaths.isNotEmpty) {
           showDialog(
             context: context,
@@ -287,7 +304,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   padding: const EdgeInsets.all(15),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     color: greyColor,
                   ),
@@ -305,12 +322,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 width: MediaQuery.of(context).size.width * 0.2,
                                 height: MediaQuery.of(context).size.width * 0.2,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(15),
                                   child: Image.file(
                                     provider.imagePaths[0],
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        FontAwesomeIcons.triangleExclamation,
+                                        Iconsax.warning_24,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -382,7 +399,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.solidUser,
+                                Iconsax.user4,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -405,7 +422,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.gasPump,
+                                Iconsax.gas_station,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -431,7 +448,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.calendarCheck,
+                                Iconsax.calendar,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -457,7 +474,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.road,
+                                Iconsax.location_tick4,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -502,7 +519,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 ),
                 actionsPadding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 titlePadding: const EdgeInsets.only(
                   left: 15,
@@ -526,6 +543,21 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       Navigator.pop(context);
                       List<String> urls =
                           await provider.uploadFiles(provider.imagePaths);
+                      var uid = DateTime.now().millisecondsSinceEpoch;
+                      setSearchParams(String s, int n) {
+                        List<String> searchQueries = [];
+                        for (int i = 0; i < n; i++) {
+                          String temp = '';
+                          for (int j = i; j < n; j++) {
+                            temp += s[j];
+                            if (temp.length >= 3) {
+                              searchQueries.add(temp);
+                            }
+                          }
+                        }
+                        return searchQueries;
+                      }
+
                       provider.dataToFirestore.addAll({
                         'catName': 'Vehicles',
                         'subCat': widget.subCatName,
@@ -535,15 +567,23 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         'modelName': modelNameController.text,
                         'fuelType': fuelTypeSelectedValue,
                         'yearOfReg': int.parse(yorSelectedValue!),
+                        'color': colorSelectedValue,
                         'kmsDriven': int.parse(kmDrivenController.text),
                         'noOfOwners': noOfOwnersSelectedValue,
                         'description': descriptionController.text,
                         'price': int.parse(priceController.text),
                         'sellerUid': _services.user!.uid,
                         'images': urls,
-                        'postedAt': DateTime.now().millisecondsSinceEpoch,
+                        'postedAt': uid,
+                        'favorites': [],
+                        'searchQueries': setSearchParams(
+                          '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                          brandNameController.text.length +
+                              modelNameController.text.length +
+                              1,
+                        ),
                       });
-                      publishProductToFirebase(provider);
+                      publishProductToFirebase(provider, uid.toString());
                     },
                     bgColor: blueColor,
                     borderColor: blueColor,
@@ -570,17 +610,20 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           showSnackBar(
             context: context,
             content: 'Please upload some images of the product',
+            color: redColor,
           );
         } else {
           showSnackBar(
             context: context,
             content: 'Please fill all the fields marked with *',
+            color: redColor,
           );
         }
       } else {
         showSnackBar(
           context: context,
           content: 'Please fill all the fields marked with *',
+          color: redColor,
         );
       }
     }
@@ -602,7 +645,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 color: greyColor,
               ),
@@ -616,7 +659,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -639,6 +682,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     modelNameController.text = '';
                     fuelTypeSelectedValue = null;
                     yorSelectedValue = null;
+                    colorSelectedValue = null;
                     kmDrivenController.text = '';
                     noOfOwnersSelectedValue = null;
                     descriptionController.text = '';
@@ -687,7 +731,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 color: greyColor,
               ),
@@ -701,7 +745,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(15),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -724,6 +768,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     modelNameController.text = '';
                     fuelTypeSelectedValue = null;
                     yorSelectedValue = null;
+                    colorSelectedValue = null;
                     kmDrivenController.text = '';
                     noOfOwnersSelectedValue = null;
                     descriptionController.text = '';
@@ -739,6 +784,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   showSnackBar(
                     context: context,
                     content: 'Listing creation cancelled',
+                    color: redColor,
                   );
                 },
                 bgColor: redColor,
@@ -775,7 +821,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(FontAwesomeIcons.xmark),
+            icon: const Icon(Iconsax.close_circle4),
           ),
           actions: [
             TextButton(
@@ -881,6 +927,102 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: TextFormField(
+                      controller: kmDrivenController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      maxLength: 7,
+                      enabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter kilometres driven';
+                        }
+                        return null;
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Kms Driven*',
+                        hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        fillColor: greyColor,
+                        filled: true,
+                        counterText: '',
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        errorStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: blueColor,
+                            width: 1.5,
+                            strokeAlign: StrokeAlign.inside,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        hintStyle: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                        floatingLabelStyle: GoogleFonts.poppins(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: DropdownButtonHideUnderline(
@@ -899,19 +1041,22 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         buttonDecoration: BoxDecoration(
                           color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 20,
+                          Iconsax.arrow_down_14,
+                          size: 15,
                         ),
                         iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 20,
+                          Iconsax.arrow_up_24,
+                          size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
+                        ),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         items: fuelType
                             .map(
@@ -954,13 +1099,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 horizontal: 10,
                                 vertical: 8,
                               ),
-                              hintText: 'Search for an item...',
+                              hintText: 'Search for fuel type',
                               hintStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
@@ -1000,19 +1145,22 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         buttonDecoration: BoxDecoration(
                           color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 20,
+                          Iconsax.arrow_down_14,
+                          size: 15,
                         ),
                         iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 20,
+                          Iconsax.arrow_up_24,
+                          size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
+                        ),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         items: yor
                             .map(
@@ -1055,13 +1203,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 horizontal: 10,
                                 vertical: 8,
                               ),
-                              hintText: 'Search for an item...',
+                              hintText: 'Search for an year',
                               hintStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
@@ -1085,94 +1233,102 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      controller: kmDrivenController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.number,
-                      maxLength: 7,
-                      enabled: isLoading ? false : true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter kilometres driven';
-                        }
-                        return null;
-                      },
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Kms Driven*',
-                        hintText: 'Enter the Kms driven. Ex: 20000, 150000',
-                        contentPadding: const EdgeInsets.symmetric(
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          'Color*',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 111, 111, 111),
+                        ),
+                        buttonDecoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 235, 239, 243),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        icon: const Icon(
+                          Iconsax.arrow_down_14,
+                          size: 15,
+                        ),
+                        iconOnClick: const Icon(
+                          Iconsax.arrow_up_24,
+                          size: 15,
+                        ),
+                        buttonPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
                         ),
-                        fillColor: greyColor,
-                        filled: true,
-                        counterText: '',
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        items: colors
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: colorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            colorSelectedValue = value as String;
+                          });
+                        },
+                        buttonHeight: 50,
+                        buttonWidth: MediaQuery.of(context).size.width,
+                        itemHeight: 50,
+                        dropdownMaxHeight: MediaQuery.of(context).size.width,
+                        searchController: colorsSearchController,
+                        searchInnerWidget: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
                           ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
+                          child: TextFormField(
+                            controller: colorsSearchController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: 'Search for a color',
+                              hintStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 12,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        errorStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          color: const Color.fromARGB(255, 111, 111, 111),
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                        floatingLabelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                          color: Colors.black87,
-                        ),
+                        searchMatchFn: (item, searchValue) {
+                          return (item.value
+                              .toString()
+                              .toLowerCase()
+                              .contains(searchValue));
+                        },
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            colorsSearchController.clear();
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -1202,16 +1358,19 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           ),
                         ),
                         icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 20,
+                          Iconsax.arrow_down_14,
+                          size: 15,
                         ),
                         iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 20,
+                          Iconsax.arrow_up_24,
+                          size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
+                        ),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         items: noOfOwners
                             .map(
@@ -1260,7 +1419,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
@@ -1362,7 +1521,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -1370,7 +1529,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -1378,7 +1537,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         errorStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -1391,7 +1550,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         focusedErrorBorder: OutlineInputBorder(
@@ -1400,7 +1559,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -1473,7 +1632,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   onPressed: () {
                     validateForm();
                   },
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Iconsax.arrow_circle_right4,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: Colors.white,

@@ -25,11 +25,13 @@ class EmailAuthService {
         showSnackBar(
           context: context,
           content: 'Account does not exist. Please create one.',
+          color: redColor,
         );
       } else if (e.code == 'wrong-password') {
         showSnackBar(
           context: context,
           content: 'Email or password is incorrect. Please try again.',
+          color: redColor,
         );
       }
     }
@@ -54,8 +56,11 @@ class EmailAuthService {
         'mobile': null,
         'email': userCredential.user!.email,
         'name': name,
+        'bio': null,
         'location': null,
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
+        'dob': null,
+        'profileImage': null,
       }).then((value) async {
         //send email verification and navigate to verification screen
         await userCredential.user!.sendEmailVerification().then((value) {
@@ -67,11 +72,13 @@ class EmailAuthService {
         showSnackBar(
           context: context,
           content: 'Password too weak. Try again.',
+          color: redColor,
         );
       } else if (e.code == 'email-already-in-use') {
         showSnackBar(
           context: context,
           content: 'An account with this email already exists. Please log in.',
+          color: redColor,
         );
       }
     }

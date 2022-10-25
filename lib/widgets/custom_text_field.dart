@@ -12,10 +12,13 @@ class CustomTextField extends StatelessWidget {
   final bool showCounterText;
   final bool autofocus;
   final String? prefixText;
+  final bool isReadOnly;
   final bool isObscured;
   final String label;
   final String hint;
   final int maxLength;
+  void Function()? onTap;
+  Function(String)? onFieldSubmitted;
   final int maxLines;
   String? Function(String?)? validator;
   Function(String)? onChanged;
@@ -25,8 +28,11 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.textInputAction,
     this.isEnabled = true,
+    this.isReadOnly = false,
     this.showCounterText = false,
     required this.label,
+    this.onTap,
+    this.onFieldSubmitted,
     this.isObscured = false,
     required this.hint,
     this.autofocus = false,
@@ -44,10 +50,13 @@ class CustomTextField extends StatelessWidget {
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       enabled: isEnabled,
+      onTap: onTap,
+      readOnly: isReadOnly,
       autofocus: autofocus,
       maxLength: maxLength,
       validator: validator,
       onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
       maxLines: maxLines,
       obscureText: isObscured,
       style: GoogleFonts.poppins(
@@ -78,7 +87,7 @@ class CustomTextField extends StatelessWidget {
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -86,7 +95,7 @@ class CustomTextField extends StatelessWidget {
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -94,7 +103,7 @@ class CustomTextField extends StatelessWidget {
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -102,7 +111,7 @@ class CustomTextField extends StatelessWidget {
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         focusedErrorBorder: OutlineInputBorder(
@@ -111,7 +120,7 @@ class CustomTextField extends StatelessWidget {
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         hintStyle: GoogleFonts.poppins(
           fontSize: 12,

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_text_field.dart';
 import '../services/phone_auth_service.dart';
-import '../../auth/screens/phone_auth_screen.dart';
 
 class OTPScreen extends StatefulWidget {
   static const String routeName = '/otp-screen';
@@ -59,12 +58,14 @@ class _OTPScreenState extends State<OTPScreen> {
           showSnackBar(
             context: context,
             content: 'Login failed. Please try again.',
+            color: redColor,
           );
         }
       } on FirebaseAuthException {
         showSnackBar(
           context: context,
           content: 'Invalid OTP. Please try again.',
+          color: redColor,
         );
       }
     }
@@ -120,7 +121,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   color: blueColor,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

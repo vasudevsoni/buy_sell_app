@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 void showSnackBar({
   required BuildContext context,
   required String content,
+  required Color color,
 }) {
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
@@ -16,12 +18,9 @@ void showSnackBar({
         ),
       ),
       elevation: 0,
-      backgroundColor: blueColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      backgroundColor: color,
       dismissDirection: DismissDirection.horizontal,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
     ),
   );

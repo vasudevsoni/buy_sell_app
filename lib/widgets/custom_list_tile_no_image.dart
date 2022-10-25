@@ -29,7 +29,7 @@ class CustomListTileNoImage extends StatelessWidget {
         height: 60,
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
           color: greyColor,
         ),
