@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
@@ -42,12 +44,12 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(
-                    MainScreen.routeName,
-                  );
+                  Get.offAll(() => const MainScreen(
+                        selectedIndex: 0,
+                      ));
                 },
                 icon: const Icon(
-                  Iconsax.close_circle4,
+                  FontAwesomeIcons.circleXmark,
                   color: blackColor,
                   size: 30,
                 ),
@@ -57,19 +59,24 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
           body: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(),
                 ConfettiWidget(
                   confettiController: controller,
                   shouldLoop: false,
-                  blastDirectionality: BlastDirectionality.explosive,
-                  maxBlastForce: 20,
+                  colors: const [
+                    blueColor,
+                    redColor,
+                    Colors.yellow,
+                  ],
+                  blastDirectionality: BlastDirectionality.directional,
+                  emissionFrequency: 0,
+                  blastDirection: pi / -2,
+                  numberOfParticles: 80,
                 ),
                 Text(
-                  'Congratulations!',
+                  '🥳 Congratulations!',
                   style: GoogleFonts.poppins(
-                    fontSize: 30,
+                    fontSize: 25,
                     fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
@@ -77,8 +84,33 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: greyColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
+                  child: Text(
+                    'Your listing will be live once it is reviewed.',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
                 Text(
-                  'Your listing is posted successfully.',
+                  'Sit back and relax.😊',
                   style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.w500,
@@ -89,14 +121,14 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 CustomButton(
                   text: 'Go to Home',
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed(
-                      MainScreen.routeName,
-                    );
+                    Get.offAll(() => const MainScreen(
+                          selectedIndex: 0,
+                        ));
                   },
-                  icon: Iconsax.home4,
+                  icon: FontAwesomeIcons.house,
                   bgColor: blackColor,
                   borderColor: blackColor,
-                  textIconColor: Colors.white,
+                  textIconColor: whiteColor,
                 ),
               ],
             ),

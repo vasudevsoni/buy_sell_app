@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
+
 import 'package:intl/intl.dart';
 
 import '../../utils/utils.dart';
@@ -41,7 +41,7 @@ class _ChatStreamState extends State<ChatStream> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -57,7 +57,7 @@ class _ChatStreamState extends State<ChatStream> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'No messages here.\nStart by sending a \'hi\'.',
+                    'No messages here.\nStart by sending a \'Hi\'.',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
@@ -68,7 +68,7 @@ class _ChatStreamState extends State<ChatStream> {
                     ),
                   ),
                   const Icon(
-                    Iconsax.message_text4,
+                    FontAwesomeIcons.mitten,
                     color: blueColor,
                     size: 20,
                   ),
@@ -108,23 +108,39 @@ class _ChatStreamState extends State<ChatStream> {
             String me = _services.user!.uid;
             return Column(
               children: [
-                BubbleSpecialThree(
-                  text: snapshot.data!.docs[index]['message'],
-                  color: sentBy == me ? blueColor : greyColor,
-                  isSender: sentBy == me ? true : false,
-                  tail: true,
-                  textStyle: sentBy == me
-                      ? GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        )
-                      : GoogleFonts.poppins(
-                          color: blackColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                snapshot.data!.docs[index]['isOffer'] == true
+                    ? BubbleNormal(
+                        bubbleRadius: 10,
+                        key: UniqueKey(),
+                        text: snapshot.data!.docs[index]['message'],
+                        color: redColor,
+                        isSender: sentBy == me ? true : false,
+                        tail: true,
+                        textStyle: GoogleFonts.poppins(
+                          color: whiteColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
                         ),
-                ),
+                      )
+                    : BubbleNormal(
+                        bubbleRadius: 10,
+                        key: UniqueKey(),
+                        text: snapshot.data!.docs[index]['message'],
+                        color: sentBy == me ? blueColor : greyColor,
+                        isSender: sentBy == me ? true : false,
+                        tail: true,
+                        textStyle: sentBy == me
+                            ? GoogleFonts.poppins(
+                                color: whiteColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              )
+                            : GoogleFonts.poppins(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                      ),
                 Align(
                   alignment: sentBy == me
                       ? Alignment.centerRight
@@ -139,8 +155,8 @@ class _ChatStreamState extends State<ChatStream> {
                                 time,
                                 style: GoogleFonts.poppins(
                                   color: blackColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(
@@ -150,7 +166,7 @@ class _ChatStreamState extends State<ChatStream> {
                                 date,
                                 style: GoogleFonts.poppins(
                                   color: fadedColor,
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -163,7 +179,7 @@ class _ChatStreamState extends State<ChatStream> {
                                 date,
                                 style: GoogleFonts.poppins(
                                   color: fadedColor,
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -174,8 +190,8 @@ class _ChatStreamState extends State<ChatStream> {
                                 time,
                                 style: GoogleFonts.poppins(
                                   color: blackColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],

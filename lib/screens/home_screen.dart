@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/auth/screens/location_screen.dart';
 import 'package:buy_sell_app/screens/search_field_screen.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:buy_sell_app/widgets/custom_product_card.dart';
@@ -7,18 +8,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
-// import 'package:geocode/geocode.dart';
 import 'package:location/location.dart';
-import 'package:page_transition/page_transition.dart';
 
+import '../widgets/custom_button.dart';
 import 'categories/sub_categories_list_screen.dart';
 import '../services/firebase_services.dart';
 import 'categories/categories_list_screen.dart';
@@ -36,147 +33,202 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  CarouselController controller = CarouselController();
+  final CarouselController controller = CarouselController();
   final FirebaseServices _services = FirebaseServices();
+  final PageController _pageController = PageController();
   User? user = FirebaseAuth.instance.currentUser;
-  String defaultAddress = 'India';
+  String area = '';
+  String city = '';
+  String state = '';
+  String country = '';
+  bool isLocationEmpty = false;
 
-  //TODO: video 5 and 9 for location
-  // Future<String> getAddress() async {
-  //   GeoCode geoCode = GeoCode();
-  //   try {
-  //     Address getAddress = await geoCode.reverseGeocoding(
-  //       latitude: widget.locationData!.latitude as double,
-  //       longitude: widget.locationData!.longitude as double,
-  //     );
-  //     setState(() {
-  //       defaultAddress = getAddress.toString();
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return defaultAddress;
-  // }
+  getAddressToUI() async {
+    await _services.getCurrentUserData().then((value) {
+      if (mounted) {
+        setState(() {
+          area = value['location']['area'];
+          city = value['location']['city'];
+          state = value['location']['state'];
+          country = value['location']['country'];
+        });
+      }
+    });
+  }
 
-  @override
-  void dispose() {
-    super.dispose();
+  getEmptyLocationUI() async {
+    setState(() {
+      isLocationEmpty = true;
+    });
   }
 
   @override
   void initState() {
-    //TODO: getAddress();
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] != null) {
+        getAddressToUI();
+      } else {
+        getEmptyLocationUI();
+      }
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      backgroundColor: whiteColor,
       body: SafeArea(
         child: NestedScrollView(
           floatHeaderSlivers: true,
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverAppBar(
-              floating: true,
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(SearchFieldScreen.routeName);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Icon(
-                      Iconsax.search_normal_14,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-              automaticallyImplyLeading: false,
-              elevation: 0.2,
-              backgroundColor: Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
-              title: Text(
-                'BestDeal',
-                style: GoogleFonts.poppins(
-                  color: blackColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              centerTitle: true,
-              leading: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Icon(
-                  Iconsax.ghost4,
-                  size: 20,
-                ),
-              ),
-            )
-          ],
-          body: Scrollbar(
-            interactive: true,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              elevation: 0.5,
+              backgroundColor: whiteColor,
+              pinned: true,
+              // floating: true,
+              // snap: true,
+              iconTheme: const IconThemeData(color: blackColor),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  const Icon(
+                    FontAwesomeIcons.twitter,
+                    color: blueColor,
+                    size: 20,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: AutoSizeText(
-                            'Browse Categories',
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 22,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            HapticFeedback.mediumImpact();
-                            Navigator.of(context)
-                                .pushNamed(CategoriesListScreen.routeName);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'See all',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  color: blueColor,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // const Icon(
+                            //   FontAwesomeIcons.locationDot,
+                            //   color: blueColor,
+                            //   size: 20,
+                            // ),
+                            // const SizedBox(
+                            //   width: 3,
+                            // ),
+                            Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.to(() => const LocationScreen(
+                                      isOpenedFromSellButton: false));
+                                },
+                                child: AutoSizeText(
+                                  isLocationEmpty == true
+                                      ? 'Set location'
+                                      : area == ''
+                                          ? city
+                                          : area,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: blackColor,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 2,
-                              ),
-                              const Icon(
-                                Iconsax.arrow_circle_right4,
-                                size: 13,
-                                color: blueColor,
-                              ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(
+                              width: 2,
+                            ),
+                            const Icon(
+                              FontAwesomeIcons.caretDown,
+                              size: 15,
+                              color: blackColor,
+                            ),
+                          ],
                         ),
+                        if (isLocationEmpty == false)
+                          Text(
+                            '$city, $state, $country',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10,
+                              color: fadedColor,
+                            ),
+                          ),
                       ],
                     ),
                   ),
-                  FutureBuilder<QuerySnapshot>(
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Get.toNamed(SearchFieldScreen.routeName);
+                    },
+                    child: const Icon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      color: blackColor,
+                      size: 20,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: AutoSizeText(
+                          'Browse Categories',
+                          maxLines: 1,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.toNamed(CategoriesListScreen.routeName);
+                        },
+                        child: Text(
+                          'See all',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            color: blueColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  child: FutureBuilder<QuerySnapshot>(
                     future: _services.categories
                         .orderBy('sortId', descending: false)
                         .get(),
@@ -187,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Text(
-                              'Some error occurred. Please try again',
+                              'Something has gone wrong. Please try again',
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -209,116 +261,116 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
                       return CarouselSlider.builder(
-                        carouselController: controller,
                         itemCount: 6,
+                        key: UniqueKey(),
+                        options: CarouselOptions(
+                          viewportFraction: 0.9,
+                          pageSnapping: true,
+                          height: MediaQuery.of(context).size.height,
+                          enlargeCenterPage: false,
+                          enableInfiniteScroll: true,
+                          reverse: false,
+                          scrollDirection: Axis.horizontal,
+                          scrollPhysics: const BouncingScrollPhysics(),
+                        ),
                         itemBuilder: (context, index, realIndex) {
                           var doc = snapshot.data!.docs[index];
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
-                              Navigator.of(context).push(
-                                PageTransition(
-                                  child: SubCategoriesListScreen(doc: doc),
-                                  type: PageTransitionType.rightToLeftWithFade,
-                                ),
+                              Get.to(
+                                () => SubCategoriesListScreen(doc: doc),
                               );
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                                 color: greyColor,
                               ),
-                              width: MediaQuery.of(context).size.width,
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 10),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: CachedNetworkImage(
-                                      imageUrl: doc['image'],
-                                      fit: BoxFit.cover,
-                                      width: MediaQuery.of(context).size.width,
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(
-                                          Iconsax.warning_24,
-                                          size: 30,
-                                          color: redColor,
-                                        );
-                                      },
-                                      placeholder: (context, url) {
-                                        return const Center(
-                                          child: SpinKitFadingCube(
-                                            color: lightBlackColor,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: CachedNetworkImage(
+                                        imageUrl: doc['image'],
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        errorWidget: (context, url, error) {
+                                          return const Icon(
+                                            FontAwesomeIcons.circleExclamation,
                                             size: 30,
-                                            duration:
-                                                Duration(milliseconds: 1000),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      doc['catName'],
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 35,
-                                        color: Colors.white,
-                                        shadows: <Shadow>[
-                                          const Shadow(
-                                            offset: Offset(0, 2),
-                                            blurRadius: 10.0,
-                                            color: lightBlackColor,
-                                          ),
-                                        ],
+                                            color: redColor,
+                                          );
+                                        },
+                                        placeholder: (context, url) {
+                                          return const Center(
+                                            child: SpinKitFadingCube(
+                                              color: lightBlackColor,
+                                              size: 30,
+                                              duration:
+                                                  Duration(milliseconds: 1000),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        doc['catName'],
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 35,
+                                          color: whiteColor,
+                                          shadows: <Shadow>[
+                                            const Shadow(
+                                              offset: Offset(0, 2),
+                                              blurRadius: 10.0,
+                                              color: lightBlackColor,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
                         },
-                        options: CarouselOptions(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          viewportFraction: 0.9,
-                          pageSnapping: true,
-                          enlargeCenterPage: false,
-                          autoPlayInterval: const Duration(seconds: 4),
-                          enableInfiniteScroll: true,
-                          scrollDirection: Axis.horizontal,
-                          scrollPhysics: const BouncingScrollPhysics(),
-                          autoPlay: false,
-                          pauseAutoPlayOnManualNavigate: true,
-                          pauseAutoPlayOnTouch: true,
-                        ),
                       );
                     },
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: AutoSizeText(
-                      'Latest Products',
-                      maxLines: 1,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22,
-                      ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: AutoSizeText(
+                    'Latest Products',
+                    maxLines: 1,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22,
                     ),
                   ),
-                  const HomeScreenProductsList(),
-                ],
-              ),
+                ),
+                HomeScreenProductsList(
+                  city: city,
+                  isLocationEmpty: isLocationEmpty,
+                ),
+              ],
             ),
           ),
         ),
@@ -328,7 +380,13 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeScreenProductsList extends StatefulWidget {
-  const HomeScreenProductsList({super.key});
+  final String city;
+  final bool isLocationEmpty;
+  const HomeScreenProductsList({
+    super.key,
+    required this.city,
+    required this.isLocationEmpty,
+  });
 
   @override
   State<HomeScreenProductsList> createState() => _HomeScreenProductsListState();
@@ -339,18 +397,21 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return FirestoreQueryBuilder(
-      query: _services.listings.orderBy(
-        'postedAt',
-        descending: true,
-      ),
+      query: widget.isLocationEmpty
+          ? _services.listings
+              .orderBy(
+                'postedAt',
+                descending: true,
+              )
+              .where('isActive', isEqualTo: true)
+          : _services.listings
+              .orderBy(
+                'postedAt',
+                descending: true,
+              )
+              .where('isActive', isEqualTo: true)
+              .where('location.city', isEqualTo: widget.city),
       pageSize: 6,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
@@ -369,7 +430,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -385,9 +446,9 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(
-                    Iconsax.heart_slash4,
+                    FontAwesomeIcons.heartCrack,
                     size: 60,
-                    color: redColor,
+                    color: pinkColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -405,24 +466,26 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
             ),
           );
         } else {
-          return MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                height: 10,
+              );
+            },
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
             padding: const EdgeInsets.only(
-              left: 10,
-              top: 0,
-              right: 10,
+              left: 15,
+              top: 10,
+              right: 15,
               bottom: 30,
             ),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
             itemCount: snapshot.docs.length,
             itemBuilder: (context, index) {
               var data = snapshot.docs[index];
               var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
               var sellerDetails = _services.getUserData(data['sellerUid']);
-              final hasEndReached = snapshot.hasMore &&
+              final hasMoreReached = snapshot.hasMore &&
                   index + 1 == snapshot.docs.length &&
                   !snapshot.isFetchingMore;
               return Column(
@@ -431,41 +494,22 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
                   CustomProductCard(
                     data: data,
                     sellerDetails: sellerDetails,
-                    priceFormat: priceFormat,
                     time: time,
                   ),
-                  if (hasEndReached)
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        fixedSize: const Size.fromHeight(70),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
+                  if (hasMoreReached)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  if (hasMoreReached)
+                    CustomButton(
+                      text: 'Load more',
                       onPressed: () {
                         snapshot.fetchMore();
                       },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Load more',
-                            style: GoogleFonts.poppins(
-                              color: blueColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Icon(
-                            Iconsax.arrow_square_down4,
-                            size: 15,
-                            color: blueColor,
-                          ),
-                        ],
-                      ),
+                      icon: FontAwesomeIcons.chevronDown,
+                      borderColor: blackColor,
+                      bgColor: blackColor,
+                      textIconColor: whiteColor,
                     ),
                 ],
               );

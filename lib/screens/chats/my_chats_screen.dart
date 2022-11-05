@@ -5,9 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../../utils/utils.dart';
 
@@ -28,31 +27,31 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
       initialIndex: 0,
       length: 3,
       child: Scaffold(
+        backgroundColor: whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          elevation: 0.2,
-          iconTheme: const IconThemeData(color: Colors.black),
+          backgroundColor: whiteColor,
+          elevation: 0.5,
+          iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
           title: Text(
             'My Chats',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: blackColor,
               fontSize: 15,
             ),
           ),
           bottom: TabBar(
-            indicatorColor: blueColor,
-            indicatorWeight: 4,
-            isScrollable: false,
+            indicatorColor: blackColor,
+            indicatorWeight: 3,
             tabs: [
               Tab(
                 child: Text(
                   'All',
                   style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     fontSize: 15,
-                    color: blueColor,
+                    color: blackColor,
                   ),
                 ),
               ),
@@ -60,9 +59,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 child: Text(
                   'Buying',
                   style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     fontSize: 15,
-                    color: blueColor,
+                    color: blackColor,
                   ),
                 ),
               ),
@@ -70,9 +69,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 child: Text(
                   'Selling',
                   style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                     fontSize: 15,
-                    color: blueColor,
+                    color: blackColor,
                   ),
                 ),
               ),
@@ -80,7 +79,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           ),
         ),
         body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: _services.chats
@@ -95,7 +94,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        'Some error occurred. Please try again',
+                        'Something has gone wrong. Please try again',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -133,16 +132,22 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 }
-                return ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data() as Map<String, dynamic>;
-                    return ChatCard(
-                      chatData: data,
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
                     );
-                  }).toList(),
+                  },
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
+                  physics: const BouncingScrollPhysics(),
                 );
               },
             ),
@@ -160,7 +165,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        'Some error occurred. Please try again',
+                        'Something has gone wrong. Please try again',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -198,16 +203,22 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 }
-                return ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data() as Map<String, dynamic>;
-                    return ChatCard(
-                      chatData: data,
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
                     );
-                  }).toList(),
+                  },
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
                 );
               },
             ),
@@ -225,7 +236,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        'Some error occurred. Please try again',
+                        'Something has gone wrong. Please try again',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
@@ -263,16 +274,22 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 }
-                return ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data() as Map<String, dynamic>;
-                    return ChatCard(
-                      chatData: data,
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
                     );
-                  }).toList(),
+                  },
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
                 );
               },
             ),
@@ -296,9 +313,14 @@ class ChatCard extends StatefulWidget {
 
 class _ChatCardState extends State<ChatCard> {
   final FirebaseServices _services = FirebaseServices();
-  DocumentSnapshot? doc;
-  DocumentSnapshot? sellerDetails;
-  DocumentSnapshot? buyerDetails;
+  String prodId = '';
+  String prodTitle = '';
+  String buyerName = '';
+  String buyerProfileImage = '';
+  String sellerName = '';
+  String sellerUid = '';
+  String sellerProfileImage = '';
+  bool isActive = false;
 
   @override
   void initState() {
@@ -314,7 +336,9 @@ class _ChatCardState extends State<ChatCard> {
         .then((value) {
       if (mounted) {
         setState(() {
-          doc = value;
+          prodId = value.id;
+          prodTitle = value['title'];
+          isActive = value['isActive'];
         });
       }
     });
@@ -324,7 +348,11 @@ class _ChatCardState extends State<ChatCard> {
     await _services.getUserData(widget.chatData['users'][0]).then((value) {
       if (mounted) {
         setState(() {
-          sellerDetails = value;
+          value['profileImage'] == null
+              ? sellerProfileImage = ''
+              : sellerProfileImage = value['profileImage'];
+          sellerUid = value['uid'];
+          value['name'] == null ? sellerName = '' : sellerName = value['name'];
         });
       }
     });
@@ -334,7 +362,10 @@ class _ChatCardState extends State<ChatCard> {
     await _services.getUserData(widget.chatData['users'][1]).then((value) {
       if (mounted) {
         setState(() {
-          buyerDetails = value;
+          value['name'] == null ? buyerName = '' : buyerName = value['name'];
+          value['profileImage'] == null
+              ? buyerProfileImage = ''
+              : buyerProfileImage = value['profileImage'];
         });
       }
     });
@@ -342,221 +373,212 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   Widget build(BuildContext context) {
-    return doc == null
-        ? Container()
-        : Column(
+    return Opacity(
+      opacity: isActive == false ? 0.5 : 1,
+      child: InkWell(
+        onTap: () {
+          Get.to(() => ConversationScreen(
+                chatRoomId: widget.chatData['chatRoomId'],
+                prodId: prodId,
+                sellerId: sellerUid,
+              ));
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 15,
+            top: 15,
+            right: 15,
+            bottom: 5,
+          ),
+          child: Column(
             children: [
-              InkWell(
-                onTap: () {
-                  _services.chats.doc(widget.chatData['chatRoomId']).update({
-                    'read': true,
-                  });
-                  Navigator.of(context).push(
-                    PageTransition(
-                      child: ConversationScreen(
-                        chatRoomId: widget.chatData['chatRoomId'],
-                        prodId: doc!.id,
-                        sellerId: doc!['sellerUid'],
-                      ),
-                      type: PageTransitionType.rightToLeftWithFade,
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    top: 15,
-                    right: 15,
-                    bottom: 5,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: widget.chatData['users'][0] != _services.user!.uid
+                        ? sellerProfileImage == ''
+                            ? Container(
+                                width: MediaQuery.of(context).size.width * 0.12,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: blueColor,
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.userTie,
+                                  color: whiteColor,
+                                  size: 20,
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: sellerProfileImage,
+                                width: MediaQuery.of(context).size.width * 0.12,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    FontAwesomeIcons.circleExclamation,
+                                    size: 20,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Icon(
+                                    FontAwesomeIcons.solidImage,
+                                    size: 20,
+                                    color: lightBlackColor,
+                                  );
+                                },
+                              )
+                        : buyerProfileImage == ''
+                            ? Container(
+                                width: MediaQuery.of(context).size.width * 0.12,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: blueColor,
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.userTie,
+                                  color: whiteColor,
+                                  size: 20,
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: buyerProfileImage,
+                                width: MediaQuery.of(context).size.width * 0.12,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    FontAwesomeIcons.circleExclamation,
+                                    size: 20,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Icon(
+                                    FontAwesomeIcons.solidImage,
+                                    size: 20,
+                                    color: lightBlackColor,
+                                  );
+                                },
+                              ),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: widget.chatData['users'][0] !=
-                                _services.user!.uid
-                            ? sellerDetails!['profileImage'] == null
-                                ? Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    height: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: blueColor,
-                                    ),
-                                    child: const Icon(
-                                      Iconsax.security_user4,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl: sellerDetails!['profileImage'],
-                                    width: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    height: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return const Icon(
-                                        Iconsax.warning_24,
-                                        size: 20,
-                                        color: redColor,
-                                      );
-                                    },
-                                    placeholder: (context, url) {
-                                      return const Icon(
-                                        Iconsax.image4,
-                                        size: 20,
-                                        color: lightBlackColor,
-                                      );
-                                    },
-                                  )
-                            : buyerDetails!['profileImage'] == null
-                                ? Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    height: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: blueColor,
-                                    ),
-                                    child: const Icon(
-                                      Iconsax.security_user4,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl:
-                                        buyerDetails!['profileImage'] ?? '',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    height: MediaQuery.of(context).size.width *
-                                        0.12,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return const Icon(
-                                        Iconsax.warning_24,
-                                        size: 20,
-                                        color: redColor,
-                                      );
-                                    },
-                                    placeholder: (context, url) {
-                                      return const Icon(
-                                        Iconsax.image4,
-                                        size: 20,
-                                        color: lightBlackColor,
-                                      );
-                                    },
-                                  ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            widget.chatData['users'][0] == _services.user!.uid
-                                ? Text(
-                                    buyerDetails!['name'] ??
-                                        'Name not disclosed',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  )
-                                : Text(
-                                    sellerDetails!['name'] ??
-                                        'Name not disclosed',
-                                    maxLines: 13,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                            if (widget.chatData['lastChat'] != null)
-                              Text(
-                                widget.chatData['lastChat'],
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        widget.chatData['users'][0] == _services.user!.uid
+                            ? Text(
+                                buyerName == '' ? 'BestDeal User' : buyerName,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: widget.chatData['read'] == false
-                                    ? GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        color: blueColor,
-                                        fontSize: 12,
-                                      )
-                                    : GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w500,
-                                        color: blackColor,
-                                        fontSize: 12,
-                                      ),
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              )
+                            : Text(
+                                sellerName == '' ? 'BestDeal User' : sellerName,
+                                maxLines: 13,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
                               ),
-                            Text(
-                              doc!['title'],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w400,
-                                color: fadedColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                            widget.chatData['users'][0] == _services.user!.uid
-                                ? Chip(
-                                    label: Text(
-                                      'Buyer',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        color: redColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    backgroundColor: greyColor,
+                        if (widget.chatData['lastChat'] != null)
+                          Text(
+                            widget.chatData['lastChat'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: widget.chatData['read'] == false
+                                ? GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: blueColor,
+                                    fontSize: 12,
                                   )
-                                : Chip(
-                                    label: Text(
-                                      'Seller',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        color: blueColor,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    backgroundColor: greyColor,
+                                : GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                    fontSize: 12,
                                   ),
-                          ],
+                          ),
+                        Text(
+                          prodTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            color: fadedColor,
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                    ],
+                        widget.chatData['users'][0] == _services.user!.uid
+                            ? Chip(
+                                label: Text(
+                                  'Buyer',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: redColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                backgroundColor: greyColor,
+                              )
+                            : Chip(
+                                label: Text(
+                                  'Seller',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: blueColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                backgroundColor: greyColor,
+                              ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (isActive == false)
+                Text(
+                  'Item is currently unavailable. Chat is disabled.',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: redColor,
+                    fontSize: 14,
                   ),
                 ),
-              ),
-              const Divider(
-                height: 0,
-                color: fadedColor,
-                indent: 15,
-                endIndent: 15,
-              ),
             ],
-          );
+          ),
+        ),
+      ),
+    );
   }
 }

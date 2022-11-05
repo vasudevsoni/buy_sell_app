@@ -27,7 +27,7 @@ class GoogleAuthentication {
         if (err.code == 'account-exists-with-different-credential') {
           showSnackBar(
             context: context,
-            content: 'Account exists with different sign in method.',
+            content: 'Account already exists with a different sign in method.',
             color: redColor,
           );
         } else if (err.code == 'invalid-credentials') {
@@ -40,7 +40,7 @@ class GoogleAuthentication {
       } catch (e) {
         showSnackBar(
           context: context,
-          content: 'Some error occurred. Please try again.',
+          content: 'Something has gone wrong. Please try again.',
           color: redColor,
         );
       }

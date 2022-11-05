@@ -3,8 +3,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -33,15 +33,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           .then((value) {
         showSnackBar(
           context: context,
-          content: 'Link to reset password sent on your email',
+          content: 'Link to reset password sent on your email.',
           color: redColor,
         );
       }).then((value) {
-        Navigator.pop(context);
+        Get.back();
       }).catchError((onError) {
         showSnackBar(
           context: context,
-          content: 'Some error occurred. Please try again',
+          content: 'Something has gone wrong. Please try again.',
           color: redColor,
         );
       });
@@ -60,15 +60,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Forgot password',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -92,18 +93,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   final bool isValid =
                       EmailValidator.validate(emailController.text);
                   if (value == null || value.isEmpty) {
-                    showSnackBar(
-                      context: context,
-                      content: 'Enter email address',
-                      color: redColor,
-                    );
+                    return 'Please enter your email address';
                   }
-                  if (value!.isNotEmpty && isValid == false) {
-                    showSnackBar(
-                      context: context,
-                      content: 'Please enter a valid email address',
-                      color: redColor,
-                    );
+                  if (value.isNotEmpty && isValid == false) {
+                    return 'Please enter a valid email address';
                   }
                   return null;
                 },
@@ -112,7 +105,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 15,
               ),
               Text(
-                'We\'ll send a link to reset your password on this email.',
+                'We\'ll send you a link to reset your password on this email.',
                 style: GoogleFonts.poppins(
                   color: lightBlackColor,
                   fontSize: 13,
@@ -123,18 +116,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ? CustomButton(
                       text: 'Loading...',
                       icon: FontAwesomeIcons.spinner,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
-                      textIconColor: Colors.white,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
                       onPressed: () {},
                       isDisabled: isLoading,
                     )
                   : CustomButton(
                       text: 'Send',
-                      icon: Iconsax.arrow_circle_right4,
+                      icon: FontAwesomeIcons.arrowRight,
                       bgColor: blackColor,
                       borderColor: blackColor,
-                      textIconColor: Colors.white,
+                      textIconColor: whiteColor,
                       onPressed: () {
                         _validateEmail();
                       },

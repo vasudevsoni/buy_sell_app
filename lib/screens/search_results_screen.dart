@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 
 import '../services/firebase_services.dart';
 import '../utils/utils.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/custom_product_card.dart';
 
 class SearchResultsScreen extends StatefulWidget {
@@ -24,27 +23,42 @@ class SearchResultsScreen extends StatefulWidget {
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   final FirebaseServices _services = FirebaseServices();
-  var priceFormat = NumberFormat.currency(
-    locale: 'HI',
-    decimalDigits: 0,
-    symbol: '₹ ',
-    name: '',
-  );
+  bool isLocationEmpty = false;
+  String city = '';
+
+  @override
+  void initState() {
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] == null) {
+        setState(() {
+          isLocationEmpty = true;
+        });
+      } else {
+        setState(() {
+          city = value['location']['city'];
+          isLocationEmpty = false;
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => Navigator.pop(context),
+          onTap: () => Get.back(),
           child: Text(
             widget.query,
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: blackColor,
               fontSize: 15,
             ),
           ),
@@ -57,9 +71,16 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           child: Column(
             children: [
               FirestoreQueryBuilder(
-                query: _services.listings
-                    .where('searchQueries', arrayContains: widget.query)
-                    .orderBy('postedAt', descending: true),
+                query: isLocationEmpty
+                    ? _services.listings
+                        .where('searchQueries', arrayContains: widget.query)
+                        .where('isActive', isEqualTo: true)
+                        .orderBy('postedAt', descending: true)
+                    : _services.listings
+                        .where('searchQueries', arrayContains: widget.query)
+                        .where('isActive', isEqualTo: true)
+                        .orderBy('postedAt', descending: true)
+                        .where('location.city', isEqualTo: city),
                 pageSize: 6,
                 builder: (context, snapshot, child) {
                   if (snapshot.isFetching) {
@@ -78,7 +99,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          'Some error occurred. Please try again',
+                          'Something has gone wrong. Please try again',
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w500,
                             fontSize: 15,
@@ -94,15 +115,15 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              Iconsax.heart_slash4,
+                              FontAwesomeIcons.heartCrack,
                               size: 60,
-                              color: redColor,
+                              color: pinkColor,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
                             Text(
-                              'No products here',
+                              'No results found',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
@@ -114,74 +135,80 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       ),
                     );
                   } else {
-                    return MasonryGridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 0,
-                      crossAxisSpacing: 0,
-                      padding: const EdgeInsets.all(15),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: snapshot.docs.length,
-                      itemBuilder: (context, index) {
-                        var data = snapshot.docs[index];
-                        var time = DateTime.fromMillisecondsSinceEpoch(
-                            data['postedAt']);
-                        var sellerDetails =
-                            _services.getUserData(data['sellerUid']);
-                        final hasEndReached = snapshot.hasMore &&
-                            index + 1 == snapshot.docs.length &&
-                            !snapshot.isFetchingMore;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            CustomProductCard(
-                              data: data,
-                              sellerDetails: sellerDetails,
-                              priceFormat: priceFormat,
-                              time: time,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 15,
+                          ),
+                          child: Text(
+                            isLocationEmpty ? 'Results' : 'Results in $city',
+                            maxLines: 1,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
                             ),
-                            if (hasEndReached)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    fixedSize: const Size.fromHeight(70),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    snapshot.fetchMore();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Load more',
-                                        style: GoogleFonts.poppins(
-                                          color: blueColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      const Icon(
-                                        Iconsax.arrow_square_down4,
-                                        size: 15,
-                                        color: blueColor,
-                                      ),
-                                    ],
-                                  ),
+                          ),
+                        ),
+                        ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                          padding: const EdgeInsets.only(
+                            left: 15,
+                            top: 10,
+                            right: 15,
+                            bottom: 30,
+                          ),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.docs.length,
+                          itemBuilder: (context, index) {
+                            var data = snapshot.docs[index];
+                            var time = DateTime.fromMillisecondsSinceEpoch(
+                                data['postedAt']);
+                            var sellerDetails =
+                                _services.getUserData(data['sellerUid']);
+                            final hasMoreReached = snapshot.hasMore &&
+                                index + 1 == snapshot.docs.length &&
+                                !snapshot.isFetchingMore;
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                CustomProductCard(
+                                  data: data,
+                                  sellerDetails: sellerDetails,
+                                  time: time,
                                 ),
-                              ),
-                          ],
-                        );
-                      },
-                      physics: const NeverScrollableScrollPhysics(),
+                                if (hasMoreReached)
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                if (hasMoreReached)
+                                  CustomButton(
+                                    text: 'Load more',
+                                    onPressed: () {
+                                      snapshot.fetchMore();
+                                    },
+                                    icon: FontAwesomeIcons.chevronDown,
+                                    borderColor: blackColor,
+                                    bgColor: blackColor,
+                                    textIconColor: whiteColor,
+                                  ),
+                              ],
+                            );
+                          },
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                      ],
                     );
                   }
                 },

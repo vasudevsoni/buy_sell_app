@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'utils/utils.dart';
+
 class ErrorScreen extends StatelessWidget {
   final String error;
   const ErrorScreen({
@@ -10,6 +12,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       body: Center(
         child: Text(error),
       ),

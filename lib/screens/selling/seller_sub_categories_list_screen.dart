@@ -1,17 +1,16 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_list_tile_no_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../services/firebase_services.dart';
-import 'ad_post_screen.dart';
-import 'vehicle_ad_post_screen.dart';
+import 'common/ad_post_screen.dart';
+import 'vehicles/vehicle_ad_post_screen.dart';
 
 class SellerSubCategoriesListScreen extends StatelessWidget {
   static const String routeName = '/seller-sub-categories-list-screen';
@@ -27,14 +26,14 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Select a sub category in ${doc['catName']}',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -68,31 +67,26 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 itemCount: data.length,
-                padding: const EdgeInsets.all(15),
                 itemBuilder: (context, index) {
                   return CustomListTileNoImage(
                     text: data[index],
-                    icon: Iconsax.arrow_circle_right4,
+                    icon: FontAwesomeIcons.chevronRight,
                     onTap: () {
                       if (doc['catName'] == 'Vehicles') {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          PageTransition(
-                            child: VehicleAdPostScreen(subCatName: data[index]),
-                            type: PageTransitionType.bottomToTop,
-                          ),
-                          (Route<dynamic> route) => false,
+                        Get.offAll(
+                          () => VehicleAdPostScreen(subCatName: data[index]),
+                          transition: Transition.downToUp,
                         );
                       } else {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          PageTransition(
-                            child: AdPostScreen(
-                              catName: doc['catName'],
-                              subCatName: data[index],
-                            ),
-                            type: PageTransitionType.bottomToTop,
+                        Get.offAll(
+                          () => AdPostScreen(
+                            catName: doc['catName'],
+                            subCatName: data[index],
                           ),
-                          (Route<dynamic> route) => false,
+                          transition: Transition.downToUp,
                         );
                       }
                     },

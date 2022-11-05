@@ -1,20 +1,22 @@
+import 'package:animations/animations.dart';
 import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
+
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../../provider/seller_form_provider.dart';
-import '../../utils/utils.dart';
-import '../../widgets/custom_button_without_icon.dart';
-import '../../widgets/custom_text_field.dart';
-import '../../services/firebase_services.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/image_picker_widget.dart';
-import '../main_screen.dart';
+import '../../../provider/seller_form_provider.dart';
+import '../../../utils/utils.dart';
+import '../../../widgets/custom_button_without_icon.dart';
+import '../../../widgets/custom_text_field.dart';
+import '../../../services/firebase_services.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/image_picker_widget.dart';
+import '../../main_screen.dart';
 
 class AdPostScreen extends StatefulWidget {
   final String catName;
@@ -31,20 +33,16 @@ class AdPostScreen extends StatefulWidget {
 
 class _AdPostScreenState extends State<AdPostScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  TextEditingController subCatNameController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-
+  TextEditingController locationController = TextEditingController();
   final FirebaseServices _services = FirebaseServices();
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    descriptionController.dispose();
-    priceController.dispose();
-    super.dispose();
-  }
+  String area = '';
+  String city = '';
+  String state = '';
+  String country = '';
 
   var priceFormat = NumberFormat.currency(
     locale: 'HI',
@@ -54,12 +52,43 @@ class _AdPostScreenState extends State<AdPostScreen> {
   );
   bool isLoading = false;
 
+  getUserLocation() async {
+    await _services.getCurrentUserData().then((value) async {
+      setState(() {
+        locationController.text =
+            '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+        area = value['location']['area'];
+        city = value['location']['city'];
+        state = value['location']['state'];
+        country = value['location']['country'];
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {
+        subCatNameController.text = '${widget.catName} > ${widget.subCatName}';
+      });
+      getUserLocation();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subCatNameController.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SellerFormProvider>(context);
-
-    TextEditingController subCatNameController =
-        TextEditingController(text: '${widget.catName} > ${widget.subCatName}');
 
     publishProductToFirebase(SellerFormProvider provider, String uid) async {
       return await _services.listings
@@ -75,7 +104,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
       }).catchError((err) {
         showSnackBar(
           context: context,
-          content: 'Some error occurred. Please try again.',
+          content: 'Something has gone wrong. Please try again.',
           color: redColor,
         );
         setState(() {
@@ -90,9 +119,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
             descriptionController.text.isNotEmpty &&
             priceController.text.isNotEmpty &&
             provider.imagePaths.isNotEmpty) {
-          showDialog(
+          showModal(
+            configuration: const FadeScaleTransitionConfiguration(),
             context: context,
-            barrierColor: Colors.black87,
             builder: (context) {
               return AlertDialog(
                 title: Text(
@@ -107,7 +136,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   padding: const EdgeInsets.all(15),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     color: greyColor,
                   ),
@@ -121,103 +150,113 @@ class _AdPostScreenState extends State<AdPostScreen> {
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                height: MediaQuery.of(context).size.width * 0.2,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.file(
-                                    provider.imagePaths[0],
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(
-                                        Iconsax.warning_24,
-                                        size: 20,
-                                        color: redColor,
-                                      );
-                                    },
+                              Stack(
+                                children: [
+                                  Opacity(
+                                    opacity: 0.7,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              FontAwesomeIcons
+                                                  .circleExclamation,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                '+${(provider.imagesCount - 1).toString()} more',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: fadedColor,
-                                ),
+                                  if (provider.imagePaths.length >= 2)
+                                    Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Center(
+                                        child: Text(
+                                          '+${(provider.imagesCount - 1).toString()}',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 30,
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.43,
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  titleController.text,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    titleController.text,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    ),
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 3,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  priceFormat.format(
-                                    int.parse(priceController.text),
+                                  Text(
+                                    priceFormat.format(
+                                      int.parse(priceController.text),
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: blueColor,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    color: blueColor,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Divider(
-                            height: 20,
-                            color: fadedColor,
-                            thickness: 1,
-                          ),
-                          Text(
-                            'Description - ${descriptionController.text}',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              color: blackColor,
-                              fontSize: 14,
-                            ),
-                            maxLines: 3,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      const Divider(
+                        height: 20,
+                        color: lightBlackColor,
+                      ),
+                      Text(
+                        'Description - ${descriptionController.text}',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          color: blackColor,
+                          fontSize: 14,
+                        ),
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
                 actionsPadding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 titlePadding: const EdgeInsets.only(
                   left: 15,
@@ -238,7 +277,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      Navigator.pop(context);
+                      Get.back();
                       List<String> urls =
                           await provider.uploadFiles(provider.imagePaths);
                       var uid = DateTime.now().millisecondsSinceEpoch;
@@ -266,16 +305,24 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         'images': urls,
                         'postedAt': uid,
                         'favorites': [],
+                        'views': [],
                         'searchQueries': setSearchParams(
                           titleController.text.toLowerCase(),
                           titleController.text.length,
                         ),
+                        'location': {
+                          'area': area,
+                          'city': city,
+                          'state': state,
+                          'country': country,
+                        },
+                        'isActive': false,
                       });
                       publishProductToFirebase(provider, uid.toString());
                     },
                     bgColor: blueColor,
                     borderColor: blueColor,
-                    textIconColor: Colors.white,
+                    textIconColor: whiteColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -283,11 +330,11 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   CustomButtonWithoutIcon(
                     text: 'Go Back & Check',
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
-                    bgColor: Colors.white,
-                    borderColor: blueColor,
-                    textIconColor: blueColor,
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
                   ),
                 ],
               );
@@ -297,27 +344,16 @@ class _AdPostScreenState extends State<AdPostScreen> {
         if (provider.imagePaths.isEmpty) {
           showSnackBar(
             context: context,
-            content: 'Please upload some images of the product',
-            color: redColor,
-          );
-        } else {
-          showSnackBar(
-            context: context,
-            content: 'Please fill all the fields marked with *',
+            content: 'Please upload some images of the product.',
             color: redColor,
           );
         }
-      } else {
-        showSnackBar(
-          context: context,
-          content: 'Please fill all the fields marked with *',
-          color: redColor,
-        );
       }
     }
 
     resetAll() {
-      showDialog(
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -333,7 +369,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 color: greyColor,
               ),
@@ -347,7 +383,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(5),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -372,11 +408,11 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     provider.imagePaths.clear();
                     provider.clearImagesCount();
                   });
-                  Navigator.pop(context);
+                  Get.back();
                 },
                 bgColor: redColor,
                 borderColor: redColor,
-                textIconColor: Colors.white,
+                textIconColor: whiteColor,
               ),
               const SizedBox(
                 height: 10,
@@ -384,10 +420,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
               CustomButtonWithoutIcon(
                 text: 'No, Cancel',
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
-                bgColor: Colors.white,
-                borderColor: blackColor,
+                bgColor: whiteColor,
+                borderColor: greyColor,
                 textIconColor: blackColor,
               ),
             ],
@@ -397,7 +433,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
     }
 
     closePageAndGoToHome() {
-      showDialog(
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -413,12 +450,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 color: greyColor,
               ),
               child: Text(
-                'Are you sure you want to cancel your listing creation? All details will be lost.',
+                'Are you sure you want to leave? Your progress will not be saved.',
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -427,7 +464,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(5),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -443,7 +480,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
             ),
             actions: [
               CustomButtonWithoutIcon(
-                text: 'Yes, Cancel',
+                text: 'Yes, Leave',
                 onPressed: () {
                   setState(() {
                     descriptionController.text = '';
@@ -451,31 +488,24 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     provider.imagePaths.clear();
                     provider.clearImagesCount();
                   });
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    MainScreen.routeName,
-                    (route) => false,
-                  );
-                  showSnackBar(
-                    context: context,
-                    content: 'Listing creation cancelled',
-                    color: redColor,
-                  );
+                  Get.offAll(() => const MainScreen(
+                        selectedIndex: 0,
+                      ));
                 },
                 bgColor: redColor,
                 borderColor: redColor,
-                textIconColor: Colors.white,
+                textIconColor: whiteColor,
               ),
               const SizedBox(
                 height: 10,
               ),
               CustomButtonWithoutIcon(
-                text: 'No, Continue',
+                text: 'No, Stay here',
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
-                bgColor: Colors.white,
-                borderColor: blackColor,
+                bgColor: whiteColor,
+                borderColor: greyColor,
                 textIconColor: blackColor,
               ),
             ],
@@ -485,18 +515,21 @@ class _AdPostScreenState extends State<AdPostScreen> {
     }
 
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        closePageAndGoToHome();
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0.2,
-          backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
+          elevation: 0.5,
+          backgroundColor: whiteColor,
+          iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(Iconsax.close_circle4),
+            icon: const Icon(FontAwesomeIcons.circleXmark),
           ),
           actions: [
             TextButton(
@@ -504,8 +537,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
               child: Text(
                 'Reset All',
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w700,
-                  color: blueColor,
+                  fontWeight: FontWeight.w500,
+                  color: redColor,
+                  fontSize: 12,
                 ),
               ),
             ),
@@ -513,7 +547,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           title: Text(
             'Create your listing',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: blackColor,
               fontSize: 15,
             ),
           ),
@@ -535,9 +569,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       'Step 1 - Listing Details',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -593,8 +627,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       label: 'Description*',
                       hint:
                           'Briefly describe your product to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                      maxLength: 1000,
-                      maxLines: 3,
+                      maxLength: 3000,
+                      maxLines: 5,
                       showCounterText: true,
                       isEnabled: isLoading ? false : true,
                       textInputAction: TextInputAction.newline,
@@ -648,7 +682,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -656,7 +690,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -664,7 +698,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -677,7 +711,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -685,13 +719,13 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         labelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
@@ -700,7 +734,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         floatingLabelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: lightBlackColor,
                         ),
                       ),
                     ),
@@ -713,12 +747,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     color: blueColor,
                     child: Text(
-                      'Step 2 - Upload Product Images',
+                      'Step 2 - Product Images',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -729,7 +763,53 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     isButtonDisabled: isLoading ? true : false,
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 3 - User Location',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: locationController,
+                      keyboardType: TextInputType.text,
+                      label: 'Location*',
+                      hint: 'Choose your location to list product',
+                      maxLines: 2,
+                      showCounterText: false,
+                      isEnabled: false,
+                      textInputAction: TextInputAction.go,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      'To change your location go to settings.',
+                      style: GoogleFonts.poppins(
+                        color: lightBlackColor,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                 ],
               ),
@@ -737,7 +817,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           ),
         ),
         bottomNavigationBar: Container(
-          color: const Color.fromARGB(255, 244, 241, 241),
+          color: greyColor,
           padding: const EdgeInsets.only(
             left: 15,
             right: 15,
@@ -750,19 +830,19 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: Colors.white,
+                  bgColor: greyColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
                 )
               : CustomButton(
                   text: 'Proceed',
                   onPressed: () {
                     validateForm();
                   },
-                  icon: Iconsax.arrow_circle_right4,
+                  icon: FontAwesomeIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,
-                  textIconColor: Colors.white,
+                  textIconColor: whiteColor,
                 ),
         ),
       ),

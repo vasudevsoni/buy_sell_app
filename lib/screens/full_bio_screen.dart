@@ -13,15 +13,16 @@ class FullBioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Bio',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -30,17 +31,14 @@ class FullBioScreen extends StatelessWidget {
         interactive: true,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Hero(
-            tag: 'full-bio',
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                bio,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  color: blackColor,
-                  fontSize: 18,
-                ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              bio,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                color: blackColor,
+                fontSize: 18,
               ),
             ),
           ),

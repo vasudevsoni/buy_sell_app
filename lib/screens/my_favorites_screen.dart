@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../utils/utils.dart';
 import '../widgets/my_favorites_products_list.dart';
 
 class MyFavoritesScreen extends StatelessWidget {
@@ -10,6 +12,7 @@ class MyFavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       body: SafeArea(
         child: Scrollbar(
           interactive: true,
@@ -24,16 +27,27 @@ class MyFavoritesScreen extends StatelessWidget {
                     right: 15,
                     top: 15,
                   ),
-                  child: Text(
-                    'My Favorites',
-                    maxLines: 1,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 22,
-                    ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'My Favorites',
+                        maxLines: 1,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      const Icon(
+                        FontAwesomeIcons.solidHeart,
+                        color: pinkColor,
+                      ),
+                    ],
                   ),
                 ),
-                MyFavoritesProductsList(),
+                const MyFavoritesProductsList(),
               ],
             ),
           ),

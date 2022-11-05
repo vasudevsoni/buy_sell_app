@@ -1,22 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/screens/main_screen.dart';
+import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:buy_sell_app/widgets/custom_product_card.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:intl/intl.dart';
 
 import '../services/firebase_services.dart';
 import '../utils/utils.dart';
-import 'product_details_screen.dart';
 
 class CategoryProductsScreen extends StatefulWidget {
   final String catName;
@@ -32,59 +25,77 @@ class CategoryProductsScreen extends StatefulWidget {
 }
 
 class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
+  final FirebaseServices _services = FirebaseServices();
+  bool isLocationEmpty = false;
+  String city = '';
+
+  @override
+  void initState() {
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] == null) {
+        setState(() {
+          isLocationEmpty = true;
+        });
+      } else {
+        setState(() {
+          city = value['location']['city'];
+          isLocationEmpty = false;
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
+        centerTitle: true,
+        title: Text(
+          '${widget.catName} > ${widget.subCatName}',
+          maxLines: 1,
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.poppins(
+            color: blackColor,
+            fontSize: 15,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            SliverAppBar(
-              floating: true,
-              elevation: 0.2,
-              backgroundColor: Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
-              centerTitle: true,
-              title: Text(
-                '${widget.catName} > ${widget.subCatName}',
-                maxLines: 1,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 15,
+        child: Scrollbar(
+          interactive: true,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                    top: 15,
+                  ),
+                  child: Text(
+                    isLocationEmpty ? 'Results' : 'Results in $city',
+                    maxLines: 1,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22,
+                    ),
+                  ),
                 ),
-              ),
-            )
-          ],
-          body: Scrollbar(
-            interactive: true,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                      top: 15,
-                    ),
-                    child: Text(
-                      'Results',
-                      maxLines: 1,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                  CategoryScreenProductsList(
-                    catName: widget.catName,
-                    subCatName: widget.subCatName,
-                  ),
-                ],
-              ),
+                CategoryScreenProductsList(
+                  catName: widget.catName,
+                  subCatName: widget.subCatName,
+                  isLocationEmpty: isLocationEmpty,
+                  city: city,
+                ),
+              ],
             ),
           ),
         ),
@@ -96,10 +107,14 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 class CategoryScreenProductsList extends StatefulWidget {
   final String catName;
   final String subCatName;
+  final bool isLocationEmpty;
+  final String city;
   const CategoryScreenProductsList({
     super.key,
     required this.catName,
     required this.subCatName,
+    required this.isLocationEmpty,
+    required this.city,
   });
 
   @override
@@ -113,21 +128,25 @@ class _CategoryScreenProductsListState
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return FirestoreQueryBuilder(
-      query: _services.listings
-          .orderBy(
-            'postedAt',
-            descending: true,
-          )
-          .where('catName', isEqualTo: widget.catName)
-          .where('subCat', isEqualTo: widget.subCatName),
+      query: widget.isLocationEmpty
+          ? _services.listings
+              .orderBy(
+                'postedAt',
+                descending: true,
+              )
+              .where('catName', isEqualTo: widget.catName)
+              .where('subCat', isEqualTo: widget.subCatName)
+              .where('isActive', isEqualTo: true)
+          : _services.listings
+              .orderBy(
+                'postedAt',
+                descending: true,
+              )
+              .where('catName', isEqualTo: widget.catName)
+              .where('subCat', isEqualTo: widget.subCatName)
+              .where('isActive', isEqualTo: true)
+              .where('location.city', isEqualTo: widget.city),
       pageSize: 6,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
@@ -146,7 +165,7 @@ class _CategoryScreenProductsListState
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -162,9 +181,9 @@ class _CategoryScreenProductsListState
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(
-                    Iconsax.heart_slash4,
+                    FontAwesomeIcons.heartCrack,
                     size: 60,
-                    color: redColor,
+                    color: pinkColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -180,46 +199,36 @@ class _CategoryScreenProductsListState
                       fontSize: 15,
                     ),
                   ),
-                  TextButton(
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  CustomButton(
+                    text: 'Go to Home',
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(MainScreen.routeName);
+                      Get.offAll(() => const MainScreen(
+                            selectedIndex: 0,
+                          ));
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Go to Home',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: blueColor,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        const Icon(
-                          Iconsax.home5,
-                          size: 13,
-                          color: blueColor,
-                        ),
-                      ],
-                    ),
+                    icon: FontAwesomeIcons.house,
+                    borderColor: blackColor,
+                    bgColor: blackColor,
+                    textIconColor: whiteColor,
                   ),
                 ],
               ),
             ),
           );
         } else {
-          return MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                height: 10,
+              );
+            },
             padding: const EdgeInsets.only(
-              left: 10,
-              top: 0,
-              right: 10,
+              left: 15,
+              top: 10,
+              right: 15,
               bottom: 30,
             ),
             shrinkWrap: true,
@@ -229,7 +238,7 @@ class _CategoryScreenProductsListState
               var data = snapshot.docs[index];
               var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
               var sellerDetails = _services.getUserData(data['sellerUid']);
-              final hasEndReached = snapshot.hasMore &&
+              final hasMoreReached = snapshot.hasMore &&
                   index + 1 == snapshot.docs.length &&
                   !snapshot.isFetchingMore;
               return Column(
@@ -238,44 +247,22 @@ class _CategoryScreenProductsListState
                   CustomProductCard(
                     data: data,
                     sellerDetails: sellerDetails,
-                    priceFormat: priceFormat,
                     time: time,
                   ),
-                  if (hasEndReached)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          fixedSize: const Size.fromHeight(70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          snapshot.fetchMore();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Load more',
-                              style: GoogleFonts.poppins(
-                                color: blueColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Icon(
-                              Iconsax.arrow_square_down4,
-                              size: 15,
-                              color: blueColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                  if (hasMoreReached)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  if (hasMoreReached)
+                    CustomButton(
+                      text: 'Load more',
+                      onPressed: () {
+                        snapshot.fetchMore();
+                      },
+                      icon: FontAwesomeIcons.chevronDown,
+                      borderColor: blackColor,
+                      bgColor: blackColor,
+                      textIconColor: whiteColor,
                     ),
                 ],
               );

@@ -1,8 +1,10 @@
 import 'package:buy_sell_app/screens/search_results_screen.dart';
 import 'package:buy_sell_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:page_transition/page_transition.dart';
+
+import '../utils/utils.dart';
 
 class SearchFieldScreen extends StatefulWidget {
   static const String routeName = '/search-field-screen';
@@ -24,15 +26,16 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.2,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: whiteColor,
+        elevation: 0.5,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Search',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -51,11 +54,8 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
               maxLength: 50,
               onFieldSubmitted: (query) {
                 query.length > 2
-                    ? Navigator.of(context).push(
-                        PageTransition(
-                          child: SearchResultsScreen(query: query),
-                          type: PageTransitionType.fade,
-                        ),
+                    ? Get.to(
+                        () => SearchResultsScreen(query: query),
                       )
                     : null;
               },

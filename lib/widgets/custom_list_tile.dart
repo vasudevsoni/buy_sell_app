@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../utils/utils.dart';
 
@@ -22,22 +22,22 @@ class CustomListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(5),
       ),
-      color: Colors.white,
+      color: greyColor,
       elevation: 0,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(5),
         child: Ink(
           padding: const EdgeInsets.only(
-            left: 10,
-            top: 10,
-            right: 10,
+            left: 5,
+            top: 5,
+            right: 5,
           ),
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
           child: Column(
@@ -48,13 +48,13 @@ class CustomListTile extends StatelessWidget {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.width * 0.3,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(4),
                   child: CachedNetworkImage(
                     imageUrl: url,
                     fit: BoxFit.cover,
                     errorWidget: (context, url, error) {
                       return const Icon(
-                        Iconsax.warning_24,
+                        FontAwesomeIcons.circleExclamation,
                         size: 20,
                         color: redColor,
                       );

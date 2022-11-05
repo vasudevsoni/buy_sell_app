@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  animations:
+    dependency: "direct main"
+    description:
+      name: animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.7"
   archive:
     dependency: transitive
     description:
@@ -43,20 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  awesome_snackbar_content:
-    dependency: "direct main"
-    description:
-      name: awesome_snackbar_content
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.8"
-  badges:
-    dependency: transitive
-    description:
-      name: badges
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -64,13 +57,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  bubble_bottom_bar:
-    dependency: "direct main"
-    description:
-      name: bubble_bottom_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -155,13 +141,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0"
-  country_state_city_pro:
+  connectivity_plus:
     dependency: "direct main"
     description:
-      name: country_state_city_pro
+      name: connectivity_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "3.0.2"
+  connectivity_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_plus_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.3"
   cross_file:
     dependency: transitive
     description:
@@ -176,13 +169,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  csc_picker:
-    dependency: "direct main"
-    description:
-      name: csc_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.6"
   csslib:
     dependency: transitive
     description:
@@ -190,20 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.2"
-  cupertino_icons:
-    dependency: "direct main"
+  dbus:
+    dependency: transitive
     description:
-      name: cupertino_icons
+      name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
-  custom_pop_up_menu:
-    dependency: "direct main"
-    description:
-      name: custom_pop_up_menu
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.4"
+    version: "0.7.8"
   desktop_webview_auth:
     dependency: transitive
     description:
@@ -211,13 +190,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.9"
-  double_back_to_close_app:
-    dependency: "direct main"
-    description:
-      name: double_back_to_close_app
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   dropdown_button2:
     dependency: "direct main"
     description:
@@ -253,6 +225,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
+  firebase_app_check:
+    dependency: "direct main"
+    description:
+      name: firebase_app_check
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9+1"
+  firebase_app_check_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_app_check_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5+1"
+  firebase_app_check_web:
+    dependency: transitive
+    description:
+      name: firebase_app_check_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7+1"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -410,6 +403,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.11"
+  flutter_neumorphic:
+    dependency: "direct main"
+    description:
+      name: flutter_neumorphic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -462,13 +462,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "10.2.1"
-  geocode:
+  geocoding:
     dependency: "direct main"
     description:
-      name: geocode
+      name: geocoding
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "2.0.5"
+  geocoding_platform_interface:
+    dependency: transitive
+    description:
+      name: geocoding_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.6.5"
   google_fonts:
     dependency: "direct main"
     description:
@@ -519,7 +533,7 @@ packages:
     source: hosted
     version: "0.15.0"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -532,13 +546,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  iconsax:
-    dependency: "direct main"
-    description:
-      name: iconsax
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.8"
   image:
     dependency: transitive
     description:
@@ -581,6 +588,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.2"
+  internet_connection_checker:
+    dependency: "direct main"
+    description:
+      name: internet_connection_checker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+1"
   intl:
     dependency: "direct main"
     description:
@@ -665,6 +679,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   octo_image:
     dependency: transitive
     description:
@@ -672,13 +693,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  page_transition:
-    dependency: "direct main"
-    description:
-      name: page_transition
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.9"
   path:
     dependency: transitive
     description:
@@ -756,6 +770,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  persistent_bottom_nav_bar_v2:
+    dependency: "direct main"
+    description:
+      name: persistent_bottom_nav_bar_v2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.6"
   petitparser:
     dependency: transitive
     description:
@@ -770,6 +791,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0"
+  pinput:
+    dependency: "direct main"
+    description:
+      name: pinput
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.16"
   platform:
     dependency: transitive
     description:
@@ -833,13 +861,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.2"
-  shimmer:
-    dependency: "direct main"
-    description:
-      name: shimmer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   sign_in_with_apple:
     dependency: transitive
     description:
@@ -866,6 +887,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smart_auth:
+    dependency: transitive
+    description:
+      name: smart_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   source_span:
     dependency: transitive
     description:
@@ -936,6 +964,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  top_snackbar_flutter:
+    dependency: "direct main"
+    description:
+      name: top_snackbar_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   twitter_login:
     dependency: transitive
     description:

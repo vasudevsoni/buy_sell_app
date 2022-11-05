@@ -1,30 +1,27 @@
 import 'package:buy_sell_app/widgets/custom_product_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterfire_ui/firestore.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 
 import '../services/firebase_services.dart';
+import 'custom_button.dart';
 
-class MyFavoritesProductsList extends StatelessWidget {
-  MyFavoritesProductsList({super.key});
+class MyFavoritesProductsList extends StatefulWidget {
+  const MyFavoritesProductsList({super.key});
 
+  @override
+  State<MyFavoritesProductsList> createState() =>
+      _MyFavoritesProductsListState();
+}
+
+class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
   final FirebaseServices services = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return FirestoreQueryBuilder(
       query: services.listings
           .orderBy('title', descending: false)
@@ -47,7 +44,7 @@ class MyFavoritesProductsList extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -59,42 +56,30 @@ class MyFavoritesProductsList extends StatelessWidget {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Iconsax.heart4,
-                    size: 60,
-                    color: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Your favorites will show here.',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
+              child: Text(
+                'Your favorites will show here.',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                ),
               ),
             ),
           );
         } else {
-          return MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                height: 10,
+              );
+            },
             padding: const EdgeInsets.only(
-              left: 10,
-              top: 0,
-              right: 10,
+              left: 15,
+              top: 10,
+              right: 15,
               bottom: 30,
             ),
             shrinkWrap: true,
@@ -104,7 +89,7 @@ class MyFavoritesProductsList extends StatelessWidget {
               var data = snapshot.docs[index];
               var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
               var sellerDetails = services.getUserData(data['sellerUid']);
-              final hasEndReached = snapshot.hasMore &&
+              final hasMoreReached = snapshot.hasMore &&
                   index + 1 == snapshot.docs.length &&
                   !snapshot.isFetchingMore;
               return Column(
@@ -113,44 +98,22 @@ class MyFavoritesProductsList extends StatelessWidget {
                   CustomProductCard(
                     data: data,
                     sellerDetails: sellerDetails,
-                    priceFormat: priceFormat,
                     time: time,
                   ),
-                  if (hasEndReached)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          fixedSize: const Size.fromHeight(70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          snapshot.fetchMore();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Load more',
-                              style: GoogleFonts.poppins(
-                                color: blueColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Icon(
-                              Iconsax.arrow_square_down4,
-                              size: 15,
-                              color: blueColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                  if (hasMoreReached)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  if (hasMoreReached)
+                    CustomButton(
+                      text: 'Load more',
+                      onPressed: () {
+                        snapshot.fetchMore();
+                      },
+                      icon: FontAwesomeIcons.chevronDown,
+                      borderColor: blackColor,
+                      bgColor: blackColor,
+                      textIconColor: whiteColor,
                     ),
                 ],
               );

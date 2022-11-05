@@ -1,18 +1,14 @@
-import 'package:buy_sell_app/screens/chats/conversation_screen.dart';
-import 'package:buy_sell_app/screens/full_decription_screen.dart';
-import 'package:buy_sell_app/screens/profile_screen.dart';
-import 'package:buy_sell_app/screens/selling/edit_vehicle_ad_screen.dart';
-import 'package:buy_sell_app/utils/utils.dart';
-import 'package:buy_sell_app/widgets/custom_button.dart';
-import 'package:buy_sell_app/widgets/custom_product_card.dart';
+import 'package:animations/animations.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/screens/all_images_display_screen.dart';
+import 'package:buy_sell_app/screens/selling/common/edit_ad_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,14 +17,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../services/firebase_services.dart';
+import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_text_field.dart';
 import 'category_products_screen.dart';
+import '../screens/chats/conversation_screen.dart';
+import '../screens/full_decription_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/selling/vehicles/edit_vehicle_ad_screen.dart';
+import '../utils/utils.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_product_card.dart';
 
-// ignore: must_be_immutable
 class ProductDetailsScreen extends StatefulWidget {
-  static const String routeName = '/product-details-screen';
-  DocumentSnapshot productData;
-  DocumentSnapshot sellerData;
-  ProductDetailsScreen({
+  final DocumentSnapshot productData;
+  final DocumentSnapshot sellerData;
+  const ProductDetailsScreen({
     super.key,
     required this.productData,
     required this.sellerData,
@@ -40,11 +43,40 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
+  final PageController controller = PageController();
+  final TextEditingController reportTextController = TextEditingController();
   int currentImage = 0;
-  CarouselController controller = CarouselController();
   List fav = [];
   bool isLiked = false;
   String profileImage = '';
+  bool isActive = true;
+
+  @override
+  void initState() {
+    if (mounted) {
+      setState(() {
+        widget.sellerData['profileImage'] == null
+            ? profileImage = ''
+            : profileImage = widget.sellerData['profileImage'];
+      });
+      if (widget.productData['isActive'] == false) {
+        setState(() {
+          isActive = false;
+        });
+      } else {
+        setState(() {
+          isActive = true;
+        });
+      }
+      getFavorites();
+      if (services.user!.uid != widget.productData['sellerUid']) {
+        services.listings.doc(widget.productData.id).update({
+          'views': FieldValue.arrayUnion([services.user!.uid]),
+        });
+      }
+    }
+    super.initState();
+  }
 
   createChatRoom() {
     Map<String, dynamic> product = {
@@ -76,28 +108,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       chatData: chatData,
       context: context,
     );
-
-    Navigator.of(context).push(
-      PageTransition(
-        child: ConversationScreen(
+    Get.to(() => ConversationScreen(
           chatRoomId: chatRoomId,
           prodId: widget.productData.id,
           sellerId: widget.productData['sellerUid'],
-        ),
-        type: PageTransitionType.rightToLeftWithFade,
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    setState(() {
-      widget.sellerData['profileImage'] == null
-          ? profileImage = ''
-          : profileImage = widget.sellerData['profileImage'];
-    });
-    getFavorites();
-    super.initState();
+        ));
   }
 
   getFavorites() {
@@ -118,6 +133,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   @override
+  void dispose() {
+    reportTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
       widget.sellerData['dateJoined'],
@@ -125,6 +146,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     var productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
       widget.productData['postedAt'],
     );
+    NumberFormat numberFormat = NumberFormat.compact();
     List images = widget.productData['images'];
 
     var priceFormat = NumberFormat.currency(
@@ -140,454 +162,688 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       name: '',
     );
 
-    void handleClick(String value) {
-      switch (value) {
-        case 'Share':
-          break;
-        case 'Report this item':
-          break;
-        case 'Help & Contact':
-          break;
-      }
+    showReportDialog() {
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'File a Report',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: CustomTextField(
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              showCounterText: true,
+              maxLength: 1000,
+              maxLines: 3,
+              label: 'Message',
+              hint:
+                  'Explain in detail the problem you are facing with this item',
+            ),
+            actionsPadding: const EdgeInsets.all(15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            titlePadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 15,
+              bottom: 10,
+            ),
+            contentPadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 5,
+              top: 5,
+            ),
+            actions: [
+              CustomButton(
+                icon: FontAwesomeIcons.bug,
+                text: 'Report item',
+                onPressed: () {
+                  if (reportTextController.text.isNotEmpty) {
+                    // services.reportItem(
+                    //   listingId: widget.productData.id,
+                    //   message: reportTextController.text,
+                    //   context: context,
+                    // );
+                    Get.back();
+                  }
+                },
+                bgColor: redColor,
+                borderColor: redColor,
+                textIconColor: whiteColor,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomButtonWithoutIcon(
+                text: 'Cancel',
+                onPressed: () {
+                  Get.back();
+                },
+                bgColor: whiteColor,
+                borderColor: greyColor,
+                textIconColor: blackColor,
+              ),
+            ],
+          );
+        },
+      );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          GestureDetector(
-            onTap: () async {
-              var url = Uri.parse(widget.productData['images'][0]);
-              Share.share(
-                'I found this ${widget.productData['title']} at ${priceFormat.format(widget.productData['price'])} on BestDeal.🤩\nCheck it out now - $url',
-                subject: 'Wow! Look at this deal I found on BestDeal.',
-              );
-            },
-            behavior: HitTestBehavior.opaque,
-            child: const Icon(
-              Iconsax.direct_send4,
-              color: blackColor,
-              size: 20,
-            ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          PopupMenuButton(
-            onSelected: handleClick,
-            icon: const Icon(
-              Iconsax.more4,
-              size: 20,
-            ),
-            splashRadius: 1,
-            padding: const EdgeInsets.all(0),
-            enableFeedback: true,
-            position: PopupMenuPosition.under,
-            tooltip: 'Options',
-            color: Colors.white,
-            offset: const Offset(-10, 10),
-            elevation: 5,
+    showOptionsDialog() {
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: const BorderSide(
-                width: 1,
-                color: blackColor,
-                strokeAlign: StrokeAlign.inside,
-                style: BorderStyle.solid,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            actions: [
+              CustomButton(
+                icon: FontAwesomeIcons.solidShareFromSquare,
+                text: 'Share item',
+                onPressed: () {},
+                bgColor: greyColor,
+                borderColor: greyColor,
+                textIconColor: blackColor,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomButton(
+                icon: FontAwesomeIcons.bug,
+                text: 'Report item',
+                onPressed: () {
+                  Get.back();
+                  showReportDialog();
+                },
+                bgColor: redColor,
+                borderColor: redColor,
+                textIconColor: whiteColor,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomButtonWithoutIcon(
+                text: 'Cancel',
+                onPressed: () {
+                  Get.back();
+                },
+                bgColor: whiteColor,
+                borderColor: greyColor,
+                textIconColor: blackColor,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    return isActive == false
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: whiteColor,
+              elevation: 0.5,
+              iconTheme: const IconThemeData(color: blackColor),
+              centerTitle: true,
+              title: Text(
+                'Item',
+                style: GoogleFonts.poppins(
+                  color: blackColor,
+                  fontSize: 15,
+                ),
               ),
             ),
-            itemBuilder: (BuildContext context) {
-              return {'Share', 'Report this item', 'Help & Contact'}
-                  .map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  textStyle: GoogleFonts.poppins(
-                    color: blackColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5,
-                  ),
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0.2,
-        iconTheme: const IconThemeData(color: Colors.black),
-        centerTitle: true,
-        title: Text(
-          'Item',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 15,
-          ),
-        ),
-      ),
-      body: Scrollbar(
-        interactive: true,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (widget.productData['sellerUid'] == services.user!.uid)
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  color: blueColor,
-                  child: Center(
-                    child: Text(
-                      'This is your listing',
-                      textAlign: TextAlign.center,
+            body: Container(
+              padding: const EdgeInsets.all(15),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'This item is currently unavailable.',
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 18,
+                        color: blackColor,
+                        fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: redColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'The reasons for this may include but are not limited to:',
+                            style: GoogleFonts.poppins(
+                              color: whiteColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            '1) The item is currently under review and will be activated once it is found valid.',
+                            style: GoogleFonts.poppins(
+                              color: whiteColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            '2) The item goes against our guidelines and has been disabled temporarily or permanently.',
+                            style: GoogleFonts.poppins(
+                              color: whiteColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            '3) The item has already been sold.',
+                            style: GoogleFonts.poppins(
+                              color: whiteColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : Scaffold(
+            backgroundColor: whiteColor,
+            appBar: AppBar(
+              actions: [
+                GestureDetector(
+                  onTap: () async {
+                    var url = Uri.parse(widget.productData['images'][0]);
+                    Share.share(
+                      'I found this ${widget.productData['title']} at ${priceFormat.format(widget.productData['price'])} on BestDeal.🤩\nCheck it out now - $url',
+                      subject: 'Wow! Look at this deal I found on BestDeal.',
+                    );
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: const Icon(
+                    FontAwesomeIcons.solidShareFromSquare,
+                    color: blackColor,
+                    size: 20,
                   ),
                 ),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      PageController pageController =
-                          PageController(initialPage: currentImage);
-                      return Dismissible(
-                        key: const Key('photosKey'),
-                        direction: DismissDirection.down,
-                        onDismissed: (direction) {
-                          Navigator.pop(context);
-                        },
-                        child: Material(
-                          color: Colors.black,
-                          child: Stack(
-                            children: [
-                              PhotoViewGallery.builder(
-                                scrollPhysics: const BouncingScrollPhysics(),
-                                itemCount: images.length,
-                                pageController: pageController,
-                                builder: (BuildContext context, int index) {
-                                  return PhotoViewGalleryPageOptions(
-                                    imageProvider: NetworkImage(
-                                      images[index],
-                                    ),
-                                    initialScale:
-                                        PhotoViewComputedScale.contained * 1,
-                                    minScale:
-                                        PhotoViewComputedScale.contained * 1,
-                                    maxScale:
-                                        PhotoViewComputedScale.contained * 10,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(
-                                        Iconsax.warning_24,
-                                        size: 20,
-                                        color: redColor,
-                                      );
+                const SizedBox(
+                  width: 15,
+                ),
+                GestureDetector(
+                  onTap: showOptionsDialog,
+                  behavior: HitTestBehavior.opaque,
+                  child: const Icon(
+                    FontAwesomeIcons.ellipsis,
+                    color: blackColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+              ],
+              backgroundColor: whiteColor,
+              elevation: 0.5,
+              iconTheme: const IconThemeData(color: blackColor),
+              centerTitle: true,
+              title: Text(
+                'Item',
+                style: GoogleFonts.poppins(
+                  color: blackColor,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            body: Scrollbar(
+              interactive: true,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.productData['sellerUid'] == services.user!.uid)
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        color: blueColor,
+                        child: Center(
+                          child: Text(
+                            'This is your listing',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              color: whiteColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    GestureDetector(
+                      onTap: () {
+                        images.length >= 2
+                            ? Get.to(
+                                () => AllImagesDisplayScreen(
+                                  images: images,
+                                ),
+                              )
+                            : showModal(
+                                configuration:
+                                    const FadeScaleTransitionConfiguration(),
+                                context: context,
+                                builder: (context) {
+                                  PageController pageController =
+                                      PageController(initialPage: currentImage);
+                                  return Dismissible(
+                                    key: UniqueKey(),
+                                    direction: DismissDirection.down,
+                                    onDismissed: (direction) {
+                                      Get.back();
                                     },
+                                    child: Material(
+                                      color: blackColor,
+                                      child: Stack(
+                                        children: [
+                                          PhotoViewGallery.builder(
+                                            scrollPhysics:
+                                                const BouncingScrollPhysics(),
+                                            itemCount: images.length,
+                                            pageController: pageController,
+                                            builder: (BuildContext context,
+                                                int index) {
+                                              return PhotoViewGalleryPageOptions(
+                                                imageProvider: NetworkImage(
+                                                  images[index],
+                                                ),
+                                                initialScale:
+                                                    PhotoViewComputedScale
+                                                            .contained *
+                                                        1,
+                                                minScale: PhotoViewComputedScale
+                                                        .contained *
+                                                    1,
+                                                maxScale: PhotoViewComputedScale
+                                                        .contained *
+                                                    10,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                    FontAwesomeIcons
+                                                        .circleExclamation,
+                                                    size: 20,
+                                                    color: redColor,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            loadingBuilder: (context, event) {
+                                              return const Center(
+                                                child: SpinKitFadingCube(
+                                                  color: greyColor,
+                                                  size: 20,
+                                                  duration: Duration(
+                                                      milliseconds: 1000),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          Positioned(
+                                            top: 15,
+                                            left: 15,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                Get.back();
+                                                pageController.dispose();
+                                              },
+                                              splashColor: blueColor,
+                                              splashRadius: 30,
+                                              icon: const Icon(
+                                                FontAwesomeIcons.circleXmark,
+                                                size: 30,
+                                                color: whiteColor,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 15,
+                                                    spreadRadius: 15,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   );
                                 },
-                                loadingBuilder: (context, event) {
-                                  return const Center(
-                                    child: SpinKitFadingCube(
-                                      color: greyColor,
+                              );
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: blackColor,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: CarouselSlider.builder(
+                              itemCount: images.length,
+                              itemBuilder: (context, index, realIndex) {
+                                return CachedNetworkImage(
+                                  imageUrl: images[index],
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      FontAwesomeIcons.circleExclamation,
                                       size: 20,
-                                      duration: Duration(milliseconds: 1000),
-                                    ),
-                                  );
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Center(
+                                      child: SpinKitFadingCube(
+                                        color: greyColor,
+                                        size: 20,
+                                        duration: Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              options: CarouselOptions(
+                                viewportFraction: 1,
+                                height: MediaQuery.of(context).size.height,
+                                enlargeCenterPage: false,
+                                enableInfiniteScroll:
+                                    images.length == 1 ? false : true,
+                                initialPage: currentImage,
+                                reverse: false,
+                                scrollDirection: Axis.horizontal,
+                                scrollPhysics: const BouncingScrollPhysics(),
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    currentImage = index;
+                                  });
                                 },
                               ),
-                              Positioned(
-                                top: 15,
-                                left: 15,
-                                child: IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    pageController.dispose();
-                                  },
-                                  splashColor: blueColor,
-                                  splashRadius: 30,
-                                  icon: const Icon(
-                                    Iconsax.close_square4,
-                                    size: 30,
-                                    color: Colors.white,
-                                    shadows: [
-                                      BoxShadow(
-                                        offset: Offset(0, 0),
-                                        blurRadius: 15,
-                                        spreadRadius: 15,
-                                      ),
-                                    ],
-                                  ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 7,
+                            right: 7,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 7,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: greyColor,
+                              ),
+                              child: Text(
+                                '${currentImage + 1} of ${widget.productData['images'].length}',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w500,
+                                  color: blackColor,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (images.length > 1)
+                            Positioned(
+                              bottom: 7,
+                              left: 0,
+                              right: 0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: images.map((url) {
+                                  int index = images.indexOf(url);
+                                  return Container(
+                                    width: 8.0,
+                                    height: 8.0,
+                                    margin: const EdgeInsets.only(
+                                        left: 2, right: 2, top: 10),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: currentImage == index
+                                          ? whiteColor
+                                          : lightBlackColor,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 15, right: 15, top: 15),
+                      child: Text(
+                        widget.productData['title'],
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: Text(
+                        priceFormat.format(
+                          widget.productData['price'],
+                        ),
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          color: blueColor,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.eye,
+                                size: 25,
+                                color: blueColor,
+                              ),
+                              const SizedBox(
+                                width: 7,
+                              ),
+                              Text(
+                                numberFormat
+                                    .format(widget.productData['views'].length),
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: blackColor,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                behavior: HitTestBehavior.opaque,
-                child: Stack(
-                  children: [
-                    Container(
-                      color: greyColor,
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: CarouselSlider.builder(
-                        carouselController: controller,
-                        itemCount: images.length,
-                        itemBuilder: (context, index, realIndex) {
-                          return CachedNetworkImage(
-                            imageUrl: images[index],
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                Iconsax.warning_24,
-                                size: 20,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Center(
-                                child: SpinKitFadingCube(
-                                  color: lightBlackColor,
-                                  size: 20,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        options: CarouselOptions(
-                          viewportFraction: 1,
-                          height: MediaQuery.of(context).size.height,
-                          enlargeCenterPage: false,
-                          enableInfiniteScroll:
-                              images.length == 1 ? false : true,
-                          initialPage: currentImage,
-                          reverse: false,
-                          scrollDirection: Axis.horizontal,
-                          scrollPhysics: const BouncingScrollPhysics(),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              currentImage = index;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 7,
-                      right: 7,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                        ),
-                        child: Text(
-                          '${currentImage + 1} of ${widget.productData['images'].length}',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500,
-                            color: blackColor,
-                            fontSize: 12,
+                          const SizedBox(
+                            width: 15,
                           ),
-                        ),
-                      ),
-                    ),
-                    if (images.length > 1)
-                      Positioned(
-                        bottom: 7,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: images.map((url) {
-                            int index = images.indexOf(url);
-                            return Container(
-                              width: 8.0,
-                              height: 8.0,
-                              margin: const EdgeInsets.only(
-                                  left: 2, right: 2, top: 10),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: currentImage == index
-                                    ? blueColor
-                                    : fadedColor,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: Text(
-                      widget.productData['title'],
-                      maxLines: 3,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Text(
-                      priceFormat.format(
-                        widget.productData['price'],
-                      ),
-                      maxLines: 1,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        color: blueColor,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  widget.productData['sellerUid'] == services.user!.uid
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: CustomButton(
-                            text: 'Edit listing',
-                            onPressed: () {
-                              widget.productData['catName'] == 'Vehicles'
-                                  ? Navigator.of(context).push(
-                                      PageTransition(
-                                        child: EditVehicleAdScreen(
-                                          productData: widget.productData,
-                                        ),
-                                        type: PageTransitionType
-                                            .rightToLeftWithFade,
-                                      ),
-                                    )
-                                  : null;
-                            },
-                            icon: Iconsax.edit4,
-                            bgColor: blackColor,
-                            borderColor: blackColor,
-                            textIconColor: Colors.white,
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: CustomButton(
-                            text: 'Chat with Seller',
-                            onPressed: createChatRoom,
-                            icon: Iconsax.message4,
-                            bgColor: blueColor,
-                            borderColor: blueColor,
-                            textIconColor: Colors.white,
-                          ),
-                        ),
-                  if (widget.productData['sellerUid'] != services.user!.uid)
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  if (widget.productData['sellerUid'] != services.user!.uid)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: CustomButton(
-                        text: isLiked
-                            ? 'Remove from favorites'
-                            : 'Add to favorites',
-                        onPressed: () {
-                          setState(() {
-                            isLiked = !isLiked;
-                          });
-                          services.updateFavorite(
-                            context: context,
-                            isLiked: isLiked,
-                            productId: widget.productData.id,
-                          );
-                        },
-                        icon: isLiked ? Iconsax.heart_slash4 : Iconsax.heart5,
-                        bgColor: isLiked ? blackColor : Colors.white,
-                        borderColor: isLiked ? blackColor : redColor,
-                        textIconColor: isLiked ? Colors.white : redColor,
-                      ),
-                    ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  widget.productData['catName'] == 'Vehicles'
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                'About this item',
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w700,
-                                  color: blackColor,
-                                  fontSize: 17,
-                                ),
+                              const Icon(
+                                FontAwesomeIcons.heart,
+                                size: 25,
+                                color: pinkColor,
                               ),
                               const SizedBox(
-                                height: 5,
+                                width: 7,
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  color: greyColor,
-                                  borderRadius: BorderRadius.circular(15),
+                              Text(
+                                numberFormat.format(
+                                    widget.productData['favorites'].length),
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: blackColor,
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 10,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    widget.productData['sellerUid'] == services.user!.uid
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomButton(
+                              text: 'Edit listing',
+                              onPressed: () {
+                                widget.productData['catName'] == 'Vehicles'
+                                    ? Get.to(() => EditVehicleAdScreen(
+                                          productData: widget.productData,
+                                        ))
+                                    : Get.to(() => EditAdScreen(
+                                          productData: widget.productData,
+                                        ));
+                              },
+                              icon: FontAwesomeIcons.solidPenToSquare,
+                              bgColor: whiteColor,
+                              borderColor: greyColor,
+                              textIconColor: blackColor,
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomButton(
+                              text: 'Chat with Seller',
+                              onPressed: createChatRoom,
+                              icon: FontAwesomeIcons.solidComment,
+                              bgColor: blueColor,
+                              borderColor: blueColor,
+                              textIconColor: whiteColor,
+                            ),
+                          ),
+                    if (widget.productData['sellerUid'] != services.user!.uid)
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    if (widget.productData['sellerUid'] != services.user!.uid)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: CustomButton(
+                          text: isLiked
+                              ? 'Added to favorites'
+                              : 'Add to favorites',
+                          onPressed: () {
+                            setState(() {
+                              isLiked = !isLiked;
+                            });
+                            services.updateFavorite(
+                              context: context,
+                              isLiked: isLiked,
+                              productId: widget.productData.id,
+                            );
+                          },
+                          icon: isLiked
+                              ? FontAwesomeIcons.solidHeart
+                              : FontAwesomeIcons.heart,
+                          bgColor: whiteColor,
+                          borderColor: pinkColor,
+                          textIconColor: pinkColor,
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    widget.productData['catName'] == 'Vehicles'
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this item',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 17,
+                                  ),
                                 ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Brand - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: greyColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Brand - ',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.60,
-                                          child: Text(
+                                          Text(
                                             widget.productData['brandName'],
                                             softWrap: true,
                                             maxLines: 2,
@@ -598,32 +854,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               fontSize: 15,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Model - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Model - ',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.60,
-                                          child: Text(
+                                          Text(
                                             widget.productData['modelName'],
                                             softWrap: true,
                                             maxLines: 2,
@@ -634,32 +884,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               fontSize: 15,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Color - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Color - ',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.60,
-                                          child: Text(
+                                          Text(
                                             widget.productData['color'],
                                             softWrap: true,
                                             maxLines: 2,
@@ -670,498 +914,471 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               fontSize: 15,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Divider(
-                                      height: 20,
-                                      color: fadedColor,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.user4,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Owner - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          widget.productData['noOfOwners'],
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.gas_station3,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Fuel Type - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          widget.productData['fuelType'],
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.calendar,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Year of Reg. - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          widget.productData['yearOfReg']
-                                              .toString(),
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.location_tick4,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Kms Driven - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          kmFormat.format(
-                                            widget.productData['kmsDriven'],
-                                          ),
-                                          maxLines: 2,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          PageTransition(
-                                            child: CategoryProductsScreen(
-                                              catName:
-                                                  widget.productData['catName'],
-                                              subCatName:
-                                                  widget.productData['subCat'],
-                                            ),
-                                            type: PageTransitionType
-                                                .rightToLeftWithFade,
-                                          ),
-                                        );
-                                      },
-                                      child: Row(
+                                        ],
+                                      ),
+                                      const Divider(
+                                        height: 20,
+                                        color: fadedColor,
+                                      ),
+                                      Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Iconsax.category4,
+                                            FontAwesomeIcons.user,
                                             size: 15,
-                                            color: lightBlackColor,
+                                            color: blueColor,
                                           ),
                                           const SizedBox(
                                             width: 7,
                                           ),
                                           Text(
-                                            'Category - ',
+                                            'Owner',
                                             style: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               color: lightBlackColor,
                                               fontSize: 15,
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.40,
-                                            child: Text(
-                                              '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                              maxLines: 3,
-                                              softWrap: true,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w600,
-                                                color: blackColor,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
                                           const Spacer(),
-                                          const Icon(
-                                            Iconsax.arrow_circle_right4,
-                                            size: 13,
-                                            color: blackColor,
+                                          Text(
+                                            widget.productData['noOfOwners'],
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.clock4,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Posted - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          timeago.format(productCreatedTime),
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 25,
-                              ),
-                            ],
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'About this item',
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w700,
-                                  color: blackColor,
-                                  fontSize: 17,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  color: greyColor,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 10,
-                                ),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          PageTransition(
-                                            child: CategoryProductsScreen(
-                                              catName:
-                                                  widget.productData['catName'],
-                                              subCatName:
-                                                  widget.productData['subCat'],
-                                            ),
-                                            type: PageTransitionType
-                                                .rightToLeftWithFade,
-                                          ),
-                                        );
-                                      },
-                                      child: Row(
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Iconsax.category4,
+                                            FontAwesomeIcons.gasPump,
                                             size: 15,
-                                            color: lightBlackColor,
+                                            color: blueColor,
                                           ),
                                           const SizedBox(
                                             width: 7,
                                           ),
                                           Text(
-                                            'Category - ',
+                                            'Fuel Type',
                                             style: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
                                               color: lightBlackColor,
                                               fontSize: 15,
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.40,
-                                            child: Text(
-                                              '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                              maxLines: 3,
-                                              softWrap: true,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w600,
-                                                color: blackColor,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ),
                                           const Spacer(),
-                                          const Icon(
-                                            Iconsax.arrow_circle_right4,
-                                            size: 13,
-                                            color: blackColor,
+                                          Text(
+                                            widget.productData['fuelType'],
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        const Icon(
-                                          Iconsax.clock4,
-                                          size: 15,
-                                          color: lightBlackColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 7,
-                                        ),
-                                        Text(
-                                          'Posted - ',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: lightBlackColor,
-                                            fontSize: 15,
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            FontAwesomeIcons.calendar,
+                                            size: 15,
+                                            color: blueColor,
                                           ),
-                                        ),
-                                        Text(
-                                          timeago.format(productCreatedTime),
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            color: blackColor,
-                                            fontSize: 15,
+                                          const SizedBox(
+                                            width: 7,
                                           ),
+                                          Text(
+                                            'Year of Reg.',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['yearOfReg']
+                                                .toString(),
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            FontAwesomeIcons.road,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Kms Driven',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            kmFormat.format(
+                                              widget.productData['kmsDriven'],
+                                            ),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          Get.to(() => CategoryProductsScreen(
+                                                catName: widget
+                                                    .productData['catName'],
+                                                subCatName: widget
+                                                    .productData['subCat'],
+                                              ));
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              FontAwesomeIcons.list,
+                                              size: 15,
+                                              color: blueColor,
+                                            ),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            Text(
+                                              'Category',
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                color: lightBlackColor,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: AutoSizeText(
+                                                '${widget.productData['catName']} > ${widget.productData['subCat']}',
+                                                maxLines: 2,
+                                                softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: blackColor,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            FontAwesomeIcons.clock,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Posted',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            timeago.format(productCreatedTime),
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 25,
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this item',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: greyColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          Get.to(() => CategoryProductsScreen(
+                                                catName: widget
+                                                    .productData['catName'],
+                                                subCatName: widget
+                                                    .productData['subCat'],
+                                              ));
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              FontAwesomeIcons.list,
+                                              size: 15,
+                                              color: blueColor,
+                                            ),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            Text(
+                                              'Category',
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w600,
+                                                color: lightBlackColor,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              child: AutoSizeText(
+                                                '${widget.productData['catName']} > ${widget.productData['subCat']}',
+                                                maxLines: 2,
+                                                softWrap: true,
+                                                textAlign: TextAlign.end,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: blackColor,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            FontAwesomeIcons.clock,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Posted',
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: lightBlackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            timeago.format(productCreatedTime),
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                              ],
+                            ),
                           ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        'Item description from the seller',
+                        maxLines: 2,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          color: blackColor,
+                          fontSize: 17,
                         ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'Item description from the seller',
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        color: blackColor,
-                        fontSize: 17,
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: GestureDetector(
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
                       onTap: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            child: FullDescriptionScreen(
-                              desc: widget.productData['description'],
-                            ),
-                            type: PageTransitionType.rightToLeftWithFade,
+                        Get.to(
+                          () => FullDescriptionScreen(
+                            desc: widget.productData['description'],
                           ),
                         );
                       },
                       child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 15),
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           color: greyColor,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
                         ),
-                        child: Hero(
-                          tag: 'full-description',
-                          child: Text(
-                            widget.productData['description'],
-                            maxLines: 5,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w500,
-                              color: blackColor,
-                              fontSize: 15,
-                            ),
+                        child: Text(
+                          widget.productData['description'],
+                          maxLines: 5,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            color: blackColor,
+                            fontSize: 15,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  if (widget.productData['sellerUid'] != services.user!.uid)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'About this seller',
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              color: blackColor,
-                              fontSize: 17,
+                    if (widget.productData['sellerUid'] != services.user!.uid)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              'About this seller',
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w700,
+                                color: blackColor,
+                                fontSize: 17,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: GestureDetector(
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
-                              Navigator.of(context).push(
-                                PageTransition(
-                                  child: ProfileScreen(
-                                    userId: widget.sellerData['uid'],
-                                  ),
-                                  type: PageTransitionType.rightToLeftWithFade,
+                              Get.to(
+                                () => ProfileScreen(
+                                  userId: widget.sellerData['uid'],
                                 ),
                               );
                             },
@@ -1169,7 +1386,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 color: greyColor,
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 15,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -1193,9 +1413,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             color: blueColor,
                                           ),
                                           child: const Icon(
-                                            Iconsax.security_user4,
-                                            color: Colors.white,
-                                            size: 15,
+                                            FontAwesomeIcons.userTie,
+                                            color: whiteColor,
+                                            size: 20,
                                           ),
                                         )
                                       : SizedBox(
@@ -1213,6 +1433,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             child: CachedNetworkImage(
                                               imageUrl: profileImage,
                                               fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) {
+                                                return const Icon(
+                                                  FontAwesomeIcons
+                                                      .circleExclamation,
+                                                  size: 10,
+                                                  color: redColor,
+                                                );
+                                              },
+                                              placeholder: (context, url) {
+                                                return const Center(
+                                                  child: SpinKitFadingCube(
+                                                    color: lightBlackColor,
+                                                    size: 10,
+                                                    duration: Duration(
+                                                        milliseconds: 1000),
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),
@@ -1231,7 +1470,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       .width *
                                                   0.5,
                                               child: Text(
-                                                'Name not disclosed',
+                                                'BestDeal User',
                                                 maxLines: 1,
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -1260,7 +1499,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               ),
                                             ),
                                       Text(
-                                        'Joined - ${timeago.format(sellerJoinTime)}',
+                                        'Joined ${timeago.format(sellerJoinTime)}',
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w500,
                                           color: lightBlackColor,
@@ -1271,7 +1510,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   const Spacer(),
                                   const Icon(
-                                    Iconsax.arrow_circle_right4,
+                                    FontAwesomeIcons.chevronRight,
                                     color: blackColor,
                                     size: 13,
                                   ),
@@ -1279,38 +1518,35 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'You might also like',
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              color: blackColor,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                        MoreLikeThisProductsList(
-                          catName: widget.productData['catName'],
-                          subCatName: widget.productData['subCat'],
-                          productId: widget.productData['postedAt'],
-                        ),
-                      ],
+                        ],
+                      ),
+                    const SizedBox(
+                      height: 25,
                     ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        'You might also like',
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          color: blackColor,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ),
+                    MoreLikeThisProductsList(
+                      catName: widget.productData['catName'],
+                      subCatName: widget.productData['subCat'],
+                      productId: widget.productData['postedAt'],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }
 
@@ -1335,13 +1571,6 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return StreamBuilder<QuerySnapshot>(
       stream: _services.listings
           .where('catName', isEqualTo: widget.catName)
@@ -1350,6 +1579,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             'postedAt',
             isNotEqualTo: widget.productId,
           )
+          .where('isActive', isEqualTo: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -1357,7 +1587,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -1395,32 +1625,61 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             ),
           );
         }
-        return MasonryGridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 0,
-          crossAxisSpacing: 0,
-          padding: const EdgeInsets.only(
-            left: 10,
-            top: 0,
-            right: 10,
-            bottom: 30,
-          ),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
-          itemBuilder: (context, index) {
-            var data = snapshot.data!.docs[index];
-            var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-            var sellerDetails = _services.getUserData(data['sellerUid']);
-
-            return CustomProductCard(
-              data: data,
-              sellerDetails: sellerDetails,
-              priceFormat: priceFormat,
-              time: time,
-            );
-          },
-          physics: const BouncingScrollPhysics(),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListView.separated(
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 10,
+                );
+              },
+              padding: const EdgeInsets.only(
+                left: 15,
+                top: 10,
+                right: 15,
+                bottom: 10,
+              ),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index];
+                var time =
+                    DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
+                var sellerDetails = _services.getUserData(data['sellerUid']);
+                return CustomProductCard(
+                  data: data,
+                  sellerDetails: sellerDetails,
+                  time: time,
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                bottom: 15,
+                right: 15,
+              ),
+              child: CustomButton(
+                text: 'See more in ${widget.subCatName}',
+                onPressed: () {
+                  Get.to(() => CategoryProductsScreen(
+                        catName: widget.catName,
+                        subCatName: widget.subCatName,
+                      ));
+                },
+                icon: FontAwesomeIcons.chevronRight,
+                borderColor: blackColor,
+                bgColor: blackColor,
+                textIconColor: whiteColor,
+              ),
+            ),
+          ],
         );
       },
     );

@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../../services/firebase_services.dart';
 import '../../utils/utils.dart';
@@ -24,15 +23,16 @@ class SubCategoriesListScreen extends StatelessWidget {
     FirebaseServices service = FirebaseServices();
 
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           doc['catName'],
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -45,7 +45,7 @@ class SubCategoriesListScreen extends StatelessWidget {
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
               return const Center(
-                child: Text('Erorr loading sub-categories'),
+                child: Text('Erorr loading sub-categories.'),
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -67,21 +67,19 @@ class SubCategoriesListScreen extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 itemCount: data.length,
-                padding: const EdgeInsets.all(15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 itemBuilder: (context, index) {
                   return CustomListTileNoImage(
                     text: data[index],
-                    icon: Iconsax.arrow_circle_right4,
-                    onTap: () => {
-                      Navigator.of(context).push(
-                        PageTransition(
-                          child: CategoryProductsScreen(
-                            catName: doc['catName'],
-                            subCatName: data[index],
-                          ),
-                          type: PageTransitionType.rightToLeftWithFade,
+                    icon: FontAwesomeIcons.chevronRight,
+                    onTap: () {
+                      Get.to(
+                        () => CategoryProductsScreen(
+                          catName: doc['catName'],
+                          subCatName: data[index],
                         ),
-                      ),
+                      );
                     },
                   );
                 },

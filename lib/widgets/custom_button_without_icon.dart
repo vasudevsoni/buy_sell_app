@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -23,36 +23,38 @@ class CustomButtonWithoutIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isDisabled ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: bgColor,
-        elevation: 0.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+    return SizedBox(
+      height: 45,
+      width: MediaQuery.of(context).size.width,
+      child: NeumorphicButton(
+        onPressed: isDisabled ? null : onPressed,
+        style: NeumorphicStyle(
+          lightSource: LightSource.top,
+          shape: NeumorphicShape.convex,
+          depth: 0,
+          intensity: 0,
+          border: NeumorphicBorder(
+            color: borderColor,
+            width: 1,
+          ),
+          boxShape: NeumorphicBoxShape.roundRect(
+            BorderRadius.circular(5),
+          ),
+          color: bgColor,
         ),
-        side: BorderSide(
-          width: 1,
-          color: borderColor,
-          strokeAlign: StrokeAlign.inside,
-          style: BorderStyle.solid,
-        ),
-        fixedSize: Size(
-          MediaQuery.of(context).size.width,
-          50,
-        ),
-      ),
-      child: SizedBox(
-        child: AutoSizeText(
-          text,
-          maxLines: 2,
-          softWrap: true,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: textIconColor,
+        provideHapticFeedback: true,
+        child: Center(
+          child: AutoSizeText(
+            text.toUpperCase(),
+            maxLines: 2,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              color: textIconColor,
+            ),
           ),
         ),
       ),

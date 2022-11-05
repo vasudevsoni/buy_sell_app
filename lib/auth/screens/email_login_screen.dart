@@ -1,9 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -54,15 +55,16 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Login with your Email',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -78,7 +80,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -95,18 +97,10 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                         final bool isValid =
                             EmailValidator.validate(emailController.text);
                         if (value == null || value.isEmpty) {
-                          showSnackBar(
-                            context: context,
-                            content: 'Please enter your email address',
-                            color: redColor,
-                          );
+                          return 'Please enter your email address';
                         }
-                        if (value!.isNotEmpty && isValid == false) {
-                          showSnackBar(
-                            context: context,
-                            content: 'Please enter a valid email address',
-                            color: redColor,
-                          );
+                        if (value.isNotEmpty && isValid == false) {
+                          return 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -129,18 +123,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                             isEnabled: isLoading ? false : true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                showSnackBar(
-                                  context: context,
-                                  content: 'Please enter your password',
-                                  color: redColor,
-                                );
+                                return 'Please enter your password';
                               } else if (value.length < 6) {
-                                showSnackBar(
-                                  context: context,
-                                  content:
-                                      'Password must be 6 to 15 characters long',
-                                  color: redColor,
-                                );
+                                return 'Password must be 6 to 15 characters long';
                               }
                               return null;
                             },
@@ -156,11 +141,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                             },
                             icon: isObscured
                                 ? const Icon(
-                                    Iconsax.eye_slash4,
+                                    FontAwesomeIcons.eyeSlash,
                                     size: 20,
                                   )
                                 : const Icon(
-                                    Iconsax.eye,
+                                    FontAwesomeIcons.eye,
                                     size: 20,
                                   ),
                           ),
@@ -172,9 +157,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          ForgotPasswordScreen.routeName,
-                        );
+                        Get.toNamed(ForgotPasswordScreen.routeName);
                       },
                       child: Text(
                         'Forgot password?',
@@ -189,33 +172,40 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(EmailRegisterScreen.routeName);
+                    Get.offNamed(
+                      EmailRegisterScreen.routeName,
+                    );
                   },
-                  child: Text(
+                  child: AutoSizeText(
                     'Don\'t have an account? Create one',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       color: blueColor,
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 5,
+                ),
                 isLoading
                     ? CustomButton(
-                        text: 'Loading...',
+                        text: 'Loading..',
                         icon: FontAwesomeIcons.spinner,
-                        bgColor: blackColor,
-                        borderColor: blackColor,
-                        textIconColor: Colors.white,
+                        bgColor: greyColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
                         onPressed: () {},
                         isDisabled: isLoading,
                       )
                     : CustomButton(
                         text: 'Login',
-                        icon: Iconsax.login4,
+                        icon: FontAwesomeIcons.rightToBracket,
                         bgColor: blackColor,
                         borderColor: blackColor,
-                        textIconColor: Colors.white,
+                        textIconColor: whiteColor,
                         onPressed: () {
                           _validateEmail();
                         },

@@ -1,9 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/auth/services/email_auth_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/custom_button.dart';
@@ -59,15 +60,16 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Register with your Email',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -82,7 +84,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                 MediaQuery.of(context).viewPadding.top,
             padding: const EdgeInsets.all(15.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 CustomTextField(
                   controller: nameController,
@@ -94,18 +96,10 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                   isEnabled: isLoading ? false : true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      showSnackBar(
-                        context: context,
-                        content: 'Please enter your name',
-                        color: redColor,
-                      );
+                      return 'Please enter your name';
                     }
-                    if (value!.length == 1) {
-                      showSnackBar(
-                        context: context,
-                        content: 'Please enter a valid name',
-                        color: redColor,
-                      );
+                    if (value.length == 1) {
+                      return 'Please enter a valid name';
                     }
                     return null;
                   },
@@ -125,18 +119,10 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                     final bool isValid =
                         EmailValidator.validate(emailController.text);
                     if (value == null || value.isEmpty) {
-                      showSnackBar(
-                        context: context,
-                        content: 'Please enter your email address',
-                        color: redColor,
-                      );
+                      return 'Please enter your email address';
                     }
-                    if (value!.isNotEmpty && isValid == false) {
-                      showSnackBar(
-                        context: context,
-                        content: 'Please enter a valid email address',
-                        color: redColor,
-                      );
+                    if (value.isNotEmpty && isValid == false) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
@@ -159,18 +145,9 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                         isEnabled: isLoading ? false : true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            showSnackBar(
-                              context: context,
-                              content: 'Please enter a password',
-                              color: redColor,
-                            );
+                            return 'Please enter a password';
                           } else if (value.length < 6) {
-                            showSnackBar(
-                              context: context,
-                              content:
-                                  'Password must be 6 to 15 characters long',
-                              color: redColor,
-                            );
+                            return 'Password must be 6 to 15 characters long';
                           }
                           return null;
                         },
@@ -186,11 +163,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                         },
                         icon: isObscured
                             ? const Icon(
-                                Iconsax.eye_slash4,
+                                FontAwesomeIcons.eyeSlash,
                                 size: 20,
                               )
                             : const Icon(
-                                Iconsax.eye,
+                                FontAwesomeIcons.eye,
                                 size: 20,
                               ),
                       ),
@@ -200,33 +177,38 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(EmailLoginScreen.routeName);
+                    Get.offNamed(EmailLoginScreen.routeName);
                   },
-                  child: Text(
+                  child: AutoSizeText(
                     'Already have an account? Login',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       color: blueColor,
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 5,
+                ),
                 isLoading
                     ? CustomButton(
                         text: 'Loading...',
                         icon: FontAwesomeIcons.spinner,
-                        bgColor: blackColor,
-                        borderColor: blackColor,
-                        textIconColor: Colors.white,
+                        bgColor: greyColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
                         onPressed: () {},
                         isDisabled: isLoading,
                       )
                     : CustomButton(
                         text: 'Create account',
-                        icon: Iconsax.tick_circle4,
+                        icon: FontAwesomeIcons.userPlus,
                         bgColor: blackColor,
                         borderColor: blackColor,
-                        textIconColor: Colors.white,
+                        textIconColor: whiteColor,
                         onPressed: () {
                           _validateEmail();
                         },

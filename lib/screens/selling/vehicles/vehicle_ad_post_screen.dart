@@ -1,82 +1,91 @@
+import 'package:animations/animations.dart';
 import 'package:buy_sell_app/screens/main_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
+import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
+import 'package:flutter/services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-import '../../provider/seller_form_provider.dart';
-import '../../services/firebase_services.dart';
-import '../../utils/utils.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_button_without_icon.dart';
-import '../../widgets/custom_text_field.dart';
+import '../../../provider/seller_form_provider.dart';
+import '../../../utils/utils.dart';
+import '../../../widgets/custom_text_field.dart';
+import '../../../services/firebase_services.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/image_picker_widget.dart';
 
-class EditVehicleAdScreen extends StatefulWidget {
-  final DocumentSnapshot productData;
-  const EditVehicleAdScreen({
+class VehicleAdPostScreen extends StatefulWidget {
+  final String subCatName;
+  const VehicleAdPostScreen({
     super.key,
-    required this.productData,
+    required this.subCatName,
   });
 
   @override
-  State<EditVehicleAdScreen> createState() => _EditVehicleAdScreenState();
+  State<VehicleAdPostScreen> createState() => _VehicleAdPostScreenState();
 }
 
-class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final FirebaseServices _services = FirebaseServices();
-  bool isLoading = false;
-
+class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController subCatNameController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
   TextEditingController brandNameController = TextEditingController();
   TextEditingController modelNameController = TextEditingController();
   TextEditingController kmDrivenController = TextEditingController();
-  TextEditingController fuelTypeSearchController = TextEditingController();
-  TextEditingController yorSearchController = TextEditingController();
-  TextEditingController colorsSearchController = TextEditingController();
-  TextEditingController noOfOwnersSearchController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController fuelTypeSearchController = TextEditingController();
+  TextEditingController yorSearchController = TextEditingController();
+  TextEditingController noOfOwnersSearchController = TextEditingController();
+  TextEditingController colorsSearchController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  final FirebaseServices _services = FirebaseServices();
+  String area = '';
+  String city = '';
+  String state = '';
+  String country = '';
 
-  String? fuelTypeSelectedValue;
-  String? yorSelectedValue;
-  String? noOfOwnersSelectedValue;
-  String? colorSelectedValue;
+  getUserLocation() async {
+    await _services.getCurrentUserData().then((value) async {
+      setState(() {
+        locationController.text =
+            '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+        area = value['location']['area'];
+        city = value['location']['city'];
+        state = value['location']['state'];
+        country = value['location']['country'];
+      });
+    });
+  }
 
   @override
   void initState() {
-    subCatNameController.text = 'Vehicles > ${widget.productData['subCat']}';
-    brandNameController.text = widget.productData['brandName'];
-    modelNameController.text = widget.productData['modelName'];
-    descriptionController.text = widget.productData['description'];
-    priceController.text = widget.productData['price'].toString();
-    kmDrivenController.text = widget.productData['kmsDriven'].toString();
-    fuelTypeSelectedValue = widget.productData['fuelType'];
-    yorSelectedValue = widget.productData['yearOfReg'].toString();
-    noOfOwnersSelectedValue = widget.productData['noOfOwners'];
-    colorSelectedValue = widget.productData['color'];
+    if (mounted) {
+      setState(() {
+        subCatNameController.text = 'Vehicles > ${widget.subCatName}';
+      });
+      getUserLocation();
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    titleController.dispose();
     subCatNameController.dispose();
     brandNameController.dispose();
     modelNameController.dispose();
+    kmDrivenController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    kmDrivenController.dispose();
     fuelTypeSearchController.dispose();
     yorSearchController.dispose();
     noOfOwnersSearchController.dispose();
     colorsSearchController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
@@ -231,6 +240,11 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     'Others',
   ];
 
+  String? fuelTypeSelectedValue;
+  String? yorSelectedValue;
+  String? noOfOwnersSelectedValue;
+  String? colorSelectedValue;
+
   var priceFormat = NumberFormat.currency(
     locale: 'HI',
     decimalDigits: 0,
@@ -243,30 +257,27 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     symbol: '',
     name: '',
   );
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SellerFormProvider>(context);
 
-    updateProductOnFirebase(SellerFormProvider provider, String uid) async {
+    publishProductToFirebase(SellerFormProvider provider, String uid) async {
       return await _services.listings
           .doc(uid)
-          .update(provider.updatedDataToFirestore)
-          .then((_) {
-        Navigator.pushReplacementNamed(context, MainScreen.routeName);
-        provider.clearDataAfterUpdateListing();
+          .set(provider.dataToFirestore)
+          .then((value) {
+        Navigator.pushReplacementNamed(
+            context, CongratulationsScreen.routeName);
+        provider.clearDataAfterSubmitListing();
         setState(() {
           isLoading = false;
         });
-        showSnackBar(
-          context: context,
-          content: 'Listing updated successfully',
-          color: blueColor,
-        );
       }).catchError((err) {
         showSnackBar(
           context: context,
-          content: 'Some error occurred. Please try again.',
+          content: 'Something has gone wrong. Please try again.',
           color: redColor,
         );
         setState(() {
@@ -285,14 +296,15 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
             descriptionController.text.isNotEmpty &&
             priceController.text.isNotEmpty &&
             kmDrivenController.text.isNotEmpty &&
-            colorSelectedValue != null) {
-          showDialog(
+            colorSelectedValue != null &&
+            provider.imagePaths.isNotEmpty) {
+          showModal(
+            configuration: const FadeScaleTransitionConfiguration(),
             context: context,
-            barrierColor: Colors.black87,
             builder: (context) {
               return AlertDialog(
                 title: Text(
-                  'Ready to update?',
+                  'Ready to post?',
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -303,7 +315,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   padding: const EdgeInsets.all(15),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     color: greyColor,
                   ),
@@ -314,47 +326,98 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.43,
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                children: [
+                                  Opacity(
+                                    opacity: 0.7,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              FontAwesomeIcons
+                                                  .circleExclamation,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  maxLines: 3,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  priceFormat.format(
-                                    int.parse(priceController.text),
+                                  if (provider.imagePaths.length >= 2)
+                                    Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Center(
+                                        child: Text(
+                                          '+${(provider.imagesCount - 1).toString()}',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 30,
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    ),
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    color: blueColor,
-                                    fontSize: 16,
+                                  Text(
+                                    priceFormat.format(
+                                      int.parse(priceController.text),
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: blueColor,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                       const Divider(
                         height: 20,
-                        color: fadedColor,
-                        thickness: 1,
+                        color: lightBlackColor,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,7 +427,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Iconsax.user4,
+                                FontAwesomeIcons.user,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -376,7 +439,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: lightBlackColor,
                                 ),
                               ),
                             ],
@@ -387,7 +450,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Iconsax.gas_station,
+                                FontAwesomeIcons.gasPump,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -399,7 +462,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: lightBlackColor,
                                 ),
                                 maxLines: 1,
                                 softWrap: true,
@@ -413,7 +476,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Iconsax.calendar,
+                                FontAwesomeIcons.calendar,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -425,7 +488,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: lightBlackColor,
                                 ),
                                 maxLines: 1,
                                 softWrap: true,
@@ -439,7 +502,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Iconsax.location4,
+                                FontAwesomeIcons.road,
                                 size: 13,
                                 color: blueColor,
                               ),
@@ -453,7 +516,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: lightBlackColor,
                                 ),
                                 maxLines: 1,
                                 softWrap: true,
@@ -461,30 +524,29 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               ),
                             ],
                           ),
-                          const Divider(
-                            height: 20,
-                            color: fadedColor,
-                            thickness: 1,
-                          ),
-                          Text(
-                            'Description - ${descriptionController.text}',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              color: blackColor,
-                              fontSize: 14,
-                            ),
-                            maxLines: 3,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          ),
                         ],
+                      ),
+                      const Divider(
+                        height: 20,
+                        color: lightBlackColor,
+                      ),
+                      Text(
+                        'Description - ${descriptionController.text}',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                          color: blackColor,
+                          fontSize: 14,
+                        ),
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
                 actionsPadding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 titlePadding: const EdgeInsets.only(
                   left: 15,
@@ -500,14 +562,32 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 actions: [
                   CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
+                    text: 'Confirm & Post',
                     onPressed: () async {
                       setState(() {
                         isLoading = true;
                       });
-                      Navigator.pop(context);
-                      var uid = widget.productData['postedAt'];
-                      provider.updatedDataToFirestore.addAll({
+                      Get.back();
+                      List<String> urls =
+                          await provider.uploadFiles(provider.imagePaths);
+                      var uid = DateTime.now().millisecondsSinceEpoch;
+                      setSearchParams(String s, int n) {
+                        List<String> searchQueries = [];
+                        for (int i = 0; i < n; i++) {
+                          String temp = '';
+                          for (int j = i; j < n; j++) {
+                            temp += s[j];
+                            if (temp.length >= 3) {
+                              searchQueries.add(temp);
+                            }
+                          }
+                        }
+                        return searchQueries;
+                      }
+
+                      provider.dataToFirestore.addAll({
+                        'catName': 'Vehicles',
+                        'subCat': widget.subCatName,
                         'title':
                             '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
                         'brandName': brandNameController.text,
@@ -519,12 +599,30 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         'noOfOwners': noOfOwnersSelectedValue,
                         'description': descriptionController.text,
                         'price': int.parse(priceController.text),
+                        'sellerUid': _services.user!.uid,
+                        'images': urls,
+                        'postedAt': uid,
+                        'favorites': [],
+                        'views': [],
+                        'searchQueries': setSearchParams(
+                          '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                          brandNameController.text.length +
+                              modelNameController.text.length +
+                              1,
+                        ),
+                        'location': {
+                          'area': area,
+                          'city': city,
+                          'state': state,
+                          'country': country,
+                        },
+                        'isActive': false,
                       });
-                      updateProductOnFirebase(provider, uid.toString());
+                      publishProductToFirebase(provider, uid.toString());
                     },
                     bgColor: blueColor,
                     borderColor: blueColor,
-                    textIconColor: Colors.white,
+                    textIconColor: whiteColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -532,39 +630,35 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   CustomButtonWithoutIcon(
                     text: 'Go Back & Check',
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
-                    bgColor: Colors.white,
-                    borderColor: blueColor,
-                    textIconColor: blueColor,
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
                   ),
                 ],
               );
             },
           );
-        } else {
+        }
+        if (provider.imagePaths.isEmpty) {
           showSnackBar(
             context: context,
-            content: 'Please fill all the fields marked with *',
+            content: 'Please upload some images of the product.',
             color: redColor,
           );
         }
-      } else {
-        showSnackBar(
-          context: context,
-          content: 'Please fill all the fields marked with *',
-          color: redColor,
-        );
       }
     }
 
-    closePageAndGoToHome() {
-      showDialog(
+    resetAll() {
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Warning',
+              'Are you sure?',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -575,12 +669,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
               padding: const EdgeInsets.all(15),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 color: greyColor,
               ),
               child: Text(
-                'Are you sure you want to cancel editing your listing? All unsaved details will be lost.',
+                'All your listing details will be removed and you\'ll have to start fresh.',
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -589,7 +683,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
             ),
             actionsPadding: const EdgeInsets.all(15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(5),
             ),
             titlePadding: const EdgeInsets.only(
               left: 15,
@@ -605,30 +699,126 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
             ),
             actions: [
               CustomButtonWithoutIcon(
-                text: 'Yes, Cancel',
+                text: 'Yes, Reset all',
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  showSnackBar(
-                    context: context,
-                    content: 'Listing editing cancelled',
-                    color: redColor,
-                  );
+                  setState(() {
+                    brandNameController.text = '';
+                    modelNameController.text = '';
+                    fuelTypeSelectedValue = null;
+                    yorSelectedValue = null;
+                    colorSelectedValue = null;
+                    kmDrivenController.text = '';
+                    noOfOwnersSelectedValue = null;
+                    descriptionController.text = '';
+                    priceController.text = '';
+                    provider.imagePaths.clear();
+                    provider.clearImagesCount();
+                  });
+                  Get.back();
                 },
                 bgColor: redColor,
                 borderColor: redColor,
-                textIconColor: Colors.white,
+                textIconColor: whiteColor,
               ),
               const SizedBox(
                 height: 10,
               ),
               CustomButtonWithoutIcon(
-                text: 'No, Continue',
+                text: 'No, Cancel',
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
-                bgColor: Colors.white,
-                borderColor: blackColor,
+                bgColor: whiteColor,
+                borderColor: greyColor,
+                textIconColor: blackColor,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    closePageAndGoToHome() {
+      showModal(
+        configuration: const FadeScaleTransitionConfiguration(),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Warning',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                color: greyColor,
+              ),
+              child: Text(
+                'Are you sure you want to leave? Your progress will not be saved',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            actionsPadding: const EdgeInsets.all(15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            titlePadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 15,
+              bottom: 10,
+            ),
+            contentPadding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 5,
+              top: 5,
+            ),
+            actions: [
+              CustomButtonWithoutIcon(
+                text: 'Yes, Leave',
+                onPressed: () {
+                  setState(() {
+                    brandNameController.text = '';
+                    modelNameController.text = '';
+                    fuelTypeSelectedValue = null;
+                    yorSelectedValue = null;
+                    colorSelectedValue = null;
+                    kmDrivenController.text = '';
+                    noOfOwnersSelectedValue = null;
+                    descriptionController.text = '';
+                    priceController.text = '';
+                    provider.imagePaths.clear();
+                    provider.clearImagesCount();
+                  });
+                  Get.offAll(() => const MainScreen(
+                        selectedIndex: 0,
+                      ));
+                },
+                bgColor: redColor,
+                borderColor: redColor,
+                textIconColor: whiteColor,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomButtonWithoutIcon(
+                text: 'No, Stay here',
+                onPressed: () {
+                  Get.back();
+                },
+                bgColor: whiteColor,
+                borderColor: greyColor,
                 textIconColor: blackColor,
               ),
             ],
@@ -638,23 +828,39 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     }
 
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        closePageAndGoToHome();
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0.2,
-          backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
+          elevation: 0.5,
+          backgroundColor: whiteColor,
+          iconTheme: const IconThemeData(color: blackColor),
+          centerTitle: true,
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(Iconsax.close_circle4),
+            icon: const Icon(FontAwesomeIcons.circleXmark),
           ),
-          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: isLoading ? null : resetAll,
+              child: Text(
+                'Reset All',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  color: redColor,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
           title: Text(
-            'Edit your listing',
+            'Create your listing',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: blackColor,
               fontSize: 15,
             ),
           ),
@@ -676,9 +882,9 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       'Step 1 - Vehicle Details',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -705,10 +911,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     child: CustomTextField(
                       controller: brandNameController,
                       keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
                       label: 'Brand Name*',
                       hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
                       maxLength: 30,
+                      textInputAction: TextInputAction.next,
                       isEnabled: isLoading ? false : true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -779,7 +985,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -787,7 +993,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -795,7 +1001,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -808,7 +1014,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         focusedErrorBorder: OutlineInputBorder(
@@ -817,12 +1023,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         labelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
@@ -831,7 +1037,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         floatingLabelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: lightBlackColor,
                         ),
                       ),
                     ),
@@ -853,18 +1059,18 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: fadedColor,
                         ),
                         buttonDecoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(15),
+                          color: greyColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         icon: const Icon(
-                          Iconsax.arrow_down_14,
+                          FontAwesomeIcons.chevronDown,
                           size: 15,
                         ),
                         iconOnClick: const Icon(
-                          Iconsax.arrow_up_24,
+                          FontAwesomeIcons.chevronUp,
                           size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
@@ -872,7 +1078,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           vertical: 10,
                         ),
                         dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         items: fuelType
                             .map(
@@ -921,7 +1127,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                           ),
@@ -957,18 +1163,18 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         buttonDecoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(15),
+                          color: greyColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         icon: const Icon(
-                          Iconsax.arrow_down_14,
+                          FontAwesomeIcons.chevronDown,
                           size: 15,
                         ),
                         iconOnClick: const Icon(
-                          Iconsax.arrow_up_24,
+                          FontAwesomeIcons.chevronUp,
                           size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
@@ -976,7 +1182,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           vertical: 10,
                         ),
                         dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         items: yor
                             .map(
@@ -1025,7 +1231,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                           ),
@@ -1061,18 +1267,18 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         buttonDecoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(15),
+                          color: greyColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         icon: const Icon(
-                          Iconsax.arrow_down_14,
+                          FontAwesomeIcons.chevronDown,
                           size: 15,
                         ),
                         iconOnClick: const Icon(
-                          Iconsax.arrow_up_24,
+                          FontAwesomeIcons.chevronUp,
                           size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
@@ -1080,7 +1286,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           vertical: 10,
                         ),
                         dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         items: colors
                             .map(
@@ -1129,7 +1335,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                           ),
@@ -1165,20 +1371,18 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         buttonDecoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 235, 239, 243),
-                          borderRadius: BorderRadius.circular(
-                            10,
-                          ),
+                          color: greyColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         icon: const Icon(
-                          Iconsax.arrow_down_14,
+                          FontAwesomeIcons.chevronDown,
                           size: 15,
                         ),
                         iconOnClick: const Icon(
-                          Iconsax.arrow_up_24,
+                          FontAwesomeIcons.chevronUp,
                           size: 15,
                         ),
                         buttonPadding: const EdgeInsets.symmetric(
@@ -1186,7 +1390,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           vertical: 10,
                         ),
                         dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         items: noOfOwners
                             .map(
@@ -1235,7 +1439,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
                           ),
@@ -1265,9 +1469,9 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       'Step 2 - Listing Details',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -1282,8 +1486,8 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       label: 'Description*',
                       hint:
                           'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                      maxLength: 1000,
-                      maxLines: 3,
+                      maxLength: 3000,
+                      maxLines: 5,
                       showCounterText: true,
                       isEnabled: isLoading ? false : true,
                       textInputAction: TextInputAction.newline,
@@ -1337,7 +1541,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -1345,7 +1549,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -1353,7 +1557,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         errorStyle: GoogleFonts.poppins(
                           fontSize: 12,
@@ -1366,7 +1570,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         focusedErrorBorder: OutlineInputBorder(
@@ -1375,12 +1579,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
-                          color: const Color.fromARGB(255, 111, 111, 111),
+                          color: greyColor,
                         ),
                         labelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
@@ -1389,8 +1593,77 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         floatingLabelStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: lightBlackColor,
                         ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 3 - Product Images',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ImagePickerWidget(
+                    isButtonDisabled: isLoading ? true : false,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    color: blueColor,
+                    child: Text(
+                      'Step 4 - User Location',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: whiteColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomTextField(
+                      controller: locationController,
+                      keyboardType: TextInputType.text,
+                      label: 'Location*',
+                      hint: 'Choose your location to list product',
+                      maxLines: 2,
+                      showCounterText: false,
+                      isEnabled: false,
+                      textInputAction: TextInputAction.go,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      'To change your location go to settings.',
+                      style: GoogleFonts.poppins(
+                        color: lightBlackColor,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -1403,7 +1676,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
           ),
         ),
         bottomNavigationBar: Container(
-          color: const Color.fromARGB(255, 244, 241, 241),
+          color: greyColor,
           padding: const EdgeInsets.only(
             left: 15,
             right: 15,
@@ -1416,17 +1689,19 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: Colors.white,
+                  bgColor: greyColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: validateForm,
-                  icon: Iconsax.arrow_circle_right4,
+                  onPressed: () {
+                    validateForm();
+                  },
+                  icon: FontAwesomeIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,
-                  textIconColor: Colors.white,
+                  textIconColor: whiteColor,
                 ),
         ),
       ),

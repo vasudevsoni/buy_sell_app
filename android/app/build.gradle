@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.buy_sell_app"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -67,7 +67,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:30.4.1')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-appcheck-playintegrity'
+    implementation platform('com.google.firebase:firebase-bom:31.0.1')
 }

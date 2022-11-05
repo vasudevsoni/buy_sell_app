@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/utils.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final bool isEnabled;
   final bool showCounterText;
   final bool autofocus;
-  final String? prefixText;
   final bool isReadOnly;
   final bool isObscured;
   final String label;
   final String hint;
-  final int maxLength;
+  final int? maxLength;
   void Function()? onTap;
   Function(String)? onFieldSubmitted;
   final int maxLines;
@@ -24,7 +24,7 @@ class CustomTextField extends StatelessWidget {
   Function(String)? onChanged;
   CustomTextField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.keyboardType,
     required this.textInputAction,
     this.isEnabled = true,
@@ -36,8 +36,7 @@ class CustomTextField extends StatelessWidget {
     this.isObscured = false,
     required this.hint,
     this.autofocus = false,
-    this.prefixText,
-    required this.maxLength,
+    this.maxLength,
     this.validator,
     this.onChanged,
     this.maxLines = 1,
@@ -66,9 +65,9 @@ class CustomTextField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         labelText: label,
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
         floatingLabelAlignment: FloatingLabelAlignment.start,
         hintText: hint,
-        prefixText: prefixText,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 10,
@@ -87,7 +86,7 @@ class CustomTextField extends StatelessWidget {
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -95,7 +94,7 @@ class CustomTextField extends StatelessWidget {
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -103,7 +102,7 @@ class CustomTextField extends StatelessWidget {
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -111,21 +110,20 @@ class CustomTextField extends StatelessWidget {
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: blueColor,
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(5),
         ),
         hintStyle: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.normal,
-          color: const Color.fromARGB(255, 111, 111, 111),
+          color: fadedColor,
         ),
         labelStyle: GoogleFonts.poppins(
           fontWeight: FontWeight.normal,
@@ -139,7 +137,7 @@ class CustomTextField extends StatelessWidget {
         floatingLabelStyle: GoogleFonts.poppins(
           fontWeight: FontWeight.normal,
           fontSize: 15,
-          color: Colors.black87,
+          color: lightBlackColor,
         ),
       ),
     );

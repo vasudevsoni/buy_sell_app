@@ -1,14 +1,12 @@
+import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/utils.dart';
-
-// ignore: must_be_immutable
 class CustomListTileNoImage extends StatelessWidget {
   final String text;
   final IconData icon;
-  void Function()? onTap;
-  CustomListTileNoImage({
+  final void Function()? onTap;
+  const CustomListTileNoImage({
     super.key,
     required this.text,
     required this.icon,
@@ -19,33 +17,30 @@ class CustomListTileNoImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Container(
-        margin: const EdgeInsets.only(top: 5, bottom: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         padding: const EdgeInsets.symmetric(
           vertical: 10,
-          horizontal: 20,
+          horizontal: 15,
         ),
-        height: 60,
-        decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
           color: greyColor,
         ),
+        height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               text,
               style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w700,
-                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
               ),
             ),
             Icon(
               icon,
-              size: 17,
+              size: 12,
             ),
           ],
         ),

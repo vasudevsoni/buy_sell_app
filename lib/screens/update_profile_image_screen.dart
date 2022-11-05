@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:get/get.dart';
+
 import 'package:uuid/uuid.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,7 +29,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   var uuid = const Uuid();
   String profileImage = '';
   XFile? pickedImage;
-  String? downloadUrl;
+  String downloadUrl = '';
   bool isLoading = false;
 
   @override
@@ -64,15 +65,20 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     downloadUrl = await (await uploadTask).ref.getDownloadURL();
     services.users.doc(services.user!.uid).update({
       'profileImage': downloadUrl,
+    }).then((value) {
+      Get.back();
+      Get.reloadAll();
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(
+        context: context,
+        content: 'Profile image updated successfully.',
+        color: blueColor,
+      );
     });
-    showSnackBar(
-      context: context,
-      content: 'Profile image updated',
-      color: blueColor,
-    );
     setState(() {
       isLoading = false;
-      Navigator.pop(context);
     });
   }
 
@@ -98,15 +104,16 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: whiteColor,
         appBar: AppBar(
-          elevation: 0.2,
-          backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
+          elevation: 0.5,
+          backgroundColor: whiteColor,
+          iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
           title: Text(
             'Update profile image',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: blackColor,
               fontSize: 15,
             ),
           ),
@@ -125,9 +132,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                       color: blueColor,
                     ),
                     child: const Icon(
-                      Iconsax.security_user4,
-                      color: Colors.white,
-                      size: 20,
+                      FontAwesomeIcons.userTie,
+                      color: whiteColor,
+                      size: 45,
                     ),
                   )
                 : pickedImage == null
@@ -139,11 +146,18 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                           child: CachedNetworkImage(
                             imageUrl: profileImage,
                             fit: BoxFit.cover,
-                            placeholder: (context, event) {
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                FontAwesomeIcons.circleExclamation,
+                                size: 30,
+                                color: redColor,
+                              );
+                            },
+                            placeholder: (context, url) {
                               return const Center(
                                 child: SpinKitFadingCube(
-                                  color: greyColor,
-                                  size: 20,
+                                  color: lightBlackColor,
+                                  size: 30,
                                   duration: Duration(milliseconds: 1000),
                                 ),
                               );
@@ -170,11 +184,11 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               child: CustomButton(
                 text: 'Take Photo',
                 onPressed: takePhoto,
-                icon: Iconsax.camera4,
+                icon: FontAwesomeIcons.cameraRetro,
                 bgColor: blackColor,
-                isDisabled: isLoading,
                 borderColor: blackColor,
-                textIconColor: Colors.white,
+                isDisabled: isLoading,
+                textIconColor: whiteColor,
               ),
             ),
             const SizedBox(
@@ -185,17 +199,17 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               child: CustomButton(
                 text: 'Choose Photo',
                 onPressed: choosePhoto,
-                icon: Iconsax.gallery4,
-                bgColor: Colors.white,
+                icon: FontAwesomeIcons.solidImages,
+                bgColor: whiteColor,
+                borderColor: greyColor,
                 isDisabled: isLoading,
-                borderColor: blackColor,
                 textIconColor: blackColor,
               ),
             ),
           ],
         ),
         bottomNavigationBar: Container(
-          color: const Color.fromARGB(255, 244, 241, 241),
+          color: greyColor,
           padding: const EdgeInsets.only(
             left: 15,
             right: 15,
@@ -208,19 +222,19 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: Colors.white,
+                  bgColor: greyColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
                 )
               : CustomButton(
-                  text: 'Save',
+                  text: 'Done',
                   onPressed: () {
                     uploadImage(File(pickedImage!.path));
                   },
-                  icon: Iconsax.tick_circle4,
+                  icon: FontAwesomeIcons.check,
                   bgColor: blueColor,
                   borderColor: blueColor,
-                  textIconColor: Colors.white,
+                  textIconColor: whiteColor,
                 ),
         ),
       ),

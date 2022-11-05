@@ -1,10 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
+
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 import '../utils/utils.dart';
 import '../widgets/custom_button.dart';
@@ -12,6 +13,7 @@ import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_text_field.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
+  static const String routeName = '/update-profile-screen';
   const UpdateProfileScreen({super.key});
 
   @override
@@ -41,9 +43,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       value['dob'] == null
           ? dobController.text == ''
           : dobController.text = value['dob'];
-      // value['profileImage'] == null
-      //     ? downloadUrl = ''
-      //     : downloadUrl = value['profileImage'];
     });
     super.initState();
   }
@@ -59,10 +58,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     validateForm() async {
       if (_formKey.currentState!.validate()) {
-        if (nameController.text.isNotEmpty && dobController.text.isNotEmpty) {
-          showDialog(
+        if (nameController.text.isNotEmpty) {
+          showModal(
+            configuration: const FadeScaleTransitionConfiguration(),
             context: context,
-            barrierColor: Colors.black87,
             builder: (context) {
               return AlertDialog(
                 title: Text(
@@ -77,7 +76,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   padding: const EdgeInsets.all(15),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     color: greyColor,
                   ),
@@ -91,7 +90,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
                 actionsPadding: const EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 titlePadding: const EdgeInsets.only(
                   left: 15,
@@ -108,13 +107,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 actions: [
                   CustomButtonWithoutIcon(
                     text: 'Confirm & Update',
-                    onPressed: () async {
+                    onPressed: () {
                       setState(() {
                         isLoading = true;
                       });
-                      Navigator.pop(context);
-                      // await uploadImage(File(pickedImage!.path));
-                      await _services.updateUserDetails(uid, {
+                      Get.back();
+                      _services.updateUserDetails(uid, {
                         'name': nameController.text,
                         'bio': bioController.text.isEmpty
                             ? null
@@ -126,15 +124,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      showSnackBar(
-                        context: context,
-                        content: 'Profile updated successfully',
-                        color: blueColor,
-                      );
+                      Get.back();
                     },
                     bgColor: blueColor,
                     borderColor: blueColor,
-                    textIconColor: Colors.white,
+                    textIconColor: whiteColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -142,11 +136,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   CustomButtonWithoutIcon(
                     text: 'Go Back & Check',
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
-                    bgColor: Colors.white,
-                    borderColor: blueColor,
-                    textIconColor: blueColor,
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
                   ),
                 ],
               );
@@ -155,29 +149,30 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         } else {
           showSnackBar(
             context: context,
-            content: 'Please fill all the fields marked with *',
+            content: 'Please fill all the required fields.',
             color: redColor,
           );
         }
       } else {
         showSnackBar(
           context: context,
-          content: 'Please fill all the fields marked with *',
+          content: 'Please fill all the required fields.',
           color: redColor,
         );
       }
     }
 
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Edit your profile',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -199,7 +194,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     'Profile Details',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
-                      color: Colors.white,
+                      color: whiteColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
                     ),
@@ -213,7 +208,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   child: CustomTextField(
                     controller: nameController,
                     keyboardType: TextInputType.text,
-                    label: 'Name',
+                    label: 'Name*',
                     hint: 'Enter you name',
                     maxLength: 80,
                     isEnabled: isLoading ? false : true,
@@ -287,7 +282,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: const Color.fromARGB(255, 244, 241, 241),
+        color: greyColor,
         padding: const EdgeInsets.only(
           left: 15,
           right: 15,
@@ -300,17 +295,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 onPressed: () {},
                 isDisabled: isLoading,
                 icon: FontAwesomeIcons.spinner,
-                bgColor: blackColor,
-                borderColor: blackColor,
-                textIconColor: Colors.white,
+                bgColor: greyColor,
+                borderColor: greyColor,
+                textIconColor: blackColor,
               )
             : CustomButton(
                 text: 'Proceed',
                 onPressed: validateForm,
-                icon: Iconsax.arrow_circle_right4,
+                icon: FontAwesomeIcons.arrowRight,
                 bgColor: blueColor,
                 borderColor: blueColor,
-                textIconColor: Colors.white,
+                textIconColor: whiteColor,
               ),
       ),
     );

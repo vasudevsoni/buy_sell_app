@@ -1,18 +1,20 @@
+import 'package:animations/animations.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/screens/full_bio_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../utils/utils.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/custom_product_card.dart';
 import '../services/firebase_services.dart';
 
@@ -33,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String bio = '';
   String profileImage = '';
   String sellerUid = '';
+  String address = '';
   DateTime dateJoined = DateTime.now();
 
   @override
@@ -46,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (mounted) {
         setState(() {
           if (value['name'] == null) {
-            name = 'Name not disclosed';
+            name = 'BestDeal User';
           } else {
             name = value['name'];
           }
@@ -60,6 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           } else {
             profileImage = value['profileImage'];
           }
+          if (value['location'] == null) {
+            address == '';
+          } else {
+            address =
+                '${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+          }
           sellerUid = value['uid'];
           dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
         });
@@ -70,15 +79,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.5,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
           'Profile',
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: blackColor,
             fontSize: 15,
           ),
         ),
@@ -102,24 +112,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: blueColor,
                         ),
                         child: const Icon(
-                          Iconsax.security_user4,
-                          color: Colors.white,
+                          FontAwesomeIcons.userTie,
+                          color: whiteColor,
                           size: 40,
                         ),
                       )
                     : GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () {
-                          showDialog(
+                          showModal(
+                            configuration:
+                                const FadeScaleTransitionConfiguration(),
                             context: context,
                             builder: (context) {
                               return Dismissible(
-                                key: const Key('photoKey'),
+                                key: UniqueKey(),
                                 direction: DismissDirection.down,
                                 onDismissed: (direction) {
-                                  Navigator.pop(context);
+                                  Get.back();
                                 },
                                 child: Material(
-                                  color: Colors.black,
+                                  color: blackColor,
                                   child: Stack(
                                     children: [
                                       PhotoViewGallery.builder(
@@ -144,7 +157,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return const Icon(
-                                                Iconsax.warning_24,
+                                                FontAwesomeIcons
+                                                    .circleExclamation,
                                                 size: 20,
                                                 color: redColor,
                                               );
@@ -167,14 +181,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         left: 15,
                                         child: IconButton(
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            Get.back();
                                           },
                                           splashColor: blueColor,
                                           splashRadius: 30,
                                           icon: const Icon(
-                                            Iconsax.close_square4,
+                                            FontAwesomeIcons.circleXmark,
                                             size: 30,
-                                            color: Colors.white,
+                                            color: whiteColor,
                                             shadows: [
                                               BoxShadow(
                                                 offset: Offset(0, 0),
@@ -200,6 +214,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: CachedNetworkImage(
                               imageUrl: profileImage,
                               fit: BoxFit.cover,
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  FontAwesomeIcons.circleExclamation,
+                                  size: 30,
+                                  color: redColor,
+                                );
+                              },
+                              placeholder: (context, url) {
+                                return const Center(
+                                  child: SpinKitFadingCube(
+                                    color: lightBlackColor,
+                                    size: 30,
+                                    duration: Duration(milliseconds: 1000),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -222,55 +252,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 if (bio != '')
-                  Column(
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            PageTransition(
-                              child: FullBioScreen(bio: bio),
-                              type: PageTransitionType.rightToLeftWithFade,
-                            ),
-                          );
-                        },
-                        child: Hero(
-                          tag: 'full-bio',
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Text(
-                              bio,
-                              maxLines: 3,
-                              softWrap: true,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.poppins(
-                                color: blackColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Get.to(
+                        () => FullBioScreen(bio: bio),
+                      );
+                    },
+                    child: Text(
+                      bio,
+                      maxLines: 3,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        color: blackColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (address != '')
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: greyColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          FontAwesomeIcons.mapLocationDot,
+                          color: blueColor,
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          child: AutoSizeText(
+                            address,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.poppins(
+                              color: lightBlackColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                Text(
-                  'Joined ${DateFormat.yMMMM().format(dateJoined)}',
-                  style: GoogleFonts.poppins(
-                    color: fadedColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+                  child: Text(
+                    'Joined ${timeago.format(dateJoined)}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: GoogleFonts.poppins(
+                      color: blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
                 const Divider(
                   height: 30,
-                  color: fadedColor,
                   indent: 15,
                   endIndent: 15,
+                  color: lightBlackColor,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,20 +385,14 @@ class _SellerProductsListState extends State<SellerProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return FirestoreQueryBuilder(
       query: _services.listings
           .orderBy(
             'postedAt',
             descending: true,
           )
-          .where('sellerUid', isEqualTo: widget.sellerUid),
+          .where('sellerUid', isEqualTo: widget.sellerUid)
+          .where('isActive', isEqualTo: true),
       pageSize: 6,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
@@ -351,7 +411,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                'Some error occurred. Please try again',
+                'Something has gone wrong. Please try again',
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -377,14 +437,16 @@ class _SellerProductsListState extends State<SellerProductsList> {
             ),
           );
         } else {
-          return MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                height: 10,
+              );
+            },
             padding: const EdgeInsets.only(
-              left: 10,
-              top: 0,
-              right: 10,
+              left: 15,
+              top: 10,
+              right: 15,
               bottom: 30,
             ),
             shrinkWrap: true,
@@ -394,7 +456,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
               var data = snapshot.docs[index];
               var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
               var sellerDetails = _services.getUserData(data['sellerUid']);
-              final hasEndReached = snapshot.hasMore &&
+              final hasMoreReached = snapshot.hasMore &&
                   index + 1 == snapshot.docs.length &&
                   !snapshot.isFetchingMore;
               return Column(
@@ -403,44 +465,22 @@ class _SellerProductsListState extends State<SellerProductsList> {
                   CustomProductCard(
                     data: data,
                     sellerDetails: sellerDetails,
-                    priceFormat: priceFormat,
                     time: time,
                   ),
-                  if (hasEndReached)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          fixedSize: const Size.fromHeight(70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          snapshot.fetchMore();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Load more',
-                              style: GoogleFonts.poppins(
-                                color: blueColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Icon(
-                              Iconsax.arrow_square_down4,
-                              size: 15,
-                              color: blueColor,
-                            ),
-                          ],
-                        ),
-                      ),
+                  if (hasMoreReached)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  if (hasMoreReached)
+                    CustomButton(
+                      text: 'Load more',
+                      onPressed: () {
+                        snapshot.fetchMore();
+                      },
+                      icon: FontAwesomeIcons.chevronDown,
+                      borderColor: blackColor,
+                      bgColor: blackColor,
+                      textIconColor: whiteColor,
                     ),
                 ],
               );
