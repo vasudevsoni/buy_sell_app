@@ -76,26 +76,17 @@ class _TimerButtonState extends State<TimerButton> {
   @override
   Widget build(BuildContext context) {
     return timeUpFlag
-        ? SizedBox(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            child: NeumorphicButton(
-              onPressed: _onPressed,
-              style: NeumorphicStyle(
-                lightSource: LightSource.top,
-                shape: NeumorphicShape.convex,
-                depth: 0,
-                intensity: 0,
-                border: NeumorphicBorder(
-                  color: widget.disabledColor,
-                  width: 1,
-                ),
-                boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.circular(5),
+        ? GestureDetector(
+            onTap: _onPressed,
+            child: Container(
+              height: 45,
+              width: MediaQuery.of(context).size.width,
+              decoration: ShapeDecoration(
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 color: widget.color,
               ),
-              provideHapticFeedback: true,
               child: Center(
                 child: AutoSizeText(
                   widget.label,
@@ -112,26 +103,17 @@ class _TimerButtonState extends State<TimerButton> {
               ),
             ),
           )
-        : SizedBox(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            child: NeumorphicButton(
-              onPressed: null,
-              style: NeumorphicStyle(
-                lightSource: LightSource.top,
-                shape: NeumorphicShape.convex,
-                depth: 0,
-                intensity: 0,
-                border: NeumorphicBorder(
-                  color: widget.disabledColor,
-                  width: 1,
-                ),
-                boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.circular(5),
+        : GestureDetector(
+            onTap: null,
+            child: Container(
+              height: 45,
+              width: MediaQuery.of(context).size.width,
+              decoration: ShapeDecoration(
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 color: widget.disabledColor,
               ),
-              provideHapticFeedback: true,
               child: Center(
                 child: AutoSizeText(
                   'Please wait for $_timerText',

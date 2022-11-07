@@ -43,11 +43,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             elevation: 0.0,
             actions: [
               IconButton(
-                onPressed: () {
-                  Get.offAll(() => const MainScreen(
-                        selectedIndex: 0,
-                      ));
-                },
+                onPressed: () =>
+                    Get.offAll(() => const MainScreen(selectedIndex: 0)),
                 icon: const Icon(
                   FontAwesomeIcons.circleXmark,
                   color: blackColor,
@@ -86,9 +83,11 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
+                  decoration: ShapeDecoration(
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     color: greyColor,
-                    borderRadius: BorderRadius.circular(5),
                   ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15,
@@ -120,11 +119,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 const Spacer(),
                 CustomButton(
                   text: 'Go to Home',
-                  onPressed: () {
-                    Get.offAll(() => const MainScreen(
-                          selectedIndex: 0,
-                        ));
-                  },
+                  onPressed: () =>
+                      Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: FontAwesomeIcons.house,
                   bgColor: blackColor,
                   borderColor: blackColor,

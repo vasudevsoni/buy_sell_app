@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
 import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
@@ -298,345 +297,366 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
             kmDrivenController.text.isNotEmpty &&
             colorSelectedValue != null &&
             provider.imagePaths.isNotEmpty) {
-          showModal(
-            configuration: const FadeScaleTransitionConfiguration(),
+          showModalBottomSheet<dynamic>(
             context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
             builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  'Ready to post?',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                content: Container(
-                  padding: const EdgeInsets.all(15),
+              return SafeArea(
+                child: Container(
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    color: greyColor,
+                    color: whiteColor,
                   ),
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Stack(
-                                children: [
-                                  Opacity(
-                                    opacity: 0.7,
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.2,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.file(
-                                          provider.imagePaths[0],
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(
-                                              FontAwesomeIcons
-                                                  .circleExclamation,
-                                              size: 20,
-                                              color: redColor,
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (provider.imagePaths.length >= 2)
-                                    Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Center(
-                                        child: Text(
-                                          '+${(provider.imagesCount - 1).toString()}',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 30,
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
+                      Center(
+                        child: Container(
+                          width: 40.0,
+                          height: 5.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: fadedColor,
                           ),
-                          Expanded(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 2,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    priceFormat.format(
-                                      int.parse(priceController.text),
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w700,
-                                      color: blueColor,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      const Divider(
-                        height: 20,
-                        color: lightBlackColor,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.user,
-                                size: 13,
-                                color: blueColor,
-                              ),
-                              const SizedBox(
-                                width: 7,
-                              ),
-                              Text(
-                                noOfOwnersSelectedValue.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: lightBlackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.gasPump,
-                                size: 13,
-                                color: blueColor,
-                              ),
-                              const SizedBox(
-                                width: 7,
-                              ),
-                              Text(
-                                fuelTypeSelectedValue.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: lightBlackColor,
-                                ),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.calendar,
-                                size: 13,
-                                color: blueColor,
-                              ),
-                              const SizedBox(
-                                width: 7,
-                              ),
-                              Text(
-                                yorSelectedValue.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: lightBlackColor,
-                                ),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                FontAwesomeIcons.road,
-                                size: 13,
-                                color: blueColor,
-                              ),
-                              const SizedBox(
-                                width: 7,
-                              ),
-                              Text(
-                                '${kmFormat.format(
-                                  int.parse(kmDrivenController.text),
-                                )} Kms',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: lightBlackColor,
-                                ),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 20,
-                        color: lightBlackColor,
+                      const SizedBox(
+                        height: 10,
                       ),
                       Text(
-                        'Description - ${descriptionController.text}',
+                        'Ready to post?',
                         style: GoogleFonts.poppins(
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: blackColor,
-                          fontSize: 14,
                         ),
-                        maxLines: 3,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: ShapeDecoration(
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: greyColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Opacity(
+                                          opacity: 0.7,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.file(
+                                                provider.imagePaths[0],
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                    FontAwesomeIcons
+                                                        .circleExclamation,
+                                                    size: 20,
+                                                    color: redColor,
+                                                  );
+                                                },
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        if (provider.imagePaths.length >= 2)
+                                          Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Center(
+                                              child: Text(
+                                                '+${(provider.imagesCount - 1).toString()}',
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 30,
+                                                  color: whiteColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                          ),
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          priceFormat.format(
+                                            int.parse(priceController.text),
+                                          ),
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w700,
+                                            color: blueColor,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              height: 20,
+                              color: lightBlackColor,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.user,
+                                      size: 13,
+                                      color: blueColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    Text(
+                                      noOfOwnersSelectedValue.toString(),
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: lightBlackColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.gasPump,
+                                      size: 13,
+                                      color: blueColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    Text(
+                                      fuelTypeSelectedValue.toString(),
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: lightBlackColor,
+                                      ),
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.calendar,
+                                      size: 13,
+                                      color: blueColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    Text(
+                                      yorSelectedValue.toString(),
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: lightBlackColor,
+                                      ),
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.road,
+                                      size: 13,
+                                      color: blueColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    Text(
+                                      '${kmFormat.format(
+                                        int.parse(kmDrivenController.text),
+                                      )} Kms',
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: lightBlackColor,
+                                      ),
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              height: 20,
+                              color: lightBlackColor,
+                            ),
+                            Text(
+                              'Description - ${descriptionController.text}',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: blackColor,
+                                fontSize: 14,
+                              ),
+                              maxLines: 3,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Confirm & Post',
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Get.back();
+                          List<String> urls =
+                              await provider.uploadFiles(provider.imagePaths);
+                          var uid = DateTime.now().millisecondsSinceEpoch;
+                          setSearchParams(String s, int n) {
+                            List<String> searchQueries = [];
+                            for (int i = 0; i < n; i++) {
+                              String temp = '';
+                              for (int j = i; j < n; j++) {
+                                temp += s[j];
+                                if (temp.length >= 3) {
+                                  searchQueries.add(temp);
+                                }
+                              }
+                            }
+                            return searchQueries;
+                          }
+
+                          provider.dataToFirestore.addAll({
+                            'catName': 'Vehicles',
+                            'subCat': widget.subCatName,
+                            'title':
+                                '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                            'brandName': brandNameController.text,
+                            'modelName': modelNameController.text,
+                            'fuelType': fuelTypeSelectedValue,
+                            'yearOfReg': int.parse(yorSelectedValue!),
+                            'color': colorSelectedValue,
+                            'kmsDriven': int.parse(kmDrivenController.text),
+                            'noOfOwners': noOfOwnersSelectedValue,
+                            'description': descriptionController.text,
+                            'price': int.parse(priceController.text),
+                            'sellerUid': _services.user!.uid,
+                            'images': urls,
+                            'postedAt': uid,
+                            'favorites': [],
+                            'views': [],
+                            'searchQueries': setSearchParams(
+                              '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                              brandNameController.text.length +
+                                  modelNameController.text.length +
+                                  1,
+                            ),
+                            'location': {
+                              'area': area,
+                              'city': city,
+                              'state': state,
+                              'country': country,
+                            },
+                            'isActive': false,
+                          });
+                          publishProductToFirebase(provider, uid.toString());
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Go Back & Check',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
                       ),
                     ],
                   ),
                 ),
-                actionsPadding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                titlePadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  top: 15,
-                  bottom: 10,
-                ),
-                contentPadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  bottom: 5,
-                  top: 5,
-                ),
-                actions: [
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Post',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      List<String> urls =
-                          await provider.uploadFiles(provider.imagePaths);
-                      var uid = DateTime.now().millisecondsSinceEpoch;
-                      setSearchParams(String s, int n) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.dataToFirestore.addAll({
-                        'catName': 'Vehicles',
-                        'subCat': widget.subCatName,
-                        'title':
-                            '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                        'brandName': brandNameController.text,
-                        'modelName': modelNameController.text,
-                        'fuelType': fuelTypeSelectedValue,
-                        'yearOfReg': int.parse(yorSelectedValue!),
-                        'color': colorSelectedValue,
-                        'kmsDriven': int.parse(kmDrivenController.text),
-                        'noOfOwners': noOfOwnersSelectedValue,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'sellerUid': _services.user!.uid,
-                        'images': urls,
-                        'postedAt': uid,
-                        'favorites': [],
-                        'views': [],
-                        'searchQueries': setSearchParams(
-                          '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
-                          brandNameController.text.length +
-                              modelNameController.text.length +
-                              1,
-                        ),
-                        'location': {
-                          'area': area,
-                          'city': city,
-                          'state': state,
-                          'country': country,
-                        },
-                        'isActive': false,
-                      });
-                      publishProductToFirebase(provider, uid.toString());
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () {
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
-                  ),
-                ],
               );
             },
           );
@@ -652,176 +672,206 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     }
 
     resetAll() {
-      showModal(
-        configuration: const FadeScaleTransitionConfiguration(),
+      showModalBottomSheet<dynamic>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Are you sure?',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          return SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'All your listing details will be removed and you\'ll have to start fresh.',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Are you sure?',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'All your listing details will be removed and you\'ll have to start fresh.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Yes, Reset all',
+                    onPressed: () {
+                      setState(() {
+                        brandNameController.text = '';
+                        modelNameController.text = '';
+                        fuelTypeSelectedValue = null;
+                        yorSelectedValue = null;
+                        colorSelectedValue = null;
+                        kmDrivenController.text = '';
+                        noOfOwnersSelectedValue = null;
+                        descriptionController.text = '';
+                        priceController.text = '';
+                        provider.imagePaths.clear();
+                        provider.clearImagesCount();
+                      });
+                      Get.back();
+                    },
+                    bgColor: redColor,
+                    borderColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'No, Cancel',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'Yes, Reset all',
-                onPressed: () {
-                  setState(() {
-                    brandNameController.text = '';
-                    modelNameController.text = '';
-                    fuelTypeSelectedValue = null;
-                    yorSelectedValue = null;
-                    colorSelectedValue = null;
-                    kmDrivenController.text = '';
-                    noOfOwnersSelectedValue = null;
-                    descriptionController.text = '';
-                    priceController.text = '';
-                    provider.imagePaths.clear();
-                    provider.clearImagesCount();
-                  });
-                  Get.back();
-                },
-                bgColor: redColor,
-                borderColor: redColor,
-                textIconColor: whiteColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomButtonWithoutIcon(
-                text: 'No, Cancel',
-                onPressed: () {
-                  Get.back();
-                },
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
-            ],
           );
         },
       );
     }
 
     closePageAndGoToHome() {
-      showModal(
-        configuration: const FadeScaleTransitionConfiguration(),
+      showModalBottomSheet<dynamic>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Warning',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          return SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'Are you sure you want to leave? Your progress will not be saved',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Warning',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'Are you sure you want to leave? Your progress will not be saved.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Yes, Leave',
+                    onPressed: () {
+                      setState(() {
+                        brandNameController.text = '';
+                        modelNameController.text = '';
+                        fuelTypeSelectedValue = null;
+                        yorSelectedValue = null;
+                        colorSelectedValue = null;
+                        kmDrivenController.text = '';
+                        noOfOwnersSelectedValue = null;
+                        descriptionController.text = '';
+                        priceController.text = '';
+                        provider.imagePaths.clear();
+                        provider.clearImagesCount();
+                      });
+                      Get.offAll(() => const MainScreen(selectedIndex: 0));
+                    },
+                    bgColor: redColor,
+                    borderColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'No, Stay here',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'Yes, Leave',
-                onPressed: () {
-                  setState(() {
-                    brandNameController.text = '';
-                    modelNameController.text = '';
-                    fuelTypeSelectedValue = null;
-                    yorSelectedValue = null;
-                    colorSelectedValue = null;
-                    kmDrivenController.text = '';
-                    noOfOwnersSelectedValue = null;
-                    descriptionController.text = '';
-                    priceController.text = '';
-                    provider.imagePaths.clear();
-                    provider.clearImagesCount();
-                  });
-                  Get.offAll(() => const MainScreen(
-                        selectedIndex: 0,
-                      ));
-                },
-                bgColor: redColor,
-                borderColor: redColor,
-                textIconColor: whiteColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomButtonWithoutIcon(
-                text: 'No, Stay here',
-                onPressed: () {
-                  Get.back();
-                },
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
-            ],
           );
         },
       );
@@ -1685,7 +1735,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           ),
           child: isLoading
               ? CustomButton(
-                  text: 'Loading..',
+                  text: 'Loading...',
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
@@ -1695,9 +1745,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: () {
-                    validateForm();
-                  },
+                  onPressed: validateForm,
                   icon: FontAwesomeIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,

@@ -33,9 +33,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CarouselController controller = CarouselController();
   final FirebaseServices _services = FirebaseServices();
-  final PageController _pageController = PageController();
   User? user = FirebaseAuth.instance.currentUser;
   String area = '';
   String city = '';
@@ -72,12 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -123,10 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             // ),
                             Flexible(
                               child: GestureDetector(
-                                onTap: () {
-                                  Get.to(() => const LocationScreen(
-                                      isOpenedFromSellButton: false));
-                                },
+                                onTap: () => Get.to(
+                                  () => const LocationScreen(
+                                    isOpenedFromSellButton: false,
+                                  ),
+                                ),
                                 child: AutoSizeText(
                                   isLocationEmpty == true
                                       ? 'Set location'
@@ -171,9 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      Get.toNamed(SearchFieldScreen.routeName);
-                    },
+                    onTap: () => Get.toNamed(SearchFieldScreen.routeName),
                     child: const Icon(
                       FontAwesomeIcons.magnifyingGlass,
                       color: blackColor,
@@ -198,21 +189,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: AutoSizeText(
+                      Expanded(
+                        child: Text(
                           'Browse Categories',
-                          maxLines: 1,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w700,
-                            fontSize: 22,
+                            fontSize: 20,
                           ),
                         ),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Get.toNamed(CategoriesListScreen.routeName);
-                        },
+                        onPressed: () =>
+                            Get.toNamed(CategoriesListScreen.routeName),
                         child: Text(
                           'See all',
                           style: GoogleFonts.poppins(
@@ -262,9 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       return CarouselSlider.builder(
                         itemCount: 6,
-                        key: UniqueKey(),
                         options: CarouselOptions(
-                          viewportFraction: 0.9,
+                          viewportFraction: 0.85,
                           pageSnapping: true,
                           height: MediaQuery.of(context).size.height,
                           enlargeCenterPage: false,
@@ -277,14 +267,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           var doc = snapshot.data!.docs[index];
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              Get.to(
-                                () => SubCategoriesListScreen(doc: doc),
-                              );
-                            },
+                            onTap: () => Get.to(
+                              () => SubCategoriesListScreen(doc: doc),
+                            ),
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(10),
                                 color: greyColor,
                               ),
                               margin:
@@ -294,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Stack(
                                   children: [
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(10),
                                       child: CachedNetworkImage(
                                         imageUrl: doc['image'],
                                         fit: BoxFit.cover,
@@ -362,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w700,
-                      fontSize: 22,
+                      fontSize: 20,
                     ),
                   ),
                 ),
@@ -469,7 +457,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                height: 10,
+                height: 13,
               );
             },
             scrollDirection: Axis.vertical,
@@ -503,9 +491,7 @@ class _HomeScreenProductsListState extends State<HomeScreenProductsList> {
                   if (hasMoreReached)
                     CustomButton(
                       text: 'Load more',
-                      onPressed: () {
-                        snapshot.fetchMore();
-                      },
+                      onPressed: () => snapshot.fetchMore(),
                       icon: FontAwesomeIcons.chevronDown,
                       borderColor: blackColor,
                       bgColor: blackColor,

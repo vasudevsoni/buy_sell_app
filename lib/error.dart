@@ -4,6 +4,7 @@ import 'utils/utils.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String error;
+
   const ErrorScreen({
     Key? key,
     required this.error,

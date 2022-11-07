@@ -73,14 +73,12 @@ class SubCategoriesListScreen extends StatelessWidget {
                   return CustomListTileNoImage(
                     text: data[index],
                     icon: FontAwesomeIcons.chevronRight,
-                    onTap: () {
-                      Get.to(
-                        () => CategoryProductsScreen(
-                          catName: doc['catName'],
-                          subCatName: data[index],
-                        ),
-                      );
-                    },
+                    onTap: () => Get.to(
+                      () => CategoryProductsScreen(
+                        catName: doc['catName'],
+                        subCatName: data[index],
+                      ),
+                    ),
                   );
                 },
               ),

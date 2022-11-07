@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -74,8 +75,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     });
   }
 
-  onSellButtonClicked() {
-    services.getCurrentUserData().then((value) {
+  onSellButtonClicked() async {
+    await services.getCurrentUserData().then((value) {
       if (value['location'] == null) {
         Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
         showSnackBar(
@@ -95,380 +96,372 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       body: SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: RefreshIndicator(
-            onRefresh: () {
-              Get.reload();
-              return Future.delayed(const Duration(seconds: 2));
-            },
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        bottom: 20,
-                      ),
-                      child: profileImage == ''
-                          ? GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                showModal(
-                                  configuration:
-                                      const FadeScaleTransitionConfiguration(),
-                                  context: context,
-                                  builder: (_) {
-                                    return Dismissible(
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.down,
-                                      onDismissed: (direction) {
-                                        Get.back();
-                                      },
-                                      child: Material(
-                                        color: blackColor,
-                                        child: Stack(
-                                          children: [
-                                            Center(
-                                              child: Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                color: blueColor,
-                                                child: const Icon(
-                                                  FontAwesomeIcons.userTie,
-                                                  color: whiteColor,
-                                                  size: 150,
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 15,
-                                              left: 15,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  Get.back();
-                                                },
-                                                splashColor: blueColor,
-                                                splashRadius: 30,
-                                                icon: const Icon(
-                                                  FontAwesomeIcons.circleXmark,
-                                                  size: 30,
-                                                  color: whiteColor,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 15,
-                                                      spreadRadius: 15,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 20,
-                                              right: 20,
-                                              child: GestureDetector(
-                                                behavior:
-                                                    HitTestBehavior.opaque,
-                                                onTap: () {
-                                                  Get.back();
-                                                  Get.toNamed(
-                                                      UpdateProfileImageScreen
-                                                          .routeName);
-                                                },
-                                                child: Text(
-                                                  'Edit',
-                                                  style: GoogleFonts.poppins(
-                                                    color: whiteColor,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      bottom: 20,
+                    ),
+                    child: profileImage == ''
+                        ? GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => showModal(
+                              configuration:
+                                  const FadeScaleTransitionConfiguration(),
+                              context: context,
+                              builder: (_) {
+                                return Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.down,
+                                  onDismissed: (direction) {
+                                    Get.back();
                                   },
-                                );
-                              },
-                              child: Container(
-                                height: MediaQuery.of(context).size.width * 0.3,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: blueColor,
-                                ),
-                                child: const Icon(
-                                  FontAwesomeIcons.userTie,
-                                  color: whiteColor,
-                                  size: 50,
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                showModal(
-                                  configuration:
-                                      const FadeScaleTransitionConfiguration(),
-                                  context: context,
-                                  builder: (context) {
-                                    return Dismissible(
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.down,
-                                      onDismissed: (direction) {
-                                        Get.back();
-                                      },
-                                      child: Material(
-                                        color: blackColor,
-                                        child: Stack(
-                                          children: [
-                                            PhotoViewGallery.builder(
-                                              scrollPhysics:
-                                                  const BouncingScrollPhysics(),
-                                              itemCount: 1,
-                                              builder: (BuildContext context,
-                                                  int index) {
-                                                return PhotoViewGalleryPageOptions(
-                                                  imageProvider: NetworkImage(
-                                                    profileImage,
-                                                  ),
-                                                  initialScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  minScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  maxScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          2,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    return const Icon(
-                                                      FontAwesomeIcons
-                                                          .circleExclamation,
-                                                      size: 20,
-                                                      color: redColor,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              loadingBuilder: (context, event) {
-                                                return const Center(
-                                                  child: SpinKitFadingCube(
-                                                    color: greyColor,
-                                                    size: 20,
-                                                    duration: Duration(
-                                                        milliseconds: 1000),
-                                                  ),
-                                                );
-                                              },
+                                  child: Material(
+                                    color: blackColor,
+                                    child: Stack(
+                                      children: [
+                                        Center(
+                                          child: Container(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            color: blueColor,
+                                            child: const Icon(
+                                              FontAwesomeIcons.userTie,
+                                              color: whiteColor,
+                                              size: 150,
                                             ),
-                                            Positioned(
-                                              top: 15,
-                                              left: 15,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  Get.back();
-                                                },
-                                                splashColor: blueColor,
-                                                splashRadius: 30,
-                                                icon: const Icon(
-                                                  FontAwesomeIcons.circleXmark,
-                                                  size: 30,
-                                                  color: whiteColor,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 15,
-                                                      spreadRadius: 15,
-                                                    ),
-                                                  ],
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 15,
+                                          right: 15,
+                                          child: IconButton(
+                                            onPressed: () => Get.back(),
+                                            splashColor: blueColor,
+                                            splashRadius: 30,
+                                            icon: const Icon(
+                                              FontAwesomeIcons.circleXmark,
+                                              size: 30,
+                                              color: whiteColor,
+                                              shadows: [
+                                                BoxShadow(
+                                                  offset: Offset(0, 0),
+                                                  blurRadius: 15,
+                                                  spreadRadius: 15,
                                                 ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 20,
+                                          left: 20,
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: () {
+                                              Get.back();
+                                              Get.toNamed(
+                                                UpdateProfileImageScreen
+                                                    .routeName,
+                                              );
+                                            },
+                                            child: Text(
+                                              'Edit',
+                                              style: GoogleFonts.poppins(
+                                                color: whiteColor,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                            Positioned(
-                                              top: 20,
-                                              right: 20,
-                                              child: GestureDetector(
-                                                behavior:
-                                                    HitTestBehavior.opaque,
-                                                onTap: () {
-                                                  Get.back();
-                                                  Get.toNamed(
-                                                      UpdateProfileImageScreen
-                                                          .routeName);
-                                                },
-                                                child: Text(
-                                                  'Edit',
-                                                  style: GoogleFonts.poppins(
-                                                    color: whiteColor,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: SizedBox(
-                                height: MediaQuery.of(context).size.width * 0.3,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: CachedNetworkImage(
-                                    imageUrl: profileImage,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return const Icon(
-                                        FontAwesomeIcons.circleExclamation,
-                                        size: 30,
-                                        color: redColor,
-                                      );
-                                    },
-                                    placeholder: (context, url) {
-                                      return const Center(
-                                        child: SpinKitFadingCube(
-                                          color: lightBlackColor,
-                                          size: 30,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
-                                      );
-                                    },
+                                      ],
+                                    ),
                                   ),
+                                );
+                              },
+                            ),
+                            child: Container(
+                              height: MediaQuery.of(context).size.width * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: blueColor,
+                              ),
+                              child: const Icon(
+                                FontAwesomeIcons.userTie,
+                                color: whiteColor,
+                                size: 50,
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => showModal(
+                              configuration:
+                                  const FadeScaleTransitionConfiguration(),
+                              context: context,
+                              builder: (_) {
+                                return Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.down,
+                                  onDismissed: (direction) {
+                                    Get.back();
+                                  },
+                                  child: Material(
+                                    color: blackColor,
+                                    child: Stack(
+                                      children: [
+                                        PhotoViewGallery.builder(
+                                          scrollPhysics:
+                                              const BouncingScrollPhysics(),
+                                          itemCount: 1,
+                                          builder: (BuildContext context,
+                                              int index) {
+                                            return PhotoViewGalleryPageOptions(
+                                              imageProvider: NetworkImage(
+                                                profileImage,
+                                              ),
+                                              initialScale:
+                                                  PhotoViewComputedScale
+                                                          .contained *
+                                                      1,
+                                              minScale: PhotoViewComputedScale
+                                                      .contained *
+                                                  1,
+                                              maxScale: PhotoViewComputedScale
+                                                      .contained *
+                                                  2,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return const Icon(
+                                                  FontAwesomeIcons
+                                                      .circleExclamation,
+                                                  size: 20,
+                                                  color: redColor,
+                                                );
+                                              },
+                                            );
+                                          },
+                                          loadingBuilder: (context, event) {
+                                            return const Center(
+                                              child: SpinKitFadingCube(
+                                                color: greyColor,
+                                                size: 20,
+                                                duration: Duration(
+                                                    milliseconds: 1000),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Positioned(
+                                          top: 15,
+                                          left: 15,
+                                          child: IconButton(
+                                            onPressed: () => Get.back(),
+                                            splashColor: blueColor,
+                                            splashRadius: 30,
+                                            icon: const Icon(
+                                              FontAwesomeIcons.circleXmark,
+                                              size: 30,
+                                              color: whiteColor,
+                                              shadows: [
+                                                BoxShadow(
+                                                  offset: Offset(0, 0),
+                                                  blurRadius: 15,
+                                                  spreadRadius: 15,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 20,
+                                          right: 20,
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: () {
+                                              Get.back();
+                                              Get.toNamed(
+                                                UpdateProfileImageScreen
+                                                    .routeName,
+                                              );
+                                            },
+                                            child: Text(
+                                              'Edit',
+                                              style: GoogleFonts.poppins(
+                                                color: whiteColor,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: profileImage,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      FontAwesomeIcons.circleExclamation,
+                                      size: 30,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Center(
+                                      child: SpinKitFadingCube(
+                                        color: lightBlackColor,
+                                        size: 30,
+                                        duration: Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                    ),
+                          ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
-                            children: [
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              name,
+                              maxLines: 2,
+                              softWrap: true,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(
+                                color: blackColor,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            if (bio != '')
                               Text(
-                                name,
-                                maxLines: 2,
+                                bio,
+                                maxLines: 3,
                                 softWrap: true,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.poppins(
                                   color: blackColor,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              if (bio != '')
-                                Text(
-                                  bio,
-                                  maxLines: 3,
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                    color: blackColor,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                            ],
-                          ),
+                          ],
                         ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            Get.toNamed(UpdateProfileScreen.routeName);
-                          },
-                          child: const Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(
-                              FontAwesomeIcons.solidPenToSquare,
-                              size: 25,
-                              color: lightBlackColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: CustomButton(
-                      text: 'Sell a product',
-                      onPressed: !user!.emailVerified &&
-                              user!.providerData[0].providerId == 'password'
-                          ? () {
-                              Get.toNamed(EmailVerificationScreen.routeName);
-                            }
-                          : onSellButtonClicked,
-                      icon: FontAwesomeIcons.plus,
-                      bgColor: blueColor,
-                      borderColor: blueColor,
-                      textIconColor: whiteColor,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomListTileNoImage(
-                      text: 'My Listings',
-                      icon: FontAwesomeIcons.list,
-                      onTap: () {
-                        Get.toNamed(MyListingsScreen.routeName);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomListTileNoImage(
-                      text: 'Settings',
-                      icon: FontAwesomeIcons.gear,
-                      onTap: () {
-                        Get.toNamed(SettingsScreen.routeName);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'Made with ❤️ in India',
-                      softWrap: true,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        color: blackColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
                       ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.toNamed(UpdateProfileScreen.routeName),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            FontAwesomeIcons.solidPenToSquare,
+                            size: 25,
+                            color: lightBlackColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Joined ${timeago.format(dateJoined)}',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: GoogleFonts.poppins(
+                      color: blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  child: CustomButton(
+                    text: 'Sell a product',
+                    onPressed: !user!.emailVerified &&
+                            user!.providerData[0].providerId == 'password'
+                        ? () => Get.toNamed(EmailVerificationScreen.routeName)
+                        : onSellButtonClicked,
+                    icon: FontAwesomeIcons.plus,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomListTileNoImage(
+                    text: 'My Listings',
+                    icon: FontAwesomeIcons.list,
+                    onTap: () => Get.toNamed(MyListingsScreen.routeName),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomListTileNoImage(
+                    text: 'Settings',
+                    icon: FontAwesomeIcons.gear,
+                    onTap: () => Get.toNamed(SettingsScreen.routeName),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Made in India 🇮🇳',
+                    softWrap: true,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color: blackColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

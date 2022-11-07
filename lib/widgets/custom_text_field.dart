@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/utils.dart';
 
-// ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType keyboardType;
@@ -17,12 +16,13 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final String hint;
   final int? maxLength;
-  void Function()? onTap;
-  Function(String)? onFieldSubmitted;
+  final void Function()? onTap;
+  final Function(String)? onFieldSubmitted;
   final int maxLines;
-  String? Function(String?)? validator;
-  Function(String)? onChanged;
-  CustomTextField({
+  final String? Function(String?)? validator;
+  final Function(String)? onChanged;
+
+  const CustomTextField({
     super.key,
     this.controller,
     required this.keyboardType,

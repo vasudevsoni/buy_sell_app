@@ -204,11 +204,8 @@ class _CategoryScreenProductsListState
                   ),
                   CustomButton(
                     text: 'Go to Home',
-                    onPressed: () {
-                      Get.offAll(() => const MainScreen(
-                            selectedIndex: 0,
-                          ));
-                    },
+                    onPressed: () =>
+                        Get.offAll(() => const MainScreen(selectedIndex: 0)),
                     icon: FontAwesomeIcons.house,
                     borderColor: blackColor,
                     bgColor: blackColor,
@@ -222,7 +219,7 @@ class _CategoryScreenProductsListState
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                height: 10,
+                height: 13,
               );
             },
             padding: const EdgeInsets.only(
@@ -256,9 +253,7 @@ class _CategoryScreenProductsListState
                   if (hasMoreReached)
                     CustomButton(
                       text: 'Load more',
-                      onPressed: () {
-                        snapshot.fetchMore();
-                      },
+                      onPressed: () => snapshot.fetchMore(),
                       icon: FontAwesomeIcons.chevronDown,
                       borderColor: blackColor,
                       bgColor: blackColor,

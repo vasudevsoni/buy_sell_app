@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -15,11 +14,11 @@ import 'custom_button.dart';
 import '../provider/seller_form_provider.dart';
 import '../utils/utils.dart';
 
-// ignore: must_be_immutable
 class ImagePickerWidget extends StatefulWidget {
   static const String routeName = '/image-picker-screen';
-  bool isButtonDisabled;
-  ImagePickerWidget({
+  final bool isButtonDisabled;
+
+  const ImagePickerWidget({
     super.key,
     this.isButtonDisabled = false,
   });
@@ -75,9 +74,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
+            shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             color: greyColor,
-            borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.all(15.0),
           margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -107,106 +108,102 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                 opacity: 0.7,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    showModal(
-                                      configuration:
-                                          const FadeScaleTransitionConfiguration(),
-                                      context: context,
-                                      builder: (context) {
-                                        return Dismissible(
-                                          key: UniqueKey(),
-                                          direction: DismissDirection.down,
-                                          onDismissed: (direction) {
-                                            Get.back();
-                                          },
-                                          child: Material(
-                                            color: blackColor,
-                                            child: Stack(
-                                              children: [
-                                                PhotoViewGallery.builder(
-                                                  scrollPhysics:
-                                                      const BouncingScrollPhysics(),
-                                                  itemCount: provider
-                                                      .imagePaths.length,
-                                                  pageController:
-                                                      pageController,
-                                                  builder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return PhotoViewGalleryPageOptions(
-                                                      imageProvider: FileImage(
-                                                        provider
-                                                            .imagePaths[index],
-                                                      ),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      initialScale:
-                                                          PhotoViewComputedScale
-                                                                  .contained *
-                                                              1,
-                                                      minScale:
-                                                          PhotoViewComputedScale
-                                                                  .contained *
-                                                              1,
-                                                      maxScale:
-                                                          PhotoViewComputedScale
-                                                                  .contained *
-                                                              5,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return const Icon(
-                                                          FontAwesomeIcons
-                                                              .circleExclamation,
-                                                          size: 20,
-                                                          color: redColor,
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  loadingBuilder:
-                                                      (context, event) {
-                                                    return const Icon(
-                                                      FontAwesomeIcons
-                                                          .solidImage,
-                                                      size: 20,
-                                                      color: lightBlackColor,
-                                                    );
-                                                  },
-                                                ),
-                                                Positioned(
-                                                  top: 15,
-                                                  left: 15,
-                                                  child: IconButton(
-                                                    onPressed: () {
-                                                      Get.back();
-                                                      pageController.dispose();
-                                                    },
-                                                    splashColor: Colors.blue,
-                                                    splashRadius: 30,
-                                                    icon: const Icon(
-                                                      FontAwesomeIcons
-                                                          .circleXmark,
-                                                      size: 30,
-                                                      color: whiteColor,
-                                                      shadows: [
-                                                        BoxShadow(
-                                                          offset: Offset(0, 0),
-                                                          blurRadius: 15,
-                                                          spreadRadius: 15,
-                                                        ),
-                                                      ],
+                                  onTap: () => showModal(
+                                    configuration:
+                                        const FadeScaleTransitionConfiguration(),
+                                    context: context,
+                                    builder: (context) {
+                                      return Dismissible(
+                                        key: UniqueKey(),
+                                        direction: DismissDirection.down,
+                                        onDismissed: (direction) {
+                                          Get.back();
+                                          pageController.dispose();
+                                        },
+                                        child: Material(
+                                          color: blackColor,
+                                          child: Stack(
+                                            children: [
+                                              PhotoViewGallery.builder(
+                                                scrollPhysics:
+                                                    const BouncingScrollPhysics(),
+                                                itemCount:
+                                                    provider.imagePaths.length,
+                                                pageController: pageController,
+                                                builder: (BuildContext context,
+                                                    int index) {
+                                                  return PhotoViewGalleryPageOptions(
+                                                    imageProvider: FileImage(
+                                                      provider
+                                                          .imagePaths[index],
                                                     ),
+                                                    filterQuality:
+                                                        FilterQuality.high,
+                                                    initialScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            1,
+                                                    minScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            1,
+                                                    maxScale:
+                                                        PhotoViewComputedScale
+                                                                .contained *
+                                                            5,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Icon(
+                                                        FontAwesomeIcons
+                                                            .circleExclamation,
+                                                        size: 20,
+                                                        color: redColor,
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                loadingBuilder:
+                                                    (context, event) {
+                                                  return const Icon(
+                                                    FontAwesomeIcons.solidImage,
+                                                    size: 20,
+                                                    color: lightBlackColor,
+                                                  );
+                                                },
+                                              ),
+                                              Positioned(
+                                                top: 15,
+                                                right: 15,
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    Get.back();
+                                                    pageController.dispose();
+                                                  },
+                                                  splashColor: Colors.blue,
+                                                  splashRadius: 30,
+                                                  icon: const Icon(
+                                                    FontAwesomeIcons
+                                                        .circleXmark,
+                                                    size: 30,
+                                                    color: whiteColor,
+                                                    shadows: [
+                                                      BoxShadow(
+                                                        offset: Offset(0, 0),
+                                                        blurRadius: 15,
+                                                        spreadRadius: 15,
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      },
-                                    );
-                                  },
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(10),
                                     child: Image.file(
                                       provider.imagePaths[index],
                                       errorBuilder:
@@ -241,17 +238,15 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               ),
                               Positioned(
                                 top: -10,
-                                left: -10,
+                                right: -10,
                                 child: IconButton(
                                   tooltip: 'Delete image',
-                                  onPressed: () {
-                                    widget.isButtonDisabled
-                                        ? null
-                                        : setState(() {
-                                            provider.imagePaths.removeAt(index);
-                                            provider.imagesCount -= 1;
-                                          });
-                                  },
+                                  onPressed: () => widget.isButtonDisabled
+                                      ? null
+                                      : setState(() {
+                                          provider.imagePaths.removeAt(index);
+                                          provider.imagesCount -= 1;
+                                        }),
                                   icon: const Icon(
                                     FontAwesomeIcons.circleXmark,
                                     size: 15,
@@ -271,7 +266,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         );
                       },
                     )
-                  : SizedBox(
+                  : Container(
+                      decoration: ShapeDecoration(
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        color: greyColor,
+                      ),
                       height: 100,
                       child: Center(
                         child: Text(

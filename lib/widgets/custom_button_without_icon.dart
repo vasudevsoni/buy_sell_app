@@ -2,16 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class CustomButtonWithoutIcon extends StatelessWidget {
-  String text;
+  final String text;
   final VoidCallback onPressed;
-  Color bgColor;
-  Color borderColor;
-  bool isDisabled;
-  Color textIconColor;
+  final Color bgColor;
+  final Color borderColor;
+  final bool isDisabled;
+  final Color textIconColor;
 
-  CustomButtonWithoutIcon({
+  const CustomButtonWithoutIcon({
     Key? key,
     required this.text,
     required this.onPressed,
@@ -23,26 +22,23 @@ class CustomButtonWithoutIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 45,
-      width: MediaQuery.of(context).size.width,
-      child: NeumorphicButton(
-        onPressed: isDisabled ? null : onPressed,
-        style: NeumorphicStyle(
-          lightSource: LightSource.top,
-          shape: NeumorphicShape.convex,
-          depth: 0,
-          intensity: 0,
-          border: NeumorphicBorder(
-            color: borderColor,
-            width: 1,
-          ),
-          boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.circular(5),
+    return GestureDetector(
+      onTap: onPressed,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        height: 45,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: ShapeDecoration(
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: borderColor,
+              strokeAlign: StrokeAlign.center,
+              width: 1.2,
+            ),
           ),
           color: bgColor,
         ),
-        provideHapticFeedback: true,
         child: Center(
           child: AutoSizeText(
             text.toUpperCase(),
@@ -52,7 +48,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
-              fontSize: 15,
+              fontSize: 14,
               color: textIconColor,
             ),
           ),

@@ -71,147 +71,132 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       ),
       body: Form(
         key: _loginformKey,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            height: MediaQuery.of(context).size.height -
-                56 -
-                MediaQuery.of(context).viewPadding.top,
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CustomTextField(
-                      controller: emailController,
-                      label: 'Email address',
-                      hint: 'Enter your email address',
-                      keyboardType: TextInputType.emailAddress,
-                      maxLength: 100,
-                      textInputAction: TextInputAction.next,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CustomTextField(
+                controller: emailController,
+                label: 'Email address',
+                hint: 'Enter your email address',
+                keyboardType: TextInputType.emailAddress,
+                maxLength: 100,
+                textInputAction: TextInputAction.next,
+                isEnabled: isLoading ? false : true,
+                validator: (value) {
+                  final bool isValid =
+                      EmailValidator.validate(emailController.text);
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email address';
+                  }
+                  if (value.isNotEmpty && isValid == false) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: CustomTextField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      label: 'Password',
+                      hint: 'Enter your password',
+                      maxLength: 15,
+                      textInputAction: TextInputAction.go,
+                      isObscured: isObscured ? true : false,
                       isEnabled: isLoading ? false : true,
                       validator: (value) {
-                        final bool isValid =
-                            EmailValidator.validate(emailController.text);
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email address';
-                        }
-                        if (value.isNotEmpty && isValid == false) {
-                          return 'Please enter a valid email address';
+                          return 'Please enter your password';
+                        } else if (value.length < 6) {
+                          return 'Password must be 6 to 15 characters long';
                         }
                         return null;
                       },
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 6,
-                          child: CustomTextField(
-                            controller: passwordController,
-                            keyboardType: TextInputType.text,
-                            label: 'Password',
-                            hint: 'Enter your password',
-                            maxLength: 15,
-                            textInputAction: TextInputAction.go,
-                            isObscured: isObscured ? true : false,
-                            isEnabled: isLoading ? false : true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              } else if (value.length < 6) {
-                                return 'Password must be 6 to 15 characters long';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isObscured = !isObscured;
-                              });
-                            },
-                            icon: isObscured
-                                ? const Icon(
-                                    FontAwesomeIcons.eyeSlash,
-                                    size: 20,
-                                  )
-                                : const Icon(
-                                    FontAwesomeIcons.eye,
-                                    size: 20,
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Get.toNamed(ForgotPasswordScreen.routeName);
-                      },
-                      child: Text(
-                        'Forgot password?',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          color: blueColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    Get.offNamed(
-                      EmailRegisterScreen.routeName,
-                    );
-                  },
-                  child: AutoSizeText(
-                    'Don\'t have an account? Create one',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: blueColor,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () => setState(() {
+                        isObscured = !isObscured;
+                      }),
+                      icon: isObscured
+                          ? const Icon(
+                              FontAwesomeIcons.eyeSlash,
+                              size: 20,
+                            )
+                          : const Icon(
+                              FontAwesomeIcons.eye,
+                              size: 20,
+                            ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                isLoading
-                    ? CustomButton(
-                        text: 'Loading..',
-                        icon: FontAwesomeIcons.spinner,
-                        bgColor: greyColor,
-                        borderColor: greyColor,
-                        textIconColor: blackColor,
-                        onPressed: () {},
-                        isDisabled: isLoading,
-                      )
-                    : CustomButton(
-                        text: 'Login',
-                        icon: FontAwesomeIcons.rightToBracket,
-                        bgColor: blackColor,
-                        borderColor: blackColor,
-                        textIconColor: whiteColor,
-                        onPressed: () {
-                          _validateEmail();
-                        },
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () =>
+                        Get.toNamed(ForgotPasswordScreen.routeName),
+                    child: Text(
+                      'Forgot password?',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        color: blueColor,
                       ),
-              ],
-            ),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => Get.offNamed(EmailRegisterScreen.routeName),
+                child: AutoSizeText(
+                  'Don\'t have an account? Create one',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: blueColor,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              isLoading
+                  ? CustomButton(
+                      text: 'Loading...',
+                      icon: FontAwesomeIcons.spinner,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
+                      onPressed: () {},
+                      isDisabled: isLoading,
+                    )
+                  : CustomButton(
+                      text: 'Login',
+                      icon: FontAwesomeIcons.rightToBracket,
+                      bgColor: blackColor,
+                      borderColor: blackColor,
+                      textIconColor: whiteColor,
+                      onPressed: () => _validateEmail(),
+                    ),
+            ],
           ),
         ),
       ),

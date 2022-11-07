@@ -177,7 +177,7 @@ class _LocationScreenState extends State<LocationScreen> {
                             right: 15,
                           ),
                           child: CustomButton(
-                            text: 'Fetching location',
+                            text: 'Fetching location...',
                             icon: FontAwesomeIcons.spinner,
                             bgColor: greyColor,
                             borderColor: greyColor,
@@ -207,11 +207,11 @@ class _LocationScreenState extends State<LocationScreen> {
                                     Get.back();
                                     Get.reloadAll();
                                     Get.toNamed(
-                                        SellerCategoriesListScreen.routeName);
+                                      SellerCategoriesListScreen.routeName,
+                                    );
                                   } else {
-                                    Get.offAll(() => const MainScreen(
-                                          selectedIndex: 0,
-                                        ));
+                                    Get.offAll(() =>
+                                        const MainScreen(selectedIndex: 0));
                                   }
                                 } else {
                                   return;
@@ -239,9 +239,7 @@ class _LocationScreenState extends State<LocationScreen> {
                       borderColor: blackColor,
                       textIconColor: whiteColor,
                       isDisabled: isLoading,
-                      onPressed: () {
-                        Get.back();
-                      },
+                      onPressed: () => Get.back(),
                     ),
                   ),
                 ],

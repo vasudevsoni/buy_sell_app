@@ -78,9 +78,9 @@ class CategoriesListScreen extends StatelessWidget {
                   return CustomListTile(
                     text: doc['catName'],
                     url: doc['image'],
-                    onTap: () {
-                      Get.to(() => SubCategoriesListScreen(doc: doc));
-                    },
+                    onTap: () => Get.to(
+                      () => SubCategoriesListScreen(doc: doc),
+                    ),
                   );
                 },
               ),

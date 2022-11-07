@@ -218,7 +218,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           ),
           child: isLoading
               ? CustomButton(
-                  text: 'Loading..',
+                  text: 'Loading...',
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
@@ -228,9 +228,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 )
               : CustomButton(
                   text: 'Done',
-                  onPressed: () {
-                    uploadImage(File(pickedImage!.path));
-                  },
+                  onPressed: () => uploadImage(File(pickedImage!.path)),
                   icon: FontAwesomeIcons.check,
                   bgColor: blueColor,
                   borderColor: blueColor,

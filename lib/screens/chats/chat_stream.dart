@@ -111,7 +111,6 @@ class _ChatStreamState extends State<ChatStream> {
                 snapshot.data!.docs[index]['isOffer'] == true
                     ? BubbleNormal(
                         bubbleRadius: 10,
-                        key: UniqueKey(),
                         text: snapshot.data!.docs[index]['message'],
                         color: redColor,
                         isSender: sentBy == me ? true : false,
@@ -124,7 +123,6 @@ class _ChatStreamState extends State<ChatStream> {
                       )
                     : BubbleNormal(
                         bubbleRadius: 10,
-                        key: UniqueKey(),
                         text: snapshot.data!.docs[index]['message'],
                         color: sentBy == me ? blueColor : greyColor,
                         isSender: sentBy == me ? true : false,

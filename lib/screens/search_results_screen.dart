@@ -158,7 +158,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                         ListView.separated(
                           separatorBuilder: (context, index) {
                             return const SizedBox(
-                              height: 10,
+                              height: 13,
                             );
                           },
                           padding: const EdgeInsets.only(
@@ -195,9 +195,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                 if (hasMoreReached)
                                   CustomButton(
                                     text: 'Load more',
-                                    onPressed: () {
-                                      snapshot.fetchMore();
-                                    },
+                                    onPressed: () => snapshot.fetchMore(),
                                     icon: FontAwesomeIcons.chevronDown,
                                     borderColor: blackColor,
                                     bgColor: blackColor,

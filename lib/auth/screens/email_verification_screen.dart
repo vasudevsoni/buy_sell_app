@@ -54,9 +54,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         content: 'Email has been verified',
         color: blueColor,
       );
-      Get.offAll(() => const MainScreen(
-            selectedIndex: 3,
-          ));
+      Get.offAll(() => const MainScreen(selectedIndex: 3));
     }
   }
 
@@ -127,9 +125,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: ShapeDecoration(
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   color: greyColor,
-                  borderRadius: BorderRadius.circular(5),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,

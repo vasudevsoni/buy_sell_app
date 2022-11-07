@@ -139,7 +139,13 @@ class FirebaseServices {
       for (var chatRoomId in chatsToDelete) {
         await deleteChat(chatRoomId: chatRoomId.toString(), context: context);
       }
-      await listings.doc(listingId.toString()).delete();
+      await listings.doc(listingId.toString()).delete().then((value) {
+        showSnackBar(
+          context: context,
+          content: 'Listing deleted',
+          color: redColor,
+        );
+      });
     } on FirebaseAuthException catch (_) {
       showSnackBar(
         context: context,

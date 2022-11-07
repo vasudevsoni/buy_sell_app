@@ -1,9 +1,9 @@
-import 'package:animations/animations.dart';
 import 'package:buy_sell_app/screens/product_details_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,6 +43,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   bool isActive = true;
   late DocumentSnapshot prod;
   late DocumentSnapshot sellerData;
+  bool isLoading = false;
 
   var priceFormat = NumberFormat.currency(
     locale: 'HI',
@@ -53,11 +54,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   void initState() {
-    getAllDetails();
+    getDetails();
     super.initState();
   }
 
-  getAllDetails() async {
+  getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
     await _services.chats.doc(widget.chatRoomId).get().then((value) {
       if (mounted) {
         setState(() {
@@ -65,6 +69,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
           title = value['product']['title'];
           price = value['product']['price'];
           imageUrl = value['product']['productImage'];
+        });
+      }
+    });
+    await _services.getUserData(widget.sellerId).then((value) {
+      if (mounted) {
+        setState(() {
+          sellerData = value;
         });
       }
     });
@@ -76,12 +87,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         });
       }
     });
-    await _services.getUserData(widget.sellerId).then((value) {
-      if (mounted) {
-        setState(() {
-          sellerData = value;
-        });
-      }
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -101,189 +108,234 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   showMakeOfferDialog() {
-    showModal(
-      configuration: const FadeScaleTransitionConfiguration(),
+    showModalBottomSheet<dynamic>(
       context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Make an offer 💵',
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          content: TextFormField(
-            controller: offerPriceController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-            maxLength: 10,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-            ),
-            decoration: InputDecoration(
-              labelText: 'Offer price*',
-              hintText: 'Enter a price you want to pay',
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 10,
+        return SafeArea(
+          child: Container(
+            decoration: ShapeDecoration(
+              shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
               ),
-              counterText: '',
-              fillColor: greyColor,
-              filled: true,
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                  width: 0,
-                  strokeAlign: StrokeAlign.inside,
+              color: whiteColor,
+            ),
+            margin: const EdgeInsets.all(15),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+              left: 15,
+              top: 15,
+              right: 15,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                  width: 0,
-                  strokeAlign: StrokeAlign.inside,
+                const SizedBox(
+                  height: 10,
                 ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Colors.red,
-                  width: 1.5,
-                  strokeAlign: StrokeAlign.inside,
+                Text(
+                  'Make an offer 💵',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              errorStyle: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.red,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: blueColor,
-                  width: 1.5,
-                  strokeAlign: StrokeAlign.inside,
+                const SizedBox(
+                  height: 10,
                 ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: blueColor,
-                  width: 1.5,
-                  strokeAlign: StrokeAlign.inside,
+                TextFormField(
+                  controller: offerPriceController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: 'Offer price*',
+                    hintText: 'Enter a price you want to pay',
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 10,
+                    ),
+                    counterText: '',
+                    fillColor: greyColor,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 0,
+                        strokeAlign: StrokeAlign.inside,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 0,
+                        strokeAlign: StrokeAlign.inside,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1.5,
+                        strokeAlign: StrokeAlign.inside,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    errorStyle: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: blueColor,
+                        width: 1.5,
+                        strokeAlign: StrokeAlign.inside,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: blueColor,
+                        width: 1.5,
+                        strokeAlign: StrokeAlign.inside,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    hintStyle: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: greyColor,
+                    ),
+                    labelStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                    floatingLabelStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 15,
+                      color: lightBlackColor,
+                    ),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              floatingLabelBehavior: FloatingLabelBehavior.auto,
-              hintStyle: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-                color: greyColor,
-              ),
-              labelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-              ),
-              floatingLabelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.normal,
-                fontSize: 15,
-                color: lightBlackColor,
-              ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                  icon: FontAwesomeIcons.arrowRight,
+                  text: 'Send offer',
+                  onPressed: () {
+                    if (offerPriceController.text.isNotEmpty) {
+                      final offerPrice = priceFormat
+                          .format(int.parse(offerPriceController.text));
+                      sendOfferMessage(
+                          'I would like to buy this for $offerPrice');
+                      Get.back();
+                    }
+                  },
+                  bgColor: blueColor,
+                  borderColor: blueColor,
+                  textIconColor: whiteColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
             ),
           ),
-          actionsPadding: const EdgeInsets.all(15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          titlePadding: const EdgeInsets.only(
-            left: 15,
-            right: 15,
-            top: 15,
-            bottom: 10,
-          ),
-          contentPadding: const EdgeInsets.only(
-            left: 15,
-            right: 15,
-            bottom: 5,
-            top: 5,
-          ),
-          actions: [
-            CustomButton(
-              icon: FontAwesomeIcons.arrowRight,
-              text: 'Send offer',
-              onPressed: () {
-                if (offerPriceController.text.isNotEmpty) {
-                  final offerPrice =
-                      priceFormat.format(int.parse(offerPriceController.text));
-                  sendOfferMessage('I would like to buy this for $offerPrice');
-                  Get.back();
-                }
-              },
-              bgColor: blueColor,
-              borderColor: blueColor,
-              textIconColor: whiteColor,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomButtonWithoutIcon(
-              text: 'Cancel',
-              onPressed: () {
-                Get.back();
-              },
-              bgColor: whiteColor,
-              borderColor: greyColor,
-              textIconColor: blackColor,
-            ),
-          ],
         );
       },
     );
   }
 
   showOptionsDialog() {
-    showModal(
-      configuration: const FadeScaleTransitionConfiguration(),
+    showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return AlertDialog(
-          actionsPadding: const EdgeInsets.all(15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+        return SafeArea(
+          child: Container(
+            decoration: ShapeDecoration(
+              shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              color: whiteColor,
+            ),
+            margin: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                  icon: FontAwesomeIcons.trash,
+                  text: 'Delete chat',
+                  onPressed: () async {
+                    await _services.deleteChat(
+                      chatRoomId: widget.chatRoomId,
+                      context: context,
+                    );
+                    Get.back();
+                    Get.back();
+                  },
+                  bgColor: redColor,
+                  borderColor: redColor,
+                  textIconColor: whiteColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              icon: FontAwesomeIcons.trash,
-              text: 'Delete chat',
-              onPressed: () {
-                _services.deleteChat(
-                    chatRoomId: widget.chatRoomId, context: context);
-                Get.back();
-                Get.back();
-              },
-              bgColor: redColor,
-              borderColor: redColor,
-              textIconColor: whiteColor,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomButtonWithoutIcon(
-              text: 'Cancel',
-              onPressed: () {
-                Get.back();
-              },
-              bgColor: whiteColor,
-              borderColor: greyColor,
-              textIconColor: blackColor,
-            ),
-          ],
         );
       },
     );
@@ -315,13 +367,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
-
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -359,203 +404,209 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
               ),
       ),
-      body: Column(
-        children: [
-          Neumorphic(
-            style: NeumorphicStyle(
-              lightSource: LightSource.top,
-              shape: NeumorphicShape.convex,
-              depth: 0,
-              intensity: 0,
-              boxShape: NeumorphicBoxShape.roundRect(
-                BorderRadius.circular(0),
+      body: isLoading
+          ? const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Center(
+                child: SpinKitFadingCube(
+                  color: lightBlackColor,
+                  size: 30,
+                  duration: Duration(milliseconds: 1000),
+                ),
               ),
-            ),
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                Get.to(() => ProductDetailsScreen(
-                      productData: prod,
-                      sellerData: sellerData,
-                    ));
-              },
-              child: Container(
-                color: blueColor,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.22,
-                      height: MediaQuery.of(context).size.width * 0.22,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                FontAwesomeIcons.circleExclamation,
-                                size: 15,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Icon(
-                                FontAwesomeIcons.solidImage,
-                                size: 15,
-                                color: lightBlackColor,
-                              );
-                            },
-                          ),
-                        ),
+            )
+          : Column(
+              children: [
+                Neumorphic(
+                  style: NeumorphicStyle(
+                    lightSource: LightSource.top,
+                    shape: NeumorphicShape.convex,
+                    depth: 0,
+                    intensity: 0,
+                    boxShape: NeumorphicBoxShape.roundRect(
+                      BorderRadius.circular(0),
+                    ),
+                  ),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Get.to(
+                      () => ProductDetailsScreen(
+                        productData: prod,
+                        sellerData: sellerData,
                       ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Container(
+                      color: blueColor,
+                      child: Row(
                         children: [
-                          Text(
-                            title,
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: whiteColor,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            height: MediaQuery.of(context).size.width * 0.20,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      FontAwesomeIcons.circleExclamation,
+                                      size: 15,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(
+                                      FontAwesomeIcons.solidImage,
+                                      size: 15,
+                                      color: lightBlackColor,
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                           ),
-                          Text(
-                            priceFormat.format(price),
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: whiteColor,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                                Text(
+                                  priceFormat.format(price),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: whiteColor,
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ChatStream(chatRoomId: widget.chatRoomId),
-          ),
-          if (isActive == true)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Text(
-                'Note - Never share confidential information like passwords, card details, bank details etc.',
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: lightBlackColor,
+                Expanded(
+                  child: ChatStream(chatRoomId: widget.chatRoomId),
                 ),
-              ),
-            ),
-          isActive == false
-              ? Container(
-                  color: redColor,
-                  height: 80,
-                  padding: const EdgeInsets.all(15),
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
+                if (isActive == true)
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: Text(
-                      'This item is currently unavailable.',
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
+                      'Note - Never share confidential information like passwords, card details, bank details etc.',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: whiteColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        color: lightBlackColor,
                       ),
                     ),
                   ),
-                )
-              : Container(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    right: 15,
-                    bottom: 15,
-                    top: 5,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          controller: chatMessageController,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.send,
-                          label: 'Write something',
-                          hint: 'Ask for product details, features and more',
-                          maxLength: 500,
-                        ),
-                      ),
-                      if (sellerUid != _services.user!.uid)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: NeumorphicFloatingActionButton(
-                            onPressed: () {
-                              HapticFeedback.mediumImpact();
-                              showMakeOfferDialog();
-                            },
-                            tooltip: 'Make an offer',
-                            style: NeumorphicStyle(
-                              lightSource: LightSource.top,
-                              shape: NeumorphicShape.convex,
-                              depth: 2,
-                              intensity: 0.2,
-                              color: Colors.green,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                BorderRadius.circular(5),
-                              ),
-                            ),
-                            child: const Icon(
-                              FontAwesomeIcons.indianRupeeSign,
-                              size: 25,
+                isActive == false
+                    ? Container(
+                        color: redColor,
+                        height: 80,
+                        padding: const EdgeInsets.all(15),
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            'This item is currently unavailable.',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                               color: whiteColor,
                             ),
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 15),
-                        child: NeumorphicFloatingActionButton(
-                          onPressed: () {
-                            HapticFeedback.mediumImpact();
-                            sendMessage();
-                          },
-                          tooltip: 'Send message',
-                          style: NeumorphicStyle(
-                            lightSource: LightSource.top,
-                            shape: NeumorphicShape.convex,
-                            depth: 2,
-                            intensity: 0.2,
-                            color: blueColor,
-                            boxShape: NeumorphicBoxShape.roundRect(
-                              BorderRadius.circular(5),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          bottom: 15,
+                          top: 5,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                controller: chatMessageController,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.send,
+                                label: 'Write something',
+                                hint:
+                                    'Ask for product details, features and more',
+                                maxLength: 500,
+                              ),
                             ),
-                          ),
-                          child: const Icon(
-                            FontAwesomeIcons.solidPaperPlane,
-                            size: 25,
-                            color: whiteColor,
-                          ),
+                            if (sellerUid != _services.user!.uid)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: NeumorphicFloatingActionButton(
+                                  onPressed: showMakeOfferDialog,
+                                  tooltip: 'Make an offer',
+                                  style: NeumorphicStyle(
+                                    lightSource: LightSource.top,
+                                    shape: NeumorphicShape.convex,
+                                    depth: 2,
+                                    intensity: 0.2,
+                                    color: Colors.green,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                      BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    FontAwesomeIcons.indianRupeeSign,
+                                    size: 25,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: NeumorphicFloatingActionButton(
+                                onPressed: sendMessage,
+                                tooltip: 'Send message',
+                                style: NeumorphicStyle(
+                                  lightSource: LightSource.top,
+                                  shape: NeumorphicShape.convex,
+                                  depth: 2,
+                                  intensity: 0.2,
+                                  color: blueColor,
+                                  boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.circular(5),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  FontAwesomeIcons.solidPaperPlane,
+                                  size: 25,
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

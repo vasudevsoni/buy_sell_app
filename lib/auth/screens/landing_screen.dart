@@ -40,85 +40,98 @@ class _LandingScreenState extends State<LandingScreen> {
         return;
       } else {
         if (mounted) {
-          Get.offAll(() => const MainScreen(
-                selectedIndex: 0,
-              ));
+          Get.offAll(() => const MainScreen(selectedIndex: 0));
         }
       }
     });
     super.initState();
   }
 
-  showDialogBox() {
-    showDialog(
+  showNetworkError() {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: false,
       builder: (context) {
         return WillPopScope(
           onWillPop: () async {
             return false;
           },
-          child: AlertDialog(
-            title: Text(
-              'No Connection',
-              style: GoogleFonts.poppins(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: redColor),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          child: SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'Please check your internet connection',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+                left: 15,
+                right: 15,
+                top: 15,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'No Connection',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    width: double.infinity,
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'Please check your internet connection',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'OK',
+                    onPressed: () async {
+                      Get.back();
+                      setState(() {
+                        isAlertSet = false;
+                      });
+                      isDeviceConnected =
+                          await InternetConnectionChecker().hasConnection;
+                      if (!isDeviceConnected) {
+                        showNetworkError();
+                        setState(() {
+                          isAlertSet = true;
+                        });
+                      }
+                    },
+                    borderColor: redColor,
+                    bgColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'OK',
-                onPressed: () async {
-                  Get.back();
-                  setState(() {
-                    isAlertSet = false;
-                  });
-                  isDeviceConnected =
-                      await InternetConnectionChecker().hasConnection;
-                  if (!isDeviceConnected) {
-                    showDialogBox();
-                    setState(() {
-                      isAlertSet = true;
-                    });
-                  }
-                },
-                borderColor: redColor,
-                bgColor: redColor,
-                textIconColor: whiteColor,
-              ),
-            ],
           ),
         );
       },
@@ -131,7 +144,7 @@ class _LandingScreenState extends State<LandingScreen> {
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
       if (!isDeviceConnected && isAlertSet == false) {
-        showDialogBox();
+        showNetworkError();
         setState(() {
           isAlertSet = true;
         });
@@ -174,94 +187,102 @@ class _LandingScreenState extends State<LandingScreen> {
               },
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.all(15),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Login to BestDeal',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: blackColor,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: ShapeDecoration(
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  color: whiteColor,
+                ),
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Login to BestDeal',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: blackColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CustomButton(
-                    text: 'Login with Phone',
-                    icon: FontAwesomeIcons.phone,
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                    onPressed: () => Get.toNamed(PhoneAuthScreen.routeName),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButton(
-                    text: 'Login with google',
-                    icon: FontAwesomeIcons.google,
-                    bgColor: googleLoginColor,
-                    borderColor: googleLoginColor,
-                    textIconColor: whiteColor,
-                    onPressed: () async {
-                      User? user = await GoogleAuthentication.signinWithGoogle(
-                        context,
-                      );
-                      if (user != null) {
-                        //login successful, add user to db and proceed
-                        PhoneAuthService auth = PhoneAuthService();
-                        // ignore: use_build_context_synchronously
-                        auth.addUser(context, user);
-                      } else {
-                        return;
-                      }
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      children: <Widget>[
-                        const Expanded(
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CustomButton(
+                      text: 'Login with Phone',
+                      icon: FontAwesomeIcons.phone,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
+                      textIconColor: whiteColor,
+                      onPressed: () => Get.toNamed(PhoneAuthScreen.routeName),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CustomButton(
+                      text: 'Login with google',
+                      icon: FontAwesomeIcons.google,
+                      bgColor: googleLoginColor,
+                      borderColor: googleLoginColor,
+                      textIconColor: whiteColor,
+                      onPressed: () async {
+                        User? user =
+                            await GoogleAuthentication.signinWithGoogle(
+                          context,
+                        );
+                        if (user != null) {
+                          //login successful, add user to db and proceed
+                          PhoneAuthService auth = PhoneAuthService();
+                          // ignore: use_build_context_synchronously
+                          auth.addUser(context, user);
+                        } else {
+                          return;
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: <Widget>[
+                          const Expanded(
                             child: Divider(
-                          color: blackColor,
-                        )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            "OR",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
+                              color: lightBlackColor,
                             ),
                           ),
-                        ),
-                        const Expanded(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              "or",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                color: lightBlackColor,
+                              ),
+                            ),
+                          ),
+                          const Expanded(
                             child: Divider(
-                          color: blackColor,
-                        )),
-                      ],
+                              color: lightBlackColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  CustomButton(
-                    text: 'Login with email',
-                    icon: FontAwesomeIcons.solidEnvelope,
-                    bgColor: greyColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
-                    onPressed: () => Get.toNamed(EmailLoginScreen.routeName),
-                  ),
-                ],
+                    CustomButton(
+                      text: 'Login with email',
+                      icon: FontAwesomeIcons.solidEnvelope,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
+                      onPressed: () => Get.toNamed(EmailLoginScreen.routeName),
+                    ),
+                  ],
+                ),
               ),
             ),
           )

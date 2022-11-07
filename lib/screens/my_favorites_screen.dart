@@ -14,42 +14,39 @@ class MyFavoritesScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: whiteColor,
       body: SafeArea(
-        child: Scrollbar(
-          interactive: true,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    right: 15,
-                    top: 15,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'My Favorites',
-                        maxLines: 1,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Icon(
-                        FontAwesomeIcons.solidHeart,
-                        color: pinkColor,
-                      ),
-                    ],
-                  ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                  top: 15,
                 ),
-                const MyFavoritesProductsList(),
-              ],
-            ),
+                child: Row(
+                  children: [
+                    Text(
+                      'My Favorites',
+                      maxLines: 1,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 22,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    const Icon(
+                      FontAwesomeIcons.solidHeart,
+                      color: pinkColor,
+                    ),
+                  ],
+                ),
+              ),
+              const MyFavoritesProductsList(),
+            ],
           ),
         ),
       ),

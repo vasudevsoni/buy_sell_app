@@ -73,7 +73,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                height: 10,
+                height: 13,
               );
             },
             padding: const EdgeInsets.only(
@@ -107,9 +107,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                   if (hasMoreReached)
                     CustomButton(
                       text: 'Load more',
-                      onPressed: () {
-                        snapshot.fetchMore();
-                      },
+                      onPressed: () => snapshot.fetchMore(),
                       icon: FontAwesomeIcons.chevronDown,
                       borderColor: blackColor,
                       bgColor: blackColor,

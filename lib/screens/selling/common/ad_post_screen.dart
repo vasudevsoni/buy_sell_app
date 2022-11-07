@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -119,224 +118,245 @@ class _AdPostScreenState extends State<AdPostScreen> {
             descriptionController.text.isNotEmpty &&
             priceController.text.isNotEmpty &&
             provider.imagePaths.isNotEmpty) {
-          showModal(
-            configuration: const FadeScaleTransitionConfiguration(),
+          showModalBottomSheet<dynamic>(
             context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
             builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  'Ready to post?',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                content: Container(
-                  padding: const EdgeInsets.all(15),
+              return SafeArea(
+                child: Container(
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    color: greyColor,
+                    color: whiteColor,
                   ),
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Stack(
-                                children: [
-                                  Opacity(
-                                    opacity: 0.7,
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.2,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.file(
-                                          provider.imagePaths[0],
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(
-                                              FontAwesomeIcons
-                                                  .circleExclamation,
-                                              size: 20,
-                                              color: redColor,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (provider.imagePaths.length >= 2)
-                                    Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Center(
-                                        child: Text(
-                                          '+${(provider.imagesCount - 1).toString()}',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 30,
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
+                      Center(
+                        child: Container(
+                          width: 40.0,
+                          height: 5.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: fadedColor,
                           ),
-                          Expanded(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    titleController.text,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 2,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    priceFormat.format(
-                                      int.parse(priceController.text),
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w700,
-                                      color: blueColor,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      const Divider(
-                        height: 20,
-                        color: lightBlackColor,
+                      const SizedBox(
+                        height: 10,
                       ),
                       Text(
-                        'Description - ${descriptionController.text}',
+                        'Ready to post?',
                         style: GoogleFonts.poppins(
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: blackColor,
-                          fontSize: 14,
                         ),
-                        maxLines: 3,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: ShapeDecoration(
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: greyColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Opacity(
+                                          opacity: 0.7,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.file(
+                                                provider.imagePaths[0],
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                    FontAwesomeIcons
+                                                        .circleExclamation,
+                                                    size: 20,
+                                                    color: redColor,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        if (provider.imagePaths.length >= 2)
+                                          Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Center(
+                                              child: Text(
+                                                '+${(provider.imagesCount - 1).toString()}',
+                                                textAlign: TextAlign.center,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 30,
+                                                  color: whiteColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          titleController.text,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                          ),
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          priceFormat.format(
+                                            int.parse(priceController.text),
+                                          ),
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w700,
+                                            color: blueColor,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              height: 20,
+                              color: lightBlackColor,
+                            ),
+                            Text(
+                              'Description - ${descriptionController.text}',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: blackColor,
+                                fontSize: 14,
+                              ),
+                              maxLines: 3,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Confirm & Post',
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Get.back();
+                          List<String> urls =
+                              await provider.uploadFiles(provider.imagePaths);
+                          var uid = DateTime.now().millisecondsSinceEpoch;
+                          setSearchParams(String s, int n) {
+                            List<String> searchQueries = [];
+                            for (int i = 0; i < n; i++) {
+                              String temp = '';
+                              for (int j = i; j < n; j++) {
+                                temp += s[j];
+                                if (temp.length >= 3) {
+                                  searchQueries.add(temp);
+                                }
+                              }
+                            }
+                            return searchQueries;
+                          }
+
+                          provider.dataToFirestore.addAll({
+                            'catName': widget.catName,
+                            'subCat': widget.subCatName,
+                            'title': titleController.text,
+                            'description': descriptionController.text,
+                            'price': int.parse(priceController.text),
+                            'sellerUid': _services.user!.uid,
+                            'images': urls,
+                            'postedAt': uid,
+                            'favorites': [],
+                            'views': [],
+                            'searchQueries': setSearchParams(
+                              titleController.text.toLowerCase(),
+                              titleController.text.length,
+                            ),
+                            'location': {
+                              'area': area,
+                              'city': city,
+                              'state': state,
+                              'country': country,
+                            },
+                            'isActive': false,
+                          });
+                          publishProductToFirebase(provider, uid.toString());
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Go Back & Check',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
                       ),
                     ],
                   ),
                 ),
-                actionsPadding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                titlePadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  top: 15,
-                  bottom: 10,
-                ),
-                contentPadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  bottom: 5,
-                  top: 5,
-                ),
-                actions: [
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Post',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      List<String> urls =
-                          await provider.uploadFiles(provider.imagePaths);
-                      var uid = DateTime.now().millisecondsSinceEpoch;
-                      setSearchParams(String s, int n) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.dataToFirestore.addAll({
-                        'catName': widget.catName,
-                        'subCat': widget.subCatName,
-                        'title': titleController.text,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'sellerUid': _services.user!.uid,
-                        'images': urls,
-                        'postedAt': uid,
-                        'favorites': [],
-                        'views': [],
-                        'searchQueries': setSearchParams(
-                          titleController.text.toLowerCase(),
-                          titleController.text.length,
-                        ),
-                        'location': {
-                          'area': area,
-                          'city': city,
-                          'state': state,
-                          'country': country,
-                        },
-                        'isActive': false,
-                      });
-                      publishProductToFirebase(provider, uid.toString());
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () {
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
-                  ),
-                ],
               );
             },
           );
@@ -352,163 +372,194 @@ class _AdPostScreenState extends State<AdPostScreen> {
     }
 
     resetAll() {
-      showModal(
-        configuration: const FadeScaleTransitionConfiguration(),
+      showModalBottomSheet<dynamic>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Are you sure?',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          return SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'All your listing details will be removed and you\'ll have to start fresh.',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Are you sure?',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'All your listing details will be removed and you\'ll have to start fresh.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Yes, Reset all',
+                    onPressed: () {
+                      setState(() {
+                        titleController.text = '';
+                        descriptionController.text = '';
+                        priceController.text = '';
+                        provider.imagePaths.clear();
+                        provider.clearImagesCount();
+                      });
+                      Get.back();
+                    },
+                    bgColor: redColor,
+                    borderColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'No, Cancel',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'Yes, Reset all',
-                onPressed: () {
-                  setState(() {
-                    titleController.text = '';
-                    descriptionController.text = '';
-                    priceController.text = '';
-                    provider.imagePaths.clear();
-                    provider.clearImagesCount();
-                  });
-                  Get.back();
-                },
-                bgColor: redColor,
-                borderColor: redColor,
-                textIconColor: whiteColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomButtonWithoutIcon(
-                text: 'No, Cancel',
-                onPressed: () {
-                  Get.back();
-                },
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
-            ],
           );
         },
       );
     }
 
     closePageAndGoToHome() {
-      showModal(
-        configuration: const FadeScaleTransitionConfiguration(),
+      showModalBottomSheet<dynamic>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Warning',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          return SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'Are you sure you want to leave? Your progress will not be saved.',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Warning',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'Are you sure you want to leave? Your progress will not be saved.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Yes, Leave',
+                    onPressed: () {
+                      setState(() {
+                        titleController.text = '';
+                        descriptionController.text = '';
+                        priceController.text = '';
+                        provider.imagePaths.clear();
+                        provider.clearImagesCount();
+                      });
+                      Get.offAll(() => const MainScreen(selectedIndex: 0));
+                    },
+                    bgColor: redColor,
+                    borderColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'No, Stay here',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'Yes, Leave',
-                onPressed: () {
-                  setState(() {
-                    descriptionController.text = '';
-                    priceController.text = '';
-                    provider.imagePaths.clear();
-                    provider.clearImagesCount();
-                  });
-                  Get.offAll(() => const MainScreen(
-                        selectedIndex: 0,
-                      ));
-                },
-                bgColor: redColor,
-                borderColor: redColor,
-                textIconColor: whiteColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomButtonWithoutIcon(
-                text: 'No, Stay here',
-                onPressed: () {
-                  Get.back();
-                },
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
-            ],
           );
         },
       );
@@ -826,7 +877,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           ),
           child: isLoading
               ? CustomButton(
-                  text: 'Loading..',
+                  text: 'Loading...',
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,
@@ -836,9 +887,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: () {
-                    validateForm();
-                  },
+                  onPressed: validateForm,
                   icon: FontAwesomeIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,

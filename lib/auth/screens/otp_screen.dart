@@ -40,11 +40,6 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
       height: 60,

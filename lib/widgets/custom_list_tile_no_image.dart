@@ -6,6 +6,7 @@ class CustomListTileNoImage extends StatelessWidget {
   final String text;
   final IconData icon;
   final void Function()? onTap;
+
   const CustomListTileNoImage({
     super.key,
     required this.text,

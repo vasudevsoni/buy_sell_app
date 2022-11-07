@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,127 +100,162 @@ class _EditAdScreenState extends State<EditAdScreen> {
         if (titleController.text.isNotEmpty &&
             descriptionController.text.isNotEmpty &&
             priceController.text.isNotEmpty) {
-          showModal(
-            configuration: const FadeScaleTransitionConfiguration(),
+          showModalBottomSheet<dynamic>(
             context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
             builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  'Ready to update?',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                content: Container(
-                  padding: const EdgeInsets.all(15),
+              return SafeArea(
+                child: Container(
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    color: greyColor,
+                    color: whiteColor,
                   ),
+                  margin: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            titleController.text,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
+                      Center(
+                        child: Container(
+                          width: 40.0,
+                          height: 5.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: fadedColor,
                           ),
-                          Text(
-                            priceFormat.format(
-                              int.parse(priceController.text),
-                            ),
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              color: blueColor,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      const Divider(
-                        height: 20,
-                        color: lightBlackColor,
+                      const SizedBox(
+                        height: 10,
                       ),
                       Text(
-                        'Description - ${descriptionController.text}',
+                        'Ready to update?',
                         style: GoogleFonts.poppins(
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: blackColor,
-                          fontSize: 14,
                         ),
-                        maxLines: 3,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: ShapeDecoration(
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          color: greyColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  titleController.text,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  priceFormat.format(
+                                    int.parse(priceController.text),
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    color: blueColor,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              height: 20,
+                              color: lightBlackColor,
+                            ),
+                            Text(
+                              'Description - ${descriptionController.text}',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                color: blackColor,
+                                fontSize: 14,
+                              ),
+                              maxLines: 3,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Confirm & Update',
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Get.back();
+                          var uid = widget.productData['postedAt'];
+                          setSearchParams(String s, int n) {
+                            List<String> searchQueries = [];
+                            for (int i = 0; i < n; i++) {
+                              String temp = '';
+                              for (int j = i; j < n; j++) {
+                                temp += s[j];
+                                if (temp.length >= 3) {
+                                  searchQueries.add(temp);
+                                }
+                              }
+                            }
+                            return searchQueries;
+                          }
+
+                          provider.updatedDataToFirestore.addAll({
+                            'title': titleController.text,
+                            'description': descriptionController.text,
+                            'price': int.parse(priceController.text),
+                            'searchQueries': setSearchParams(
+                              titleController.text.toLowerCase(),
+                              titleController.text.length,
+                            ),
+                            'isActive': false,
+                          });
+                          await updateProductOnFirebase(
+                              provider, uid.toString());
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButtonWithoutIcon(
+                        text: 'Go Back & Check',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
                       ),
                     ],
                   ),
                 ),
-                actionsPadding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                titlePadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  top: 15,
-                  bottom: 10,
-                ),
-                contentPadding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  bottom: 5,
-                  top: 5,
-                ),
-                actions: [
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      var uid = widget.productData['postedAt'];
-                      provider.updatedDataToFirestore.addAll({
-                        'title': titleController.text,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'isActive': false,
-                      });
-                      await updateProductOnFirebase(provider, uid.toString());
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () {
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
-                  ),
-                ],
               );
             },
           );
@@ -242,75 +276,91 @@ class _EditAdScreenState extends State<EditAdScreen> {
     }
 
     closePageAndGoToHome() {
-      showModal(
-        configuration: const FadeScaleTransitionConfiguration(),
+      showModalBottomSheet<dynamic>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Warning',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          return SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'Are you sure you want to leave? Your progress will not be saved.',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Warning',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'Are you sure you want to leave? Your progress will not be saved.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Yes, Leave',
+                    onPressed: () {
+                      Get.back();
+                      Get.back();
+                    },
+                    bgColor: redColor,
+                    borderColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'No, Stay here',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'Yes, Leave',
-                onPressed: () {
-                  Get.back();
-                  Get.back();
-                },
-                bgColor: redColor,
-                borderColor: redColor,
-                textIconColor: whiteColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CustomButtonWithoutIcon(
-                text: 'No, Stay here',
-                onPressed: () {
-                  Get.back();
-                },
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
-            ],
           );
         },
       );
@@ -546,7 +596,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           ),
           child: isLoading
               ? CustomButton(
-                  text: 'Loading..',
+                  text: 'Loading...',
                   onPressed: () {},
                   isDisabled: isLoading,
                   icon: FontAwesomeIcons.spinner,

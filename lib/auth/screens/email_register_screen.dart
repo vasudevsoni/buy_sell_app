@@ -24,7 +24,6 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
 
   final EmailAuthService _service = EmailAuthService();
   bool isLoading = false;
@@ -53,7 +52,6 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -76,145 +74,133 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
       ),
       body: Form(
         key: _registerformKey,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            height: MediaQuery.of(context).size.height -
-                56 -
-                MediaQuery.of(context).viewPadding.top,
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CustomTextField(
-                  controller: nameController,
-                  keyboardType: TextInputType.name,
-                  label: 'Name',
-                  hint: 'Enter your Name',
-                  maxLength: 80,
-                  textInputAction: TextInputAction.next,
-                  isEnabled: isLoading ? false : true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    if (value.length == 1) {
-                      return 'Please enter a valid name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  label: 'Email address',
-                  hint: 'Enter your Email address',
-                  maxLength: 100,
-                  textInputAction: TextInputAction.next,
-                  isEnabled: isLoading ? false : true,
-                  validator: (value) {
-                    final bool isValid =
-                        EmailValidator.validate(emailController.text);
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email address';
-                    }
-                    if (value.isNotEmpty && isValid == false) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: CustomTextField(
-                        controller: passwordController,
-                        keyboardType: TextInputType.text,
-                        label: 'Password',
-                        hint: 'Create a password',
-                        maxLength: 15,
-                        textInputAction: TextInputAction.next,
-                        isObscured: isObscured ? true : false,
-                        isEnabled: isLoading ? false : true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a password';
-                          } else if (value.length < 6) {
-                            return 'Password must be 6 to 15 characters long';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscured = !isObscured;
-                          });
-                        },
-                        icon: isObscured
-                            ? const Icon(
-                                FontAwesomeIcons.eyeSlash,
-                                size: 20,
-                              )
-                            : const Icon(
-                                FontAwesomeIcons.eye,
-                                size: 20,
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    Get.offNamed(EmailLoginScreen.routeName);
-                  },
-                  child: AutoSizeText(
-                    'Already have an account? Login',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: blueColor,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CustomTextField(
+                controller: nameController,
+                keyboardType: TextInputType.name,
+                label: 'Name',
+                hint: 'Enter your Name',
+                maxLength: 80,
+                textInputAction: TextInputAction.next,
+                isEnabled: isLoading ? false : true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  if (value.length == 1) {
+                    return 'Please enter a valid name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomTextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                label: 'Email address',
+                hint: 'Enter your Email address',
+                maxLength: 100,
+                textInputAction: TextInputAction.next,
+                isEnabled: isLoading ? false : true,
+                validator: (value) {
+                  final bool isValid =
+                      EmailValidator.validate(emailController.text);
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email address';
+                  }
+                  if (value.isNotEmpty && isValid == false) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: CustomTextField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      label: 'Password',
+                      hint: 'Create a password',
+                      maxLength: 15,
+                      textInputAction: TextInputAction.next,
+                      isObscured: isObscured ? true : false,
+                      isEnabled: isLoading ? false : true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a password';
+                        } else if (value.length < 6) {
+                          return 'Password must be 6 to 15 characters long';
+                        }
+                        return null;
+                      },
                     ),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () => setState(() {
+                        isObscured = !isObscured;
+                      }),
+                      icon: isObscured
+                          ? const Icon(
+                              FontAwesomeIcons.eyeSlash,
+                              size: 20,
+                            )
+                          : const Icon(
+                              FontAwesomeIcons.eye,
+                              size: 20,
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => Get.offNamed(EmailLoginScreen.routeName),
+                child: AutoSizeText(
+                  'Already have an account? Login',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: blueColor,
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                isLoading
-                    ? CustomButton(
-                        text: 'Loading...',
-                        icon: FontAwesomeIcons.spinner,
-                        bgColor: greyColor,
-                        borderColor: greyColor,
-                        textIconColor: blackColor,
-                        onPressed: () {},
-                        isDisabled: isLoading,
-                      )
-                    : CustomButton(
-                        text: 'Create account',
-                        icon: FontAwesomeIcons.userPlus,
-                        bgColor: blackColor,
-                        borderColor: blackColor,
-                        textIconColor: whiteColor,
-                        onPressed: () {
-                          _validateEmail();
-                        },
-                      ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              isLoading
+                  ? CustomButton(
+                      text: 'Loading...',
+                      icon: FontAwesomeIcons.spinner,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
+                      onPressed: () {},
+                      isDisabled: isLoading,
+                    )
+                  : CustomButton(
+                      text: 'Create account',
+                      icon: FontAwesomeIcons.userPlus,
+                      bgColor: blackColor,
+                      borderColor: blackColor,
+                      textIconColor: whiteColor,
+                      onPressed: () => _validateEmail(),
+                    ),
+            ],
           ),
         ),
       ),

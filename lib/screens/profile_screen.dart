@@ -119,93 +119,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     : GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          showModal(
-                            configuration:
-                                const FadeScaleTransitionConfiguration(),
-                            context: context,
-                            builder: (context) {
-                              return Dismissible(
-                                key: UniqueKey(),
-                                direction: DismissDirection.down,
-                                onDismissed: (direction) {
-                                  Get.back();
-                                },
-                                child: Material(
-                                  color: blackColor,
-                                  child: Stack(
-                                    children: [
-                                      PhotoViewGallery.builder(
-                                        scrollPhysics:
-                                            const BouncingScrollPhysics(),
-                                        itemCount: 1,
-                                        builder:
-                                            (BuildContext context, int index) {
-                                          return PhotoViewGalleryPageOptions(
-                                            imageProvider: NetworkImage(
-                                              profileImage,
-                                            ),
-                                            initialScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            minScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            maxScale: PhotoViewComputedScale
-                                                    .contained *
-                                                2,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                FontAwesomeIcons
-                                                    .circleExclamation,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                          );
-                                        },
-                                        loadingBuilder: (context, event) {
-                                          return const Center(
-                                            child: SpinKitFadingCube(
-                                              color: greyColor,
-                                              size: 20,
-                                              duration:
-                                                  Duration(milliseconds: 1000),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      Positioned(
-                                        top: 15,
-                                        left: 15,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          splashColor: blueColor,
-                                          splashRadius: 30,
-                                          icon: const Icon(
-                                            FontAwesomeIcons.circleXmark,
-                                            size: 30,
-                                            color: whiteColor,
-                                            shadows: [
-                                              BoxShadow(
-                                                offset: Offset(0, 0),
-                                                blurRadius: 15,
-                                                spreadRadius: 15,
-                                              ),
-                                            ],
+                        onTap: () => showModal(
+                          configuration:
+                              const FadeScaleTransitionConfiguration(),
+                          context: context,
+                          builder: (context) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.down,
+                              onDismissed: (direction) {
+                                Get.back();
+                              },
+                              child: Material(
+                                color: blackColor,
+                                child: Stack(
+                                  children: [
+                                    PhotoViewGallery.builder(
+                                      scrollPhysics:
+                                          const BouncingScrollPhysics(),
+                                      itemCount: 1,
+                                      builder:
+                                          (BuildContext context, int index) {
+                                        return PhotoViewGalleryPageOptions(
+                                          imageProvider: NetworkImage(
+                                            profileImage,
                                           ),
+                                          initialScale:
+                                              PhotoViewComputedScale.contained *
+                                                  1,
+                                          minScale:
+                                              PhotoViewComputedScale.contained *
+                                                  1,
+                                          maxScale:
+                                              PhotoViewComputedScale.contained *
+                                                  2,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              FontAwesomeIcons
+                                                  .circleExclamation,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                        );
+                                      },
+                                      loadingBuilder: (context, event) {
+                                        return const Center(
+                                          child: SpinKitFadingCube(
+                                            color: greyColor,
+                                            size: 20,
+                                            duration:
+                                                Duration(milliseconds: 1000),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Positioned(
+                                      top: 15,
+                                      right: 15,
+                                      child: IconButton(
+                                        onPressed: () => Get.back(),
+                                        splashColor: blueColor,
+                                        splashRadius: 30,
+                                        icon: const Icon(
+                                          FontAwesomeIcons.circleXmark,
+                                          size: 30,
+                                          color: whiteColor,
+                                          shadows: [
+                                            BoxShadow(
+                                              offset: Offset(0, 0),
+                                              blurRadius: 15,
+                                              spreadRadius: 15,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              );
-                            },
-                          );
-                        },
+                              ),
+                            );
+                          },
+                        ),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.width * 0.3,
                           width: MediaQuery.of(context).size.width * 0.3,
@@ -254,11 +250,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (bio != '')
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      Get.to(
-                        () => FullBioScreen(bio: bio),
-                      );
-                    },
+                    onTap: () => Get.to(
+                      () => FullBioScreen(bio: bio),
+                    ),
                     child: Text(
                       bio,
                       maxLines: 3,
@@ -278,9 +272,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (address != '')
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                       color: greyColor,
-                      borderRadius: BorderRadius.circular(5),
                     ),
                     margin: const EdgeInsets.symmetric(
                       horizontal: 15,
@@ -326,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: GoogleFonts.poppins(
-                      color: blackColor,
+                      color: lightBlackColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -440,7 +436,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                height: 10,
+                height: 13,
               );
             },
             padding: const EdgeInsets.only(
@@ -474,9 +470,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                   if (hasMoreReached)
                     CustomButton(
                       text: 'Load more',
-                      onPressed: () {
-                        snapshot.fetchMore();
-                      },
+                      onPressed: () => snapshot.fetchMore(),
                       icon: FontAwesomeIcons.chevronDown,
                       borderColor: blackColor,
                       bgColor: blackColor,

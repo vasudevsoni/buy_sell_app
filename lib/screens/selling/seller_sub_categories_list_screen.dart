@@ -83,9 +83,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
                       } else {
                         Get.offAll(
                           () => AdPostScreen(
-                            catName: doc['catName'],
-                            subCatName: data[index],
-                          ),
+                              catName: doc['catName'], subCatName: data[index]),
                           transition: Transition.downToUp,
                         );
                       }

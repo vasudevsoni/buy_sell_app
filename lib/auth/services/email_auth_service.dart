@@ -17,9 +17,7 @@ class EmailAuthService {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) {
-        Get.offAll(() => const MainScreen(
-              selectedIndex: 0,
-            ));
+        Get.offAll(() => const MainScreen(selectedIndex: 0));
       });
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {
@@ -64,9 +62,7 @@ class EmailAuthService {
         'profileImage': null,
       }).then((value) async {
         //send to main screen
-        Get.offAll(() => const MainScreen(
-              selectedIndex: 0,
-            ));
+        Get.offAll(() => const MainScreen(selectedIndex: 0));
       });
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {

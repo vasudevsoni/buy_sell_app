@@ -23,7 +23,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          images.length == 1 ? 'Images' : '${images.length} Images',
+          '${images.length} Images',
           style: GoogleFonts.poppins(
             color: blackColor,
             fontSize: 15,
@@ -38,7 +38,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
             child: ListView.separated(
               separatorBuilder: (context, index) {
                 return const SizedBox(
-                  height: 10,
+                  height: 15,
                 );
               },
               shrinkWrap: true,
@@ -50,102 +50,98 @@ class AllImagesDisplayScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        showModal(
-                          configuration:
-                              const FadeScaleTransitionConfiguration(),
-                          context: context,
-                          builder: (context) {
-                            PageController pageController =
-                                PageController(initialPage: index);
-                            return Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.down,
-                              onDismissed: (direction) {
-                                Get.back();
-                              },
-                              child: Material(
-                                color: blackColor,
-                                child: Stack(
-                                  children: [
-                                    PhotoViewGallery.builder(
-                                      scrollPhysics:
-                                          const BouncingScrollPhysics(),
-                                      itemCount: images.length,
-                                      pageController: pageController,
-                                      builder:
-                                          (BuildContext context, int index) {
-                                        return PhotoViewGalleryPageOptions(
-                                          imageProvider: NetworkImage(
-                                            images[index],
-                                          ),
-                                          initialScale:
-                                              PhotoViewComputedScale.contained *
-                                                  1,
-                                          minScale:
-                                              PhotoViewComputedScale.contained *
-                                                  1,
-                                          maxScale:
-                                              PhotoViewComputedScale.contained *
-                                                  10,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(
-                                              FontAwesomeIcons
-                                                  .circleExclamation,
-                                              size: 20,
-                                              color: redColor,
-                                            );
-                                          },
-                                        );
-                                      },
-                                      loadingBuilder: (context, event) {
-                                        return const Center(
-                                          child: SpinKitFadingCube(
-                                            color: greyColor,
-                                            size: 20,
-                                            duration:
-                                                Duration(milliseconds: 1000),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    Positioned(
-                                      top: 15,
-                                      left: 15,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          Get.back();
-                                          pageController.dispose();
-                                        },
-                                        splashColor: blueColor,
-                                        splashRadius: 30,
-                                        icon: const Icon(
-                                          FontAwesomeIcons.circleXmark,
-                                          size: 30,
-                                          color: whiteColor,
-                                          shadows: [
-                                            BoxShadow(
-                                              offset: Offset(0, 0),
-                                              blurRadius: 15,
-                                              spreadRadius: 15,
-                                            ),
-                                          ],
+                      onTap: () => showModal(
+                        configuration: const FadeScaleTransitionConfiguration(),
+                        context: context,
+                        builder: (_) {
+                          PageController pageController =
+                              PageController(initialPage: index);
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.down,
+                            onDismissed: (direction) {
+                              Get.back();
+                              pageController.dispose();
+                            },
+                            child: Material(
+                              color: blackColor,
+                              child: Stack(
+                                children: [
+                                  PhotoViewGallery.builder(
+                                    scrollPhysics:
+                                        const BouncingScrollPhysics(),
+                                    itemCount: images.length,
+                                    pageController: pageController,
+                                    builder: (BuildContext context, int index) {
+                                      return PhotoViewGalleryPageOptions(
+                                        imageProvider: NetworkImage(
+                                          images[index],
                                         ),
+                                        initialScale:
+                                            PhotoViewComputedScale.contained *
+                                                1,
+                                        minScale:
+                                            PhotoViewComputedScale.contained *
+                                                1,
+                                        maxScale:
+                                            PhotoViewComputedScale.contained *
+                                                10,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Icon(
+                                            FontAwesomeIcons.circleExclamation,
+                                            size: 20,
+                                            color: redColor,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    loadingBuilder: (context, event) {
+                                      return const Center(
+                                        child: SpinKitFadingCube(
+                                          color: greyColor,
+                                          size: 20,
+                                          duration:
+                                              Duration(milliseconds: 1000),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Positioned(
+                                    top: 15,
+                                    right: 15,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Get.back();
+                                        pageController.dispose();
+                                      },
+                                      splashColor: blueColor,
+                                      splashRadius: 30,
+                                      icon: const Icon(
+                                        FontAwesomeIcons.circleXmark,
+                                        size: 30,
+                                        color: whiteColor,
+                                        shadows: [
+                                          BoxShadow(
+                                            offset: Offset(0, 0),
+                                            blurRadius: 15,
+                                            spreadRadius: 15,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                        );
-                      },
+                            ),
+                          );
+                        },
+                      ),
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
                         width: double.infinity,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
                             imageUrl: images[index],
                             fit: BoxFit.cover,

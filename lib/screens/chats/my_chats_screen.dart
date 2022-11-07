@@ -1,14 +1,21 @@
+import 'package:buy_sell_app/provider/main_provider.dart';
 import 'package:buy_sell_app/screens/chats/conversation_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
+import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import '../../auth/screens/email_verification_screen.dart';
+import '../../auth/screens/location_screen.dart';
 import '../../utils/utils.dart';
+import '../selling/seller_categories_list_screen.dart';
 
 class MyChatsScreen extends StatefulWidget {
   static const String routeName = '/my-chats-screen';
@@ -20,9 +27,27 @@ class MyChatsScreen extends StatefulWidget {
 
 class _MyChatsScreenState extends State<MyChatsScreen> {
   final FirebaseServices _services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  onSellButtonClicked() {
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] == null) {
+        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+        showSnackBar(
+          context: context,
+          content: 'Please set your location to sell an item',
+          color: redColor,
+        );
+      } else {
+        Get.toNamed(SellerCategoriesListScreen.routeName);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final mainProv = Provider.of<MainProvider>(context, listen: false);
+
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
@@ -35,7 +60,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
           title: Text(
-            'My Chats',
+            'Inbox',
             style: GoogleFonts.poppins(
               color: blackColor,
               fontSize: 15,
@@ -79,7 +104,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           ),
         ),
         body: TabBarView(
-          physics: const BouncingScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: _services.chats
@@ -103,21 +128,57 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 } else if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Center(
-                      child: Text(
-                        'Your chats will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When you chat with a seller, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Explore Products',
+                          onPressed: () => setState(() {
+                            mainProv.switchToPage(0);
+                          }),
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -174,21 +235,57 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 } else if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Center(
-                      child: Text(
-                        'Your buying chats will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When you chat with a seller, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Explore Products',
+                          onPressed: () => setState(() {
+                            mainProv.switchToPage(0);
+                          }),
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -245,21 +342,59 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     ),
                   );
                 } else if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Center(
-                      child: Text(
-                        'Your selling chats will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When someone sends you a message, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Start selling',
+                          onPressed: !user!.emailVerified &&
+                                  user!.providerData[0].providerId == 'password'
+                              ? () =>
+                                  Get.toNamed(EmailVerificationScreen.routeName)
+                              : onSellButtonClicked,
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -315,6 +450,7 @@ class _ChatCardState extends State<ChatCard> {
   final FirebaseServices _services = FirebaseServices();
   String prodId = '';
   String prodTitle = '';
+  String productImage = '';
   String buyerName = '';
   String buyerProfileImage = '';
   String sellerName = '';
@@ -339,6 +475,7 @@ class _ChatCardState extends State<ChatCard> {
           prodId = value.id;
           prodTitle = value['title'];
           isActive = value['isActive'];
+          productImage = value['images'][0];
         });
       }
     });
@@ -376,20 +513,15 @@ class _ChatCardState extends State<ChatCard> {
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
-        onTap: () {
-          Get.to(() => ConversationScreen(
-                chatRoomId: widget.chatData['chatRoomId'],
-                prodId: prodId,
-                sellerId: sellerUid,
-              ));
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 15,
-            top: 15,
-            right: 15,
-            bottom: 5,
+        onTap: () => Get.to(
+          () => ConversationScreen(
+            chatRoomId: widget.chatData['chatRoomId'],
+            prodId: prodId,
+            sellerId: sellerUid,
           ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
               Row(
@@ -471,94 +603,144 @@ class _ChatCardState extends State<ChatCard> {
                                 },
                               ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        widget.chatData['users'][0] == _services.user!.uid
-                            ? Text(
-                                buyerName == '' ? 'BestDeal User' : buyerName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              )
-                            : Text(
-                                sellerName == '' ? 'BestDeal User' : sellerName,
-                                maxLines: 13,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                        if (widget.chatData['lastChat'] != null)
-                          Text(
-                            widget.chatData['lastChat'],
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style: widget.chatData['read'] == false
-                                ? GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    color: blueColor,
-                                    fontSize: 12,
-                                  )
-                                : GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                    fontSize: 12,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          widget.chatData['users'][0] == _services.user!.uid
+                              ? RichText(
+                                  text: TextSpan(
+                                    text: buyerName == ''
+                                        ? 'BestDeal User •'
+                                        : '$buyerName •',
+                                    children: [
+                                      TextSpan(
+                                        text: ' Buyer',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: redColor,
+                                        ),
+                                      ),
+                                    ],
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      color: blackColor,
+                                      fontSize: 14,
+                                    ),
                                   ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                )
+                              : RichText(
+                                  text: TextSpan(
+                                    text: sellerName == ''
+                                        ? 'BestDeal User •'
+                                        : '$sellerName •',
+                                    children: [
+                                      TextSpan(
+                                        text: ' Seller',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: blueColor,
+                                        ),
+                                      ),
+                                    ],
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      color: blackColor,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                ),
+                          if (widget.chatData['lastChat'] != null)
+                            Text(
+                              widget.chatData['lastChat'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: widget.chatData['read'] == false
+                                  ? GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: blueColor,
+                                      fontSize: 12,
+                                    )
+                                  : GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      color: blackColor,
+                                      fontSize: 12,
+                                    ),
+                            ),
+                          const SizedBox(
+                            height: 5,
                           ),
-                        Text(
-                          prodTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            color: fadedColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                        widget.chatData['users'][0] == _services.user!.uid
-                            ? Chip(
-                                label: Text(
-                                  'Buyer',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    color: redColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: greyColor,
-                              )
-                            : Chip(
-                                label: Text(
-                                  'Seller',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700,
-                                    color: blueColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                backgroundColor: greyColor,
+                          Container(
+                            width: double.infinity,
+                            decoration: ShapeDecoration(
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                      ],
+                              color: greyColor,
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: CachedNetworkImage(
+                                      imageUrl: productImage,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(
+                                          FontAwesomeIcons.circleExclamation,
+                                          size: 20,
+                                          color: redColor,
+                                        );
+                                      },
+                                      placeholder: (context, url) {
+                                        return const Icon(
+                                          FontAwesomeIcons.solidImage,
+                                          size: 20,
+                                          color: lightBlackColor,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  prodTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                    color: lightBlackColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

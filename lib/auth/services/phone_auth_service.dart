@@ -33,10 +33,12 @@ class PhoneAuthService {
       codeSent: ((String verificationId, int? resendToken) async {
         _resendToken = resendToken;
         if (isResend == false) {
-          Get.to(() => OTPScreen(
-                mobileNumber: phoneNumber,
-                verificationId: verificationId,
-              ));
+          Get.to(
+            () => OTPScreen(
+              mobileNumber: phoneNumber,
+              verificationId: verificationId,
+            ),
+          );
         }
       }),
       forceResendingToken: _resendToken,
@@ -51,9 +53,7 @@ class PhoneAuthService {
     List<DocumentSnapshot> document = result.docs;
     if (document.isNotEmpty) {
       //if user already exists in database, just navigate him
-      Get.offAll(() => const MainScreen(
-            selectedIndex: 0,
-          ));
+      Get.offAll(() => const MainScreen(selectedIndex: 0));
     } else {
       //if user does not exists in database, add him to db and then navigate
       try {
@@ -68,9 +68,7 @@ class PhoneAuthService {
           'dob': null,
           'profileImage': null,
         }).then((value) {
-          Get.offAll(() => const MainScreen(
-                selectedIndex: 0,
-              ));
+          Get.offAll(() => const MainScreen(selectedIndex: 0));
         });
       } on FirebaseAuthException catch (_) {
         showSnackBar(

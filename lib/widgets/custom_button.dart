@@ -2,17 +2,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class CustomButton extends StatelessWidget {
-  String text;
+  final String text;
   final VoidCallback onPressed;
-  IconData icon;
-  Color bgColor;
-  Color borderColor;
-  bool isDisabled;
-  Color textIconColor;
+  final IconData icon;
+  final Color bgColor;
+  final Color borderColor;
+  final bool isDisabled;
+  final Color textIconColor;
 
-  CustomButton({
+  const CustomButton({
     Key? key,
     required this.text,
     required this.onPressed,
@@ -25,26 +24,24 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 45,
-      width: MediaQuery.of(context).size.width,
-      child: NeumorphicButton(
-        onPressed: isDisabled ? null : onPressed,
-        style: NeumorphicStyle(
-          lightSource: LightSource.top,
-          shape: NeumorphicShape.convex,
-          border: NeumorphicBorder(
-            color: borderColor,
-            width: 1,
-          ),
-          depth: 0,
-          intensity: 0,
-          boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.circular(5),
+    return GestureDetector(
+      onTap: onPressed,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        height: 45,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        decoration: ShapeDecoration(
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: borderColor,
+              strokeAlign: StrokeAlign.center,
+              width: 1.2,
+            ),
           ),
           color: bgColor,
         ),
-        provideHapticFeedback: true,
+        width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
             Expanded(
@@ -57,7 +54,7 @@ class CustomButton extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
-                  fontSize: 15,
+                  fontSize: 14,
                   color: textIconColor,
                 ),
               ),
@@ -67,7 +64,7 @@ class CustomButton extends StatelessWidget {
               child: Icon(
                 icon,
                 color: textIconColor,
-                size: 18,
+                size: 16,
               ),
             ),
           ],

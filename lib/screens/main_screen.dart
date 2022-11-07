@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:buy_sell_app/provider/main_provider.dart';
 import 'package:buy_sell_app/screens/my_profile_screen.dart';
 import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -27,97 +26,102 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+  GlobalKey globalKey = GlobalKey(debugLabel: 'btm_nav_bar');
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
-  int _selectedIndex = 0;
-
-  _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
     getConnectivity();
-    setState(() {
-      _selectedIndex = widget.selectedIndex;
-    });
     super.initState();
   }
 
-  showDialogBox() {
-    showDialog(
+  showNetworkError() {
+    showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: false,
       builder: (context) {
         return WillPopScope(
           onWillPop: () async {
             return false;
           },
-          child: AlertDialog(
-            title: Text(
-              'No Connection',
-              style: GoogleFonts.poppins(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: redColor),
-              textAlign: TextAlign.center,
-            ),
-            content: Container(
-              padding: const EdgeInsets.all(15),
+          child: SafeArea(
+            child: Container(
               decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                color: greyColor,
+                color: whiteColor,
               ),
-              child: Text(
-                'Please check your internet connection',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+              margin: const EdgeInsets.all(15),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+                left: 15,
+                right: 15,
+                top: 15,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'No Connection',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    width: double.infinity,
+                    decoration: ShapeDecoration(
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'Please check your internet connection',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'OK',
+                    onPressed: () async {
+                      Get.back();
+                      setState(() {
+                        isAlertSet = false;
+                      });
+                      isDeviceConnected =
+                          await InternetConnectionChecker().hasConnection;
+                      if (!isDeviceConnected) {
+                        showNetworkError();
+                        setState(() {
+                          isAlertSet = true;
+                        });
+                      }
+                    },
+                    borderColor: redColor,
+                    bgColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                ],
               ),
             ),
-            actionsPadding: const EdgeInsets.all(15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            titlePadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 15,
-              bottom: 10,
-            ),
-            contentPadding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              bottom: 5,
-              top: 5,
-            ),
-            actions: [
-              CustomButtonWithoutIcon(
-                text: 'OK',
-                onPressed: () async {
-                  Get.back();
-                  setState(() {
-                    isAlertSet = false;
-                  });
-                  isDeviceConnected =
-                      await InternetConnectionChecker().hasConnection;
-                  if (!isDeviceConnected) {
-                    showDialogBox();
-                    setState(() {
-                      isAlertSet = true;
-                    });
-                  }
-                },
-                borderColor: redColor,
-                bgColor: redColor,
-                textIconColor: whiteColor,
-              ),
-            ],
           ),
         );
       },
@@ -130,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
       if (!isDeviceConnected && isAlertSet == false) {
-        showDialogBox();
+        showNetworkError();
         setState(() {
           isAlertSet = true;
         });
@@ -147,7 +151,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final locationProv = Provider.of<LocationProvider>(context);
-    List<Widget> pages = <Widget>[
+    final mainProv = Provider.of<MainProvider>(context);
+    int selectedIndex = mainProv.currentPageIndex;
+
+    final pages = [
       HomeScreen(
         locationData: locationProv.locationData,
       ),
@@ -156,58 +163,95 @@ class _MainScreenState extends State<MainScreen> {
       const MyProfileScreen(),
     ];
 
+    onItemTapped(int index) {
+      mainProv.switchToPage(index);
+    }
+
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        activeIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        gapLocation: GapLocation.none,
-        iconSize: 25,
-        height: 60,
-        notchSmoothness: NotchSmoothness.defaultEdge,
-        backgroundColor: greyColor,
-        activeColor: blackColor,
-        inactiveColor: lightBlackColor,
-        splashRadius: 0,
-        elevation: 0.0,
-        icons: [
-          _selectedIndex == 0
-              ? FontAwesomeIcons.solidCompass
-              : FontAwesomeIcons.compass,
-          _selectedIndex == 1
-              ? FontAwesomeIcons.solidComment
-              : FontAwesomeIcons.comment,
-          _selectedIndex == 2
-              ? FontAwesomeIcons.solidHeart
-              : FontAwesomeIcons.heart,
-          _selectedIndex == 3
-              ? FontAwesomeIcons.solidCircleUser
-              : FontAwesomeIcons.circleUser
-        ],
-      ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: NeumorphicFloatingActionButton(
-      //   onPressed: onButtonClicked,
-      //   tooltip: 'List a product',
-      //   style: NeumorphicStyle(
-      //     lightSource: LightSource.top,
-      //     shape: NeumorphicShape.convex,
-      //     depth: 2,
-      //     intensity: 0.2,
-      //     color: blueColor,
-      //     boxShape: NeumorphicBoxShape.roundRect(
-      //       BorderRadius.circular(50),
-      //     ),
-      //   ),
-      //   child: const Icon(
-      //     FontAwesomeIcons.plus,
-      //     color: whiteColor,
-      //   ),
-      // ),
-    );
+        body: IndexedStack(
+          index: selectedIndex,
+          children: pages,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          currentIndex: selectedIndex,
+          selectedItemColor: blackColor,
+          unselectedItemColor: fadedColor,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          iconSize: 28,
+          backgroundColor: greyColor,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.compass),
+              activeIcon: Icon(FontAwesomeIcons.solidCompass),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.envelope),
+              activeIcon: Icon(FontAwesomeIcons.solidEnvelope),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.heart),
+              activeIcon: Icon(FontAwesomeIcons.solidHeart),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.user),
+              activeIcon: Icon(FontAwesomeIcons.solidUser),
+              label: '',
+            ),
+          ],
+        )
+        // AnimatedBottomNavigationBar(
+        //   activeIndex: _selectedIndex,
+        //   onTap: _onItemTapped,
+        //   key: globalKey,
+        //   gapLocation: GapLocation.none,
+        //   iconSize: 25,
+        //   height: 56,
+        //   notchSmoothness: NotchSmoothness.defaultEdge,
+        //   backgroundColor: greyColor,
+        //   activeColor: blackColor,
+        //   inactiveColor: lightBlackColor,
+        //   splashRadius: 0,
+        //   elevation: 0.0,
+        //   icons: [
+        //     _selectedIndex == 0
+        //         ? FontAwesomeIcons.solidCompass
+        //         : FontAwesomeIcons.compass,
+        //     _selectedIndex == 1
+        //         ? FontAwesomeIcons.solidComment
+        //         : FontAwesomeIcons.comment,
+        //     _selectedIndex == 2
+        //         ? FontAwesomeIcons.solidHeart
+        //         : FontAwesomeIcons.heart,
+        //     _selectedIndex == 3
+        //         ? FontAwesomeIcons.solidCircleUser
+        //         : FontAwesomeIcons.circleUser
+        //   ],
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: NeumorphicFloatingActionButton(
+        //   onPressed: onButtonClicked,
+        //   tooltip: 'List a product',
+        //   style: NeumorphicStyle(
+        //     lightSource: LightSource.top,
+        //     shape: NeumorphicShape.convex,
+        //     depth: 2,
+        //     intensity: 0.2,
+        //     color: blueColor,
+        //     boxShape: NeumorphicBoxShape.roundRect(
+        //       BorderRadius.circular(50),
+        //     ),
+        //   ),
+        //   child: const Icon(
+        //     FontAwesomeIcons.plus,
+        //     color: whiteColor,
+        //   ),
+        // ),
+        );
   }
 }
