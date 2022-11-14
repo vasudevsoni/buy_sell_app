@@ -1,22 +1,23 @@
-import 'package:buy_sell_app/screens/main_screen.dart';
-import 'package:buy_sell_app/screens/selling/congratulations_screen.dart';
-import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
-import '../../../provider/seller_form_provider.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/custom_text_field.dart';
-import '../../../services/firebase_services.dart';
-import '../../../widgets/custom_button.dart';
-import '../../../widgets/image_picker_widget.dart';
+import '../utils/selling_utils.dart';
+import '/screens/main_screen.dart';
+import '/screens/selling/congratulations_screen.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/provider/seller_form_provider.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_text_field.dart';
+import '/services/firebase_services.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/image_picker_widget.dart';
 
 class VehicleAdPostScreen extends StatefulWidget {
   final String subCatName;
@@ -48,6 +49,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   String state = '';
   String country = '';
 
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+
   getUserLocation() async {
     await _services.getCurrentUserData().then((value) async {
       setState(() {
@@ -64,6 +69,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   @override
   void initState() {
     if (mounted) {
+      getConnectivity();
       setState(() {
         subCatNameController.text = 'Vehicles > ${widget.subCatName}';
       });
@@ -72,8 +78,112 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     super.initState();
   }
 
+  showNetworkError() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: transparentColor,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: false,
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: whiteColor,
+              ),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+                left: 15,
+                right: 15,
+                top: 15,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'No Connection',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: greyColor,
+                    ),
+                    child: const Text(
+                      'Please check your internet connection',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'OK',
+                    onPressed: () async {
+                      Get.back();
+                      setState(() {
+                        isAlertSet = false;
+                      });
+                      isDeviceConnected =
+                          await InternetConnectionChecker().hasConnection;
+                      if (!isDeviceConnected) {
+                        showNetworkError();
+                        setState(() {
+                          isAlertSet = true;
+                        });
+                      }
+                    },
+                    borderColor: redColor,
+                    bgColor: redColor,
+                    textIconColor: whiteColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  getConnectivity() {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      isDeviceConnected = await InternetConnectionChecker().hasConnection;
+      if (!isDeviceConnected && isAlertSet == false) {
+        showNetworkError();
+        setState(() {
+          isAlertSet = true;
+        });
+      }
+    });
+  }
+
   @override
   void dispose() {
+    subscription.cancel();
     subCatNameController.dispose();
     brandNameController.dispose();
     modelNameController.dispose();
@@ -88,195 +198,31 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     super.dispose();
   }
 
-  final List<String> fuelType = [
-    'Petrol',
-    'Diesel',
-    'Electric',
-    'Hybrid',
-    'CNG',
-    'LPG',
-    'Hydrogen',
-  ];
-  final List<String> yor = [
-    '2022',
-    '2021',
-    '2020',
-    '2019',
-    '2018',
-    '2017',
-    '2016',
-    '2015',
-    '2014',
-    '2013',
-    '2012',
-    '2011',
-    '2010',
-    '2009',
-    '2008',
-    '2007',
-    '2006',
-    '2005',
-    '2004',
-    '2003',
-    '2002',
-    '2001',
-    '2000',
-    '1999',
-    '1998',
-    '1997',
-    '1996',
-    '1995',
-    '1994',
-    '1993',
-    '1992',
-    '1991',
-    '1990',
-    '1989',
-    '1988',
-    '1987',
-    '1986',
-    '1985',
-    '1984',
-    '1983',
-    '1982',
-    '1981',
-    '1980',
-    '1979',
-    '1978',
-    '1977',
-    '1976',
-    '1975',
-    '1974',
-    '1973',
-    '1972',
-    '1971',
-    '1970',
-    '1969',
-    '1968',
-    '1967',
-    '1966',
-    '1965',
-    '1964',
-    '1963',
-    '1962',
-    '1961',
-    '1960',
-    '1959',
-    '1958',
-    '1957',
-    '1956',
-    '1955',
-    '1954',
-    '1953',
-    '1952',
-    '1951',
-    '1950',
-    '1949',
-    '1948',
-    '1947',
-    '1946',
-    '1945',
-    '1944',
-    '1943',
-    '1942',
-    '1941',
-    '1940',
-    '1939',
-    '1938',
-    '1937',
-    '1936',
-    '1935',
-    '1934',
-    '1933',
-    '1932',
-    '1931',
-    '1930',
-    '1929',
-    '1928',
-    '1927',
-    '1926',
-    '1925',
-    '1924',
-    '1923',
-    '1922',
-    '1921',
-    '1920',
-    '1919',
-    '1918',
-    '1917',
-    '1916',
-    '1915',
-    '1914',
-    '1913',
-    '1912',
-    '1911',
-    '1910',
-    '1909',
-    '1908',
-    '1907',
-    '1906',
-    '1905',
-    '1904',
-    '1903',
-    '1902',
-    '1901',
-    '1900',
-  ];
-  final List<String> noOfOwners = ['1st', '2nd', '3rd', '4th', '5th +'];
-  final List<String> colors = [
-    'White',
-    'Silver',
-    'Grey',
-    'Black',
-    'Red',
-    'Blue',
-    'Green',
-    'Yellow',
-    'Purple',
-    'Brown',
-    'Orange',
-    'Gold',
-    'Others',
-  ];
-
   String? fuelTypeSelectedValue;
   String? yorSelectedValue;
   String? noOfOwnersSelectedValue;
   String? colorSelectedValue;
-
-  var priceFormat = NumberFormat.currency(
-    locale: 'HI',
-    decimalDigits: 0,
-    symbol: '₹',
-    name: '',
-  );
-  var kmFormat = NumberFormat.currency(
-    locale: 'HI',
-    decimalDigits: 0,
-    symbol: '',
-    name: '',
-  );
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SellerFormProvider>(context);
 
-    publishProductToFirebase(SellerFormProvider provider, String uid) async {
+    publishProductToFirebase(SellerFormProvider provider) async {
       return await _services.listings
-          .doc(uid)
+          .doc()
           .set(provider.dataToFirestore)
           .then((value) {
-        Navigator.pushReplacementNamed(
-            context, CongratulationsScreen.routeName);
+        Get.off(
+          () => const CongratulationsScreen(),
+        );
         provider.clearDataAfterSubmitListing();
         setState(() {
           isLoading = false;
         });
       }).catchError((err) {
         showSnackBar(
-          context: context,
-          content: 'Something has gone wrong. Please try again.',
+          content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
         setState(() {
@@ -286,406 +232,41 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     }
 
     validateForm() async {
-      if (_formKey.currentState!.validate()) {
-        if (brandNameController.text.isNotEmpty &&
-            modelNameController.text.isNotEmpty &&
-            fuelTypeSelectedValue != null &&
-            yorSelectedValue != null &&
-            noOfOwnersSelectedValue != null &&
-            descriptionController.text.isNotEmpty &&
-            priceController.text.isNotEmpty &&
-            kmDrivenController.text.isNotEmpty &&
-            colorSelectedValue != null &&
-            provider.imagePaths.isNotEmpty) {
-          showModalBottomSheet<dynamic>(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) {
-              return SafeArea(
-                child: Container(
-                  decoration: ShapeDecoration(
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    color: whiteColor,
-                  ),
-                  margin: const EdgeInsets.all(15),
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 40.0,
-                          height: 5.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: fadedColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Ready to post?',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: ShapeDecoration(
-                          shape: ContinuousRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          color: greyColor,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Opacity(
-                                          opacity: 0.7,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.file(
-                                                provider.imagePaths[0],
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const Icon(
-                                                    FontAwesomeIcons
-                                                        .circleExclamation,
-                                                    size: 20,
-                                                    color: redColor,
-                                                  );
-                                                },
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        if (provider.imagePaths.length >= 2)
-                                          Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                            child: Center(
-                                              child: Text(
-                                                '+${(provider.imagesCount - 1).toString()}',
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 30,
-                                                  color: whiteColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                          ),
-                                          maxLines: 2,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          priceFormat.format(
-                                            int.parse(priceController.text),
-                                          ),
-                                          maxLines: 1,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w700,
-                                            color: blueColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              height: 20,
-                              color: lightBlackColor,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.user,
-                                      size: 13,
-                                      color: blueColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      noOfOwnersSelectedValue.toString(),
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: lightBlackColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.gasPump,
-                                      size: 13,
-                                      color: blueColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      fuelTypeSelectedValue.toString(),
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: lightBlackColor,
-                                      ),
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.calendar,
-                                      size: 13,
-                                      color: blueColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      yorSelectedValue.toString(),
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: lightBlackColor,
-                                      ),
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.road,
-                                      size: 13,
-                                      color: blueColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      '${kmFormat.format(
-                                        int.parse(kmDrivenController.text),
-                                      )} Kms',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: lightBlackColor,
-                                      ),
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              height: 20,
-                              color: lightBlackColor,
-                            ),
-                            Text(
-                              'Description - ${descriptionController.text}',
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500,
-                                color: blackColor,
-                                fontSize: 14,
-                              ),
-                              maxLines: 3,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomButtonWithoutIcon(
-                        text: 'Confirm & Post',
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          Get.back();
-                          List<String> urls =
-                              await provider.uploadFiles(provider.imagePaths);
-                          var uid = DateTime.now().millisecondsSinceEpoch;
-                          setSearchParams(String s, int n) {
-                            List<String> searchQueries = [];
-                            for (int i = 0; i < n; i++) {
-                              String temp = '';
-                              for (int j = i; j < n; j++) {
-                                temp += s[j];
-                                if (temp.length >= 3) {
-                                  searchQueries.add(temp);
-                                }
-                              }
-                            }
-                            return searchQueries;
-                          }
-
-                          provider.dataToFirestore.addAll({
-                            'catName': 'Vehicles',
-                            'subCat': widget.subCatName,
-                            'title':
-                                '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                            'brandName': brandNameController.text,
-                            'modelName': modelNameController.text,
-                            'fuelType': fuelTypeSelectedValue,
-                            'yearOfReg': int.parse(yorSelectedValue!),
-                            'color': colorSelectedValue,
-                            'kmsDriven': int.parse(kmDrivenController.text),
-                            'noOfOwners': noOfOwnersSelectedValue,
-                            'description': descriptionController.text,
-                            'price': int.parse(priceController.text),
-                            'sellerUid': _services.user!.uid,
-                            'images': urls,
-                            'postedAt': uid,
-                            'favorites': [],
-                            'views': [],
-                            'searchQueries': setSearchParams(
-                              '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
-                              brandNameController.text.length +
-                                  modelNameController.text.length +
-                                  1,
-                            ),
-                            'location': {
-                              'area': area,
-                              'city': city,
-                              'state': state,
-                              'country': country,
-                            },
-                            'isActive': false,
-                          });
-                          publishProductToFirebase(provider, uid.toString());
-                        },
-                        bgColor: blueColor,
-                        borderColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomButtonWithoutIcon(
-                        text: 'Go Back & Check',
-                        onPressed: () => Get.back(),
-                        bgColor: whiteColor,
-                        borderColor: greyColor,
-                        textIconColor: blackColor,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        }
-        if (provider.imagePaths.isEmpty) {
-          showSnackBar(
-            context: context,
-            content: 'Please upload some images of the product.',
-            color: redColor,
-          );
-        }
+      if (!_formKey.currentState!.validate()) {
+        return;
       }
-    }
-
-    resetAll() {
+      if (brandNameController.text.isEmpty ||
+          modelNameController.text.isEmpty ||
+          fuelTypeSelectedValue == null ||
+          yorSelectedValue == null ||
+          noOfOwnersSelectedValue == null ||
+          descriptionController.text.isEmpty ||
+          priceController.text.isEmpty ||
+          kmDrivenController.text.isEmpty ||
+          colorSelectedValue == null) {
+        return;
+      }
+      if (provider.imagePaths.isEmpty) {
+        showSnackBar(
+          content: 'Please upload some images of the product',
+          color: redColor,
+        );
+        return;
+      }
       showModalBottomSheet<dynamic>(
         context: context,
         isScrollControlled: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparentColor,
         builder: (context) {
           return SafeArea(
             child: Container(
-              decoration: ShapeDecoration(
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
                 ),
                 color: whiteColor,
               ),
-              margin: const EdgeInsets.all(15),
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,9 +285,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    'Are you sure?',
-                    style: GoogleFonts.poppins(
+                  const Text(
+                    'Ready to post?',
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -717,15 +298,407 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: ShapeDecoration(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: Text(
-                      'All your listing details will be removed and you\'ll have to start fresh.',
-                      style: GoogleFonts.poppins(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Opacity(
+                                      opacity: 0.7,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.2,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: Image.file(
+                                            provider.imagePaths[0],
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Icon(
+                                                FontAwesomeIcons
+                                                    .circleExclamation,
+                                                size: 20,
+                                                color: redColor,
+                                              );
+                                            },
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (provider.imagePaths.length >= 2)
+                                      Positioned(
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Center(
+                                          child: Text(
+                                            '+${(provider.imagesCount - 1).toString()}',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 30,
+                                              color: whiteColor,
+                                              shadows: [
+                                                Shadow(
+                                                  offset: Offset(0, 2),
+                                                  blurRadius: 10.0,
+                                                  color: lightBlackColor,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                      ),
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      priceFormat.format(
+                                        int.parse(priceController.text),
+                                      ),
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: blueColor,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          height: 20,
+                          color: lightBlackColor,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.user,
+                                  size: 13,
+                                  color: blueColor,
+                                ),
+                                const SizedBox(
+                                  width: 7,
+                                ),
+                                Text(
+                                  noOfOwnersSelectedValue.toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: lightBlackColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.gasPump,
+                                  size: 13,
+                                  color: blueColor,
+                                ),
+                                const SizedBox(
+                                  width: 7,
+                                ),
+                                Text(
+                                  fuelTypeSelectedValue.toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: lightBlackColor,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.calendar,
+                                  size: 13,
+                                  color: blueColor,
+                                ),
+                                const SizedBox(
+                                  width: 7,
+                                ),
+                                Text(
+                                  yorSelectedValue.toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: lightBlackColor,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  FontAwesomeIcons.road,
+                                  size: 13,
+                                  color: blueColor,
+                                ),
+                                const SizedBox(
+                                  width: 7,
+                                ),
+                                Text(
+                                  '${kmFormat.format(
+                                    int.parse(kmDrivenController.text),
+                                  )} Kms',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: lightBlackColor,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          height: 20,
+                          color: lightBlackColor,
+                        ),
+                        Text(
+                          'Description - ${descriptionController.text}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: blackColor,
+                            fontSize: 14,
+                          ),
+                          maxLines: 3,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Confirm & Post',
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      Get.back();
+                      List<String> urls =
+                          await provider.uploadFiles(provider.imagePaths);
+                      var time = DateTime.now().millisecondsSinceEpoch;
+                      setSearchParams({
+                        required String s,
+                        required int n,
+                        required String catName,
+                        required String subCatName,
+                      }) {
+                        List<String> searchQueries = [];
+                        for (int i = 0; i < n; i++) {
+                          String temp = '';
+                          for (int j = i; j < n; j++) {
+                            temp += s[j];
+                            if (temp.length >= 3) {
+                              searchQueries.add(temp);
+                            }
+                          }
+                        }
+                        for (int i = 0; i < catName.length; i++) {
+                          String catNameTemp = '';
+                          for (int j = i; j < catName.length; j++) {
+                            catNameTemp += catName[j];
+                            if (catNameTemp.length >= 3) {
+                              searchQueries.add(catNameTemp);
+                            }
+                          }
+                        }
+                        for (int i = 0; i < subCatName.length; i++) {
+                          String subCatNameTemp = '';
+                          for (int j = i; j < subCatName.length; j++) {
+                            subCatNameTemp += subCatName[j];
+                            if (subCatNameTemp.length >= 3) {
+                              searchQueries.add(subCatNameTemp);
+                            }
+                          }
+                        }
+                        return searchQueries;
+                      }
+
+                      provider.dataToFirestore.addAll({
+                        'catName': 'Vehicles',
+                        'subCat': widget.subCatName,
+                        'title':
+                            '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                        'brandName': brandNameController.text,
+                        'modelName': modelNameController.text,
+                        'fuelType': fuelTypeSelectedValue,
+                        'yearOfReg': int.parse(yorSelectedValue!),
+                        'color': colorSelectedValue,
+                        'kmsDriven': int.parse(kmDrivenController.text),
+                        'noOfOwners': noOfOwnersSelectedValue,
+                        'description': descriptionController.text,
+                        'price': int.parse(priceController.text),
+                        'sellerUid': _services.user!.uid,
+                        'images': urls,
+                        'postedAt': time,
+                        'favorites': [],
+                        'views': [],
+                        'searchQueries': setSearchParams(
+                          s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                          n: brandNameController.text.length +
+                              modelNameController.text.length +
+                              1,
+                          catName: 'vehicles',
+                          subCatName: widget.subCatName.toLowerCase(),
+                        ),
+                        'location': {
+                          'area': area,
+                          'city': city,
+                          'state': state,
+                          'country': country,
+                        },
+                        'isSold': false,
+                        'isActive': false,
+                      });
+                      publishProductToFirebase(provider);
+                    },
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Go Back & Check',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    resetAll() {
+      showModalBottomSheet<dynamic>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: transparentColor,
+        builder: (context) {
+          return SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: whiteColor,
+              ),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Are you sure?',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: greyColor,
+                    ),
+                    child: const Text(
+                      'All your product details will be removed and you\'ll have to start fresh.',
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -735,7 +708,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'Yes, Reset all',
+                    text: 'Yes, Reset All',
                     onPressed: () {
                       setState(() {
                         brandNameController.text = '';
@@ -752,9 +725,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       });
                       Get.back();
                     },
-                    bgColor: redColor,
+                    bgColor: whiteColor,
                     borderColor: redColor,
-                    textIconColor: whiteColor,
+                    textIconColor: redColor,
                   ),
                   const SizedBox(
                     height: 10,
@@ -778,17 +751,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
       showModalBottomSheet<dynamic>(
         context: context,
         isScrollControlled: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparentColor,
         builder: (context) {
           return SafeArea(
             child: Container(
-              decoration: ShapeDecoration(
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
                 ),
                 color: whiteColor,
               ),
-              margin: const EdgeInsets.all(15),
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -807,9 +780,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     'Warning',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -820,15 +793,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
-                    decoration: ShapeDecoration(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: Text(
+                    child: const Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -855,15 +826,15 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       });
                       Get.offAll(() => const MainScreen(selectedIndex: 0));
                     },
-                    bgColor: redColor,
+                    bgColor: whiteColor,
                     borderColor: redColor,
-                    textIconColor: whiteColor,
+                    textIconColor: redColor,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'No, Stay here',
+                    text: 'No, Stay Here',
                     onPressed: () => Get.back(),
                     bgColor: whiteColor,
                     borderColor: greyColor,
@@ -897,9 +868,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           actions: [
             TextButton(
               onPressed: isLoading ? null : resetAll,
-              child: Text(
-                'Reset All',
-                style: GoogleFonts.poppins(
+              child: const Text(
+                'Reset all',
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: redColor,
                   fontSize: 12,
@@ -907,821 +878,820 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               ),
             ),
           ],
-          title: Text(
-            'Create your listing',
-            style: GoogleFonts.poppins(
+          title: const Text(
+            'Create your product listing',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
             ),
           ),
         ),
-        body: Scrollbar(
-          interactive: true,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    color: blueColor,
-                    child: Text(
-                      'Step 1 - Vehicle Details',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          physics: const BouncingScrollPhysics(),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: const Text(
+                    'Step 1 - Vehicle Details',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: subCatNameController,
+                    keyboardType: TextInputType.text,
+                    label: 'Category',
+                    hint: '',
+                    isEnabled: false,
+                    maxLength: 80,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: brandNameController,
+                    keyboardType: TextInputType.text,
+                    label: 'Brand Name',
+                    hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
+                    maxLength: 30,
+                    textInputAction: TextInputAction.next,
+                    isEnabled: isLoading ? false : true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter brand name';
+                      }
+                      setState(() {});
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: modelNameController,
+                    keyboardType: TextInputType.text,
+                    label: 'Model',
+                    hint: 'Enter the model name. Ex: Swift, Activa',
+                    maxLength: 40,
+                    textInputAction: TextInputAction.next,
+                    isEnabled: isLoading ? false : true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter model name';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFormField(
+                    controller: kmDrivenController,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    maxLength: 7,
+                    enabled: isLoading ? false : true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter kilometres driven';
+                      }
+                      return null;
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Kms Driven',
+                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomTextField(
-                      controller: subCatNameController,
-                      keyboardType: TextInputType.text,
-                      label: 'Category',
-                      hint: '',
-                      isEnabled: false,
-                      maxLength: 80,
-                      textInputAction: TextInputAction.next,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomTextField(
-                      controller: brandNameController,
-                      keyboardType: TextInputType.text,
-                      label: 'Brand Name*',
-                      hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
-                      maxLength: 30,
-                      textInputAction: TextInputAction.next,
-                      isEnabled: isLoading ? false : true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter brand name';
-                        }
-                        setState(() {});
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomTextField(
-                      controller: modelNameController,
-                      keyboardType: TextInputType.text,
-                      label: 'Model*',
-                      hint: 'Enter the model name. Ex: Swift, Activa',
-                      maxLength: 40,
-                      textInputAction: TextInputAction.next,
-                      isEnabled: isLoading ? false : true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter model name';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      controller: kmDrivenController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.number,
-                      maxLength: 7,
-                      enabled: isLoading ? false : true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter kilometres driven';
-                        }
-                        return null;
-                      },
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      style: GoogleFonts.poppins(
+                      fillColor: greyColor,
+                      filled: true,
+                      counterText: '',
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: redColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorStyle: const TextStyle(
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
+                        color: redColor,
                       ),
-                      decoration: InputDecoration(
-                        labelText: 'Kms Driven*',
-                        hintText: 'Enter the Kms driven. Ex: 20000, 150000',
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
                         ),
-                        fillColor: greyColor,
-                        filled: true,
-                        counterText: '',
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        errorStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        hintStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          color: greyColor,
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                        floatingLabelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                          color: lightBlackColor,
-                        ),
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          'Fuel type*',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
                         ),
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: fadedColor,
-                        ),
-                        buttonDecoration: BoxDecoration(
-                          color: greyColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 15,
-                        ),
-                        iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 15,
-                        ),
-                        buttonPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        items: fuelType
-                            .map(
-                              (item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: blackColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        value: fuelTypeSelectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            fuelTypeSelectedValue = value as String;
-                          });
-                        },
-                        buttonHeight: 50,
-                        buttonWidth: MediaQuery.of(context).size.width,
-                        itemHeight: 50,
-                        dropdownMaxHeight: MediaQuery.of(context).size.width,
-                        searchController: fuelTypeSearchController,
-                        searchInnerWidget: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 4,
-                            right: 8,
-                            left: 8,
-                          ),
-                          child: TextFormField(
-                            controller: fuelTypeSearchController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              hintText: 'Search for fuel type',
-                              hintStyle: GoogleFonts.poppins(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        searchMatchFn: (item, searchValue) {
-                          return (item.value
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchValue));
-                        },
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            fuelTypeSearchController.clear();
-                          }
-                        },
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          'Year of Registration*',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
-                        ),
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: greyColor,
-                        ),
-                        buttonDecoration: BoxDecoration(
-                          color: greyColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 15,
-                        ),
-                        iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 15,
-                        ),
-                        buttonPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        items: yor
-                            .map(
-                              (item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: blackColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        value: yorSelectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            yorSelectedValue = value as String;
-                          });
-                        },
-                        buttonHeight: 50,
-                        buttonWidth: MediaQuery.of(context).size.width,
-                        itemHeight: 50,
-                        dropdownMaxHeight: MediaQuery.of(context).size.width,
-                        searchController: yorSearchController,
-                        searchInnerWidget: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 4,
-                            right: 8,
-                            left: 8,
-                          ),
-                          child: TextFormField(
-                            controller: yorSearchController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              hintText: 'Search for an year',
-                              hintStyle: GoogleFonts.poppins(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        searchMatchFn: (item, searchValue) {
-                          return (item.value
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchValue));
-                        },
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            yorSearchController.clear();
-                          }
-                        },
+                      hintStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: greyColor,
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          'Color*',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
-                        ),
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: greyColor,
-                        ),
-                        buttonDecoration: BoxDecoration(
-                          color: greyColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 15,
-                        ),
-                        iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 15,
-                        ),
-                        buttonPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        items: colors
-                            .map(
-                              (item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: blackColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        value: colorSelectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            colorSelectedValue = value as String;
-                          });
-                        },
-                        buttonHeight: 50,
-                        buttonWidth: MediaQuery.of(context).size.width,
-                        itemHeight: 50,
-                        dropdownMaxHeight: MediaQuery.of(context).size.width,
-                        searchController: colorsSearchController,
-                        searchInnerWidget: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 4,
-                            right: 8,
-                            left: 8,
-                          ),
-                          child: TextFormField(
-                            controller: colorsSearchController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              hintText: 'Search for a color',
-                              hintStyle: GoogleFonts.poppins(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        searchMatchFn: (item, searchValue) {
-                          return (item.value
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchValue));
-                        },
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            colorsSearchController.clear();
-                          }
-                        },
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          'Number of Owners*',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
-                        ),
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          color: greyColor,
-                        ),
-                        buttonDecoration: BoxDecoration(
-                          color: greyColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        icon: const Icon(
-                          FontAwesomeIcons.chevronDown,
-                          size: 15,
-                        ),
-                        iconOnClick: const Icon(
-                          FontAwesomeIcons.chevronUp,
-                          size: 15,
-                        ),
-                        buttonPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        items: noOfOwners
-                            .map(
-                              (item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: blackColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        value: noOfOwnersSelectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            noOfOwnersSelectedValue = value as String;
-                          });
-                        },
-                        buttonHeight: 50,
-                        buttonWidth: MediaQuery.of(context).size.width,
-                        itemHeight: 50,
-                        dropdownMaxHeight: MediaQuery.of(context).size.width,
-                        searchController: noOfOwnersSearchController,
-                        searchInnerWidget: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 4,
-                            right: 8,
-                            left: 8,
-                          ),
-                          child: TextFormField(
-                            controller: noOfOwnersSearchController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              hintText: 'Search for an item...',
-                              hintStyle: GoogleFonts.poppins(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        searchMatchFn: (item, searchValue) {
-                          return (item.value
-                              .toString()
-                              .toLowerCase()
-                              .contains(searchValue));
-                        },
-                        onMenuStateChange: (isOpen) {
-                          if (!isOpen) {
-                            noOfOwnersSearchController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    color: blueColor,
-                    child: Text(
-                      'Step 2 - Listing Details',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomTextField(
-                      controller: descriptionController,
-                      keyboardType: TextInputType.multiline,
-                      label: 'Description*',
-                      hint:
-                          'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                      maxLength: 3000,
-                      maxLines: 5,
-                      showCounterText: true,
-                      isEnabled: isLoading ? false : true,
-                      textInputAction: TextInputAction.newline,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a description';
-                        }
-                        if (value.length < 30) {
-                          return 'Please enter 30 or more characters';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: TextFormField(
-                      controller: priceController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      enabled: isLoading ? false : true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the price for your listing';
-                        }
-                        return null;
-                      },
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Price*',
-                        hintText: 'Set a price for your listing',
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 10,
-                        ),
-                        counterText: '',
-                        fillColor: greyColor,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 0,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        errorStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: blueColor,
-                            width: 1.5,
-                            strokeAlign: StrokeAlign.inside,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        hintStyle: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          color: greyColor,
-                        ),
-                        labelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                        floatingLabelStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                          color: lightBlackColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    color: blueColor,
-                    child: Text(
-                      'Step 3 - Product Images',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ImagePickerWidget(
-                    isButtonDisabled: isLoading ? true : false,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    color: blueColor,
-                    child: Text(
-                      'Step 4 - User Location',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomTextField(
-                      controller: locationController,
-                      keyboardType: TextInputType.text,
-                      label: 'Location*',
-                      hint: 'Choose your location to list product',
-                      maxLines: 2,
-                      showCounterText: false,
-                      isEnabled: false,
-                      textInputAction: TextInputAction.go,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'To change your location go to settings.',
-                      style: GoogleFonts.poppins(
+                      floatingLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15,
                         color: lightBlackColor,
-                        fontSize: 13,
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: const Text(
+                        'Fuel type',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: fadedColor,
+                      ),
+                      buttonDecoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronDown,
+                        size: 15,
+                      ),
+                      iconOnClick: const Icon(
+                        FontAwesomeIcons.chevronUp,
+                        size: 15,
+                      ),
+                      buttonPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      items: fuelType
+                          .map(
+                            (item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      value: fuelTypeSelectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          fuelTypeSelectedValue = value as String;
+                        });
+                      },
+                      buttonHeight: 50,
+                      buttonWidth: MediaQuery.of(context).size.width,
+                      itemHeight: 50,
+                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      searchController: fuelTypeSearchController,
+                      searchInnerWidget: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          bottom: 4,
+                          right: 8,
+                          left: 8,
+                        ),
+                        child: TextFormField(
+                          controller: fuelTypeSearchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            hintText: 'Search for fuel type',
+                            hintStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        return (item.value
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchValue));
+                      },
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          fuelTypeSearchController.clear();
+                        }
+                      },
+                    ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: const Text(
+                        'Year of Registration',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: greyColor,
+                      ),
+                      buttonDecoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronDown,
+                        size: 15,
+                      ),
+                      iconOnClick: const Icon(
+                        FontAwesomeIcons.chevronUp,
+                        size: 15,
+                      ),
+                      buttonPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      items: yor
+                          .map(
+                            (item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      value: yorSelectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          yorSelectedValue = value as String;
+                        });
+                      },
+                      buttonHeight: 50,
+                      buttonWidth: MediaQuery.of(context).size.width,
+                      itemHeight: 50,
+                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      searchController: yorSearchController,
+                      searchInnerWidget: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          bottom: 4,
+                          right: 8,
+                          left: 8,
+                        ),
+                        child: TextFormField(
+                          controller: yorSearchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            hintText: 'Search for an year',
+                            hintStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        return (item.value
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchValue));
+                      },
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          yorSearchController.clear();
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: const Text(
+                        'Color',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: greyColor,
+                      ),
+                      buttonDecoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronDown,
+                        size: 15,
+                      ),
+                      iconOnClick: const Icon(
+                        FontAwesomeIcons.chevronUp,
+                        size: 15,
+                      ),
+                      buttonPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      items: colors
+                          .map(
+                            (item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      value: colorSelectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          colorSelectedValue = value as String;
+                        });
+                      },
+                      buttonHeight: 50,
+                      buttonWidth: MediaQuery.of(context).size.width,
+                      itemHeight: 50,
+                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      searchController: colorsSearchController,
+                      searchInnerWidget: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          bottom: 4,
+                          right: 8,
+                          left: 8,
+                        ),
+                        child: TextFormField(
+                          controller: colorsSearchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            hintText: 'Search for a color',
+                            hintStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        return (item.value
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchValue));
+                      },
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          colorsSearchController.clear();
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: const Text(
+                        'Number of Owners',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: greyColor,
+                      ),
+                      buttonDecoration: BoxDecoration(
+                        color: greyColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      icon: const Icon(
+                        FontAwesomeIcons.chevronDown,
+                        size: 15,
+                      ),
+                      iconOnClick: const Icon(
+                        FontAwesomeIcons.chevronUp,
+                        size: 15,
+                      ),
+                      buttonPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      items: noOfOwners
+                          .map(
+                            (item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      value: noOfOwnersSelectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          noOfOwnersSelectedValue = value as String;
+                        });
+                      },
+                      buttonHeight: 50,
+                      buttonWidth: MediaQuery.of(context).size.width,
+                      itemHeight: 50,
+                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      searchController: noOfOwnersSearchController,
+                      searchInnerWidget: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          bottom: 4,
+                          right: 8,
+                          left: 8,
+                        ),
+                        child: TextFormField(
+                          controller: noOfOwnersSearchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            hintText: 'Search for an item...',
+                            hintStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        return (item.value
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchValue));
+                      },
+                      onMenuStateChange: (isOpen) {
+                        if (!isOpen) {
+                          noOfOwnersSearchController.clear();
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: const Text(
+                    'Step 2 - Listing Details',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    label: 'Description',
+                    hint:
+                        'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
+                    maxLength: 3000,
+                    maxLines: 5,
+                    showCounterText: true,
+                    isEnabled: isLoading ? false : true,
+                    textInputAction: TextInputAction.newline,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a description';
+                      }
+                      if (value.length < 30) {
+                        return 'Please enter 30 or more characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFormField(
+                    controller: priceController,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    enabled: isLoading ? false : true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the price for your product';
+                      }
+                      return null;
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Price',
+                      hintText: 'Set a price for your product',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      counterText: '',
+                      fillColor: greyColor,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: redColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: redColor,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      hintStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: greyColor,
+                      ),
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                      floatingLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 15,
+                        color: lightBlackColor,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: const Text(
+                    'Step 3 - Product Images',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ImagePickerWidget(
+                  isButtonDisabled: isLoading ? true : false,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: const Text(
+                    'Step 4 - User Location',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: locationController,
+                    keyboardType: TextInputType.text,
+                    label: 'Location',
+                    hint: 'Choose your location to list product',
+                    maxLines: 2,
+                    showCounterText: false,
+                    isEnabled: false,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'To change your location go to settings.',
+                    style: TextStyle(
+                      color: lightBlackColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           ),
         ),

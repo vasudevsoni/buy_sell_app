@@ -1,7 +1,8 @@
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '/utils/utils.dart';
 
 class GoogleAuthentication {
   static Future<User?> signinWithGoogle(BuildContext context) async {
@@ -26,21 +27,19 @@ class GoogleAuthentication {
       } on FirebaseAuthException catch (err) {
         if (err.code == 'account-exists-with-different-credential') {
           showSnackBar(
-            context: context,
-            content: 'Account already exists with a different sign in method.',
+            content: 'Account already exists with a different sign in method',
             color: redColor,
           );
-        } else if (err.code == 'invalid-credentials') {
+        }
+        if (err.code == 'invalid-credentials') {
           showSnackBar(
-            context: context,
-            content: 'Invalid credentials. Please try again.',
+            content: 'Invalid credentials. Please try again',
             color: redColor,
           );
         }
       } catch (e) {
         showSnackBar(
-          context: context,
-          content: 'Something has gone wrong. Please try again.',
+          content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
       }

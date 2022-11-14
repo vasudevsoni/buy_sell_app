@@ -1,24 +1,24 @@
-import 'package:buy_sell_app/provider/main_provider.dart';
-import 'package:buy_sell_app/screens/chats/conversation_screen.dart';
-import 'package:buy_sell_app/services/firebase_services.dart';
-import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:provider/provider.dart';
 
-import '../../auth/screens/email_verification_screen.dart';
-import '../../auth/screens/location_screen.dart';
-import '../../utils/utils.dart';
+import '/provider/main_provider.dart';
+import '/screens/chats/conversation_screen.dart';
+import '/services/firebase_services.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/auth/screens/email_verification_screen.dart';
+import '/auth/screens/location_screen.dart';
+import '/utils/utils.dart';
 import '../selling/seller_categories_list_screen.dart';
 
 class MyChatsScreen extends StatefulWidget {
-  static const String routeName = '/my-chats-screen';
   const MyChatsScreen({super.key});
 
   @override
@@ -31,16 +31,17 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
 
   onSellButtonClicked() {
     _services.getCurrentUserData().then((value) {
-      if (value['location'] == null) {
-        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
-        showSnackBar(
-          context: context,
-          content: 'Please set your location to sell an item',
-          color: redColor,
+      if (value['location'] != null) {
+        Get.to(
+          () => const SellerCategoriesListScreen(),
         );
-      } else {
-        Get.toNamed(SellerCategoriesListScreen.routeName);
+        return;
       }
+      Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+      showSnackBar(
+        content: 'Please set your location to sell products',
+        color: redColor,
+      );
     });
   }
 
@@ -59,52 +60,39 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           elevation: 0.5,
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
-          title: Text(
-            'Inbox',
-            style: GoogleFonts.poppins(
+          title: const Text(
+            'Messages',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
             ),
           ),
-          bottom: TabBar(
-            indicatorColor: blackColor,
+          bottom: const TabBar(
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: blueColor,
             indicatorWeight: 3,
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              fontFamily: 'SFProDisplay',
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              fontFamily: 'SFProDisplay',
+            ),
+            labelColor: blackColor,
+            unselectedLabelColor: lightBlackColor,
             tabs: [
-              Tab(
-                child: Text(
-                  'All',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: blackColor,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  'Buying',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: blackColor,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  'Selling',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: blackColor,
-                  ),
-                ),
-              ),
+              Tab(child: Text('All')),
+              Tab(child: Text('Buying')),
+              Tab(child: Text('Selling')),
             ],
           ),
         ),
         body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: _services.chats
@@ -115,50 +103,79 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
                       ),
                     ),
                   );
-                } else if (snapshot.hasData && snapshot.data!.size == 0) {
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: SvgPicture.network(
+                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
+                          semanticsLabel: 'Empty messages image',
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (BuildContext context) =>
+                              const Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Center(
+                              child: SpinKitFadingCircle(
+                                color: lightBlackColor,
+                                size: 20,
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When you chat with a seller, it will show here.',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                            fontSize: 14,
                           ),
                         ),
                       ),
@@ -185,7 +202,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCube(
+                      child: SpinKitFadingCircle(
                         color: lightBlackColor,
                         size: 20,
                         duration: Duration(milliseconds: 1000),
@@ -222,50 +239,79 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
                       ),
                     ),
                   );
-                } else if (snapshot.hasData && snapshot.data!.size == 0) {
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: SvgPicture.network(
+                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
+                          semanticsLabel: 'Empty messages image',
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (BuildContext context) =>
+                              const Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Center(
+                              child: SpinKitFadingCircle(
+                                color: lightBlackColor,
+                                size: 20,
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When you chat with a seller, it will show here.',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                            fontSize: 14,
                           ),
                         ),
                       ),
@@ -292,7 +338,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCube(
+                      child: SpinKitFadingCircle(
                         color: lightBlackColor,
                         size: 20,
                         duration: Duration(milliseconds: 1000),
@@ -329,50 +375,79 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
                       ),
                     ),
                   );
-                } else if (snapshot.hasData && snapshot.data!.size == 0) {
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: SvgPicture.network(
+                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
+                          semanticsLabel: 'Empty messages image',
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (BuildContext context) =>
+                              const Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Center(
+                              child: SpinKitFadingCircle(
+                                color: lightBlackColor,
+                                size: 20,
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
                           ),
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When someone sends you a message, it will show here.',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                            fontSize: 14,
                           ),
                         ),
                       ),
@@ -383,11 +458,12 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
                         child: CustomButtonWithoutIcon(
-                          text: 'Start selling',
+                          text: 'Start Selling',
                           onPressed: !user!.emailVerified &&
                                   user!.providerData[0].providerId == 'password'
-                              ? () =>
-                                  Get.toNamed(EmailVerificationScreen.routeName)
+                              ? () => Get.to(
+                                    () => const EmailVerificationScreen(),
+                                  )
                               : onSellButtonClicked,
                           bgColor: blueColor,
                           borderColor: blueColor,
@@ -401,7 +477,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCube(
+                      child: SpinKitFadingCircle(
                         color: lightBlackColor,
                         size: 20,
                         duration: Duration(milliseconds: 1000),
@@ -468,7 +544,7 @@ class _ChatCardState extends State<ChatCard> {
 
   getProductDetails() async {
     await _services
-        .getProductDetails(widget.chatData['product']['productId'].toString())
+        .getProductDetails(widget.chatData['product']['productId'])
         .then((value) {
       if (mounted) {
         setState(() {
@@ -617,17 +693,17 @@ class _ChatCardState extends State<ChatCard> {
                                     text: buyerName == ''
                                         ? 'BestDeal User •'
                                         : '$buyerName •',
-                                    children: [
+                                    children: const [
                                       TextSpan(
                                         text: ' Buyer',
-                                        style: GoogleFonts.poppins(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                           color: redColor,
                                         ),
                                       ),
                                     ],
-                                    style: GoogleFonts.poppins(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: blackColor,
                                       fontSize: 14,
@@ -642,17 +718,17 @@ class _ChatCardState extends State<ChatCard> {
                                     text: sellerName == ''
                                         ? 'BestDeal User •'
                                         : '$sellerName •',
-                                    children: [
+                                    children: const [
                                       TextSpan(
                                         text: ' Seller',
-                                        style: GoogleFonts.poppins(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                           color: blueColor,
                                         ),
                                       ),
                                     ],
-                                    style: GoogleFonts.poppins(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: blackColor,
                                       fontSize: 14,
@@ -669,15 +745,15 @@ class _ChatCardState extends State<ChatCard> {
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               style: widget.chatData['read'] == false
-                                  ? GoogleFonts.poppins(
+                                  ? const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: blueColor,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     )
-                                  : GoogleFonts.poppins(
+                                  : const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: blackColor,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                             ),
                           const SizedBox(
@@ -685,10 +761,8 @@ class _ChatCardState extends State<ChatCard> {
                           ),
                           Container(
                             width: double.infinity,
-                            decoration: ShapeDecoration(
-                              shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
                               color: greyColor,
                             ),
                             padding: const EdgeInsets.all(10),
@@ -725,15 +799,17 @@ class _ChatCardState extends State<ChatCard> {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                Text(
-                                  prodTitle,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    color: lightBlackColor,
-                                    fontSize: 12,
+                                Expanded(
+                                  child: Text(
+                                    prodTitle,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: lightBlackColor,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -746,12 +822,12 @@ class _ChatCardState extends State<ChatCard> {
                 ],
               ),
               if (isActive == false)
-                Text(
-                  'Item is currently unavailable. Chat is disabled.',
+                const Text(
+                  'Product is currently unavailable. Chat is disabled.',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: redColor,
                     fontSize: 14,

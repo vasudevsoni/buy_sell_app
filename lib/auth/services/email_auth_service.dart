@@ -1,9 +1,9 @@
-import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../../utils/utils.dart';
+import '/screens/main_screen.dart';
+import '/utils/utils.dart';
 
 class EmailAuthService {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -22,14 +22,13 @@ class EmailAuthService {
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackBar(
-          context: context,
-          content: 'Account does not exist. Please create one.',
+          content: 'Account does not exist. Please create one',
           color: redColor,
         );
-      } else if (e.code == 'wrong-password') {
+      }
+      if (e.code == 'wrong-password') {
         showSnackBar(
-          context: context,
-          content: 'Email or password is incorrect. Please try again.',
+          content: 'Email or password is incorrect. Please try again',
           color: redColor,
         );
       }
@@ -60,6 +59,8 @@ class EmailAuthService {
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
         'dob': null,
         'profileImage': null,
+        'followers': [],
+        'following': [],
       }).then((value) async {
         //send to main screen
         Get.offAll(() => const MainScreen(selectedIndex: 0));
@@ -67,15 +68,14 @@ class EmailAuthService {
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
         showSnackBar(
-          context: context,
           content:
-              'Password is weak. Please try a combination of numbers, letters and special characters.',
+              'Password is weak. Please try a combination of numbers, letters and special characters',
           color: redColor,
         );
-      } else if (e.code == 'email-already-in-use') {
+      }
+      if (e.code == 'email-already-in-use') {
         showSnackBar(
-          context: context,
-          content: 'An account with this email already exists. Please log in.',
+          content: 'An account with this email already exists. Please log in',
           color: redColor,
         );
       }

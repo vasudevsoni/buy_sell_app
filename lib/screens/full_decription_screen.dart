@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/utils.dart';
+import '/utils/utils.dart';
 
 class FullDescriptionScreen extends StatelessWidget {
   final String desc;
@@ -19,27 +18,25 @@ class FullDescriptionScreen extends StatelessWidget {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Description',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
         ),
       ),
-      body: Scrollbar(
-        interactive: true,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              desc,
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                color: blackColor,
-                fontSize: 18,
-              ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            desc,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              color: blackColor,
+              fontSize: 18,
             ),
           ),
         ),

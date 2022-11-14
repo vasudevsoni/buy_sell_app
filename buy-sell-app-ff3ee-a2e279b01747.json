@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "buy-sell-app-ff3ee",
+  "private_key_id": "a2e279b01747f6337d5ef09aaf86ffbf47edda4d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDgQ8M5oKW1AzOL\np6TV1bNGvRMk9fy4ojJIDiwZSJLqGWGHogMG6XEYgbKjEtMPAakUoLGYU7GUAT8c\naq8OdOVCKg8f9u+IjUPuXGTqEM/zxgo6ywaiJ/3etvSrjlxHq6kOBxaCEa/GZUHi\n+h4z25yfwFEFdJZwhQQnB173M81W8NVfeHSB0RsT8djix4J/i3C72oOHGF4o/hKG\neSxMBAOcVI2INbve3sorpsdIRt+6JzvX68TbRWMjlgNBKVWpLQhYzIm5rew0SX4R\nTLGrc7pAyL9NxXAYRr6lS/Zwgk/JWPPsozHA8f9sgkIZiyJeE7vsx2lPVlFoMVV3\n0d+1B+QhAgMBAAECggEAAuZtbl/Y9LvLXVl4JLnEPTxxtG8n6v1R+COSx2rsV3Gn\nlLjwIBVBvKbkt/4k05Naa+VeFpGygK75cXUhuWaillXz5x5q35GwGLOCLJK2Fblw\nZW09szggLNKh3FwVbmnWYFOQI3N2GfMyRGymmlYTMu+qPI9S6LaXpKeQP1Mgqyig\n7dDvoL/EAQYgxMFOMx/QZB1rWd6Rg+xFF2GujOhtMKCr/dAClvGSQxWWVayjURfV\n8M3pOApnpid9rSba+ket+th2VM/2mz1gWvpjHQYQwVoWUC+oHAZ7nDs1bCtraAuh\niV/pqFeP8ipK9DBbOxJ9/+iEXoNZcmv+leu46uwPaQKBgQD6J90cjstp7/1e+Ksu\nDRO6RWwR16WaEZQKTz/SD+m7S4bfmkN+pATygrne7tBFaSUrBAs1/QU9vRFgT0uM\nAztVLiazvK2J6mn1rUZVM4QrbemlWZSeCE9l34URf6JEh4xqoVKhv8kE2WTN7Cqp\nilcmbZvoFXKlhuJ5YO7rxtJb1QKBgQDlgQyigN+01CuDxFSHEHGECgwh2l2oAIWq\nrk5d1RsCEbavvyAuvqdV4D+yp2eAkjVBavRWGDWq5TEqrgsO7mRn8eCIuk6krndK\nqZPZ2jQxgriJyU58EebX4JB55UsaXu/aZZwRqhlV4W3EYYpVDdEaSMsP8VPmjL9g\na18me5UJHQKBgFFaH3VHFu3nxy1Yj0rVo+HC6+dNiyR0rQFBTo8A79EiOcWEBIkt\nzBIV416VqZO5IwY/NWokU80FLJ52iyoIbwY/kQSIyqL8YeMsq5/Pth7tirtkS4mt\nSCzoKP1M1beVoVuYBShnF3eFP1wcfq9ONxNfOAGc4ADmwcYZePmiWgzVAoGBAIPG\ny3hrQwfTY4DvNBGxUVydYEX32hri4d0U5I5gFHflr93Ngi8U7YQTlL+B+54JVWbQ\ngKcGk5oiq050TIkwPJqqeWBIiWtpebl3ERvffGSJSGhlHBmFNeTyXkJ/c9YaeOIP\nwcMqxg1XuO0vjHw1yMCs11u6F5CjdCdqv2GbSAHJAoGBANVpBkIlYcUb48MeS5AR\nmnJWdORE/j3cWhIoDHvdqLP3wTycBg3O9XbL4WYCFCHJRMUhD+/LguwMTMt+J0pD\nkWcMJ1s/huPBXrjnvV/L8YRFspZU7jZJDHuW86v5QEKNR7j5RC8CIeVfQ0+fGeFx\njVT9AUQUL8SyCmIn3NKALL6U\n-----END PRIVATE KEY-----\n",
+  "client_email": "revenuecat-for-in-app-purchase@buy-sell-app-ff3ee.iam.gserviceaccount.com",
+  "client_id": "115915475650589307311",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/revenuecat-for-in-app-purchase%40buy-sell-app-ff3ee.iam.gserviceaccount.com"
+}

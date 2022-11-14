@@ -1,19 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../screens/product_details_screen.dart';
-import '../services/firebase_services.dart';
-import '../utils/utils.dart';
+import '/screens/product_details_screen.dart';
+import '/services/firebase_services.dart';
+import '/utils/utils.dart';
 
 class CustomProductCard extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> data;
@@ -38,12 +34,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
   bool isLiked = false;
   bool isLoading = false;
 
-  NumberFormat priceFormat = NumberFormat.currency(
-    locale: "en_IN",
-    symbol: '₹',
-    decimalDigits: 0,
-  );
-
   @override
   void initState() {
     getDetails();
@@ -51,9 +41,11 @@ class _CustomProductCardState extends State<CustomProductCard> {
   }
 
   getDetails() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     await services.getUserData(widget.data['sellerUid']).then((value) {
       if (mounted) {
         setState(() {
@@ -66,20 +58,26 @@ class _CustomProductCardState extends State<CustomProductCard> {
         setState(() {
           fav = value['favorites'];
         });
-        if (fav.contains(services.user!.uid)) {
+      }
+      if (fav.contains(services.user!.uid)) {
+        if (mounted) {
           setState(() {
             isLiked = true;
           });
-        } else {
-          setState(() {
-            isLiked = false;
-          });
         }
+        return;
+      }
+      if (mounted) {
+        setState(() {
+          isLiked = false;
+        });
       }
     });
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -88,7 +86,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
         ? const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCube(
+              child: SpinKitFadingCircle(
                 color: lightBlackColor,
                 size: 30,
                 duration: Duration(milliseconds: 1000),
@@ -154,10 +152,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w400,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                   color: blackColor,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                 ),
                               ),
                               AutoSizeText(
@@ -165,27 +163,30 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: blueColor,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 5,
                               ),
                               RichText(
                                 text: TextSpan(
                                   text: '${timeago.format(widget.time)} •',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12.5,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
                                     color: lightBlackColor,
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(
                                       text:
                                           ' ${widget.data['location']['area']}, ${widget.data['location']['city']}, ${widget.data['location']['state']}',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12.5,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13,
                                         color: lightBlackColor,
                                       ),
                                     ),
@@ -206,7 +207,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
               ),
               if (widget.data['sellerUid'] != services.user!.uid)
                 Positioned(
-                  top: 0,
+                  top: -7,
                   right: 0,
                   child: LikeButton(
                     isLiked: isLiked,
@@ -233,7 +234,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     onTap: (isLiked) async {
                       this.isLiked = !isLiked;
                       services.updateFavorite(
-                        context: context,
                         isLiked: !isLiked,
                         productId: widget.data.id,
                       );

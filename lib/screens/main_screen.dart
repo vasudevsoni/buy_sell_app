@@ -1,18 +1,16 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:buy_sell_app/provider/main_provider.dart';
-import 'package:buy_sell_app/screens/my_profile_screen.dart';
-import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-
 import 'package:provider/provider.dart';
 
-import '../provider/location_provider.dart';
-import '../utils/utils.dart';
+import '/provider/main_provider.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/provider/location_provider.dart';
+import '/utils/utils.dart';
+import 'my_profile_screen.dart';
 import 'home_screen.dart';
 import 'chats/my_chats_screen.dart';
 import 'my_favorites_screen.dart';
@@ -26,7 +24,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  GlobalKey globalKey = GlobalKey(debugLabel: 'btm_nav_bar');
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
@@ -40,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
   showNetworkError() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparentColor,
       isDismissible: false,
       enableDrag: false,
       isScrollControlled: false,
@@ -51,13 +48,13 @@ class _MainScreenState extends State<MainScreen> {
           },
           child: SafeArea(
             child: Container(
-              decoration: ShapeDecoration(
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
                 ),
                 color: whiteColor,
               ),
-              margin: const EdgeInsets.all(15),
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
@@ -68,11 +65,11 @@ class _MainScreenState extends State<MainScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'No Connection',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -82,15 +79,13 @@ class _MainScreenState extends State<MainScreen> {
                   Container(
                     padding: const EdgeInsets.all(15),
                     width: double.infinity,
-                    decoration: ShapeDecoration(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: Text(
+                    child: const Text(
                       'Please check your internet connection',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -180,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
           unselectedItemColor: fadedColor,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          iconSize: 28,
+          elevation: 0,
           backgroundColor: greyColor,
           items: const [
             BottomNavigationBarItem(
@@ -189,8 +184,8 @@ class _MainScreenState extends State<MainScreen> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.envelope),
-              activeIcon: Icon(FontAwesomeIcons.solidEnvelope),
+              icon: Icon(FontAwesomeIcons.comment),
+              activeIcon: Icon(FontAwesomeIcons.solidComment),
               label: '',
             ),
             BottomNavigationBarItem(
@@ -232,25 +227,6 @@ class _MainScreenState extends State<MainScreen> {
         //         ? FontAwesomeIcons.solidCircleUser
         //         : FontAwesomeIcons.circleUser
         //   ],
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        // floatingActionButton: NeumorphicFloatingActionButton(
-        //   onPressed: onButtonClicked,
-        //   tooltip: 'List a product',
-        //   style: NeumorphicStyle(
-        //     lightSource: LightSource.top,
-        //     shape: NeumorphicShape.convex,
-        //     depth: 2,
-        //     intensity: 0.2,
-        //     color: blueColor,
-        //     boxShape: NeumorphicBoxShape.roundRect(
-        //       BorderRadius.circular(50),
-        //     ),
-        //   ),
-        //   child: const Icon(
-        //     FontAwesomeIcons.plus,
-        //     color: whiteColor,
-        //   ),
         // ),
         );
   }

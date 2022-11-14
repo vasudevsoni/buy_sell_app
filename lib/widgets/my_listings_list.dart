@@ -1,22 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/screens/selling/common/edit_ad_screen.dart';
-import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutterfire_ui/firestore.dart';
-import 'package:buy_sell_app/utils/utils.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
 
-import '../screens/product_details_screen.dart';
-import '../screens/selling/vehicles/edit_vehicle_ad_screen.dart';
-import '../services/firebase_services.dart';
+import '../auth/screens/email_verification_screen.dart';
+import '../auth/screens/location_screen.dart';
+import '../screens/selling/seller_categories_list_screen.dart';
+import '/screens/selling/common/edit_ad_screen.dart';
+import '/utils/utils.dart';
+import '/screens/product_details_screen.dart';
+import '/screens/selling/vehicles/edit_vehicle_ad_screen.dart';
+import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
+import 'custom_button.dart';
 
 class MyListingsList extends StatefulWidget {
   const MyListingsList({super.key});
@@ -27,15 +31,25 @@ class MyListingsList extends StatefulWidget {
 
 class _MyListingsListState extends State<MyListingsList> {
   final FirebaseServices _services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    var priceFormat = NumberFormat.currency(
-      locale: 'HI',
-      decimalDigits: 0,
-      symbol: '₹ ',
-      name: '',
-    );
+    onSellButtonClicked() {
+      _services.getCurrentUserData().then((value) {
+        if (value['location'] != null) {
+          Get.to(
+            () => const SellerCategoriesListScreen(),
+          );
+          return;
+        }
+        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+        showSnackBar(
+          content: 'Please set your location to sell products',
+          color: redColor,
+        );
+      });
+    }
 
     return FirestoreQueryBuilder(
       query: _services.listings
@@ -47,42 +61,117 @@ class _MyListingsListState extends State<MyListingsList> {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(15.0),
-              child: SpinKitFadingCube(
+              child: SpinKitFadingCircle(
                 color: lightBlackColor,
                 size: 20,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
           );
-        } else if (snapshot.hasError) {
-          return Center(
+        }
+        if (snapshot.hasError) {
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
               ),
             ),
           );
-        } else if (snapshot.hasData && snapshot.docs.isEmpty) {
+        }
+        if (snapshot.hasData && snapshot.docs.isEmpty) {
           return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Text(
-                'Your listings will show here.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: greyColor,
+                  ),
+                  child: SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Laying%20Down.svg?alt=media&token=314f27c5-1e3b-450b-8f5d-886568e261c3',
+                    semanticsLabel: 'Empty products image',
+                    fit: BoxFit.contain,
+                    placeholderBuilder: (BuildContext context) => const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Center(
+                        child: SpinKitFadingCircle(
+                          color: lightBlackColor,
+                          size: 20,
+                          duration: Duration(milliseconds: 1000),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'You haven\'t listed any product yet!',
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'When you list a product, it will show here.',
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  child: CustomButtonWithoutIcon(
+                    text: 'Start Selling',
+                    onPressed: !user!.emailVerified &&
+                            user!.providerData[0].providerId == 'password'
+                        ? () => Get.to(
+                              () => const EmailVerificationScreen(),
+                            )
+                        : onSellButtonClicked,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                ),
+              ],
             ),
           );
-        } else {
-          return Column(
+        }
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -90,16 +179,16 @@ class _MyListingsListState extends State<MyListingsList> {
                 child: Text(
                   '${snapshot.docs.length} products',
                   maxLines: 1,
-                  style: GoogleFonts.poppins(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 22,
+                    fontSize: 18,
                   ),
                 ),
               ),
               ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 15,
+                    height: 20,
                   );
                 },
                 shrinkWrap: true,
@@ -120,7 +209,6 @@ class _MyListingsListState extends State<MyListingsList> {
                       MyListingScreenProductCard(
                         data: data,
                         sellerDetails: sellerDetails,
-                        priceFormat: priceFormat,
                         time: time,
                       ),
                       if (hasMoreReached)
@@ -129,11 +217,11 @@ class _MyListingsListState extends State<MyListingsList> {
                         ),
                       if (hasMoreReached)
                         CustomButton(
-                          text: 'Load more',
+                          text: 'Load More Products',
                           onPressed: () => snapshot.fetchMore(),
-                          icon: FontAwesomeIcons.chevronDown,
-                          borderColor: blackColor,
-                          bgColor: blackColor,
+                          icon: FontAwesomeIcons.plus,
+                          borderColor: blueColor,
+                          bgColor: blueColor,
                           textIconColor: whiteColor,
                         ),
                     ],
@@ -142,8 +230,8 @@ class _MyListingsListState extends State<MyListingsList> {
                 physics: const NeverScrollableScrollPhysics(),
               ),
             ],
-          );
-        }
+          ),
+        );
       },
     );
   }
@@ -154,13 +242,11 @@ class MyListingScreenProductCard extends StatefulWidget {
     Key? key,
     required this.data,
     required this.sellerDetails,
-    required this.priceFormat,
     required this.time,
   }) : super(key: key);
 
   final QueryDocumentSnapshot<Object?> data;
   final Future<DocumentSnapshot<Object?>> sellerDetails;
-  final NumberFormat priceFormat;
   final String time;
 
   @override
@@ -198,21 +284,21 @@ class _MyListingScreenProductCardState
     });
   }
 
-  showDeleteModal() {
+  showMarskasSoldModal() {
     showModalBottomSheet<dynamic>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparentColor,
       builder: (context) {
         return SafeArea(
           child: Container(
-            decoration: ShapeDecoration(
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
               color: whiteColor,
             ),
-            margin: const EdgeInsets.all(15),
             padding: const EdgeInsets.all(15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,9 +317,9 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  'Are you sure? 😱',
-                  style: GoogleFonts.poppins(
+                const Text(
+                  'Are you sure?',
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -244,15 +330,104 @@ class _MyListingScreenProductCardState
                 ),
                 Container(
                   padding: const EdgeInsets.all(15),
-                  decoration: ShapeDecoration(
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: Text(
-                    'Your listing will be permanently deleted.\nAll your chats with buyers for this product will also be deleted.\n\nNote - This action cannot be reversed.',
-                    style: GoogleFonts.poppins(
+                  child: const Text(
+                    'Your product will be marked as sold. This action cannot be reversed.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Yes, Mark as Sold',
+                  onPressed: () {
+                    services.markAsSold(
+                      productId: widget.data.id,
+                    );
+                    Get.back();
+                  },
+                  bgColor: whiteColor,
+                  borderColor: blueColor,
+                  textIconColor: blueColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'No, Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  showDeleteModal() {
+    showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: transparentColor,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Are you sure? 😱',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: greyColor,
+                  ),
+                  child: const Text(
+                    'Your product will be permanently deleted.\nAll your chats with buyers for this product will also be deleted.\n\nNote - This action cannot be reversed.',
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -263,16 +438,15 @@ class _MyListingScreenProductCardState
                 ),
                 CustomButtonWithoutIcon(
                   text: 'Yes, Delete',
-                  onPressed: () async {
-                    await services.deleteListing(
-                      listingId: widget.data['postedAt'],
-                      context: context,
+                  onPressed: () {
+                    services.deleteListing(
+                      listingId: widget.data.id,
                     );
                     Get.back();
                   },
-                  bgColor: redColor,
+                  bgColor: whiteColor,
                   borderColor: redColor,
-                  textIconColor: whiteColor,
+                  textIconColor: redColor,
                 ),
                 const SizedBox(
                   height: 10,
@@ -298,7 +472,7 @@ class _MyListingScreenProductCardState
         ? const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCube(
+              child: SpinKitFadingCircle(
                 color: lightBlackColor,
                 size: 30,
                 duration: Duration(milliseconds: 1000),
@@ -307,15 +481,15 @@ class _MyListingScreenProductCardState
           )
         : Stack(
             children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              InkWell(
+                borderRadius: BorderRadius.circular(10),
                 onTap: () => Get.to(
                   () => ProductDetailsScreen(
                     productData: widget.data,
                     sellerData: sellerDetails,
                   ),
                 ),
-                child: Container(
+                child: Ink(
                   color: whiteColor,
                   child: Column(
                     children: [
@@ -357,38 +531,93 @@ class _MyListingScreenProductCardState
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: GoogleFonts.poppins(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: blackColor,
-                                      fontSize: 13,
+                                      fontSize: 14,
                                     ),
                                   ),
                                   AutoSizeText(
-                                    widget.priceFormat
-                                        .format(widget.data['price']),
+                                    priceFormat.format(widget.data['price']),
                                     maxLines: 1,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.poppins(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: blueColor,
-                                      fontSize: 13,
+                                      fontSize: 14,
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
                                   ),
                                   Text(
                                     'Posted on - ${widget.time}',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: GoogleFonts.poppins(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 12.5,
+                                      fontSize: 13,
                                       color: lightBlackColor,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.eye,
+                                size: 16,
+                                color: blueColor,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                numberFormat
+                                    .format(widget.data['views'].length),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: blackColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.heart,
+                                size: 16,
+                                color: pinkColor,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                numberFormat
+                                    .format(widget.data['favorites'].length),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: blackColor,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -400,23 +629,21 @@ class _MyListingScreenProductCardState
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              decoration: ShapeDecoration(
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
                                 color: redColor,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: Text(
-                                'This item is currently unavailable',
+                              child: const Text(
+                                'Product is currently unavailable',
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: whiteColor,
@@ -431,78 +658,23 @@ class _MyListingScreenProductCardState
                             const SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.eye,
-                                      size: 22,
-                                      color: blueColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      numberFormat
-                                          .format(widget.data['views'].length),
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      FontAwesomeIcons.heart,
-                                      size: 22,
-                                      color: pinkColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text(
-                                      numberFormat.format(
-                                          widget.data['favorites'].length),
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              decoration: ShapeDecoration(
-                                shape: ContinuousRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
                                 color: blueColor,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: Text(
-                                'Listing is live',
+                              child: const Text(
+                                'Product is live',
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: whiteColor,
@@ -523,17 +695,17 @@ class _MyListingScreenProductCardState
                     behavior: HitTestBehavior.opaque,
                     onTap: () => showModalBottomSheet(
                       context: context,
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: transparentColor,
                       builder: (context) {
                         return SafeArea(
                           child: Container(
-                            decoration: ShapeDecoration(
-                              shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
                               ),
                               color: whiteColor,
                             ),
-                            margin: const EdgeInsets.all(15),
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -553,7 +725,7 @@ class _MyListingScreenProductCardState
                                 ),
                                 CustomButton(
                                   icon: FontAwesomeIcons.solidPenToSquare,
-                                  text: 'Edit item',
+                                  text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
                                     widget.data['catName'] == 'Vehicles'
@@ -564,8 +736,8 @@ class _MyListingScreenProductCardState
                                               productData: widget.data,
                                             ));
                                   },
-                                  bgColor: greyColor,
-                                  borderColor: greyColor,
+                                  bgColor: whiteColor,
+                                  borderColor: blackColor,
                                   textIconColor: blackColor,
                                 ),
                                 const SizedBox(
@@ -573,25 +745,28 @@ class _MyListingScreenProductCardState
                                 ),
                                 CustomButton(
                                   icon: FontAwesomeIcons.checkDouble,
-                                  text: 'Mark as sold',
-                                  onPressed: () => Get.back(),
-                                  bgColor: greyColor,
-                                  borderColor: greyColor,
-                                  textIconColor: blackColor,
+                                  text: 'Mark as Sold',
+                                  onPressed: () {
+                                    Get.back();
+                                    showMarskasSoldModal();
+                                  },
+                                  bgColor: whiteColor,
+                                  borderColor: blueColor,
+                                  textIconColor: blueColor,
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
                                 CustomButton(
                                   icon: FontAwesomeIcons.trash,
-                                  text: 'Delete item',
+                                  text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();
                                     showDeleteModal();
                                   },
-                                  bgColor: greyColor,
-                                  borderColor: greyColor,
-                                  textIconColor: blackColor,
+                                  bgColor: whiteColor,
+                                  borderColor: redColor,
+                                  textIconColor: redColor,
                                 ),
                                 const SizedBox(
                                   height: 10,

@@ -1,17 +1,14 @@
 import 'dart:math';
-
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:confetti/confetti.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../utils/utils.dart';
-import '../../widgets/custom_button.dart';
-import '../../screens/main_screen.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button.dart';
+import '/screens/main_screen.dart';
 
 class CongratulationsScreen extends StatefulWidget {
-  static const String routeName = '/congratulations-screen';
   const CongratulationsScreen({super.key});
 
   @override
@@ -39,7 +36,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
       children: [
         Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: transparentColor,
             elevation: 0.0,
             actions: [
               IconButton(
@@ -63,18 +60,19 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   colors: const [
                     blueColor,
                     redColor,
-                    Colors.yellow,
+                    pinkColor,
+                    blackColor,
                   ],
                   blastDirectionality: BlastDirectionality.directional,
                   emissionFrequency: 0,
                   blastDirection: pi / -2,
                   numberOfParticles: 80,
                 ),
-                Text(
+                const Text(
                   '🥳 Congratulations!',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 25,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -83,20 +81,18 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  decoration: ShapeDecoration(
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15,
                     vertical: 10,
                   ),
-                  child: Text(
-                    'Your listing will be live once it is reviewed.',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
+                  child: const Text(
+                    'Your product will be live once it is reviewed.',
+                    style: TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
@@ -108,10 +104,10 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Text(
+                const Text(
                   'Sit back and relax.😊',
-                  style: GoogleFonts.poppins(
-                    fontSize: 22,
+                  style: TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -122,8 +118,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: FontAwesomeIcons.house,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
               ],

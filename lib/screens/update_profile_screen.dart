@@ -1,18 +1,17 @@
-import 'package:buy_sell_app/services/firebase_services.dart';
+import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
 
-import '../utils/utils.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_button_without_icon.dart';
-import '../widgets/custom_text_field.dart';
+import '/utils/utils.dart';
+import '/services/firebase_services.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/widgets/custom_text_field.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  static const String routeName = '/update-profile-screen';
   const UpdateProfileScreen({super.key});
 
   @override
@@ -56,125 +55,122 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     validateForm() async {
-      if (_formKey.currentState!.validate()) {
-        if (nameController.text.isNotEmpty) {
-          showModalBottomSheet<dynamic>(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) {
-              return SafeArea(
-                child: Container(
-                  decoration: ShapeDecoration(
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    color: whiteColor,
-                  ),
-                  margin: const EdgeInsets.all(15),
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 40.0,
-                          height: 5.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: fadedColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Ready to update?',
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: ShapeDecoration(
-                          shape: ContinuousRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          color: greyColor,
-                        ),
-                        child: Text(
-                          'Are you sure you want to update your details?',
-                          style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomButtonWithoutIcon(
-                        text: 'Confirm & Update',
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          Get.back();
-                          await _services.updateUserDetails(uid, {
-                            'name': nameController.text,
-                            'bio': bioController.text.isEmpty
-                                ? null
-                                : bioController.text,
-                            'dob': dobController.text.isEmpty
-                                ? null
-                                : dobController.text,
-                          });
-                          setState(() {
-                            isLoading = false;
-                          });
-                          Get.back();
-                        },
-                        bgColor: blueColor,
-                        borderColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomButtonWithoutIcon(
-                        text: 'Go Back & Check',
-                        onPressed: () => Get.back(),
-                        bgColor: whiteColor,
-                        borderColor: greyColor,
-                        textIconColor: blackColor,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          showSnackBar(
-            context: context,
-            content: 'Please fill all the required fields.',
-            color: redColor,
-          );
-        }
-      } else {
+      if (!_formKey.currentState!.validate()) {
         showSnackBar(
-          context: context,
-          content: 'Please fill all the required fields.',
+          content: 'Please fill all the required fields',
           color: redColor,
         );
+        return;
       }
+      if (nameController.text.isEmail) {
+        showSnackBar(
+          content: 'Please fill all the required fields',
+          color: redColor,
+        );
+        return;
+      }
+      showModalBottomSheet<dynamic>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: transparentColor,
+        builder: (context) {
+          return SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: whiteColor,
+              ),
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Ready to update?',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: greyColor,
+                    ),
+                    child: const Text(
+                      'Are you sure you want to update your details?',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Confirm & Update',
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      Get.back();
+                      await _services.updateUserDetails(uid, {
+                        'name': nameController.text,
+                        'bio': bioController.text.isEmpty
+                            ? null
+                            : bioController.text,
+                        'dob': dobController.text.isEmpty
+                            ? null
+                            : dobController.text,
+                      });
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Get.offAll(() => const MainScreen(selectedIndex: 3));
+                    },
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomButtonWithoutIcon(
+                    text: 'Go Back & Check',
+                    onPressed: () => Get.back(),
+                    bgColor: whiteColor,
+                    borderColor: greyColor,
+                    textIconColor: blackColor,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
     }
 
     return Scaffold(
@@ -184,115 +180,113 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Edit your profile',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
         ),
       ),
-      body: Scrollbar(
-        interactive: true,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blueColor,
-                  child: Text(
-                    'Profile Details',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
+      body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        physics: const BouncingScrollPhysics(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                color: blackColor,
+                child: const Text(
+                  'Profile Details',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: whiteColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: CustomTextField(
+                  controller: nameController,
+                  keyboardType: TextInputType.text,
+                  label: 'Name',
+                  hint: 'Enter you name',
+                  maxLength: 80,
+                  isEnabled: isLoading ? false : true,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    setState(() {});
+                    return null;
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: nameController,
-                    keyboardType: TextInputType.text,
-                    label: 'Name*',
-                    hint: 'Enter you name',
-                    maxLength: 80,
-                    isEnabled: isLoading ? false : true,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      setState(() {});
-                      return null;
-                    },
-                  ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: CustomTextField(
+                  controller: bioController,
+                  keyboardType: TextInputType.multiline,
+                  label: 'Bio (Optional)',
+                  hint: 'Enter a short bio about yourself',
+                  maxLength: 200,
+                  maxLines: 3,
+                  showCounterText: true,
+                  isEnabled: isLoading ? false : true,
+                  textInputAction: TextInputAction.newline,
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: CustomTextField(
+                  controller: dobController,
+                  keyboardType: TextInputType.text,
+                  label: 'Date of Birth (Optional)',
+                  hint: '',
+                  maxLength: 80,
+                  isReadOnly: true,
+                  isEnabled: isLoading ? false : true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      helpText: 'SELECT DATE OF BIRTH',
+                      locale: const Locale('en', 'IN'),
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now().subtract(
+                        const Duration(days: 54750),
+                      ),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate == null) {
+                      return;
+                    }
+                    String formattedDate =
+                        DateFormat.yMMMd().format(pickedDate);
+                    setState(() {
+                      dobController.text = formattedDate;
+                    });
+                  },
+                  textInputAction: TextInputAction.next,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: bioController,
-                    keyboardType: TextInputType.multiline,
-                    label: 'Bio',
-                    hint: 'Enter a short bio about yourself',
-                    maxLength: 200,
-                    maxLines: 3,
-                    showCounterText: true,
-                    isEnabled: isLoading ? false : true,
-                    textInputAction: TextInputAction.newline,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: dobController,
-                    keyboardType: TextInputType.text,
-                    label: 'Date of Birth',
-                    hint: '',
-                    maxLength: 80,
-                    isReadOnly: true,
-                    isEnabled: isLoading ? false : true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        helpText: 'SELECT DATE OF BIRTH',
-                        locale: const Locale('en', 'IN'),
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now().subtract(
-                          const Duration(days: 54750),
-                        ),
-                        lastDate: DateTime.now(),
-                      );
-                      if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat.yMMMd().format(pickedDate);
-                        setState(() {
-                          dobController.text = formattedDate;
-                        });
-                      } else {
-                        return;
-                      }
-                    },
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,30 +1,28 @@
-import 'package:animations/animations.dart';
-import 'package:buy_sell_app/auth/screens/email_verification_screen.dart';
-import 'package:buy_sell_app/auth/screens/location_screen.dart';
-import 'package:buy_sell_app/screens/my_listings_screen.dart';
-import 'package:buy_sell_app/screens/selling/seller_categories_list_screen.dart';
-import 'package:buy_sell_app/screens/settings_screen.dart';
-import 'package:buy_sell_app/screens/update_profile_image_screen.dart';
-import 'package:buy_sell_app/screens/update_profile_screen.dart';
-import 'package:buy_sell_app/widgets/custom_list_tile_no_image.dart';
+import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:store_redirect/store_redirect.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../utils/utils.dart';
-import '../widgets/custom_button.dart';
-import '../services/firebase_services.dart';
+import '/auth/screens/email_verification_screen.dart';
+import '/auth/screens/location_screen.dart';
+import 'help_and_support_screen.dart';
+import 'my_listings_screen.dart';
+import '/screens/selling/seller_categories_list_screen.dart';
+import 'settings_screen.dart';
+import 'update_profile_image_screen.dart';
+import 'update_profile_screen.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button.dart';
+import '/services/firebase_services.dart';
 
 class MyProfileScreen extends StatefulWidget {
-  static const String routeName = '/my-profile-screen';
   const MyProfileScreen({super.key});
 
   @override
@@ -42,36 +40,33 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   void initState() {
-    if (mounted) {
-      setState(() {
-        getUserData();
-      });
-    }
+    getUserData();
     super.initState();
   }
 
   getUserData() async {
     await services.getCurrentUserData().then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['name'] == null) {
-            name = 'BestDeal User';
-          } else {
-            name = value['name'];
-          }
-          if (value['bio'] == null) {
-            bio = '';
-          } else {
-            bio = value['bio'];
-          }
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-        });
+      if (!mounted) {
+        return;
       }
+      setState(() {
+        if (value['name'] == 'BestDeal User') {
+          name = 'BestDeal User';
+        } else {
+          name = value['name'];
+        }
+        if (value['bio'] == null) {
+          bio = '';
+        } else {
+          bio = value['bio'];
+        }
+        if (value['profileImage'] == null) {
+          profileImage = '';
+        } else {
+          profileImage = value['profileImage'];
+        }
+        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      });
     });
   }
 
@@ -80,12 +75,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       if (value['location'] == null) {
         Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
         showSnackBar(
-          context: context,
-          content: 'Please set your location to sell an item',
+          content: 'Please set your location to sell products',
           color: redColor,
         );
       } else {
-        Get.toNamed(SellerCategoriesListScreen.routeName);
+        Get.to(
+          () => const SellerCategoriesListScreen(),
+        );
       }
     });
   }
@@ -113,9 +109,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     child: profileImage == ''
                         ? GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => showModal(
-                              configuration:
-                                  const FadeScaleTransitionConfiguration(),
+                            onTap: () => showDialog(
                               context: context,
                               builder: (_) {
                                 return Dismissible(
@@ -146,7 +140,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                         Positioned(
                                           top: 15,
-                                          right: 15,
+                                          left: 15,
                                           child: IconButton(
                                             onPressed: () => Get.back(),
                                             splashColor: blueColor,
@@ -167,22 +161,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                         Positioned(
                                           top: 20,
-                                          left: 20,
+                                          right: 20,
                                           child: GestureDetector(
                                             behavior: HitTestBehavior.opaque,
                                             onTap: () {
                                               Get.back();
-                                              Get.toNamed(
-                                                UpdateProfileImageScreen
-                                                    .routeName,
+                                              Get.to(
+                                                () =>
+                                                    const UpdateProfileImageScreen(),
                                               );
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Edit',
-                                              style: GoogleFonts.poppins(
+                                              style: TextStyle(
                                                 color: whiteColor,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ),
@@ -209,9 +203,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           )
                         : GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => showModal(
-                              configuration:
-                                  const FadeScaleTransitionConfiguration(),
+                            onTap: () => showDialog(
                               context: context,
                               builder: (_) {
                                 return Dismissible(
@@ -257,7 +249,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                           },
                                           loadingBuilder: (context, event) {
                                             return const Center(
-                                              child: SpinKitFadingCube(
+                                              child: SpinKitFadingCircle(
                                                 color: greyColor,
                                                 size: 20,
                                                 duration: Duration(
@@ -294,17 +286,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                             behavior: HitTestBehavior.opaque,
                                             onTap: () {
                                               Get.back();
-                                              Get.toNamed(
-                                                UpdateProfileImageScreen
-                                                    .routeName,
+                                              Get.to(
+                                                () =>
+                                                    const UpdateProfileImageScreen(),
                                               );
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Edit',
-                                              style: GoogleFonts.poppins(
+                                              style: TextStyle(
                                                 color: whiteColor,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ),
@@ -332,7 +324,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   },
                                   placeholder: (context, url) {
                                     return const Center(
-                                      child: SpinKitFadingCube(
+                                      child: SpinKitFadingCircle(
                                         color: lightBlackColor,
                                         size: 30,
                                         duration: Duration(milliseconds: 1000),
@@ -359,12 +351,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               softWrap: true,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.poppins(
+                              style: const TextStyle(
                                 color: blackColor,
-                                fontSize: 25,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
+                            if (bio != '')
+                              const SizedBox(
+                                height: 5,
+                              ),
                             if (bio != '')
                               Text(
                                 bio,
@@ -372,10 +368,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 softWrap: true,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   color: blackColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                           ],
@@ -383,7 +379,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       ),
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => Get.toNamed(UpdateProfileScreen.routeName),
+                        onTap: () => Get.to(
+                          () => const UpdateProfileScreen(),
+                        ),
                         child: const Align(
                           alignment: Alignment.centerRight,
                           child: Icon(
@@ -406,8 +404,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: GoogleFonts.poppins(
-                      color: blackColor,
+                    style: const TextStyle(
+                      color: lightBlackColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -417,13 +415,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   height: 15,
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomButton(
-                    text: 'Sell a product',
+                    text: 'Sell a Product',
                     onPressed: !user!.emailVerified &&
                             user!.providerData[0].providerId == 'password'
-                        ? () => Get.toNamed(EmailVerificationScreen.routeName)
+                        ? () => Get.to(
+                              () => const EmailVerificationScreen(),
+                            )
                         : onSellButtonClicked,
                     icon: FontAwesomeIcons.plus,
                     bgColor: blueColor,
@@ -431,30 +430,70 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     textIconColor: whiteColor,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomListTileNoImage(
-                    text: 'My Listings',
-                    icon: FontAwesomeIcons.list,
-                    onTap: () => Get.toNamed(MyListingsScreen.routeName),
-                  ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomListTileNoImage(
-                    text: 'Settings',
-                    icon: FontAwesomeIcons.gear,
-                    onTap: () => Get.toNamed(SettingsScreen.routeName),
+                  child: Row(
+                    children: [
+                      MyProfileItemWidget(
+                        icon: FontAwesomeIcons.listUl,
+                        text: 'My Products',
+                        onTap: () => Get.to(
+                          () => const MyListingsScreen(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      MyProfileItemWidget(
+                        icon: FontAwesomeIcons.userGear,
+                        text: 'Settings',
+                        onTap: () => Get.to(
+                          () => const SettingsScreen(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    children: [
+                      MyProfileItemWidget(
+                        icon: FontAwesomeIcons.headset,
+                        text: 'Help and Support',
+                        onTap: () => Get.to(
+                          () => const HelpAndSupportScreen(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      MyProfileItemWidget(
+                        icon: FontAwesomeIcons.solidStar,
+                        iconColor: blueColor,
+                        text: 'Rate us',
+                        onTap: () {
+                          StoreRedirect.redirect();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'Made in India 🇮🇳',
                     softWrap: true,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: blackColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -463,6 +502,62 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyProfileItemWidget extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final void Function()? onTap;
+  final Color? iconColor;
+  const MyProfileItemWidget({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.onTap,
+    this.iconColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Container(
+          height: 90,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 5,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: greyColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                icon,
+                size: 22,
+                color: iconColor,
+              ),
+              AutoSizeText(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ],
           ),
         ),
       ),

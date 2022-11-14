@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../services/firebase_services.dart';
+import '/services/firebase_services.dart';
 
 class SellerFormProvider with ChangeNotifier {
   final FirebaseServices services = FirebaseServices();

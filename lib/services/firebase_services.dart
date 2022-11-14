@@ -1,7 +1,9 @@
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
+
+import '/utils/utils.dart';
 
 class FirebaseServices {
   User? user = FirebaseAuth.instance.currentUser;
@@ -34,85 +36,180 @@ class FirebaseServices {
     return doc;
   }
 
-  updateUserDetails(id, Map<String, dynamic> data) async {
-    await users.doc(id).update(data);
-  }
+  final Uuid uuid = const Uuid();
 
-  createChatRoomInFirebase({chatData, context}) async {
-    await chats.doc(chatData['chatRoomId']).set(chatData).catchError((e) {
-      showSnackBar(
-        context: context,
-        content: 'Something has gone wrong. Plase try again later.',
-        color: redColor,
-      );
-    });
-  }
-
-  sendChat({chatRoomId, message, context}) async {
-    await chats
-        .doc(chatRoomId)
-        .collection('messages')
-        .add(message)
-        .catchError((e) {
-      showSnackBar(
-        context: context,
-        content: 'Unable to send message. Plase try again later.',
-        color: redColor,
-      );
-    });
-    await chats.doc(chatRoomId).update({
-      'lastChat': message['message'],
-      'lastChatTime': message['time'],
-      'read': false,
-    });
-  }
-
-  updateFavorite({isLiked, productId, context}) {
-    if (isLiked) {
-      listings.doc(productId).update({
-        'favorites': FieldValue.arrayUnion([user!.uid])
-      });
-      showSnackBar(
-        context: context,
-        content: 'Added to favorites',
-        color: blueColor,
-      );
-    } else {
-      listings.doc(productId).update({
-        'favorites': FieldValue.arrayRemove([user!.uid])
-      });
-      showSnackBar(
-        context: context,
-        content: 'Removed from favorites',
-        color: redColor,
-      );
-    }
-  }
-
-  deleteChat({chatRoomId, context}) async {
-    await chats.doc(chatRoomId).delete().then((value) {
-      showSnackBar(
-        context: context,
-        content: 'Chat deleted successfully',
-        color: redColor,
-      );
-    });
-  }
-
-  deleteListingImage({listingId, required String imageUrl, context}) async {
-    final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+  updateUserDetails(
+    id,
+    Map<String, dynamic> data,
+  ) async {
     try {
-      await storageRef.delete();
+      await users.doc(id).update(data);
     } on FirebaseException catch (_) {
       showSnackBar(
-        context: context,
         content: 'Something has gone wrong. Please try again',
         color: redColor,
       );
     }
   }
 
-  deleteListing({listingId, context}) async {
+  createChatRoomInFirebase({chatData}) async {
+    try {
+      await chats.doc(chatData['chatRoomId']).set(chatData);
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  sendChat({chatRoomId, message}) async {
+    try {
+      await chats.doc(chatRoomId).collection('messages').add(message);
+      await chats.doc(chatRoomId).update({
+        'lastChat': message['message'],
+        'lastChatTime': message['time'],
+        'read': false,
+      });
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  updateFavorite({isLiked, productId}) async {
+    try {
+      if (!isLiked) {
+        await listings.doc(productId).update({
+          'favorites': FieldValue.arrayRemove([user!.uid])
+        }).then((value) {
+          showSnackBar(
+            content: 'Removed from favorites',
+            color: redColor,
+          );
+        });
+        return;
+      }
+      await listings.doc(productId).update({
+        'favorites': FieldValue.arrayUnion([user!.uid])
+      }).then((value) {
+        showSnackBar(
+          content: 'Added to favorites',
+          color: blueColor,
+        );
+      });
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  followUser({currentUserId, userId, isFollowed}) async {
+    try {
+      if (!isFollowed) {
+        await users.doc(userId).update({
+          'followers': FieldValue.arrayRemove([currentUserId])
+        });
+        await users.doc(currentUserId).update({
+          'following': FieldValue.arrayRemove([userId])
+        });
+        showSnackBar(
+          content: 'Unfollowed user',
+          color: blueColor,
+        );
+        return;
+      }
+      await users.doc(userId).update({
+        'followers': FieldValue.arrayUnion([currentUserId])
+      });
+      await users.doc(currentUserId).update({
+        'following': FieldValue.arrayUnion([userId])
+      });
+      showSnackBar(
+        content: 'Followed user',
+        color: blueColor,
+      );
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  markAsSold({productId}) async {
+    try {
+      await listings.doc(productId).update({
+        'isActive': false,
+        'isSold': true,
+      }).then((value) {
+        showSnackBar(
+          content: 'Your product has been marked as sold',
+          color: blueColor,
+        );
+      });
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  promoteListingToTop({listingId}) async {
+    try {
+      await listings.doc(listingId).update({
+        'postedAt': DateTime.now().millisecondsSinceEpoch,
+      }).then((value) {
+        showSnackBar(
+          content: 'Listing succesfully boosted to top',
+          color: blueColor,
+        );
+      });
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  deleteChat({chatRoomId}) async {
+    try {
+      await chats.doc(chatRoomId).delete().then((value) {
+        showSnackBar(
+          content: 'Chat deleted successfully',
+          color: redColor,
+        );
+      });
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  deleteListingImage({
+    listingId,
+    required String imageUrl,
+  }) async {
+    final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+    try {
+      await storageRef.delete();
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  deleteListing({listingId}) async {
     List<String> images = [];
     List<dynamic> chatsToDelete = [];
     try {
@@ -125,7 +222,6 @@ class FirebaseServices {
         await deleteListingImage(
           listingId: listingId,
           imageUrl: link,
-          context: context,
         );
       }
       await chats
@@ -137,44 +233,98 @@ class FirebaseServices {
         }
       });
       for (var chatRoomId in chatsToDelete) {
-        await deleteChat(chatRoomId: chatRoomId.toString(), context: context);
+        await deleteChat(chatRoomId: chatRoomId.toString());
       }
       await listings.doc(listingId.toString()).delete().then((value) {
         showSnackBar(
-          context: context,
-          content: 'Listing deleted',
+          content: 'Product deleted',
           color: redColor,
         );
       });
     } on FirebaseAuthException catch (_) {
       showSnackBar(
-        context: context,
-        content: 'Unable to delete item. Please try again',
+        content: 'Unable to delete product. Please try again',
         color: redColor,
       );
     }
   }
 
-  // reportItem({listingId, message, context}) async {
-  //   var id = DateTime.now().millisecondsSinceEpoch;
-  //   await reports.doc().add({
-  //     'productId': listingId,
-  //     'userUid': user!.uid,
-  //     'reportId': id,
-  //     'message': message,
-  //   }).then((value) {
-  //     showSnackBar(
-  //       context: context,
-  //       content:
-  //           'Report filed successfully. We will get back to you as soon as possible.',
-  //       color: blueColor,
-  //     );
-  //   }).catchError((_) {
-  //     showSnackBar(
-  //       context: context,
-  //       content: 'Something has gone wrong. Please try again.',
-  //       color: blueColor,
-  //     );
-  //   });
-  // }
+  feedbackToFirestore({
+    text,
+    model,
+    androidVersion,
+    securityPatch,
+    screenshot,
+  }) async {
+    var id = uuid.v4();
+    try {
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('reportImages/${user!.uid}/$id');
+      UploadTask uploadTask = storageReference.putFile(screenshot);
+      String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      await reports.doc(id).set({
+        'type': 'screenshotReport',
+        'userId': user!.uid,
+        'text': text,
+        'screenshot': downloadUrl,
+        'postedAt': DateTime.now().toLocal().toString(),
+        'model': model,
+        'androidVersion': androidVersion,
+        'securityPatch': securityPatch,
+      });
+      showSnackBar(
+        content: 'Report submitted. We will try to fix it as soon as possible',
+        color: blueColor,
+      );
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  reportItem({listingId, message}) async {
+    var id = uuid.v4();
+    try {
+      await reports.doc(id).set({
+        'type': 'productReport',
+        'productId': listingId,
+        'userUid': user!.uid,
+        'message': message,
+        'postedAt': DateTime.now().toLocal().toString(),
+      });
+      showSnackBar(
+        content: 'Product reported. We will look into it as soon as possible',
+        color: blueColor,
+      );
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  reportUser({userId, message}) async {
+    var id = uuid.v4();
+    try {
+      await reports.doc(id).set({
+        'type': 'userReport',
+        'reporterId': user!.uid,
+        'userUid': userId,
+        'message': message,
+        'postedAt': DateTime.now().toLocal().toString(),
+      });
+      showSnackBar(
+        content: 'User reported. We will look into it as soon as possible',
+        color: blueColor,
+      );
+    } on FirebaseException catch (_) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
 }

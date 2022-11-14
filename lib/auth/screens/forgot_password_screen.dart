@@ -1,16 +1,14 @@
-import 'package:buy_sell_app/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_text_field.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_text_field.dart';
+import '/utils/utils.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  static const String routeName = '/forgot-password-screen';
   const ForgotPasswordScreen({super.key});
 
   @override
@@ -32,16 +30,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           .sendPasswordResetEmail(email: emailController.text)
           .then((value) {
         showSnackBar(
-          context: context,
-          content: 'Link to reset password sent on your email.',
+          content: 'Link to reset password sent on your email',
           color: redColor,
         );
       }).then((value) {
         Get.back();
       }).catchError((onError) {
         showSnackBar(
-          context: context,
-          content: 'Something has gone wrong. Please try again.',
+          content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
       });
@@ -66,9 +62,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Forgot password',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -104,11 +101,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'We\'ll send you a link to reset your password on this email.',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
                   color: lightBlackColor,
-                  fontSize: 13,
+                  fontSize: 14,
                 ),
               ),
               const Spacer(),
@@ -125,8 +123,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   : CustomButton(
                       text: 'Send',
                       icon: FontAwesomeIcons.arrowRight,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),

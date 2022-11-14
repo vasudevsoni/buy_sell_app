@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/utils.dart';
+import '/utils/utils.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -58,7 +56,7 @@ class CustomTextField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       maxLines: maxLines,
       obscureText: isObscured,
-      style: GoogleFonts.poppins(
+      style: const TextStyle(
         fontWeight: FontWeight.w600,
         color: blackColor,
         fontSize: 16,
@@ -75,14 +73,14 @@ class CustomTextField extends StatelessWidget {
         fillColor: greyColor,
         filled: true,
         counterText: showCounterText ? null : '',
-        counterStyle: GoogleFonts.poppins(
+        counterStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: fadedColor,
         ),
         border: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors.transparent,
+            color: transparentColor,
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
@@ -90,7 +88,7 @@ class CustomTextField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors.transparent,
+            color: transparentColor,
             width: 0,
             strokeAlign: StrokeAlign.inside,
           ),
@@ -98,7 +96,7 @@ class CustomTextField extends StatelessWidget {
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors.red,
+            color: redColor,
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
@@ -120,21 +118,21 @@ class CustomTextField extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(5),
         ),
-        hintStyle: GoogleFonts.poppins(
+        hintStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
           color: fadedColor,
         ),
-        labelStyle: GoogleFonts.poppins(
+        labelStyle: const TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 16,
         ),
-        errorStyle: GoogleFonts.poppins(
+        errorStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: Colors.red,
+          color: redColor,
         ),
-        floatingLabelStyle: GoogleFonts.poppins(
+        floatingLabelStyle: const TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 15,
           color: lightBlackColor,

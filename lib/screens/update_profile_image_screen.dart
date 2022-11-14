@@ -1,22 +1,21 @@
+import 'package:buy_sell_app/screens/main_screen.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
-
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:get/get.dart';
-
 import 'package:uuid/uuid.dart';
-import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:image_picker/image_picker.dart';
 
-import '../services/firebase_services.dart';
+import '../widgets/custom_button_without_icon.dart';
+import '/widgets/custom_button.dart';
+import '/utils/utils.dart';
+import '/services/firebase_services.dart';
 
 class UpdateProfileImageScreen extends StatefulWidget {
-  static const String routeName = '/update-profile-image-screen';
   const UpdateProfileImageScreen({super.key});
 
   @override
@@ -42,15 +41,16 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   getUserProfileImage() async {
     await services.getCurrentUserData().then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-        });
+      if (!mounted) {
+        return;
       }
+      setState(() {
+        if (value['profileImage'] != null) {
+          profileImage = value['profileImage'];
+          return;
+        }
+        profileImage = '';
+      });
     });
   }
 
@@ -65,17 +65,6 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     downloadUrl = await (await uploadTask).ref.getDownloadURL();
     services.users.doc(services.user!.uid).update({
       'profileImage': downloadUrl,
-    }).then((value) {
-      Get.back();
-      Get.reloadAll();
-      setState(() {
-        isLoading = false;
-      });
-      showSnackBar(
-        context: context,
-        content: 'Profile image updated successfully.',
-        color: blueColor,
-      );
     });
     setState(() {
       isLoading = false;
@@ -84,8 +73,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   choosePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
     setState(() {
       pickedImage = picked;
     });
@@ -93,11 +84,107 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   takePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked =
-        await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
+    final picked = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+      preferredCameraDevice: CameraDevice.front,
+    );
     setState(() {
       pickedImage = picked;
     });
+  }
+
+  showConfirmationDialog() {
+    showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: transparentColor,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Ready to update?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: greyColor,
+                  ),
+                  child: const Text(
+                    'Are you sure you want to update your profile image?',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Confirm & Update',
+                  onPressed: () async {
+                    await uploadImage(File(pickedImage!.path));
+                    Get.back();
+                    Get.offAll(() => const MainScreen(selectedIndex: 3));
+                  },
+                  bgColor: blueColor,
+                  isDisabled: isLoading,
+                  borderColor: blueColor,
+                  textIconColor: whiteColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Go Back & Change',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  isDisabled: isLoading,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -110,9 +197,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Update profile image',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
             ),
@@ -155,7 +243,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                             },
                             placeholder: (context, url) {
                               return const Center(
-                                child: SpinKitFadingCube(
+                                child: SpinKitFadingCircle(
                                   color: lightBlackColor,
                                   size: 30,
                                   duration: Duration(milliseconds: 1000),
@@ -184,11 +272,11 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               child: CustomButton(
                 text: 'Take Photo',
                 onPressed: takePhoto,
-                icon: FontAwesomeIcons.cameraRetro,
-                bgColor: blackColor,
+                icon: FontAwesomeIcons.camera,
+                bgColor: whiteColor,
                 borderColor: blackColor,
+                textIconColor: blackColor,
                 isDisabled: isLoading,
-                textIconColor: whiteColor,
               ),
             ),
             const SizedBox(
@@ -201,9 +289,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 onPressed: choosePhoto,
                 icon: FontAwesomeIcons.solidImages,
                 bgColor: whiteColor,
-                borderColor: greyColor,
-                isDisabled: isLoading,
+                borderColor: blackColor,
                 textIconColor: blackColor,
+                isDisabled: isLoading,
               ),
             ),
           ],
@@ -227,9 +315,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   textIconColor: blackColor,
                 )
               : CustomButton(
-                  text: 'Done',
-                  onPressed: () => uploadImage(File(pickedImage!.path)),
-                  icon: FontAwesomeIcons.check,
+                  text: 'Proceed',
+                  onPressed:
+                      pickedImage != null ? showConfirmationDialog : () {},
+                  icon: FontAwesomeIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

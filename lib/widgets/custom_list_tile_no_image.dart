@@ -1,51 +1,48 @@
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import '/utils/utils.dart';
 
 class CustomListTileNoImage extends StatelessWidget {
   final String text;
-  final IconData icon;
+  final IconData? icon;
+  final IconData? trailingIcon;
+  final bool isEnabled;
   final void Function()? onTap;
 
   const CustomListTileNoImage({
     super.key,
     required this.text,
-    required this.icon,
+    this.icon,
+    this.trailingIcon,
     required this.onTap,
+    required this.isEnabled,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.symmetric(
-          vertical: 10,
-          horizontal: 15,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: greyColor,
-        ),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              text,
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),
-            ),
-            Icon(
-              icon,
-              size: 12,
-            ),
-          ],
+    return ListTile(
+      title: Text(
+        text,
+        style: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 15,
         ),
       ),
+      onTap: isEnabled ? onTap : null,
+      dense: true,
+      trailing: Icon(
+        trailingIcon,
+        size: 10,
+        color: lightBlackColor,
+      ),
+      minLeadingWidth: icon == null ? 0 : 40,
+      leading: Icon(
+        icon,
+        size: 18,
+        color: blackColor,
+      ),
+      horizontalTitleGap: 0,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
     );
   }
 }

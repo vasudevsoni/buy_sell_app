@@ -1,18 +1,16 @@
-import 'dart:io';
-
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
 
 import 'custom_button.dart';
-import '../provider/seller_form_provider.dart';
-import '../utils/utils.dart';
+import '/provider/seller_form_provider.dart';
+import '/utils/utils.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   static const String routeName = '/image-picker-screen';
@@ -36,36 +34,37 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     showMaximumError() {
       showSnackBar(
-        context: context,
-        content: 'Maximum 15 images are allowed.',
+        content: 'Maximum 15 images are allowed',
         color: redColor,
       );
     }
 
     Future getImageFromCamera() async {
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
+      XFile? pickedFile = await picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        preferredCameraDevice: CameraDevice.rear,
+      );
       if (pickedFile == null) {
-        return null;
-      } else {
-        provider.addImageToPaths(File(pickedFile.path));
+        return;
       }
+      provider.addImageToPaths(File(pickedFile.path));
       provider.imagesCount += 1;
       setState(() {});
     }
 
     Future getImageFromGallery() async {
       final List<XFile>? pickedFiles =
-          await picker.pickMultiImage(imageQuality: 100);
+          await picker.pickMultiImage(imageQuality: 85);
       if (pickedFiles!.isEmpty) {
-        return null;
-      } else if (pickedFiles.length > 15) {
+        return;
+      }
+      if (pickedFiles.length > 15) {
         showMaximumError();
-        return null;
-      } else {
-        for (var i in pickedFiles) {
-          provider.addImageToPaths(File(i.path));
-        }
+        return;
+      }
+      for (var i in pickedFiles) {
+        provider.addImageToPaths(File(i.path));
       }
       provider.imagesCount += pickedFiles.length;
       setState(() {});
@@ -74,10 +73,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     return Column(
       children: [
         Container(
-          decoration: ShapeDecoration(
-            shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
             color: greyColor,
           ),
           padding: const EdgeInsets.all(15.0),
@@ -105,20 +102,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             fit: StackFit.expand,
                             children: [
                               Opacity(
-                                opacity: 0.7,
+                                opacity: 0.8,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onTap: () => showModal(
-                                    configuration:
-                                        const FadeScaleTransitionConfiguration(),
+                                  onTap: () => showDialog(
                                     context: context,
                                     builder: (context) {
                                       return Dismissible(
                                         key: UniqueKey(),
                                         direction: DismissDirection.down,
                                         onDismissed: (direction) {
-                                          Get.back();
                                           pageController.dispose();
+                                          Get.back();
                                         },
                                         child: Material(
                                           color: blackColor,
@@ -176,11 +171,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                 right: 15,
                                                 child: IconButton(
                                                   onPressed: () {
-                                                    Get.back();
                                                     pageController.dispose();
+                                                    Get.back();
                                                   },
-                                                  splashColor: Colors.blue,
-                                                  splashRadius: 30,
                                                   icon: const Icon(
                                                     FontAwesomeIcons
                                                         .circleXmark,
@@ -228,10 +221,17 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   child: Text(
                                     '${index + 1}',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w700,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
                                       fontSize: 30,
                                       color: whiteColor,
+                                      shadows: [
+                                        Shadow(
+                                          offset: Offset(0, 2),
+                                          blurRadius: 10.0,
+                                          color: lightBlackColor,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -267,22 +267,20 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       },
                     )
                   : Container(
-                      decoration: ShapeDecoration(
-                        shape: ContinuousRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
                         color: greyColor,
                       ),
                       height: 100,
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'Uploaded pics will show here.',
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
+                          style: TextStyle(
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -291,8 +289,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               if (provider.imagePaths.isNotEmpty)
                 Text(
                   '${provider.imagePaths.length} / 15',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
                     color: fadedColor,
                     fontSize: 12,
                   ),
@@ -310,10 +308,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             onPressed: provider.imagesCount >= 15
                 ? showMaximumError
                 : getImageFromCamera,
-            icon: FontAwesomeIcons.cameraRetro,
-            bgColor: blackColor,
+            icon: FontAwesomeIcons.camera,
+            bgColor: whiteColor,
             borderColor: blackColor,
-            textIconColor: whiteColor,
+            textIconColor: blackColor,
             isDisabled: widget.isButtonDisabled,
           ),
         ),
@@ -329,7 +327,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 : getImageFromGallery,
             icon: FontAwesomeIcons.solidImages,
             bgColor: whiteColor,
-            borderColor: greyColor,
+            borderColor: blackColor,
             textIconColor: blackColor,
             isDisabled: widget.isButtonDisabled,
           ),

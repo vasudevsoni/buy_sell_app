@@ -1,17 +1,18 @@
-import 'package:buy_sell_app/screens/selling/seller_categories_list_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import '../../provider/location_provider.dart';
-import '../../services/firebase_services.dart';
-import '../../utils/utils.dart';
-import '../../widgets/custom_button.dart';
-import '../../screens/main_screen.dart';
+
+import '/provider/location_provider.dart';
+import '/screens/selling/seller_categories_list_screen.dart';
+import '/services/firebase_services.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button.dart';
+import '/screens/main_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   final bool isOpenedFromSellButton;
@@ -30,7 +31,7 @@ class _LocationScreenState extends State<LocationScreen> {
   Location location = Location();
   late PermissionStatus permissionGranted;
 
-  Future<void> getAddress() async {
+  Future<bool> getAddress() async {
     final locationProv = Provider.of<LocationProvider>(context, listen: false);
     try {
       List<geocode.Placemark> placemarks =
@@ -53,23 +54,23 @@ class _LocationScreenState extends State<LocationScreen> {
       });
       if (mounted) {
         showSnackBar(
-          context: context,
           content: placemarks[0].subLocality == ''
               ? 'Location set to ${placemarks[0].locality.toString()}'
               : 'Location set to ${placemarks[0].subLocality.toString()}',
           color: blueColor,
         );
       }
+      return true;
     } catch (e) {
       showSnackBar(
-        context: context,
-        content: 'Unable to get your current location. Please try again.',
+        content: 'Unable to get your current location. Please try again',
         color: redColor,
       );
+      return false;
     }
   }
 
-  Future<LocationData?> getUserLocation() async {
+  Future<bool> getUserLocation() async {
     final locationProv = Provider.of<LocationProvider>(context, listen: false);
 
     serviceEnabled = await location.serviceEnabled();
@@ -77,12 +78,11 @@ class _LocationScreenState extends State<LocationScreen> {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
         showSnackBar(
-          context: context,
           content:
-              'Location services are disabled. Please enable services to continue.',
+              'Location services are disabled. Please enable services to continue',
           color: redColor,
         );
-        return null;
+        return false;
       }
     }
     permissionGranted = await location.hasPermission();
@@ -90,26 +90,25 @@ class _LocationScreenState extends State<LocationScreen> {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
         showSnackBar(
-          context: context,
           content:
-              'Location access was denied. Please allow access for a better experience.',
+              'Location access was denied. Please allow access for a better experience',
           color: redColor,
         );
-        return null;
+        return false;
       }
-    } else if (permissionGranted == PermissionStatus.deniedForever) {
+    }
+    if (permissionGranted == PermissionStatus.deniedForever) {
       showSnackBar(
-        context: context,
         content:
-            'Location services are permanently disabled, unable to fetch location.',
+            'Location services are permanently disabled, unable to fetch location',
         color: redColor,
       );
     }
     await location.getLocation().then((value) {
       locationProv.updateLocation(value);
-      getAddress();
     });
-    return locationProv.locationData;
+    bool addressGot = await getAddress();
+    return addressGot;
   }
 
   @override
@@ -122,130 +121,132 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Set your location',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  'Set your location to get nearby product recommendations and to sell your own products',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: greyColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: 100,
+                height: 100,
+                child: const Icon(
+                  FontAwesomeIcons.locationDot,
+                  size: 50,
+                  color: blueColor,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  'To enjoy all that we have to offer you we need to know where to look for them',
-                  style: GoogleFonts.poppins(
-                    color: lightBlackColor,
-                  ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                'Set your location to get nearby product recommendations and to sell your own products',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              Container(
-                height: MediaQuery.of(context).size.width * 0.5,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      'https://media.istockphoto.com/vectors/vector-map-with-pin-pointer-illustration-vector-id535913739?k=20&m=535913739&s=612x612&w=0&h=cS_zINbhJ9T9vRlaAc4S_-Yd45f6qs5zliFHZ7KNhFI=',
-                    ),
-                  ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                'To enjoy all that we have to offer, we need to know where to look for them',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: lightBlackColor,
+                  fontSize: 14,
                 ),
               ),
-              Column(
-                children: [
-                  isLoading
-                      ? Container(
-                          margin: const EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                          ),
-                          child: CustomButton(
-                            text: 'Fetching location...',
-                            icon: FontAwesomeIcons.spinner,
-                            bgColor: greyColor,
-                            borderColor: greyColor,
-                            textIconColor: blackColor,
-                            isDisabled: true,
-                            onPressed: () {},
-                          ),
-                        )
-                      : Container(
-                          margin: const EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                          ),
-                          child: CustomButton(
-                            text: 'set location using gps',
-                            icon: FontAwesomeIcons.locationCrosshairs,
-                            bgColor: blueColor,
-                            borderColor: blueColor,
-                            textIconColor: whiteColor,
-                            onPressed: () async {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              await getUserLocation().then((value) {
-                                if (value != null) {
-                                  if (widget.isOpenedFromSellButton) {
-                                    Get.back();
-                                    Get.reloadAll();
-                                    Get.toNamed(
-                                      SellerCategoriesListScreen.routeName,
-                                    );
-                                  } else {
-                                    Get.offAll(() =>
-                                        const MainScreen(selectedIndex: 0));
-                                  }
-                                } else {
-                                  return;
-                                }
-                              });
-                              setState(() {
-                                isLoading = false;
-                              });
-                            },
-                          ),
-                        ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
+            ),
+            const Spacer(),
+            isLoading
+                ? Container(
                     margin: const EdgeInsets.only(
                       left: 15,
                       right: 15,
-                      bottom: 15,
                     ),
                     child: CustomButton(
-                      text: 'Skip',
-                      icon: FontAwesomeIcons.forward,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
+                      text: 'Fetching Location...',
+                      icon: FontAwesomeIcons.spinner,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
+                      isDisabled: true,
+                      onPressed: () {},
+                    ),
+                  )
+                : Container(
+                    margin: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                    ),
+                    child: CustomButton(
+                      text: 'Set Location using GPS',
+                      icon: FontAwesomeIcons.locationCrosshairs,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
-                      isDisabled: isLoading,
-                      onPressed: () => Get.back(),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await getUserLocation().then((value) {
+                          if (!value) {
+                            return;
+                          }
+                          if (!widget.isOpenedFromSellButton) {
+                            Get.offAll(
+                              () => const MainScreen(selectedIndex: 0),
+                            );
+                            return;
+                          }
+                          Get.back();
+                          Get.to(
+                            () => const SellerCategoriesListScreen(),
+                          );
+                        });
+                        setState(() {
+                          isLoading = false;
+                        });
+                      },
                     ),
                   ),
-                ],
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+                bottom: 15,
               ),
-            ],
-          ),
+              child: CustomButton(
+                text: 'Skip',
+                icon: FontAwesomeIcons.forward,
+                bgColor: whiteColor,
+                borderColor: blackColor,
+                textIconColor: blackColor,
+                isDisabled: isLoading,
+                onPressed: () => Get.back(),
+              ),
+            ),
+          ],
         ),
       ),
     );

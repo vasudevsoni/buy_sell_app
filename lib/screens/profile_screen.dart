@@ -1,22 +1,21 @@
-import 'package:animations/animations.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/screens/full_bio_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../utils/utils.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_product_card.dart';
-import '../services/firebase_services.dart';
+import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_text_field.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button.dart';
+import 'full_bio_screen.dart';
+import '/widgets/custom_product_card.dart';
+import '/services/firebase_services.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userId;
@@ -31,12 +30,19 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseServices services = FirebaseServices();
+  final TextEditingController reportTextController = TextEditingController();
+  final User? user = FirebaseAuth.instance.currentUser;
   String name = '';
   String bio = '';
   String profileImage = '';
   String sellerUid = '';
   String address = '';
   DateTime dateJoined = DateTime.now();
+  int followers = 0;
+  int following = 0;
+  bool isFollowing = false;
+
+  NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
@@ -46,34 +52,215 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getUserData() async {
     await services.getUserData(widget.userId).then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['name'] == null) {
-            name = 'BestDeal User';
-          } else {
-            name = value['name'];
-          }
-          if (value['bio'] == null) {
-            bio = '';
-          } else {
-            bio = value['bio'];
-          }
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-          if (value['location'] == null) {
-            address == '';
-          } else {
-            address =
-                '${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-          }
-          sellerUid = value['uid'];
-          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-        });
+      if (!mounted) {
+        return;
       }
+      setState(() {
+        if (value['name'] == null) {
+          name = 'BestDeal User';
+        } else {
+          name = value['name'];
+        }
+        if (value['bio'] == null) {
+          bio = '';
+        } else {
+          bio = value['bio'];
+        }
+        if (value['profileImage'] == null) {
+          profileImage = '';
+        } else {
+          profileImage = value['profileImage'];
+        }
+        if (value['location'] == null) {
+          address == '';
+        } else {
+          address =
+              '${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+        }
+        if (value['followers'].contains(user!.uid)) {
+          isFollowing = true;
+        } else {
+          isFollowing = false;
+        }
+        if (value['followers'].isEmpty) {
+          followers = 0;
+        } else {
+          followers = value['followers'].length;
+        }
+        if (value['following'].isEmpty) {
+          following = 0;
+        } else {
+          following = value['following'].length;
+        }
+        sellerUid = value['uid'];
+        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      });
     });
+  }
+
+  showReportDialog() {
+    showModalBottomSheet<dynamic>(
+      context: context,
+      backgroundColor: transparentColor,
+      isScrollControlled: true,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+              left: 15,
+              right: 15,
+              top: 15,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Report this user',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextField(
+                  controller: reportTextController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  showCounterText: true,
+                  maxLength: 1000,
+                  maxLines: 3,
+                  label: 'Message',
+                  hint: 'Explain in detail why you are reporting this user',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                  icon: FontAwesomeIcons.bug,
+                  text: 'Report User',
+                  onPressed: () {
+                    if (reportTextController.text.isEmpty) {
+                      return;
+                    }
+                    services.reportUser(
+                      message: reportTextController.text,
+                      userId: sellerUid,
+                    );
+                    Get.back();
+                    reportTextController.clear();
+                  },
+                  bgColor: redColor,
+                  borderColor: redColor,
+                  textIconColor: whiteColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  showOptionsDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: transparentColor,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                  icon: FontAwesomeIcons.userShield,
+                  text: 'Report User',
+                  onPressed: () {
+                    Get.back();
+                    showReportDialog();
+                  },
+                  bgColor: whiteColor,
+                  borderColor: redColor,
+                  textIconColor: redColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    reportTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,170 +272,258 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: showOptionsDialog,
+            behavior: HitTestBehavior.opaque,
+            child: const Icon(
+              FontAwesomeIcons.ellipsis,
+              color: blackColor,
+              size: 20,
+            ),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
         title: Text(
-          'Profile',
-          style: GoogleFonts.poppins(
+          name,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
         ),
       ),
       body: SafeArea(
-        child: Scrollbar(
-          interactive: true,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                profileImage == ''
-                    ? Container(
-                        height: MediaQuery.of(context).size.width * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: blueColor,
-                        ),
-                        child: const Icon(
-                          FontAwesomeIcons.userTie,
-                          color: whiteColor,
-                          size: 40,
-                        ),
-                      )
-                    : GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () => showModal(
-                          configuration:
-                              const FadeScaleTransitionConfiguration(),
-                          context: context,
-                          builder: (context) {
-                            return Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.down,
-                              onDismissed: (direction) {
-                                Get.back();
-                              },
-                              child: Material(
-                                color: blackColor,
-                                child: Stack(
-                                  children: [
-                                    PhotoViewGallery.builder(
-                                      scrollPhysics:
-                                          const BouncingScrollPhysics(),
-                                      itemCount: 1,
-                                      builder:
-                                          (BuildContext context, int index) {
-                                        return PhotoViewGalleryPageOptions(
-                                          imageProvider: NetworkImage(
-                                            profileImage,
-                                          ),
-                                          initialScale:
-                                              PhotoViewComputedScale.contained *
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    profileImage == ''
+                        ? Container(
+                            height: MediaQuery.of(context).size.width * 0.3,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: blueColor,
+                            ),
+                            child: const Icon(
+                              FontAwesomeIcons.userTie,
+                              color: whiteColor,
+                              size: 40,
+                            ),
+                          )
+                        : GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.down,
+                                  onDismissed: (direction) {
+                                    Get.back();
+                                  },
+                                  child: Material(
+                                    color: blackColor,
+                                    child: Stack(
+                                      children: [
+                                        PhotoViewGallery.builder(
+                                          scrollPhysics:
+                                              const BouncingScrollPhysics(),
+                                          itemCount: 1,
+                                          builder: (BuildContext context,
+                                              int index) {
+                                            return PhotoViewGalleryPageOptions(
+                                              imageProvider: NetworkImage(
+                                                profileImage,
+                                              ),
+                                              initialScale:
+                                                  PhotoViewComputedScale
+                                                          .contained *
+                                                      1,
+                                              minScale: PhotoViewComputedScale
+                                                      .contained *
                                                   1,
-                                          minScale:
-                                              PhotoViewComputedScale.contained *
-                                                  1,
-                                          maxScale:
-                                              PhotoViewComputedScale.contained *
+                                              maxScale: PhotoViewComputedScale
+                                                      .contained *
                                                   2,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(
-                                              FontAwesomeIcons
-                                                  .circleExclamation,
-                                              size: 20,
-                                              color: redColor,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return const Icon(
+                                                  FontAwesomeIcons
+                                                      .circleExclamation,
+                                                  size: 20,
+                                                  color: redColor,
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                      loadingBuilder: (context, event) {
-                                        return const Center(
-                                          child: SpinKitFadingCube(
-                                            color: greyColor,
-                                            size: 20,
-                                            duration:
-                                                Duration(milliseconds: 1000),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    Positioned(
-                                      top: 15,
-                                      right: 15,
-                                      child: IconButton(
-                                        onPressed: () => Get.back(),
-                                        splashColor: blueColor,
-                                        splashRadius: 30,
-                                        icon: const Icon(
-                                          FontAwesomeIcons.circleXmark,
-                                          size: 30,
-                                          color: whiteColor,
-                                          shadows: [
-                                            BoxShadow(
-                                              offset: Offset(0, 0),
-                                              blurRadius: 15,
-                                              spreadRadius: 15,
-                                            ),
-                                          ],
+                                          loadingBuilder: (context, event) {
+                                            return const Center(
+                                              child: SpinKitFadingCircle(
+                                                color: greyColor,
+                                                size: 20,
+                                                duration: Duration(
+                                                    milliseconds: 1000),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                      ),
+                                        Positioned(
+                                          top: 15,
+                                          right: 15,
+                                          child: IconButton(
+                                            onPressed: () => Get.back(),
+                                            splashColor: blueColor,
+                                            splashRadius: 30,
+                                            icon: const Icon(
+                                              FontAwesomeIcons.circleXmark,
+                                              size: 30,
+                                              color: whiteColor,
+                                              shadows: [
+                                                BoxShadow(
+                                                  offset: Offset(0, 0),
+                                                  blurRadius: 15,
+                                                  spreadRadius: 15,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.3,
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: CachedNetworkImage(
-                              imageUrl: profileImage,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) {
-                                return const Icon(
-                                  FontAwesomeIcons.circleExclamation,
-                                  size: 30,
-                                  color: redColor,
-                                );
-                              },
-                              placeholder: (context, url) {
-                                return const Center(
-                                  child: SpinKitFadingCube(
-                                    color: lightBlackColor,
-                                    size: 30,
-                                    duration: Duration(milliseconds: 1000),
                                   ),
                                 );
                               },
                             ),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: profileImage,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      FontAwesomeIcons.circleExclamation,
+                                      size: 30,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Center(
+                                      child: SpinKitFadingCircle(
+                                        color: lightBlackColor,
+                                        size: 30,
+                                        duration: Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Builder(builder: (context) {
+                                return Text(
+                                  numberFormat.format(followers),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: const TextStyle(
+                                    color: blackColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              }),
+                              const Text(
+                                'Followers',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                numberFormat.format(following),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(
+                                  color: blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const Text(
+                                'Following',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    name,
-                    maxLines: 2,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      color: blackColor,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  name,
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: blackColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                if (bio != '')
-                  GestureDetector(
+              ),
+              if (bio != '')
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => Get.to(
                       () => FullBioScreen(bio: bio),
@@ -259,105 +534,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       softWrap: true,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
+                      style: const TextStyle(
                         color: blackColor,
                         fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                const SizedBox(
-                  height: 10,
                 ),
-                if (address != '')
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: ShapeDecoration(
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      color: greyColor,
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 10,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.mapLocationDot,
-                          color: blueColor,
-                          size: 20,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          child: AutoSizeText(
-                            address,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style: GoogleFonts.poppins(
-                              color: lightBlackColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+              const SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Member since - ${DateFormat.yMMM().format(dateJoined)}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  style: const TextStyle(
+                    color: lightBlackColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
                   ),
+                ),
+              ),
+              if (address != '')
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    'Joined ${timeago.format(dateJoined)}',
+                    address,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: GoogleFonts.poppins(
+                    style: const TextStyle(
                       color: lightBlackColor,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                       fontSize: 14,
                     ),
                   ),
                 ),
-                const Divider(
-                  height: 30,
-                  indent: 15,
-                  endIndent: 15,
-                  color: lightBlackColor,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: isFollowing
+                    ? CustomButton(
+                        text: 'Unfollow',
+                        onPressed: () {
+                          services.followUser(
+                            currentUserId: user!.uid,
+                            userId: sellerUid,
+                            isFollowed: false,
+                          );
+                          setState(() {
+                            isFollowing = false;
+                          });
+                        },
+                        icon: FontAwesomeIcons.userMinus,
+                        borderColor: blackColor,
+                        bgColor: blackColor,
+                        textIconColor: whiteColor,
+                      )
+                    : CustomButton(
+                        text: 'Follow',
+                        onPressed: () {
+                          services.followUser(
+                            currentUserId: user!.uid,
+                            userId: sellerUid,
+                            isFollowed: true,
+                          );
+                          setState(() {
+                            isFollowing = true;
+                          });
+                        },
+                        icon: FontAwesomeIcons.userPlus,
+                        borderColor: blueColor,
+                        bgColor: blueColor,
+                        textIconColor: whiteColor,
                       ),
-                      child: Text(
-                        'From this Seller',
-                        maxLines: 1,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22,
-                        ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                    ),
+                    child: Text(
+                      'Currently Selling',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
                       ),
                     ),
-                    SellerProductsList(
-                      sellerUid: sellerUid,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  SellerProductsList(
+                    sellerUid: sellerUid,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -395,93 +678,94 @@ class _SellerProductsListState extends State<SellerProductsList> {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCube(
+              child: SpinKitFadingCircle(
                 color: lightBlackColor,
                 size: 20,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
           );
-        } else if (snapshot.hasError) {
-          return Center(
+        }
+        if (snapshot.hasError) {
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
               ),
             ),
           );
-        } else if (snapshot.hasData && snapshot.docs.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.all(15),
+        }
+        if (snapshot.hasData && snapshot.docs.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(15),
             child: Center(
               child: Text(
-                'No listings from this seller',
+                'No products from this seller',
                 maxLines: 2,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
               ),
             ),
           );
-        } else {
-          return ListView.separated(
-            separatorBuilder: (context, index) {
-              return const SizedBox(
-                height: 13,
-              );
-            },
-            padding: const EdgeInsets.only(
-              left: 15,
-              top: 10,
-              right: 15,
-              bottom: 30,
-            ),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.docs.length,
-            itemBuilder: (context, index) {
-              var data = snapshot.docs[index];
-              var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-              var sellerDetails = _services.getUserData(data['sellerUid']);
-              final hasMoreReached = snapshot.hasMore &&
-                  index + 1 == snapshot.docs.length &&
-                  !snapshot.isFetchingMore;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CustomProductCard(
-                    data: data,
-                    sellerDetails: sellerDetails,
-                    time: time,
-                  ),
-                  if (hasMoreReached)
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  if (hasMoreReached)
-                    CustomButton(
-                      text: 'Load more',
-                      onPressed: () => snapshot.fetchMore(),
-                      icon: FontAwesomeIcons.chevronDown,
-                      borderColor: blackColor,
-                      bgColor: blackColor,
-                      textIconColor: whiteColor,
-                    ),
-                ],
-              );
-            },
-            physics: const BouncingScrollPhysics(),
-          );
         }
+        return ListView.separated(
+          separatorBuilder: (context, index) {
+            return const SizedBox(
+              height: 13,
+            );
+          },
+          padding: const EdgeInsets.only(
+            left: 15,
+            top: 10,
+            right: 15,
+            bottom: 15,
+          ),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: snapshot.docs.length,
+          itemBuilder: (context, index) {
+            var data = snapshot.docs[index];
+            var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
+            var sellerDetails = _services.getUserData(data['sellerUid']);
+            final hasMoreReached = snapshot.hasMore &&
+                index + 1 == snapshot.docs.length &&
+                !snapshot.isFetchingMore;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CustomProductCard(
+                  data: data,
+                  sellerDetails: sellerDetails,
+                  time: time,
+                ),
+                if (hasMoreReached)
+                  const SizedBox(
+                    height: 10,
+                  ),
+                if (hasMoreReached)
+                  CustomButton(
+                    text: 'Load More Products',
+                    onPressed: () => snapshot.fetchMore(),
+                    icon: FontAwesomeIcons.plus,
+                    borderColor: blueColor,
+                    bgColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+              ],
+            );
+          },
+          physics: const BouncingScrollPhysics(),
+        );
       },
     );
   }

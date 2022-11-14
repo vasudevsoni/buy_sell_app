@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomButtonWithoutIcon extends StatelessWidget {
   final String text;
@@ -23,32 +23,33 @@ class CustomButtonWithoutIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        HapticFeedback.vibrate();
+        onPressed();
+      },
       behavior: HitTestBehavior.opaque,
       child: Container(
-        height: 45,
+        height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: ShapeDecoration(
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(
-              color: borderColor,
-              strokeAlign: StrokeAlign.center,
-              width: 1.2,
-            ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: borderColor,
+            strokeAlign: StrokeAlign.center,
+            width: 1.2,
           ),
           color: bgColor,
         ),
         child: Center(
           child: AutoSizeText(
-            text.toUpperCase(),
+            text,
             maxLines: 2,
             softWrap: true,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14.5,
               color: textIconColor,
             ),
           ),

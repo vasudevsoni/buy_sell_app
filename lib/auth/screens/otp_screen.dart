@@ -1,17 +1,16 @@
-import 'package:buy_sell_app/utils/utils.dart';
-import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 import 'package:pinput/pinput.dart';
 
-import '../../widgets/timer_button.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/widgets/timer_button.dart';
 import '../services/phone_auth_service.dart';
 
 class OTPScreen extends StatefulWidget {
-  static const String routeName = '/otp-screen';
   final String verificationId;
   final String mobileNumber;
   const OTPScreen({
@@ -43,10 +42,10 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
       height: 60,
-      textStyle: GoogleFonts.poppins(
+      textStyle: const TextStyle(
         fontSize: 22,
         color: blackColor,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w800,
       ),
       decoration: BoxDecoration(
         color: greyColor,
@@ -94,18 +93,16 @@ class _OTPScreenState extends State<OTPScreen> {
           smsCode: userOTP,
         );
         await auth.signInWithCredential(credential).then((value) {
-          _services.addUser(context, value.user);
+          _services.addUser(value.user);
         }).catchError((err) {
           showSnackBar(
-            context: context,
-            content: 'Login failed. Please try again.',
+            content: 'Login failed. Please try again',
             color: redColor,
           );
         });
       } on FirebaseAuthException {
         showSnackBar(
-          context: context,
-          content: 'Invalid OTP. Please try again.',
+          content: 'Invalid OTP. Please try again',
           color: redColor,
         );
       }
@@ -118,9 +115,10 @@ class _OTPScreenState extends State<OTPScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Verification code',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -131,14 +129,17 @@ class _OTPScreenState extends State<OTPScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Center(
                 child: Text(
                   'Enter the code sent to ${widget.mobileNumber}.',
-                  style: GoogleFonts.poppins(
+                  style: const TextStyle(
                     color: lightBlackColor,
-                    fontSize: 13,
+                    fontSize: 15,
                   ),
                 ),
               ),
@@ -171,17 +172,34 @@ class _OTPScreenState extends State<OTPScreen> {
                 );
               },
             ),
+            const SizedBox(
+              height: 5,
+            ),
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text(
+                'Change mobile number',
+                style: TextStyle(
+                  color: blueColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+            ),
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 'Didn\'t receive the code?',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: 16,
                 ),
               ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             noOfResends < 5
                 ? TimerButton(
@@ -194,10 +212,10 @@ class _OTPScreenState extends State<OTPScreen> {
                       });
                     },
                     disabledColor: greyColor,
-                    color: blackColor,
+                    color: blueColor,
                   )
                 : CustomButtonWithoutIcon(
-                    text: 'OTP Limit exceeded',
+                    text: 'OTP Limit Exceeded',
                     onPressed: () {},
                     isDisabled: true,
                     borderColor: lightBlackColor,

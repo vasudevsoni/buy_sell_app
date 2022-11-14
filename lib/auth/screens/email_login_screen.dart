@@ -1,19 +1,17 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/utils/utils.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_text_field.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_text_field.dart';
 import '../services/email_auth_service.dart';
-import '../../auth/screens/email_register_screen.dart';
-import '../../auth/screens/forgot_password_screen.dart';
+import '/auth/screens/email_register_screen.dart';
+import '/auth/screens/forgot_password_screen.dart';
 
 class EmailLoginScreen extends StatefulWidget {
-  static const String routeName = '/email-login-screen';
   const EmailLoginScreen({super.key});
 
   @override
@@ -56,14 +54,16 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0.5,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
-          'Login with your Email',
-          style: GoogleFonts.poppins(
+        title: const Text(
+          'Login with your email',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -115,7 +115,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
-                        } else if (value.length < 6) {
+                        }
+                        if (value.length < 6) {
                           return 'Password must be 6 to 15 characters long';
                         }
                         return null;
@@ -148,13 +149,15 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () =>
-                        Get.toNamed(ForgotPasswordScreen.routeName),
-                    child: Text(
+                    onPressed: () => Get.to(
+                      () => const ForgotPasswordScreen(),
+                    ),
+                    child: const Text(
                       'Forgot password?',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: blueColor,
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -162,16 +165,19 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () => Get.offNamed(EmailRegisterScreen.routeName),
-                child: AutoSizeText(
+                onPressed: () => Get.off(
+                  () => const EmailRegisterScreen(),
+                ),
+                child: const AutoSizeText(
                   'Don\'t have an account? Create one',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: blueColor,
+                    fontSize: 15,
                   ),
                 ),
               ),
@@ -191,8 +197,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   : CustomButton(
                       text: 'Login',
                       icon: FontAwesomeIcons.rightToBracket,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),

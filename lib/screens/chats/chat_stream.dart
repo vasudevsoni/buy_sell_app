@@ -1,14 +1,12 @@
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
-import 'package:buy_sell_app/services/firebase_services.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
 
-import '../../utils/utils.dart';
+import '/services/firebase_services.dart';
+import '/utils/utils.dart';
 
 class ChatStream extends StatefulWidget {
   final String chatRoomId;
@@ -37,51 +35,59 @@ class _ChatStreamState extends State<ChatStream> {
         AsyncSnapshot<QuerySnapshot> snapshot,
       ) {
         if (snapshot.hasError) {
-          return Center(
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
               ),
             ),
           );
-        } else if (snapshot.hasData && snapshot.data!.size == 0) {
-          return Padding(
-            padding: const EdgeInsets.all(15),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'No messages here.\nStart by sending a \'Hi\'.',
-                    maxLines: 2,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                    ),
+        }
+        if (snapshot.hasData && snapshot.data!.size == 0) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'No messages here yet!',
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
                   ),
-                  const Icon(
-                    FontAwesomeIcons.mitten,
-                    color: blueColor,
-                    size: 20,
-                  ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Start by sending a Hi',
+                maxLines: 2,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCube(
+              child: SpinKitFadingCircle(
                 color: lightBlackColor,
                 size: 20,
                 duration: Duration(milliseconds: 1000),
@@ -110,30 +116,30 @@ class _ChatStreamState extends State<ChatStream> {
               children: [
                 snapshot.data!.docs[index]['isOffer'] == true
                     ? BubbleNormal(
-                        bubbleRadius: 10,
+                        bubbleRadius: 5,
                         text: snapshot.data!.docs[index]['message'],
                         color: redColor,
                         isSender: sentBy == me ? true : false,
                         tail: true,
-                        textStyle: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
                           color: whiteColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                         ),
                       )
                     : BubbleNormal(
-                        bubbleRadius: 10,
+                        bubbleRadius: 5,
                         text: snapshot.data!.docs[index]['message'],
                         color: sentBy == me ? blueColor : greyColor,
                         isSender: sentBy == me ? true : false,
                         tail: true,
                         textStyle: sentBy == me
-                            ? GoogleFonts.poppins(
+                            ? const TextStyle(
                                 color: whiteColor,
-                                fontSize: 14,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w600,
                               )
-                            : GoogleFonts.poppins(
+                            : const TextStyle(
                                 color: blackColor,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -151,10 +157,10 @@ class _ChatStreamState extends State<ChatStream> {
                             children: [
                               Text(
                                 time,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   color: blackColor,
                                   fontSize: 10,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(
@@ -162,10 +168,10 @@ class _ChatStreamState extends State<ChatStream> {
                               ),
                               Text(
                                 date,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   color: fadedColor,
                                   fontSize: 10,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -175,10 +181,10 @@ class _ChatStreamState extends State<ChatStream> {
                             children: [
                               Text(
                                 date,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   color: fadedColor,
                                   fontSize: 10,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(
@@ -186,10 +192,10 @@ class _ChatStreamState extends State<ChatStream> {
                               ),
                               Text(
                                 time,
-                                style: GoogleFonts.poppins(
+                                style: const TextStyle(
                                   color: blackColor,
                                   fontSize: 10,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],

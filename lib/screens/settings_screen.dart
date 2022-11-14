@@ -1,18 +1,18 @@
-import 'package:buy_sell_app/auth/screens/location_screen.dart';
-import 'package:buy_sell_app/services/firebase_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:store_redirect/store_redirect.dart';
 
-import '../auth/screens/landing_screen.dart';
-import '../utils/utils.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_list_tile_no_image.dart';
+import '../widgets/custom_button_without_icon.dart';
+import '/auth/screens/location_screen.dart';
+import '/widgets/custom_list_tile_with_subtitle.dart';
+import '/services/firebase_services.dart';
+import '/auth/screens/landing_screen.dart';
+import '/utils/utils.dart';
 
 class SettingsScreen extends StatefulWidget {
-  static const String routeName = '/settings-screen';
   const SettingsScreen({super.key});
 
   @override
@@ -28,23 +28,117 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    if (mounted) {
-      _services.getCurrentUserData().then((value) {
-        if (value['location'] == null) {
-          return;
-        } else {
-          setState(() {
-            address =
-                '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
-            country = value['location']['country'];
-          });
-        }
-      });
-      setState(() {
-        signInMethod = user!.providerData[0].providerId.toString();
-      });
+    if (!mounted) {
+      return;
     }
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] == null) {
+        return;
+      }
+      setState(() {
+        address =
+            '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
+        country = value['location']['country'];
+      });
+    });
+    setState(() {
+      signInMethod = user!.providerData[0].providerId.toString();
+    });
     super.initState();
+  }
+
+  showLogoutConfirmation() {
+    showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: transparentColor,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Are you sure?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: greyColor,
+                  ),
+                  child: const Text(
+                    'Are you sure you want to log out of your account? You will need to log in again to access your account.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Yes, Log Out',
+                  onPressed: () async {
+                    Get.back();
+                    await FirebaseAuth.instance.signOut().then(
+                          (value) => Get.off(
+                            () => const LandingScreen(),
+                          ),
+                        );
+                  },
+                  bgColor: whiteColor,
+                  borderColor: redColor,
+                  textIconColor: redColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'No, Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -56,9 +150,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Settings',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -71,202 +166,131 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Text(
+              child: const Text(
                 'Account',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   color: blackColor,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            GestureDetector(
+            CustomListTileWithSubtitle(
+              text: 'Location',
+              subTitle: address == '' ? 'No location selected' : address,
+              icon: FontAwesomeIcons.locationDot,
+              trailingIcon: FontAwesomeIcons.chevronRight,
               onTap: () => Get.to(
                 () => const LocationScreen(
                   isOpenedFromSellButton: false,
                 ),
               ),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                margin: const EdgeInsets.only(
-                  top: 5,
-                  bottom: 5,
-                  left: 15,
-                  right: 15,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 20,
-                ),
-                width: MediaQuery.of(context).size.width,
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  color: greyColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Location',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Text(
-                      address == '' ? 'No location selected' : address,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: true,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        color: lightBlackColor,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                top: 5,
-                bottom: 5,
-                left: 15,
-                right: 15,
-              ),
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
-              ),
-              width: MediaQuery.of(context).size.width,
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                color: greyColor,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Nationality',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    country == '' ? 'No location selected' : country,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      color: lightBlackColor,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
+              isEnabled: true,
             ),
             if (signInMethod == 'phone')
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomListTileNoImage(
-                  text: 'Signed in using',
-                  icon: FontAwesomeIcons.phone,
-                  onTap: () {},
-                ),
+              CustomListTileWithSubtitle(
+                text: 'Signed in using',
+                subTitle: 'Mobile Number',
+                icon: FontAwesomeIcons.rightToBracket,
+                isEnabled: false,
+                onTap: () {},
               ),
             if (signInMethod == 'google.com')
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomListTileNoImage(
-                  text: 'Signed in using',
-                  icon: FontAwesomeIcons.google,
-                  onTap: () {},
-                ),
+              CustomListTileWithSubtitle(
+                text: 'Logged in using',
+                subTitle: 'Google',
+                icon: FontAwesomeIcons.rightToBracket,
+                isEnabled: false,
+                onTap: () {},
               ),
             if (signInMethod == 'password')
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CustomListTileNoImage(
-                  text: 'Signed in using',
-                  icon: FontAwesomeIcons.solidEnvelope,
-                  onTap: () {},
-                ),
+              CustomListTileWithSubtitle(
+                text: 'Logged in using',
+                subTitle: 'Email Address',
+                icon: FontAwesomeIcons.rightToBracket,
+                isEnabled: false,
+                onTap: () {},
               ),
+            CustomListTileWithSubtitle(
+              text: 'Unique User Id',
+              subTitle: user!.uid,
+              icon: FontAwesomeIcons.idBadge,
+              onTap: () {},
+              isEnabled: false,
+            ),
+            const Divider(
+              height: 0,
+              indent: 15,
+              color: lightBlackColor,
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Text(
-                'Support',
-                style: GoogleFonts.poppins(
+              child: const Text(
+                'Actions',
+                style: TextStyle(
                   color: blackColor,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomListTileNoImage(
-                text: 'Help & Support',
-                icon: FontAwesomeIcons.headset,
-                onTap: () {},
-              ),
+            CustomListTileWithSubtitle(
+              text: 'Rate us on Play Store',
+              subTitle:
+                  'If you love our app, please take a moment to rate it on the Play Store',
+              icon: FontAwesomeIcons.solidStar,
+              textColor: blueColor,
+              trailingIcon: FontAwesomeIcons.chevronRight,
+              isEnabled: true,
+              onTap: () {
+                StoreRedirect.redirect();
+              },
+            ),
+            CustomListTileWithSubtitle(
+              text: 'Invite friends to BestDeal',
+              subTitle: 'Invite your friends to buy and sell',
+              icon: FontAwesomeIcons.users,
+              trailingIcon: FontAwesomeIcons.chevronRight,
+              isEnabled: true,
+              onTap: () {
+                Share.share(
+                    'I found some amazing deals on the BestDeal app. Download it now - https://play.google.com/store/apps/details?id=com.vasudevsoni.buy_sell_app');
+              },
+            ),
+            CustomListTileWithSubtitle(
+              text: 'Log out',
+              subTitle: 'Log out of your account from this device',
+              onTap: showLogoutConfirmation,
+              icon: FontAwesomeIcons.rightFromBracket,
+              trailingIcon: FontAwesomeIcons.chevronRight,
+              isEnabled: true,
+            ),
+            const Divider(
+              height: 0,
+              indent: 15,
+              color: lightBlackColor,
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               width: MediaQuery.of(context).size.width,
-              child: Text(
-                'About',
-                style: GoogleFonts.poppins(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: const Text(
+                'Danger Zone',
+                style: TextStyle(
                   color: blackColor,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomListTileNoImage(
-                text: 'Terms & Conditions',
-                icon: FontAwesomeIcons.bookOpen,
-                onTap: () {},
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomListTileNoImage(
-                text: 'Privacy',
-                icon: FontAwesomeIcons.lock,
-                onTap: () {},
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomListTileNoImage(
-                text: 'Version - 1.0.0',
-                icon: FontAwesomeIcons.mobile,
-                onTap: () {},
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: CustomButton(
-                text: 'Log out',
-                onPressed: () => FirebaseAuth.instance
-                    .signOut()
-                    .then((value) => Get.offNamed(LandingScreen.routeName)),
-                icon: FontAwesomeIcons.rightFromBracket,
-                bgColor: whiteColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              ),
+            CustomListTileWithSubtitle(
+              text: 'Delete account',
+              subTitle: 'This will delete all your data',
+              onTap: () {},
+              textColor: redColor,
+              icon: FontAwesomeIcons.trash,
+              trailingIcon: FontAwesomeIcons.chevronRight,
+              isEnabled: true,
             ),
           ],
         ),

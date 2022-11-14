@@ -1,13 +1,11 @@
-import 'package:buy_sell_app/screens/search_results_screen.dart';
-import 'package:buy_sell_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/utils.dart';
+import 'search_results_screen.dart';
+import '/widgets/custom_text_field.dart';
+import '/utils/utils.dart';
 
 class SearchFieldScreen extends StatefulWidget {
-  static const String routeName = '/search-field-screen';
   const SearchFieldScreen({super.key});
 
   @override
@@ -32,9 +30,10 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
         elevation: 0.5,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Search',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),

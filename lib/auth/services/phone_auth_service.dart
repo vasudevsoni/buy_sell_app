@@ -1,11 +1,11 @@
-import 'package:buy_sell_app/screens/main_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../../utils/utils.dart';
-import '../../auth/screens/otp_screen.dart';
+import '/screens/main_screen.dart';
+import '/utils/utils.dart';
+import '/auth/screens/otp_screen.dart';
 
 class PhoneAuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -25,14 +25,13 @@ class PhoneAuthService {
       },
       verificationFailed: (FirebaseAuthException e) {
         showSnackBar(
-          context: context,
-          content: 'Something has gone wrong. Please try again.',
+          content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
       },
       codeSent: ((String verificationId, int? resendToken) async {
         _resendToken = resendToken;
-        if (isResend == false) {
+        if (!isResend) {
           Get.to(
             () => OTPScreen(
               mobileNumber: phoneNumber,
@@ -47,15 +46,12 @@ class PhoneAuthService {
     );
   }
 
-  Future<void> addUser(context, User? user) async {
+  Future<void> addUser(User? user) async {
     final QuerySnapshot result =
         await users.where('uid', isEqualTo: user!.uid).get();
     List<DocumentSnapshot> document = result.docs;
-    if (document.isNotEmpty) {
-      //if user already exists in database, just navigate him
-      Get.offAll(() => const MainScreen(selectedIndex: 0));
-    } else {
-      //if user does not exists in database, add him to db and then navigate
+    //if user does not exists in database, add him and then navigate to main screen
+    if (document.isEmpty) {
       try {
         return users.doc(user.uid).set({
           'uid': user.uid,
@@ -67,16 +63,20 @@ class PhoneAuthService {
           'dateJoined': DateTime.now().millisecondsSinceEpoch,
           'dob': null,
           'profileImage': null,
+          'followers': [],
+          'following': [],
         }).then((value) {
           Get.offAll(() => const MainScreen(selectedIndex: 0));
         });
       } on FirebaseAuthException catch (_) {
         showSnackBar(
-          context: context,
-          content: 'Something has gone wrong. Please try again.',
+          content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
       }
+      return;
     }
+    //if user already exists in database, just navigate him
+    Get.offAll(() => const MainScreen(selectedIndex: 0));
   }
 }

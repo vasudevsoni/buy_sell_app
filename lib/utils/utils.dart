@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 void showSnackBar({
-  required BuildContext context,
   required String content,
   required Color color,
 }) {
@@ -16,7 +15,7 @@ void showSnackBar({
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         softWrap: true,
-        style: GoogleFonts.poppins(
+        style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
           color: whiteColor,
@@ -26,11 +25,27 @@ void showSnackBar({
       backgroundColor: color,
       duration: const Duration(seconds: 4),
       snackStyle: SnackStyle.GROUNDED,
+      dismissDirection: DismissDirection.up,
       snackPosition: SnackPosition.TOP,
     ),
   );
 }
 
+var priceFormat = NumberFormat.currency(
+  locale: 'HI',
+  decimalDigits: 0,
+  symbol: '₹',
+  name: '',
+);
+
+var kmFormat = NumberFormat.currency(
+  locale: 'HI',
+  decimalDigits: 0,
+  symbol: '',
+  name: '',
+);
+
+const transparentColor = Colors.transparent;
 const whiteColor = Color(0xffffffff);
 const pinkColor = Color(0xffff4d6d);
 const redColor = Color(0xffe5383b);

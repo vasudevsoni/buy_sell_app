@@ -1,20 +1,18 @@
-import 'package:buy_sell_app/screens/product_details_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
-import '../../utils/utils.dart';
-import '../../screens/chats/chat_stream.dart';
-import '../../services/firebase_services.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_button_without_icon.dart';
-import '../../widgets/custom_text_field.dart';
+import '/utils/utils.dart';
+import '/screens/product_details_screen.dart';
+import '/screens/chats/chat_stream.dart';
+import '/services/firebase_services.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/widgets/custom_text_field.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
@@ -44,13 +42,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   late DocumentSnapshot prod;
   late DocumentSnapshot sellerData;
   bool isLoading = false;
-
-  var priceFormat = NumberFormat.currency(
-    locale: 'HI',
-    decimalDigits: 0,
-    symbol: '₹',
-    name: '',
-  );
 
   @override
   void initState() {
@@ -101,7 +92,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
     };
     await _services.sendChat(
       chatRoomId: widget.chatRoomId,
-      context: context,
       message: message,
     );
     offerPriceController.clear();
@@ -110,18 +100,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
   showMakeOfferDialog() {
     showModalBottomSheet<dynamic>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: transparentColor,
       isScrollControlled: true,
       builder: (context) {
         return SafeArea(
           child: Container(
-            decoration: ShapeDecoration(
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
               color: whiteColor,
             ),
-            margin: const EdgeInsets.all(15),
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 15,
               left: 15,
@@ -145,9 +135,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
+                const Text(
                   'Make an offer 💵',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -164,11 +154,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  style: GoogleFonts.poppins(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Offer price*',
+                    labelText: 'Offer price',
                     hintText: 'Enter a price you want to pay',
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 15,
@@ -179,7 +169,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     filled: true,
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.transparent,
+                        color: transparentColor,
                         width: 0,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -187,7 +177,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.transparent,
+                        color: transparentColor,
                         width: 0,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -195,16 +185,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     errorBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.red,
+                        color: redColor,
                         width: 1.5,
                         strokeAlign: StrokeAlign.inside,
                       ),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    errorStyle: GoogleFonts.poppins(
+                    errorStyle: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Colors.red,
+                      color: redColor,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
@@ -223,16 +213,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.normal,
                       color: greyColor,
                     ),
-                    labelStyle: GoogleFonts.poppins(
+                    labelStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
                     ),
-                    floatingLabelStyle: GoogleFonts.poppins(
+                    floatingLabelStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 15,
                       color: lightBlackColor,
@@ -244,15 +234,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
                 CustomButton(
                   icon: FontAwesomeIcons.arrowRight,
-                  text: 'Send offer',
+                  text: 'Send Offer',
                   onPressed: () {
-                    if (offerPriceController.text.isNotEmpty) {
-                      final offerPrice = priceFormat
-                          .format(int.parse(offerPriceController.text));
-                      sendOfferMessage(
-                          'I would like to buy this for $offerPrice');
-                      Get.back();
+                    if (offerPriceController.text.isEmpty) {
+                      return;
                     }
+                    final offerPrice = priceFormat
+                        .format(int.parse(offerPriceController.text));
+                    sendOfferMessage(
+                        'I would like to buy this for $offerPrice');
+                    Get.back();
                   },
                   bgColor: blueColor,
                   borderColor: blueColor,
@@ -276,20 +267,112 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
-  showOptionsDialog() {
-    showModalBottomSheet(
+  showDeleteDialog() {
+    showModalBottomSheet<dynamic>(
       context: context,
-      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      backgroundColor: transparentColor,
       builder: (context) {
         return SafeArea(
           child: Container(
-            decoration: ShapeDecoration(
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
               color: whiteColor,
             ),
-            margin: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Are you sure?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: greyColor,
+                  ),
+                  child: const Text(
+                    'Are you sure you want to delete this chat? This action cannot be reversed.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'Yes, Delete',
+                  onPressed: () {
+                    _services.deleteChat(
+                      chatRoomId: widget.chatRoomId,
+                    );
+                    Get.back();
+                    Get.back();
+                  },
+                  bgColor: whiteColor,
+                  borderColor: redColor,
+                  textIconColor: redColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'No, Cancel',
+                  onPressed: () => Get.back(),
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  showOptionsDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: transparentColor,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
             padding: const EdgeInsets.all(15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,18 +393,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
                 CustomButton(
                   icon: FontAwesomeIcons.trash,
-                  text: 'Delete chat',
-                  onPressed: () async {
-                    await _services.deleteChat(
-                      chatRoomId: widget.chatRoomId,
-                      context: context,
-                    );
+                  text: 'Delete Chat',
+                  onPressed: () {
                     Get.back();
-                    Get.back();
+                    showDeleteDialog();
                   },
-                  bgColor: redColor,
+                  bgColor: whiteColor,
                   borderColor: redColor,
-                  textIconColor: whiteColor,
+                  textIconColor: redColor,
                 ),
                 const SizedBox(
                   height: 10,
@@ -342,20 +421,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   sendMessage() async {
-    if (chatMessageController.text.isNotEmpty) {
-      Map<String, dynamic> message = {
-        'message': chatMessageController.text,
-        'sentBy': _services.user!.uid,
-        'time': DateTime.now().microsecondsSinceEpoch,
-        'isOffer': false,
-      };
-      chatMessageController.clear();
-      await _services.sendChat(
-        chatRoomId: widget.chatRoomId,
-        context: context,
-        message: message,
-      );
+    if (chatMessageController.text.isEmpty) {
+      return;
     }
+    Map<String, dynamic> message = {
+      'message': chatMessageController.text,
+      'sentBy': _services.user!.uid,
+      'time': DateTime.now().microsecondsSinceEpoch,
+      'isOffer': false,
+    };
+    chatMessageController.clear();
+    await _services.sendChat(
+      chatRoomId: widget.chatRoomId,
+      message: message,
+    );
   }
 
   @override
@@ -389,16 +468,24 @@ class _ConversationScreenState extends State<ConversationScreen> {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: sellerUid == _services.user!.uid
-            ? Text(
+            ? const Text(
                 'Chat with buyer',
-                style: GoogleFonts.poppins(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 15,
                 ),
               )
-            : Text(
+            : const Text(
                 'Chat with seller',
-                style: GoogleFonts.poppins(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 15,
                 ),
@@ -408,7 +495,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ? const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCube(
+                child: SpinKitFadingCircle(
                   color: lightBlackColor,
                   size: 30,
                   duration: Duration(milliseconds: 1000),
@@ -417,87 +504,76 @@ class _ConversationScreenState extends State<ConversationScreen> {
             )
           : Column(
               children: [
-                Neumorphic(
-                  style: NeumorphicStyle(
-                    lightSource: LightSource.top,
-                    shape: NeumorphicShape.convex,
-                    depth: 0,
-                    intensity: 0,
-                    boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.circular(0),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => Get.to(
+                    () => ProductDetailsScreen(
+                      productData: prod,
+                      sellerData: sellerData,
                     ),
                   ),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Get.to(
-                      () => ProductDetailsScreen(
-                        productData: prod,
-                        sellerData: sellerData,
-                      ),
-                    ),
-                    child: Container(
-                      color: blueColor,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.20,
-                            height: MediaQuery.of(context).size.width * 0.20,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      FontAwesomeIcons.circleExclamation,
-                                      size: 15,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Icon(
-                                      FontAwesomeIcons.solidImage,
-                                      size: 15,
-                                      color: lightBlackColor,
-                                    );
-                                  },
-                                ),
+                  child: Container(
+                    color: blueColor,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.20,
+                          height: MediaQuery.of(context).size.width * 0.20,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    FontAwesomeIcons.circleExclamation,
+                                    size: 15,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Icon(
+                                    FontAwesomeIcons.solidImage,
+                                    size: 15,
+                                    color: lightBlackColor,
+                                  );
+                                },
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  title,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: whiteColor,
-                                  ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: whiteColor,
                                 ),
-                                Text(
-                                  priceFormat.format(price),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: whiteColor,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              Text(
+                                priceFormat.format(price),
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                  color: whiteColor,
+                                ),
+                              )
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -505,13 +581,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   child: ChatStream(chatRoomId: widget.chatRoomId),
                 ),
                 if (isActive == true)
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: Text(
                       'Note - Never share confidential information like passwords, card details, bank details etc.',
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
+                      style: TextStyle(
+                        fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: lightBlackColor,
                       ),
@@ -523,14 +598,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         height: 80,
                         padding: const EdgeInsets.all(15),
                         width: MediaQuery.of(context).size.width,
-                        child: Center(
+                        child: const Center(
                           child: Text(
-                            'This item is currently unavailable.',
+                            'This product is currently unavailable.',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
+                            style: TextStyle(
+                              fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: whiteColor,
                             ),
@@ -560,18 +635,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             if (sellerUid != _services.user!.uid)
                               Padding(
                                 padding: const EdgeInsets.only(left: 15),
-                                child: NeumorphicFloatingActionButton(
+                                child: FloatingActionButton(
                                   onPressed: showMakeOfferDialog,
                                   tooltip: 'Make an offer',
-                                  style: NeumorphicStyle(
-                                    lightSource: LightSource.top,
-                                    shape: NeumorphicShape.convex,
-                                    depth: 2,
-                                    intensity: 0.2,
-                                    color: Colors.green,
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.circular(5),
-                                    ),
+                                  backgroundColor: Colors.green,
+                                  elevation: 0,
+                                  highlightElevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(
                                     FontAwesomeIcons.indianRupeeSign,
@@ -582,18 +653,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                             Padding(
                               padding: const EdgeInsets.only(left: 15),
-                              child: NeumorphicFloatingActionButton(
+                              child: FloatingActionButton(
                                 onPressed: sendMessage,
                                 tooltip: 'Send message',
-                                style: NeumorphicStyle(
-                                  lightSource: LightSource.top,
-                                  shape: NeumorphicShape.convex,
-                                  depth: 2,
-                                  intensity: 0.2,
-                                  color: blueColor,
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.circular(5),
-                                  ),
+                                backgroundColor: blueColor,
+                                elevation: 0,
+                                highlightElevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(
                                   FontAwesomeIcons.solidPaperPlane,

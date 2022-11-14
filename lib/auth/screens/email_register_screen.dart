@@ -1,18 +1,16 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/auth/services/email_auth_service.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../utils/utils.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_text_field.dart';
+import '/utils/utils.dart';
+import '../services/email_auth_service.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_text_field.dart';
 import 'email_login_screen.dart';
 
 class EmailRegisterScreen extends StatefulWidget {
-  static const String routeName = '/email-register-screen';
   const EmailRegisterScreen({super.key});
 
   @override
@@ -64,9 +62,10 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
-          'Register with your Email',
-          style: GoogleFonts.poppins(
+        title: const Text(
+          'Register with your email',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -139,7 +138,8 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a password';
-                        } else if (value.length < 6) {
+                        }
+                        if (value.length < 6) {
                           return 'Password must be 6 to 15 characters long';
                         }
                         return null;
@@ -167,15 +167,18 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () => Get.offNamed(EmailLoginScreen.routeName),
-                child: AutoSizeText(
+                onPressed: () => Get.off(
+                  () => const EmailLoginScreen(),
+                ),
+                child: const AutoSizeText(
                   'Already have an account? Login',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: blueColor,
+                    fontSize: 15,
                   ),
                 ),
               ),
@@ -193,10 +196,10 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       isDisabled: isLoading,
                     )
                   : CustomButton(
-                      text: 'Create account',
+                      text: 'Create Account',
                       icon: FontAwesomeIcons.userPlus,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),

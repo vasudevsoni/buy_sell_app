@@ -1,9 +1,7 @@
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'dart:async';
-
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 
 const int aSec = 1;
 const String _secPostFix = 's';
@@ -54,9 +52,9 @@ class _TimerButtonState extends State<TimerButton> {
       }
       if (timeCounter != 0) {
         _timerUpdate();
-      } else {
-        timeUpFlag = true;
+        return;
       }
+      timeUpFlag = true;
     });
   }
 
@@ -79,12 +77,10 @@ class _TimerButtonState extends State<TimerButton> {
         ? GestureDetector(
             onTap: _onPressed,
             child: Container(
-              height: 45,
+              height: 48,
               width: MediaQuery.of(context).size.width,
-              decoration: ShapeDecoration(
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                 color: widget.color,
               ),
               child: Center(
@@ -94,9 +90,9 @@ class _TimerButtonState extends State<TimerButton> {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: 14.5,
                     color: whiteColor,
                   ),
                 ),
@@ -106,12 +102,10 @@ class _TimerButtonState extends State<TimerButton> {
         : GestureDetector(
             onTap: null,
             child: Container(
-              height: 45,
+              height: 48,
               width: MediaQuery.of(context).size.width,
-              decoration: ShapeDecoration(
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                 color: widget.disabledColor,
               ),
               child: Center(
@@ -121,9 +115,9 @@ class _TimerButtonState extends State<TimerButton> {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: 14.5,
                     color: blackColor,
                   ),
                 ),

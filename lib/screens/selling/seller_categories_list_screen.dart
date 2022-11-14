@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../services/firebase_services.dart';
-import '../../utils/utils.dart';
-import '../../widgets/custom_list_tile.dart';
-import '../../screens/selling/seller_sub_categories_list_screen.dart';
+import '/services/firebase_services.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_list_tile.dart';
+import '/screens/selling/seller_sub_categories_list_screen.dart';
 
 class SellerCategoriesListScreen extends StatelessWidget {
-  static const String routeName = '/seller-categories-list-screen';
   const SellerCategoriesListScreen({super.key});
 
   @override
@@ -23,9 +21,10 @@ class SellerCategoriesListScreen extends StatelessWidget {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Select a category',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -51,7 +50,7 @@ class SellerCategoriesListScreen extends StatelessWidget {
               return const Padding(
                 padding: EdgeInsets.all(15.0),
                 child: Center(
-                  child: SpinKitFadingCube(
+                  child: SpinKitFadingCircle(
                     color: lightBlackColor,
                     size: 20,
                     duration: Duration(milliseconds: 1000),
@@ -59,30 +58,27 @@ class SellerCategoriesListScreen extends StatelessWidget {
                 ),
               );
             }
-            return Scrollbar(
-              interactive: true,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 1 / 1,
-                ),
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                padding: const EdgeInsets.all(15),
-                itemBuilder: (context, index) {
-                  var doc = snapshot.data!.docs[index];
-                  return CustomListTile(
-                    text: doc['catName'],
-                    url: doc['image'],
-                    onTap: () => Get.to(
-                      () => SellerSubCategoriesListScreen(doc: doc),
-                    ),
-                  );
-                },
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.3 / 1,
               ),
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              itemCount: snapshot.data!.docs.length,
+              padding: const EdgeInsets.all(15),
+              itemBuilder: (context, index) {
+                var doc = snapshot.data!.docs[index];
+                return CustomListTile(
+                  text: doc['catName'],
+                  url: doc['image'],
+                  onTap: () => Get.to(
+                    () => SellerSubCategoriesListScreen(doc: doc),
+                  ),
+                );
+              },
             );
           },
         ),

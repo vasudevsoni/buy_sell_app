@@ -1,15 +1,13 @@
-import 'package:buy_sell_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../utils/utils.dart';
-import '../../widgets/custom_button.dart';
-import '../../auth/services/phone_auth_service.dart';
+import '/utils/utils.dart';
+import '/widgets/custom_text_field.dart';
+import '/widgets/custom_button.dart';
+import '/auth/services/phone_auth_service.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
-  static const routeName = '/phone-auth-screen';
   const PhoneAuthScreen({Key? key}) : super(key: key);
 
   @override
@@ -23,10 +21,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   bool isLoading = false;
 
   _validateMobile() async {
+    setState(() {
+      isLoading = true;
+    });
     if (_mobileLoginFormKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
       String number =
           '${countryCodeController.text}${mobileNumberController.text}';
       await _service.signInWithPhone(
@@ -34,10 +32,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         phoneNumber: number,
         isResend: false,
       );
-      setState(() {
-        isLoading = false;
-      });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -58,9 +56,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: Text(
-          'Login with your Mobile',
-          style: GoogleFonts.poppins(
+        title: const Text(
+          'Login with your mobile',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
@@ -101,7 +100,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your mobile number';
-                        } else if (value.length != 10) {
+                        }
+                        if (value.length != 10) {
                           return 'Please enter a valid mobile number';
                         }
                         return null;
@@ -109,7 +109,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      style: GoogleFonts.poppins(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                       decoration: InputDecoration(
@@ -124,7 +124,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         filled: true,
                         border: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color: Colors.transparent,
+                            color: transparentColor,
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
@@ -132,7 +132,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color: Colors.transparent,
+                            color: transparentColor,
                             width: 0,
                             strokeAlign: StrokeAlign.inside,
                           ),
@@ -140,16 +140,16 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         ),
                         errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color: Colors.red,
+                            color: redColor,
                             width: 1.5,
                             strokeAlign: StrokeAlign.inside,
                           ),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        errorStyle: GoogleFonts.poppins(
+                        errorStyle: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.red,
+                          color: redColor,
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -168,16 +168,16 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        hintStyle: GoogleFonts.poppins(
+                        hintStyle: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
                           color: greyColor,
                         ),
-                        labelStyle: GoogleFonts.poppins(
+                        labelStyle: const TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
-                        floatingLabelStyle: GoogleFonts.poppins(
+                        floatingLabelStyle: const TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 15,
                           color: lightBlackColor,
@@ -190,22 +190,32 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'We\'ll send a verification code to this number.',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   color: lightBlackColor,
-                  fontSize: 13,
+                  fontSize: 15,
                 ),
               ),
               const Spacer(),
-              CustomButton(
-                text: 'Proceed',
-                icon: FontAwesomeIcons.arrowRight,
-                bgColor: blackColor,
-                borderColor: blackColor,
-                textIconColor: whiteColor,
-                onPressed: _validateMobile,
-              ),
+              isLoading
+                  ? CustomButton(
+                      text: 'Loading...',
+                      icon: FontAwesomeIcons.spinner,
+                      bgColor: greyColor,
+                      borderColor: greyColor,
+                      textIconColor: blackColor,
+                      onPressed: () {},
+                      isDisabled: isLoading,
+                    )
+                  : CustomButton(
+                      text: 'Proceed',
+                      icon: FontAwesomeIcons.arrowRight,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
+                      textIconColor: whiteColor,
+                      onPressed: _validateMobile,
+                    ),
             ],
           ),
         ),
