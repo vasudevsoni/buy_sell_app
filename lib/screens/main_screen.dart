@@ -59,19 +59,21 @@ class _MainScreenState extends State<MainScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 15,
+                top: 5,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'No Connection',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                  const Center(
+                    child: Text(
+                      'No Connection',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(
                     height: 10,

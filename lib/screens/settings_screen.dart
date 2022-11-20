@@ -62,14 +62,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               color: whiteColor,
             ),
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(
+              left: 15,
+              top: 5,
+              right: 15,
+              bottom: 15,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Center(
                   child: Container(
-                    width: 40.0,
+                    width: 80.0,
                     height: 5.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
@@ -80,13 +85,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Are you sure?',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+                const Center(
+                  child: Text(
+                    'Are you sure?',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
                   ),
-                  textAlign: TextAlign.start,
                 ),
                 const SizedBox(
                   height: 10,
@@ -263,6 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subTitle: 'Log out of your account from this device',
               onTap: showLogoutConfirmation,
               icon: Ionicons.log_out,
+              textColor: redColor,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
             ),

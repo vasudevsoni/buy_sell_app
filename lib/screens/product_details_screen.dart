@@ -13,16 +13,16 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
+import '../widgets/custom_text_field.dart';
 import '../widgets/text_field_label.dart';
 import 'all_images_display_screen.dart';
-import '/screens/help_and_support_screen.dart';
 import '/screens/selling/common/edit_ad_screen.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button_without_icon.dart';
-import '/widgets/custom_text_field.dart';
 import 'category_products_screen.dart';
 import '/screens/chats/conversation_screen.dart';
 import 'full_decription_screen.dart';
+import 'help_and_support_screen.dart';
 import 'profile_screen.dart';
 import '/screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/utils/utils.dart';
@@ -188,7 +188,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 15,
+                top: 5,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +196,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   Center(
                     child: Container(
-                      width: 40.0,
+                      width: 80.0,
                       height: 5.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -207,13 +207,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    'Report this product',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
+                  const Center(
+                    child: Text(
+                      'Report this product',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.start,
                     ),
-                    textAlign: TextAlign.start,
                   ),
                   const SizedBox(
                     height: 10,
@@ -267,8 +269,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     height: 10,
                   ),
                   CustomButton(
-                    icon: Ionicons.bug,
-                    text: 'Report Product',
+                    icon: Ionicons.arrow_forward,
+                    text: 'Submit',
                     onPressed: () {
                       if (reportTextController.text.isEmpty) {
                         return;
@@ -316,14 +318,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
                 color: whiteColor,
               ),
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.only(
+                top: 5,
+                left: 15,
+                right: 15,
+                bottom: 15,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Center(
                     child: Container(
-                      width: 40.0,
+                      width: 80.0,
                       height: 5.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -334,16 +341,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
-                    icon: Ionicons.bug,
-                    text: 'Report Product',
-                    onPressed: () {
-                      Get.back();
-                      showReportDialog();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
+                  Center(
+                    child: CustomButton(
+                      icon: Ionicons.bug,
+                      text: 'Report Product',
+                      onPressed: () {
+                        Get.back();
+                        showReportDialog();
+                      },
+                      bgColor: whiteColor,
+                      borderColor: redColor,
+                      textIconColor: redColor,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,

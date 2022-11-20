@@ -80,7 +80,7 @@ class _TimerButtonState extends State<TimerButton> {
               height: 48,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(50),
                 color: widget.color,
               ),
               child: Center(
@@ -105,7 +105,7 @@ class _TimerButtonState extends State<TimerButton> {
               height: 48,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(50),
                 color: widget.disabledColor,
               ),
               child: Center(

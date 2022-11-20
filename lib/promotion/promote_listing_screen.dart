@@ -198,7 +198,12 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     ),
                                     color: whiteColor,
                                   ),
-                                  padding: const EdgeInsets.all(15.0),
+                                  padding: const EdgeInsets.only(
+                                    left: 15,
+                                    right: 15,
+                                    top: 5,
+                                    bottom: 15,
+                                  ),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -206,7 +211,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     children: [
                                       Center(
                                         child: Container(
-                                          width: 40.0,
+                                          width: 80.0,
                                           height: 5.0,
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -218,13 +223,15 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      const Text(
-                                        'Boost to Top Example',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
+                                      const Center(
+                                        child: Text(
+                                          'Boost to Top Example',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          textAlign: TextAlign.start,
                                         ),
-                                        textAlign: TextAlign.start,
                                       ),
                                       const SizedBox(
                                         height: 10,

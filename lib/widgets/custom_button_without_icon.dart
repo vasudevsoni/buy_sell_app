@@ -32,7 +32,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: borderColor,
             strokeAlign: StrokeAlign.inside,

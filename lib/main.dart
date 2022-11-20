@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'provider/location_provider.dart';
 import 'provider/main_provider.dart';
 import 'provider/seller_form_provider.dart';
-import 'screens/loading_screen.dart';
+import 'auth/screens/loading_screen.dart';
 import 'error.dart';
 
 Future<void> main() async {

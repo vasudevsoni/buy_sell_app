@@ -118,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               bottom: MediaQuery.of(context).viewInsets.bottom + 15,
               left: 15,
               right: 15,
-              top: 15,
+              top: 5,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Center(
                   child: Container(
-                    width: 40.0,
+                    width: 80.0,
                     height: 5.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
@@ -137,13 +137,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Report this user',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+                const Center(
+                  child: Text(
+                    'Report this user',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
                   ),
-                  textAlign: TextAlign.start,
                 ),
                 const SizedBox(
                   height: 10,
@@ -162,8 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: Ionicons.bug,
-                  text: 'Report User',
+                  icon: Ionicons.arrow_forward,
+                  text: 'Submit',
                   onPressed: () {
                     if (reportTextController.text.isEmpty) {
                       return;
@@ -211,14 +213,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               color: whiteColor,
             ),
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(
+              left: 15,
+              top: 5,
+              right: 15,
+              bottom: 15,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Center(
                   child: Container(
-                    width: 40.0,
+                    width: 80.0,
                     height: 5.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
