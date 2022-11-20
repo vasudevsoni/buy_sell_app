@@ -3,13 +3,11 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/main_provider.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
-import 'custom_button.dart';
 import 'custom_button_without_icon.dart';
 import 'custom_product_card.dart';
 
@@ -39,7 +37,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -72,7 +70,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                   color: greyColor,
                 ),
                 child: SvgPicture.network(
-                  'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Loving.svg?alt=media&token=0091fb33-3f0c-4bca-9e71-c3fa441ec496',
+                  'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=72cb7455-45f3-4a48-a395-6e0d4ec601cf',
                   semanticsLabel: 'Empty favorites image',
                   fit: BoxFit.contain,
                   placeholderBuilder: (BuildContext context) => const Padding(
@@ -80,7 +78,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                     child: Center(
                       child: SpinKitFadingCircle(
                         color: lightBlackColor,
-                        size: 20,
+                        size: 30,
                         duration: Duration(milliseconds: 1000),
                       ),
                     ),
@@ -197,13 +195,12 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                           height: 10,
                         ),
                       if (hasMoreReached)
-                        CustomButton(
-                          text: 'Load More Products',
+                        CustomButtonWithoutIcon(
+                          text: 'Load More',
                           onPressed: () => snapshot.fetchMore(),
-                          icon: FontAwesomeIcons.plus,
-                          borderColor: blueColor,
-                          bgColor: blueColor,
-                          textIconColor: whiteColor,
+                          borderColor: blackColor,
+                          bgColor: whiteColor,
+                          textIconColor: blackColor,
                         ),
                     ],
                   );

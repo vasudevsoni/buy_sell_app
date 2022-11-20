@@ -4,10 +4,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
 
+import '../widgets/custom_button_without_icon.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
 import '/auth/screens/location_screen.dart';
@@ -88,12 +89,13 @@ class _HomeScreenState extends State<HomeScreen>
         elevation: 0.5,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(
-              FontAwesomeIcons.locationDot,
-              size: 20,
+              Ionicons.location,
+              size: 25,
               color: blueColor,
             ),
             const SizedBox(
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
                         width: 2,
                       ),
                       const Icon(
-                        FontAwesomeIcons.caretDown,
+                        Ionicons.caret_down,
                         size: 15,
                         color: blackColor,
                       ),
@@ -161,9 +163,9 @@ class _HomeScreenState extends State<HomeScreen>
                 () => const SearchFieldScreen(),
               ),
               child: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
+                Ionicons.search,
                 color: blackColor,
-                size: 20,
+                size: 25,
               ),
             )
           ],
@@ -313,7 +315,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //           child: Center(
           //             child: SpinKitFadingCircle(
           //               color: lightBlackColor,
-          //               size: 20,
+          //               size: 30,
           //               duration: Duration(milliseconds: 1000),
           //             ),
           //           ),
@@ -356,7 +358,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //                         width: MediaQuery.of(context).size.width,
           //                         errorWidget: (context, url, error) {
           //                           return const Icon(
-          //                             FontAwesomeIcons.circleExclamation,
+          //                             Ionicons.alert_circle,
           //                             size: 30,
           //                             color: redColor,
           //                           );
@@ -526,7 +528,7 @@ class _ProductsListState extends State<ProductsList> {
                     color: greyColor,
                   ),
                   child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Thinking.svg?alt=media&token=f1715e70-1ac4-43c2-a90d-22f0705d4349',
+                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                     semanticsLabel: 'Empty favorites image',
                     fit: BoxFit.contain,
                     placeholderBuilder: (BuildContext context) => const Padding(
@@ -534,7 +536,7 @@ class _ProductsListState extends State<ProductsList> {
                       child: Center(
                         child: SpinKitFadingCircle(
                           color: lightBlackColor,
-                          size: 20,
+                          size: 30,
                           duration: Duration(milliseconds: 1000),
                         ),
                       ),
@@ -566,7 +568,7 @@ class _ProductsListState extends State<ProductsList> {
                   onPressed: () {
                     widget.tabController.animateTo(1);
                   },
-                  icon: FontAwesomeIcons.earthAsia,
+                  icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,
@@ -597,7 +599,7 @@ class _ProductsListState extends State<ProductsList> {
                   child: Center(
                     child: SpinKitFadingCircle(
                       color: lightBlackColor,
-                      size: 20,
+                      size: 30,
                       duration: Duration(milliseconds: 1000),
                     ),
                   ),
@@ -632,7 +634,7 @@ class _ProductsListState extends State<ProductsList> {
                           color: greyColor,
                         ),
                         child: SvgPicture.network(
-                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Thinking.svg?alt=media&token=f1715e70-1ac4-43c2-a90d-22f0705d4349',
+                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                           semanticsLabel: 'Empty favorites image',
                           fit: BoxFit.contain,
                           placeholderBuilder: (BuildContext context) =>
@@ -641,7 +643,7 @@ class _ProductsListState extends State<ProductsList> {
                             child: Center(
                               child: SpinKitFadingCircle(
                                 color: lightBlackColor,
-                                size: 20,
+                                size: 30,
                                 duration: Duration(milliseconds: 1000),
                               ),
                             ),
@@ -673,7 +675,7 @@ class _ProductsListState extends State<ProductsList> {
                         onPressed: () {
                           widget.tabController.animateTo(1);
                         },
-                        icon: FontAwesomeIcons.earthAsia,
+                        icon: Ionicons.earth,
                         borderColor: blueColor,
                         bgColor: blueColor,
                         textIconColor: whiteColor,
@@ -718,13 +720,12 @@ class _ProductsListState extends State<ProductsList> {
                           height: 10,
                         ),
                       if (hasMoreReached)
-                        CustomButton(
-                          text: 'Load More Products',
+                        CustomButtonWithoutIcon(
+                          text: 'Load More',
                           onPressed: () => snapshot.fetchMore(),
-                          icon: FontAwesomeIcons.plus,
-                          borderColor: blueColor,
-                          bgColor: blueColor,
-                          textIconColor: whiteColor,
+                          borderColor: blackColor,
+                          bgColor: whiteColor,
+                          textIconColor: blackColor,
                         ),
                     ],
                   );

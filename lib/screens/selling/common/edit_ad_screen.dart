@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/loading_button.dart';
+import '../../../widgets/text_field_label.dart';
 import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
@@ -181,7 +183,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           isLoading = false;
         });
         showSnackBar(
-          content: 'Details updated. Product will be active once reviewed',
+          content: 'Details updated. Product will be live once reviewed',
           color: blueColor,
         );
       }).catchError((err) {
@@ -490,7 +492,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(FontAwesomeIcons.circleXmark),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
           title: const Text(
@@ -527,12 +529,15 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Category'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: categoryController,
                     keyboardType: TextInputType.text,
-                    label: 'Category',
                     hint: '',
                     isEnabled: false,
                     maxLength: 80,
@@ -542,12 +547,15 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Product Title'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: titleController,
                     keyboardType: TextInputType.text,
-                    label: 'Title',
                     hint: 'Enter the title',
                     maxLength: 40,
                     textInputAction: TextInputAction.next,
@@ -568,12 +576,15 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Description'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: descriptionController,
                     keyboardType: TextInputType.multiline,
-                    label: 'Description',
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
                     maxLength: 3000,
@@ -595,6 +606,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Price'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextFormField(
@@ -614,9 +629,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ],
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Price',
                       hintText: 'Set a price for your product',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
@@ -662,7 +678,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
                           color: blueColor,
@@ -672,18 +688,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       hintStyle: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: greyColor,
+                        color: fadedColor,
                       ),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
-                      ),
-                      floatingLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: lightBlackColor,
                       ),
                     ),
                   ),
@@ -704,19 +715,11 @@ class _EditAdScreenState extends State<EditAdScreen> {
             top: 10,
           ),
           child: isLoading
-              ? CustomButton(
-                  text: 'Loading...',
-                  onPressed: () {},
-                  isDisabled: isLoading,
-                  icon: FontAwesomeIcons.spinner,
-                  bgColor: greyColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
-                )
+              ? const LoadingButton()
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

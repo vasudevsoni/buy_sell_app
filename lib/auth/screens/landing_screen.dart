@@ -9,12 +9,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:ionicons/ionicons.dart';
 
-import '/screens/main_screen.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '../services/google_auth_service.dart';
 import '../services/phone_auth_service.dart';
@@ -39,12 +38,6 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     getConnectivity();
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null && mounted) {
-        Get.offAll(() => const MainScreen(selectedIndex: 0));
-      }
-      return;
-    });
     super.initState();
   }
 
@@ -204,7 +197,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               return const Center(
                                 child: SpinKitFadingCircle(
                                   color: greyColor,
-                                  size: 20,
+                                  size: 30,
                                   duration: Duration(milliseconds: 1000),
                                 ),
                               );
@@ -250,6 +243,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 enlargeCenterPage: true,
                 enableInfiniteScroll: false,
                 initialPage: 0,
+                autoPlay: true,
                 scrollPhysics: const BouncingScrollPhysics(),
                 reverse: false,
                 scrollDirection: Axis.horizontal,
@@ -325,7 +319,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   CustomButton(
                     text: 'Google',
-                    icon: FontAwesomeIcons.google,
+                    icon: Ionicons.logo_google,
                     bgColor: whiteColor,
                     borderColor: lightBlackColor,
                     textIconColor: blackColor,
@@ -346,7 +340,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   CustomButton(
                     text: 'Facebook',
-                    icon: FontAwesomeIcons.facebook,
+                    icon: Ionicons.logo_facebook,
                     bgColor: whiteColor,
                     borderColor: lightBlackColor,
                     textIconColor: blackColor,
@@ -357,7 +351,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   CustomButton(
                     text: 'Mobile',
-                    icon: FontAwesomeIcons.phone,
+                    icon: Ionicons.call,
                     bgColor: whiteColor,
                     borderColor: lightBlackColor,
                     textIconColor: blackColor,
@@ -370,7 +364,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   CustomButton(
                     text: 'Email',
-                    icon: FontAwesomeIcons.solidEnvelope,
+                    icon: Ionicons.mail,
                     bgColor: whiteColor,
                     borderColor: lightBlackColor,
                     textIconColor: blackColor,

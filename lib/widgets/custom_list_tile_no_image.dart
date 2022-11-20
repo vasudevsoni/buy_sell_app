@@ -32,13 +32,13 @@ class CustomListTileNoImage extends StatelessWidget {
       dense: true,
       trailing: Icon(
         trailingIcon,
-        size: 10,
+        size: 15,
         color: lightBlackColor,
       ),
       minLeadingWidth: icon == null ? 0 : 40,
       leading: Icon(
         icon,
-        size: 18,
+        size: 22,
         color: blackColor,
       ),
       horizontalTitleGap: 0,

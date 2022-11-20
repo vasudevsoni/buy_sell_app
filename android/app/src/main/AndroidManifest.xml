@@ -1,8 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vasudevsoni.buy_sell_app">
+   <!-- Permissions options for the `internet` group -->
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+   <!-- Permissions options for the `location` group -->
    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+   <!-- Permissions options for the `accessMediaLocation` group -->
+   <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+   <!-- Permissions options for the `camera` group -->
+   <uses-permission android:name="android.permission.CAMERA"/>
+   <!-- Permissions options for the `vibrate` group -->
+   <uses-permission android:name="android.permission.VIBRATE"/>
+   <!-- Permissions options for the `prevent screen from sleeping` group -->
+   <uses-permission android:name="android.permission.WAKE_LOCK"/>
+   <!-- Permissions options for the `storage` group -->
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+   <!-- Permissions options for the `play store billing` group -->
    <uses-permission android:name="android.vending.BILLING" />
    <application
         android:label="Buy Sell"

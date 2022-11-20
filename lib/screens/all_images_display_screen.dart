@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '/utils/utils.dart';
 
@@ -83,7 +83,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(
-                                          FontAwesomeIcons.circleExclamation,
+                                          Ionicons.alert_circle,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -94,7 +94,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                                     return const Center(
                                       child: SpinKitFadingCircle(
                                         color: greyColor,
-                                        size: 20,
+                                        size: 30,
                                         duration: Duration(milliseconds: 1000),
                                       ),
                                     );
@@ -111,7 +111,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                                     splashColor: blueColor,
                                     splashRadius: 30,
                                     icon: const Icon(
-                                      FontAwesomeIcons.circleXmark,
+                                      Ionicons.close_circle_outline,
                                       size: 30,
                                       color: whiteColor,
                                       shadows: [
@@ -140,7 +140,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) {
                             return const Icon(
-                              FontAwesomeIcons.circleExclamation,
+                              Ionicons.alert_circle,
                               size: 30,
                               color: redColor,
                             );

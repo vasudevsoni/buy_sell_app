@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '/provider/main_provider.dart';
@@ -163,71 +163,48 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return Scaffold(
-        body: IndexedStack(
-          index: selectedIndex,
-          children: pages,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onItemTapped,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: selectedIndex,
-          selectedItemColor: blackColor,
-          unselectedItemColor: fadedColor,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          elevation: 0,
-          backgroundColor: greyColor,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.compass),
-              activeIcon: Icon(FontAwesomeIcons.solidCompass),
-              label: '',
+      body: IndexedStack(
+        index: selectedIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: selectedIndex,
+        selectedItemColor: blackColor,
+        unselectedItemColor: fadedColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 25,
+        elevation: 0,
+        backgroundColor: greyColor,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Ionicons.home_outline),
+            activeIcon: Icon(Ionicons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Ionicons.chatbubbles_outline),
+            activeIcon: Icon(Ionicons.chatbubbles),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Ionicons.heart_outline,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.comment),
-              activeIcon: Icon(FontAwesomeIcons.solidComment),
-              label: '',
+            activeIcon: Icon(
+              Ionicons.heart,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.heart),
-              activeIcon: Icon(FontAwesomeIcons.solidHeart),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.user),
-              activeIcon: Icon(FontAwesomeIcons.solidUser),
-              label: '',
-            ),
-          ],
-        )
-        // AnimatedBottomNavigationBar(
-        //   activeIndex: _selectedIndex,
-        //   onTap: _onItemTapped,
-        //   key: globalKey,
-        //   gapLocation: GapLocation.none,
-        //   iconSize: 25,
-        //   height: 56,
-        //   notchSmoothness: NotchSmoothness.defaultEdge,
-        //   backgroundColor: greyColor,
-        //   activeColor: blackColor,
-        //   inactiveColor: lightBlackColor,
-        //   splashRadius: 0,
-        //   elevation: 0.0,
-        //   icons: [
-        //     _selectedIndex == 0
-        //         ? FontAwesomeIcons.solidCompass
-        //         : FontAwesomeIcons.compass,
-        //     _selectedIndex == 1
-        //         ? FontAwesomeIcons.solidComment
-        //         : FontAwesomeIcons.comment,
-        //     _selectedIndex == 2
-        //         ? FontAwesomeIcons.solidHeart
-        //         : FontAwesomeIcons.heart,
-        //     _selectedIndex == 3
-        //         ? FontAwesomeIcons.solidCircleUser
-        //         : FontAwesomeIcons.circleUser
-        //   ],
-        // ),
-        );
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Ionicons.person_circle_outline),
+            activeIcon: Icon(Ionicons.person_circle),
+            label: '',
+          ),
+        ],
+      ),
+    );
   }
 }

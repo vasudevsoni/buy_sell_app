@@ -3,14 +3,15 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import 'full_bio_screen.dart';
@@ -147,6 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const TextFieldLabel(labelText: 'Message'),
                 CustomTextField(
                   controller: reportTextController,
                   keyboardType: TextInputType.text,
@@ -154,14 +156,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   showCounterText: true,
                   maxLength: 1000,
                   maxLines: 3,
-                  label: 'Message',
                   hint: 'Explain in detail why you are reporting this user',
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 CustomButton(
-                  icon: FontAwesomeIcons.bug,
+                  icon: Ionicons.bug,
                   text: 'Report User',
                   onPressed: () {
                     if (reportTextController.text.isEmpty) {
@@ -229,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: FontAwesomeIcons.userShield,
+                  icon: Ionicons.shield_half,
                   text: 'Report User',
                   onPressed: () {
                     Get.back();
@@ -277,9 +278,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              FontAwesomeIcons.ellipsis,
+              Ionicons.ellipsis_horizontal,
               color: blackColor,
-              size: 20,
+              size: 25,
             ),
           ),
           const SizedBox(
@@ -319,7 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: blueColor,
                             ),
                             child: const Icon(
-                              FontAwesomeIcons.userTie,
+                              Ionicons.person,
                               color: whiteColor,
                               size: 40,
                             ),
@@ -362,8 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               errorBuilder:
                                                   (context, error, stackTrace) {
                                                 return const Icon(
-                                                  FontAwesomeIcons
-                                                      .circleExclamation,
+                                                  Ionicons.alert_circle,
                                                   size: 20,
                                                   color: redColor,
                                                 );
@@ -374,7 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             return const Center(
                                               child: SpinKitFadingCircle(
                                                 color: greyColor,
-                                                size: 20,
+                                                size: 30,
                                                 duration: Duration(
                                                     milliseconds: 1000),
                                               ),
@@ -389,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             splashColor: blueColor,
                                             splashRadius: 30,
                                             icon: const Icon(
-                                              FontAwesomeIcons.circleXmark,
+                                              Ionicons.close_circle_outline,
                                               size: 30,
                                               color: whiteColor,
                                               shadows: [
@@ -418,7 +418,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      FontAwesomeIcons.circleExclamation,
+                                      Ionicons.alert_circle,
                                       size: 30,
                                       color: redColor,
                                     );
@@ -592,7 +592,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isFollowing = false;
                           });
                         },
-                        icon: FontAwesomeIcons.userMinus,
+                        icon: Ionicons.person_remove,
                         borderColor: blackColor,
                         bgColor: blackColor,
                         textIconColor: whiteColor,
@@ -609,7 +609,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             isFollowing = true;
                           });
                         },
-                        icon: FontAwesomeIcons.userPlus,
+                        icon: Ionicons.person_add,
                         borderColor: blueColor,
                         bgColor: blueColor,
                         textIconColor: whiteColor,
@@ -680,7 +680,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -753,13 +753,12 @@ class _SellerProductsListState extends State<SellerProductsList> {
                     height: 10,
                   ),
                 if (hasMoreReached)
-                  CustomButton(
-                    text: 'Load More Products',
+                  CustomButtonWithoutIcon(
+                    text: 'Load More',
                     onPressed: () => snapshot.fetchMore(),
-                    icon: FontAwesomeIcons.plus,
-                    borderColor: blueColor,
-                    bgColor: blueColor,
-                    textIconColor: whiteColor,
+                    borderColor: blackColor,
+                    bgColor: whiteColor,
+                    textIconColor: blackColor,
                   ),
               ],
             );

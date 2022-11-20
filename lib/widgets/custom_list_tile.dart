@@ -1,8 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '/utils/utils.dart';
 
@@ -23,59 +22,54 @@ class CustomListTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Stack(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: url,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) {
-                  return const Icon(
-                    FontAwesomeIcons.circleExclamation,
-                    size: 20,
-                    color: redColor,
-                  );
-                },
-                placeholder: (context, url) {
-                  return const Center(
-                    child: SpinKitFadingCircle(
-                      color: lightBlackColor,
-                      size: 20,
-                      duration: Duration(milliseconds: 1000),
-                    ),
-                  );
-                },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: greyColor,
+        ),
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: SvgPicture.network(
+                  url,
+                  fit: BoxFit.contain,
+                  placeholderBuilder: (context) {
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: lightBlackColor,
+                        size: 30,
+                        duration: Duration(milliseconds: 1000),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+                bottom: 10,
+              ),
               child: AutoSizeText(
                 text,
                 maxLines: 1,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 35,
-                  color: whiteColor,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(0, 2),
-                      blurRadius: 10.0,
-                      color: lightBlackColor,
-                    ),
-                  ],
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: blackColor,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

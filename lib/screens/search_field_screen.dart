@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/text_field_label.dart';
 import 'search_results_screen.dart';
 import '/widgets/custom_text_field.dart';
 import '/utils/utils.dart';
@@ -40,14 +41,22 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 15,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: TextFieldLabel(labelText: 'Search for anything'),
+          ),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomTextField(
               controller: searchController,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.search,
-              label: 'Search for anything',
+              // label: 'Search for anything',
               autofocus: true,
               hint: 'Start typing',
               maxLength: 50,

@@ -35,7 +35,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Center(
-            child: Text('Erorr loading categories.'),
+            child: Text('Error loading categories'),
           );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,7 +44,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),

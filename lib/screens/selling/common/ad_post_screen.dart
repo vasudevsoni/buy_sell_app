@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/loading_button.dart';
+import '../../../widgets/text_field_label.dart';
 import '/screens/selling/congratulations_screen.dart';
 import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
@@ -309,8 +311,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return const Icon(
-                                                FontAwesomeIcons
-                                                    .circleExclamation,
+                                                Ionicons.alert_circle,
                                                 size: 20,
                                                 color: redColor,
                                               );
@@ -707,7 +708,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(FontAwesomeIcons.circleXmark),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           actions: [
             TextButton(
@@ -756,12 +757,15 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Category'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: subCatNameController,
                     keyboardType: TextInputType.text,
-                    label: 'Category',
                     hint: '',
                     isEnabled: false,
                     maxLength: 80,
@@ -771,13 +775,16 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Product Title'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: titleController,
                     keyboardType: TextInputType.text,
-                    label: 'Title',
-                    hint: 'Enter the title',
+                    hint: 'Sony PlayStation 5 in good codition',
                     maxLength: 40,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
@@ -797,14 +804,17 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Description'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: descriptionController,
                     keyboardType: TextInputType.multiline,
-                    label: 'Description',
                     hint:
-                        'Briefly describe your product to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
+                        'Briefly describe your product to increase your chances of getting a good deal.\nInclude details like condition, features, reason for selling, etc.',
                     maxLength: 3000,
                     maxLines: 5,
                     showCounterText: true,
@@ -823,6 +833,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 const SizedBox(
                   height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Price'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -843,9 +857,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     ],
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Price',
                       hintText: 'Set a price for your product',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
@@ -899,20 +914,15 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                       hintStyle: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: greyColor,
+                        color: fadedColor,
                       ),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
-                      ),
-                      floatingLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: lightBlackColor,
                       ),
                     ),
                   ),
@@ -960,12 +970,15 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: locationController,
                     keyboardType: TextInputType.text,
-                    label: 'Location',
                     hint: 'Choose your location to list product',
                     maxLines: 2,
                     showCounterText: false,
@@ -1002,19 +1015,11 @@ class _AdPostScreenState extends State<AdPostScreen> {
             top: 10,
           ),
           child: isLoading
-              ? CustomButton(
-                  text: 'Loading...',
-                  onPressed: () {},
-                  isDisabled: isLoading,
-                  icon: FontAwesomeIcons.spinner,
-                  bgColor: greyColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
-                )
+              ? const LoadingButton()
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

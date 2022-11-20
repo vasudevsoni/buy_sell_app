@@ -2,12 +2,11 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
+import '../widgets/custom_button_without_icon.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
-import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
 
 class SearchResultsScreen extends StatefulWidget {
@@ -85,7 +84,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               child: Center(
                 child: SpinKitFadingCircle(
                   color: lightBlackColor,
-                  size: 20,
+                  size: 30,
                   duration: Duration(milliseconds: 1000),
                 ),
               ),
@@ -121,8 +120,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                         color: greyColor,
                       ),
                       child: SvgPicture.network(
-                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Laying%20Down.svg?alt=media&token=314f27c5-1e3b-450b-8f5d-886568e261c3',
-                        semanticsLabel: 'Empty favorites image',
+                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
+                        semanticsLabel: 'Empty search image',
                         fit: BoxFit.contain,
                         placeholderBuilder: (BuildContext context) =>
                             const Padding(
@@ -130,7 +129,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                           child: Center(
                             child: SpinKitFadingCircle(
                               color: lightBlackColor,
-                              size: 20,
+                              size: 30,
                               duration: Duration(milliseconds: 1000),
                             ),
                           ),
@@ -220,13 +219,12 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                             height: 10,
                           ),
                         if (hasMoreReached)
-                          CustomButton(
-                            text: 'Load More Products',
+                          CustomButtonWithoutIcon(
+                            text: 'Load More',
                             onPressed: () => snapshot.fetchMore(),
-                            icon: FontAwesomeIcons.plus,
-                            borderColor: blueColor,
-                            bgColor: blueColor,
-                            textIconColor: whiteColor,
+                            borderColor: blackColor,
+                            bgColor: whiteColor,
+                            textIconColor: blackColor,
                           ),
                       ],
                     );

@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +55,28 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       setState(() {});
     }
 
+    void requestCameraPermission() async {
+      var status = await Permission.camera.status;
+      if (status.isGranted) {
+        getImageFromCamera();
+      } else if (status.isDenied) {
+        if (await Permission.camera.request().isGranted) {
+          getImageFromCamera();
+        } else {
+          showSnackBar(
+            content: 'Camera permission is required to take pictures',
+            color: redColor,
+          );
+        }
+      } else if (status.isPermanentlyDenied || status.isRestricted) {
+        showSnackBar(
+          content: 'Permission is disabled. Please change from phone settings',
+          color: redColor,
+        );
+        openAppSettings();
+      }
+    }
+
     Future getImageFromGallery() async {
       final List<XFile>? pickedFiles =
           await picker.pickMultiImage(imageQuality: 85);
@@ -68,6 +92,28 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       }
       provider.imagesCount += pickedFiles.length;
       setState(() {});
+    }
+
+    void requestGalleryPermission() async {
+      var status = await Permission.storage.status;
+      if (status.isGranted) {
+        getImageFromGallery();
+      } else if (status.isDenied) {
+        if (await Permission.storage.request().isGranted) {
+          getImageFromGallery();
+        } else {
+          showSnackBar(
+            content: 'Storage permission is required to upload pictures',
+            color: redColor,
+          );
+        }
+      } else if (status.isPermanentlyDenied || status.isRestricted) {
+        showSnackBar(
+          content: 'Permission is disabled. Please change from phone settings',
+          color: redColor,
+        );
+        openAppSettings();
+      }
     }
 
     return Column(
@@ -149,8 +195,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                     errorBuilder: (context,
                                                         error, stackTrace) {
                                                       return const Icon(
-                                                        FontAwesomeIcons
-                                                            .circleExclamation,
+                                                        Ionicons.alert_circle,
                                                         size: 20,
                                                         color: redColor,
                                                       );
@@ -160,7 +205,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                 loadingBuilder:
                                                     (context, event) {
                                                   return const Icon(
-                                                    FontAwesomeIcons.solidImage,
+                                                    Ionicons.image,
                                                     size: 20,
                                                     color: lightBlackColor,
                                                   );
@@ -175,8 +220,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                     Get.back();
                                                   },
                                                   icon: const Icon(
-                                                    FontAwesomeIcons
-                                                        .circleXmark,
+                                                    Ionicons
+                                                        .close_circle_outline,
                                                     size: 30,
                                                     color: whiteColor,
                                                     shadows: [
@@ -202,7 +247,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(
-                                          FontAwesomeIcons.circleExclamation,
+                                          Ionicons.alert_circle,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -248,7 +293,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                           provider.imagesCount -= 1;
                                         }),
                                   icon: const Icon(
-                                    FontAwesomeIcons.circleXmark,
+                                    Ionicons.close_circle_outline,
                                     size: 15,
                                     color: whiteColor,
                                     shadows: [
@@ -307,8 +352,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             text: 'Take Photo',
             onPressed: provider.imagesCount >= 15
                 ? showMaximumError
-                : getImageFromCamera,
-            icon: FontAwesomeIcons.camera,
+                : requestCameraPermission,
+            icon: Ionicons.camera,
             bgColor: whiteColor,
             borderColor: blackColor,
             textIconColor: blackColor,
@@ -324,8 +369,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             text: 'Choose Photos',
             onPressed: provider.imagesCount >= 15
                 ? showMaximumError
-                : getImageFromGallery,
-            icon: FontAwesomeIcons.solidImages,
+                : requestGalleryPermission,
+            icon: Ionicons.images,
             bgColor: whiteColor,
             borderColor: blackColor,
             textIconColor: blackColor,

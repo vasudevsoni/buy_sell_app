@@ -37,7 +37,7 @@ class CustomListTileWithSubtitle extends StatelessWidget {
       dense: true,
       trailing: Icon(
         trailingIcon,
-        size: 10,
+        size: 15,
         color: lightBlackColor,
       ),
       subtitle: Text(
@@ -50,7 +50,7 @@ class CustomListTileWithSubtitle extends StatelessWidget {
       ),
       leading: Icon(
         icon,
-        size: 18,
+        size: 22,
         color: blackColor,
       ),
       horizontalTitleGap: 0,

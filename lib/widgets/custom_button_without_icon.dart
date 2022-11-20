@@ -35,7 +35,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
             color: borderColor,
-            strokeAlign: StrokeAlign.center,
+            strokeAlign: StrokeAlign.inside,
             width: 1.2,
           ),
           color: bgColor,

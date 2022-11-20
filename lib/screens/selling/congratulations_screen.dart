@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -43,7 +43,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 onPressed: () =>
                     Get.offAll(() => const MainScreen(selectedIndex: 0)),
                 icon: const Icon(
-                  FontAwesomeIcons.circleXmark,
+                  Ionicons.close_circle_outline,
                   color: blackColor,
                   size: 30,
                 ),
@@ -117,7 +117,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: FontAwesomeIcons.house,
+                  icon: Ionicons.home,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

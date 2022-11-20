@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/loading_button.dart';
+import '../../widgets/text_field_label.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_text_field.dart';
 import '/utils/utils.dart';
@@ -78,11 +80,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const TextFieldLabel(labelText: 'Email Address'),
               CustomTextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
-                label: 'Email address',
-                hint: 'Enter your email address',
+                hint: 'johndoe@gmail.com',
                 maxLength: 50,
                 textInputAction: TextInputAction.go,
                 autofocus: true,
@@ -99,10 +101,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 },
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               const Text(
-                'We\'ll send you a link to reset your password on this email.',
+                'We\'ll send you a link to reset your password on this email',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   color: lightBlackColor,
@@ -111,18 +113,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const Spacer(),
               isLoading
-                  ? CustomButton(
-                      text: 'Loading...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: greyColor,
-                      borderColor: greyColor,
-                      textIconColor: blackColor,
-                      onPressed: () {},
-                      isDisabled: isLoading,
-                    )
+                  ? const LoadingButton()
                   : CustomButton(
                       text: 'Send',
-                      icon: FontAwesomeIcons.arrowRight,
+                      icon: Ionicons.arrow_forward,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

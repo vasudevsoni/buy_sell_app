@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:store_redirect/store_redirect.dart';
 
@@ -114,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onPressed: () async {
                     Get.back();
                     await FirebaseAuth.instance.signOut().then(
-                          (value) => Get.off(
+                          (value) => Get.offAll(
                             () => const LandingScreen(),
                           ),
                         );
@@ -178,8 +178,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomListTileWithSubtitle(
               text: 'Location',
               subTitle: address == '' ? 'No location selected' : address,
-              icon: FontAwesomeIcons.locationDot,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.location,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => Get.to(
                 () => const LocationScreen(
                   isOpenedFromSellButton: false,
@@ -191,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomListTileWithSubtitle(
                 text: 'Signed in using',
                 subTitle: 'Mobile Number',
-                icon: FontAwesomeIcons.rightToBracket,
+                icon: Ionicons.log_in,
                 isEnabled: false,
                 onTap: () {},
               ),
@@ -199,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
                 subTitle: 'Google',
-                icon: FontAwesomeIcons.rightToBracket,
+                icon: Ionicons.log_in,
                 isEnabled: false,
                 onTap: () {},
               ),
@@ -207,14 +207,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
                 subTitle: 'Email Address',
-                icon: FontAwesomeIcons.rightToBracket,
+                icon: Ionicons.log_in,
                 isEnabled: false,
                 onTap: () {},
               ),
             CustomListTileWithSubtitle(
               text: 'Unique User Id',
               subTitle: user!.uid,
-              icon: FontAwesomeIcons.idBadge,
+              icon: Ionicons.id_card,
               onTap: () {},
               isEnabled: false,
             ),
@@ -239,9 +239,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               text: 'Rate us on Play Store',
               subTitle:
                   'If you love our app, please take a moment to rate it on the Play Store',
-              icon: FontAwesomeIcons.solidStar,
+              icon: Ionicons.star,
               textColor: blueColor,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {
                 StoreRedirect.redirect();
@@ -250,48 +250,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomListTileWithSubtitle(
               text: 'Invite friends to BestDeal',
               subTitle: 'Invite your friends to buy and sell',
-              icon: FontAwesomeIcons.users,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.people,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {
                 Share.share(
-                    'I found some amazing deals on the BestDeal app. Download it now - https://play.google.com/store/apps/details?id=com.vasudevsoni.buy_sell_app');
+                    'I found some really amazing deals on the BestDeal app. Download it now - https://play.google.com/store/apps/details?id=com.vasudevsoni.buy_sell_app');
               },
             ),
             CustomListTileWithSubtitle(
               text: 'Log out',
               subTitle: 'Log out of your account from this device',
               onTap: showLogoutConfirmation,
-              icon: FontAwesomeIcons.rightFromBracket,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.log_out,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
             ),
-            const Divider(
-              height: 0,
-              indent: 15,
-              color: lightBlackColor,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
-                'Danger Zone',
-                style: TextStyle(
-                  color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            CustomListTileWithSubtitle(
-              text: 'Delete account',
-              subTitle: 'This will delete all your data',
-              onTap: () {},
-              textColor: redColor,
-              icon: FontAwesomeIcons.trash,
-              trailingIcon: FontAwesomeIcons.chevronRight,
-              isEnabled: true,
-            ),
+            // const Divider(
+            //   height: 0,
+            //   indent: 15,
+            //   color: lightBlackColor,
+            // ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width,
+            //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            //   child: const Text(
+            //     'Danger Zone',
+            //     style: TextStyle(
+            //       color: blackColor,
+            //       fontSize: 18,
+            //       fontWeight: FontWeight.w700,
+            //     ),
+            //   ),
+            // ),
+            // CustomListTileWithSubtitle(
+            //   text: 'Delete account',
+            //   subTitle: 'This will delete all your data',
+            //   onTap: () {},
+            //   textColor: redColor,
+            //   icon: FontAwesomeIcons.trash,
+            //   trailingIcon: Ionicons.chevron_forward,
+            //   isEnabled: true,
+            // ),
           ],
         ),
       ),

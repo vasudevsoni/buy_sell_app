@@ -1,9 +1,11 @@
+import 'package:buy_sell_app/widgets/loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_text_field.dart';
@@ -76,10 +78,10 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const TextFieldLabel(labelText: 'Email address'),
               CustomTextField(
                 controller: emailController,
-                label: 'Email address',
-                hint: 'Enter your email address',
+                hint: 'johndoe@gmail.com',
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 100,
                 textInputAction: TextInputAction.next,
@@ -99,6 +101,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               const SizedBox(
                 height: 10,
               ),
+              const TextFieldLabel(labelText: 'Password'),
               Row(
                 children: [
                   Expanded(
@@ -106,8 +109,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                     child: CustomTextField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
-                      label: 'Password',
-                      hint: 'Enter your password',
+                      hint: 'doejohn\$2325',
                       maxLength: 15,
                       textInputAction: TextInputAction.go,
                       isObscured: isObscured ? true : false,
@@ -131,12 +133,12 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              FontAwesomeIcons.eyeSlash,
-                              size: 20,
+                              Ionicons.eye_off_outline,
+                              size: 30,
                             )
                           : const Icon(
-                              FontAwesomeIcons.eye,
-                              size: 20,
+                              Ionicons.eye_outline,
+                              size: 30,
                             ),
                     ),
                   ),
@@ -185,18 +187,10 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 height: 5,
               ),
               isLoading
-                  ? CustomButton(
-                      text: 'Loading...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: greyColor,
-                      borderColor: greyColor,
-                      textIconColor: blackColor,
-                      onPressed: () {},
-                      isDisabled: isLoading,
-                    )
+                  ? const LoadingButton()
                   : CustomButton(
                       text: 'Login',
-                      icon: FontAwesomeIcons.rightToBracket,
+                      icon: Ionicons.log_in,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

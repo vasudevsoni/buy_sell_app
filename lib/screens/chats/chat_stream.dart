@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -89,7 +88,7 @@ class _ChatStreamState extends State<ChatStream> {
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -115,35 +114,102 @@ class _ChatStreamState extends State<ChatStream> {
             return Column(
               children: [
                 snapshot.data!.docs[index]['isOffer'] == true
-                    ? BubbleNormal(
-                        bubbleRadius: 5,
-                        text: snapshot.data!.docs[index]['message'],
-                        color: redColor,
-                        isSender: sentBy == me ? true : false,
-                        tail: true,
-                        textStyle: const TextStyle(
-                          color: whiteColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                    ? Align(
+                        alignment: sentBy == me
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 5,
+                            bottom: 2,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: sentBy == me
+                                ? const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(3),
+                                  )
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(3),
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                sentBy == me ? 'YOUR OFFER' : 'BUYER\'S OFFER',
+                                style: const TextStyle(
+                                  color: whiteColor,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                snapshot.data!.docs[index]['message'],
+                                style: const TextStyle(
+                                  color: whiteColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
-                    : BubbleNormal(
-                        bubbleRadius: 5,
-                        text: snapshot.data!.docs[index]['message'],
-                        color: sentBy == me ? blueColor : greyColor,
-                        isSender: sentBy == me ? true : false,
-                        tail: true,
-                        textStyle: sentBy == me
-                            ? const TextStyle(
-                                color: whiteColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              )
-                            : const TextStyle(
-                                color: blackColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
+                    : Align(
+                        alignment: sentBy == me
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 5,
+                            bottom: 2,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: sentBy == me ? blueColor : greyColor,
+                            borderRadius: sentBy == me
+                                ? const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(3),
+                                  )
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(3),
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                          ),
+                          child: Text(
+                            snapshot.data!.docs[index]['message'],
+                            style: TextStyle(
+                              color: sentBy == me ? whiteColor : blackColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
                 Align(
                   alignment: sentBy == me

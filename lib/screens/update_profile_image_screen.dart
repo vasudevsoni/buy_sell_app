@@ -2,15 +2,17 @@ import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/loading_button.dart';
 import '/widgets/custom_button.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
@@ -92,6 +94,50 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     setState(() {
       pickedImage = picked;
     });
+  }
+
+  void requestCameraPermission() async {
+    var status = await Permission.camera.status;
+    if (status.isGranted) {
+      takePhoto();
+    } else if (status.isDenied) {
+      if (await Permission.camera.request().isGranted) {
+        takePhoto();
+      } else {
+        showSnackBar(
+          content: 'Camera permission is required to take picture',
+          color: redColor,
+        );
+      }
+    } else if (status.isPermanentlyDenied || status.isRestricted) {
+      showSnackBar(
+        content: 'Permission is disabled. Please change from phone settings',
+        color: redColor,
+      );
+      openAppSettings();
+    }
+  }
+
+  void requestGalleryPermission() async {
+    var status = await Permission.storage.status;
+    if (status.isGranted) {
+      choosePhoto();
+    } else if (status.isDenied) {
+      if (await Permission.storage.request().isGranted) {
+        choosePhoto();
+      } else {
+        showSnackBar(
+          content: 'Storage permission is required to upload picture',
+          color: redColor,
+        );
+      }
+    } else if (status.isPermanentlyDenied || status.isRestricted) {
+      showSnackBar(
+        content: 'Permission is disabled. Please change from phone settings',
+        color: redColor,
+      );
+      openAppSettings();
+    }
   }
 
   showConfirmationDialog() {
@@ -220,7 +266,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                       color: blueColor,
                     ),
                     child: const Icon(
-                      FontAwesomeIcons.userTie,
+                      Ionicons.person,
                       color: whiteColor,
                       size: 45,
                     ),
@@ -236,7 +282,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                             fit: BoxFit.cover,
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                FontAwesomeIcons.circleExclamation,
+                                Ionicons.alert_circle,
                                 size: 30,
                                 color: redColor,
                               );
@@ -271,8 +317,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: CustomButton(
                 text: 'Take Photo',
-                onPressed: takePhoto,
-                icon: FontAwesomeIcons.camera,
+                onPressed: requestCameraPermission,
+                icon: Ionicons.camera,
                 bgColor: whiteColor,
                 borderColor: blackColor,
                 textIconColor: blackColor,
@@ -286,8 +332,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: CustomButton(
                 text: 'Choose Photo',
-                onPressed: choosePhoto,
-                icon: FontAwesomeIcons.solidImages,
+                onPressed: requestGalleryPermission,
+                icon: Ionicons.image,
                 bgColor: whiteColor,
                 borderColor: blackColor,
                 textIconColor: blackColor,
@@ -305,20 +351,12 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             top: 10,
           ),
           child: isLoading
-              ? CustomButton(
-                  text: 'Loading...',
-                  onPressed: () {},
-                  isDisabled: isLoading,
-                  icon: FontAwesomeIcons.spinner,
-                  bgColor: greyColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
-                )
+              ? const LoadingButton()
               : CustomButton(
                   text: 'Proceed',
                   onPressed:
                       pickedImage != null ? showConfirmationDialog : () {},
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/promotion/promote_listing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,18 +7,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
+import '../screens/selling/common/edit_ad_screen.dart';
 import '../screens/selling/seller_categories_list_screen.dart';
-import '/screens/selling/common/edit_ad_screen.dart';
+import '../screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/utils/utils.dart';
 import '/screens/product_details_screen.dart';
-import '/screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
 import 'custom_button.dart';
@@ -63,7 +64,7 @@ class _MyListingsListState extends State<MyListingsList> {
               padding: EdgeInsets.all(15.0),
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -97,7 +98,7 @@ class _MyListingsListState extends State<MyListingsList> {
                     color: greyColor,
                   ),
                   child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Laying%20Down.svg?alt=media&token=314f27c5-1e3b-450b-8f5d-886568e261c3',
+                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=747d5792-c4cf-4a18-801f-dfa2569778b1',
                     semanticsLabel: 'Empty products image',
                     fit: BoxFit.contain,
                     placeholderBuilder: (BuildContext context) => const Padding(
@@ -105,7 +106,7 @@ class _MyListingsListState extends State<MyListingsList> {
                       child: Center(
                         child: SpinKitFadingCircle(
                           color: lightBlackColor,
-                          size: 20,
+                          size: 30,
                           duration: Duration(milliseconds: 1000),
                         ),
                       ),
@@ -216,13 +217,12 @@ class _MyListingsListState extends State<MyListingsList> {
                           height: 20,
                         ),
                       if (hasMoreReached)
-                        CustomButton(
-                          text: 'Load More Products',
+                        CustomButtonWithoutIcon(
+                          text: 'Load More',
                           onPressed: () => snapshot.fetchMore(),
-                          icon: FontAwesomeIcons.plus,
-                          borderColor: blueColor,
-                          bgColor: blueColor,
-                          textIconColor: whiteColor,
+                          borderColor: blackColor,
+                          bgColor: whiteColor,
+                          textIconColor: blackColor,
                         ),
                     ],
                   );
@@ -482,6 +482,8 @@ class _MyListingScreenProductCardState
         : Stack(
             children: [
               InkWell(
+                splashFactory: InkRipple.splashFactory,
+                splashColor: greyColor,
                 borderRadius: BorderRadius.circular(10),
                 onTap: () => Get.to(
                   () => ProductDetailsScreen(
@@ -505,14 +507,14 @@ class _MyListingScreenProductCardState
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) {
                                 return const Icon(
-                                  FontAwesomeIcons.circleExclamation,
+                                  Ionicons.alert_circle,
                                   size: 30,
                                   color: redColor,
                                 );
                               },
                               placeholder: (context, url) {
                                 return const Icon(
-                                  FontAwesomeIcons.solidImage,
+                                  Ionicons.image,
                                   size: 30,
                                   color: lightBlackColor,
                                 );
@@ -577,16 +579,15 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.eye,
-                                size: 16,
+                                Ionicons.eye_outline,
+                                size: 20,
                                 color: blueColor,
                               ),
                               const SizedBox(
                                 width: 5,
                               ),
                               Text(
-                                numberFormat
-                                    .format(widget.data['views'].length),
+                                'Views: ${numberFormat.format(widget.data['views'].length)}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -601,16 +602,15 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.heart,
-                                size: 16,
+                                Ionicons.heart_outline,
+                                size: 20,
                                 color: pinkColor,
                               ),
                               const SizedBox(
                                 width: 5,
                               ),
                               Text(
-                                numberFormat
-                                    .format(widget.data['favorites'].length),
+                                'Likes: ${numberFormat.format(widget.data['favorites'].length)}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -621,7 +621,8 @@ class _MyListingScreenProductCardState
                           ),
                         ],
                       ),
-                      if (widget.data['isActive'] == false)
+                      if (widget.data['isActive'] == false &&
+                          widget.data['isSold'] == false)
                         Column(
                           children: [
                             const SizedBox(
@@ -683,6 +684,37 @@ class _MyListingScreenProductCardState
                             ),
                           ],
                         ),
+                      if (widget.data['isSold'] == true)
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: redColor,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: const Text(
+                                'Product has been sold',
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -724,7 +756,28 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: FontAwesomeIcons.solidPenToSquare,
+                                  icon: Ionicons.trending_up,
+                                  text: 'Reach More Buyers',
+                                  onPressed: () {
+                                    Get.back();
+                                    Get.to(
+                                      () => PromoteListingScreen(
+                                        productId: widget.data.id,
+                                        title: widget.data['title'],
+                                        price: widget.data['price'].toDouble(),
+                                        imageUrl: widget.data['images'][0],
+                                      ),
+                                    );
+                                  },
+                                  bgColor: blueColor,
+                                  borderColor: blueColor,
+                                  textIconColor: whiteColor,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                CustomButton(
+                                  icon: Ionicons.create_outline,
                                   text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
@@ -744,7 +797,7 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: FontAwesomeIcons.checkDouble,
+                                  icon: Ionicons.checkmark_done,
                                   text: 'Mark as Sold',
                                   onPressed: () {
                                     Get.back();
@@ -758,7 +811,7 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: FontAwesomeIcons.trash,
+                                  icon: Ionicons.trash_bin,
                                   text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();
@@ -785,8 +838,8 @@ class _MyListingScreenProductCardState
                       },
                     ),
                     child: const Icon(
-                      FontAwesomeIcons.ellipsisVertical,
-                      size: 20,
+                      Ionicons.ellipsis_vertical,
+                      size: 25,
                     ),
                   ),
                 ),

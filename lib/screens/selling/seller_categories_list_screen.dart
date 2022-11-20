@@ -52,7 +52,7 @@ class SellerCategoriesListScreen extends StatelessWidget {
                 child: Center(
                   child: SpinKitFadingCircle(
                     color: lightBlackColor,
-                    size: 20,
+                    size: 30,
                     duration: Duration(milliseconds: 1000),
                   ),
                 ),

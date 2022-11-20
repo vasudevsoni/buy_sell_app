@@ -3,13 +3,15 @@ import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-import 'widgets/custom_button.dart';
-import 'widgets/custom_button_without_icon.dart';
-import 'widgets/custom_text_field.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/text_field_label.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -24,7 +26,7 @@ class _ReportScreenState extends State<ReportScreen> {
   final ImagePicker picker = ImagePicker();
   File? reportImage;
 
-  Future pickImage() async {
+  Future getImageFromGallery() async {
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 60);
     if (pickedFile == null) {
@@ -33,6 +35,28 @@ class _ReportScreenState extends State<ReportScreen> {
     setState(() {
       reportImage = File(pickedFile.path);
     });
+  }
+
+  void requestGalleryPermission() async {
+    var status = await Permission.storage.status;
+    if (status.isGranted) {
+      getImageFromGallery();
+    } else if (status.isDenied) {
+      if (await Permission.storage.request().isGranted) {
+        getImageFromGallery();
+      } else {
+        showSnackBar(
+          content: 'Storage permission is required to upload pictures',
+          color: redColor,
+        );
+      }
+    } else if (status.isPermanentlyDenied || status.isRestricted) {
+      showSnackBar(
+        content: 'Permission is disabled. Please change from phone settings',
+        color: redColor,
+      );
+      openAppSettings();
+    }
   }
 
   showConfirmation() {
@@ -103,7 +127,7 @@ class _ReportScreenState extends State<ReportScreen> {
                     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                     AndroidDeviceInfo androidInfo =
                         await deviceInfo.androidInfo;
-                    services.feedbackToFirestore(
+                    services.reportAProblem(
                       text: reportTextController.text,
                       screenshot: reportImage,
                       androidVersion: androidInfo.version.release,
@@ -169,17 +193,7 @@ class _ReportScreenState extends State<ReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Explain your problem',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: blackColor,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            const TextFieldLabel(labelText: 'Explain your problem'),
             CustomTextField(
               controller: reportTextController,
               keyboardType: TextInputType.text,
@@ -187,26 +201,17 @@ class _ReportScreenState extends State<ReportScreen> {
               showCounterText: true,
               maxLength: 1000,
               maxLines: 3,
-              label: 'Message',
+              // label: 'Message',
               hint: 'Briefly explain what happened or what\'s not working',
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              'Upload a screenshot of the problem',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: blackColor,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            const TextFieldLabel(
+                labelText: 'Upload a screenshot of the problem'),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: pickImage,
+              onTap: requestGalleryPermission,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -216,7 +221,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 width: 100,
                 child: reportImage == null
                     ? const Icon(
-                        FontAwesomeIcons.upload,
+                        Ionicons.cloud_upload,
                         color: lightBlackColor,
                       )
                     : ClipRRect(
@@ -228,7 +233,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               reportImage!,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(
-                                  FontAwesomeIcons.circleExclamation,
+                                  Ionicons.alert_circle,
                                   size: 20,
                                   color: redColor,
                                 );
@@ -246,7 +251,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   });
                                 },
                                 icon: const Icon(
-                                  FontAwesomeIcons.circleXmark,
+                                  Ionicons.close_circle_outline,
                                   size: 15,
                                   color: whiteColor,
                                   shadows: [
@@ -266,7 +271,7 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             const Spacer(),
             CustomButton(
-              icon: FontAwesomeIcons.bug,
+              icon: Ionicons.arrow_forward,
               text: 'Send Report',
               onPressed: () {
                 if (reportTextController.text.isEmpty || reportImage == null) {

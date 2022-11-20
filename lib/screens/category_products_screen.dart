@@ -1,9 +1,10 @@
+import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
@@ -93,7 +94,7 @@ class _CategoryScreenProductsListState
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -128,7 +129,7 @@ class _CategoryScreenProductsListState
                     color: greyColor,
                   ),
                   child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20Thinking.svg?alt=media&token=f1715e70-1ac4-43c2-a90d-22f0705d4349',
+                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                     semanticsLabel: 'Empty favorites image',
                     fit: BoxFit.contain,
                     placeholderBuilder: (BuildContext context) => const Padding(
@@ -136,7 +137,7 @@ class _CategoryScreenProductsListState
                       child: Center(
                         child: SpinKitFadingCircle(
                           color: lightBlackColor,
-                          size: 20,
+                          size: 30,
                           duration: Duration(milliseconds: 1000),
                         ),
                       ),
@@ -167,7 +168,7 @@ class _CategoryScreenProductsListState
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: FontAwesomeIcons.house,
+                  icon: Ionicons.home,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,
@@ -232,13 +233,12 @@ class _CategoryScreenProductsListState
                           height: 10,
                         ),
                       if (hasMoreReached)
-                        CustomButton(
-                          text: 'Load More Products',
+                        CustomButtonWithoutIcon(
+                          text: 'Load More',
                           onPressed: () => snapshot.fetchMore(),
-                          icon: FontAwesomeIcons.plus,
-                          borderColor: blueColor,
-                          bgColor: blueColor,
-                          textIconColor: whiteColor,
+                          borderColor: blackColor,
+                          bgColor: whiteColor,
+                          textIconColor: blackColor,
                         ),
                     ],
                   );

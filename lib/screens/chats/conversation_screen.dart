@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/utils/utils.dart';
 import '/screens/product_details_screen.dart';
@@ -156,9 +156,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ],
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
+                    color: blackColor,
+                    fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Offer price',
                     hintText: 'Enter a price you want to pay',
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 15,
@@ -212,20 +213,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
                     hintStyle: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
-                      color: greyColor,
+                      color: fadedColor,
                     ),
                     labelStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
-                    ),
-                    floatingLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 15,
-                      color: lightBlackColor,
                     ),
                   ),
                 ),
@@ -233,7 +229,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   text: 'Send Offer',
                   onPressed: () {
                     if (offerPriceController.text.isEmpty) {
@@ -392,7 +388,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: FontAwesomeIcons.trash,
+                  icon: Ionicons.trash_bin,
                   text: 'Delete Chat',
                   onPressed: () {
                     Get.back();
@@ -420,12 +416,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
-  sendMessage() async {
-    if (chatMessageController.text.isEmpty) {
-      return;
-    }
+  sendMessage(String text) async {
     Map<String, dynamic> message = {
-      'message': chatMessageController.text,
+      'message': text,
       'sentBy': _services.user!.uid,
       'time': DateTime.now().microsecondsSinceEpoch,
       'isOffer': false,
@@ -455,9 +448,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              FontAwesomeIcons.ellipsis,
+              Ionicons.ellipsis_horizontal,
               color: blackColor,
-              size: 20,
+              size: 25,
             ),
           ),
           const SizedBox(
@@ -528,14 +521,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    FontAwesomeIcons.circleExclamation,
+                                    Ionicons.alert_circle,
                                     size: 15,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    FontAwesomeIcons.solidImage,
+                                    Ionicons.image,
                                     size: 15,
                                     color: lightBlackColor,
                                   );
@@ -581,15 +574,86 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   child: ChatStream(chatRoomId: widget.chatRoomId),
                 ),
                 if (isActive == true)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: Text(
-                      'Note - Never share confidential information like passwords, card details, bank details etc.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: lightBlackColor,
-                      ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    width: MediaQuery.of(context).size.width,
+                    child: Wrap(
+                      runSpacing: 0,
+                      spacing: 5,
+                      alignment: WrapAlignment.start,
+                      children: [
+                        if (sellerUid != _services.user!.uid)
+                          ActionChip(
+                            pressElevation: 5,
+                            label: const Text('Make offer'),
+                            backgroundColor: Colors.green,
+                            labelStyle: const TextStyle(
+                              color: whiteColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            onPressed: showMakeOfferDialog,
+                            padding: const EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ActionChip(
+                          pressElevation: 5,
+                          label: const Text('Is it available?'),
+                          backgroundColor: greyColor,
+                          labelStyle: const TextStyle(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => sendMessage('Is it available?'),
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        ActionChip(
+                          pressElevation: 5,
+                          label: const Text('Hello'),
+                          backgroundColor: greyColor,
+                          labelStyle: const TextStyle(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => sendMessage('Hello'),
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        ActionChip(
+                          pressElevation: 5,
+                          label: const Text('Please reply'),
+                          backgroundColor: greyColor,
+                          labelStyle: const TextStyle(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => sendMessage('Please reply'),
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        ActionChip(
+                          pressElevation: 5,
+                          label: const Text('Not interested'),
+                          backgroundColor: greyColor,
+                          labelStyle: const TextStyle(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => sendMessage('Not interested'),
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 isActive == false
@@ -626,35 +690,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 controller: chatMessageController,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.send,
-                                label: 'Write something',
-                                hint:
-                                    'Ask for product details, features and more',
+                                hint: 'Write something',
                                 maxLength: 500,
                               ),
                             ),
-                            if (sellerUid != _services.user!.uid)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: FloatingActionButton(
-                                  onPressed: showMakeOfferDialog,
-                                  tooltip: 'Make an offer',
-                                  backgroundColor: Colors.green,
-                                  elevation: 0,
-                                  highlightElevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Icon(
-                                    FontAwesomeIcons.indianRupeeSign,
-                                    size: 25,
-                                    color: whiteColor,
-                                  ),
-                                ),
-                              ),
                             Padding(
                               padding: const EdgeInsets.only(left: 15),
                               child: FloatingActionButton(
-                                onPressed: sendMessage,
+                                onPressed: () {
+                                  if (chatMessageController.text.isNotEmpty) {
+                                    sendMessage(chatMessageController.text);
+                                  }
+                                },
                                 tooltip: 'Send message',
                                 backgroundColor: blueColor,
                                 elevation: 0,
@@ -663,7 +710,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(
-                                  FontAwesomeIcons.solidPaperPlane,
+                                  Ionicons.send,
                                   size: 25,
                                   color: whiteColor,
                                 ),

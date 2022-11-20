@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/loading_button.dart';
+import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
 import '/screens/main_screen.dart';
 import '/screens/selling/congratulations_screen.dart';
@@ -331,8 +333,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return const Icon(
-                                                FontAwesomeIcons
-                                                    .circleExclamation,
+                                                Ionicons.alert_circle,
                                                 size: 20,
                                                 color: redColor,
                                               );
@@ -419,7 +420,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.user,
+                                  Ionicons.person,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -442,7 +443,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.gasPump,
+                                  Ionicons.funnel,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -468,7 +469,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.calendar,
+                                  Ionicons.calendar,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -494,7 +495,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  FontAwesomeIcons.road,
+                                  Ionicons.speedometer,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -863,7 +864,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(FontAwesomeIcons.circleXmark),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           actions: [
             TextButton(
@@ -912,12 +913,15 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Category'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: subCatNameController,
                     keyboardType: TextInputType.text,
-                    label: 'Category',
                     hint: '',
                     isEnabled: false,
                     maxLength: 80,
@@ -927,12 +931,15 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Brand'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: brandNameController,
                     keyboardType: TextInputType.text,
-                    label: 'Brand Name',
                     hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
                     maxLength: 30,
                     textInputAction: TextInputAction.next,
@@ -949,13 +956,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Model/Variant'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: modelNameController,
                     keyboardType: TextInputType.text,
-                    label: 'Model',
-                    hint: 'Enter the model name. Ex: Swift, Activa',
+                    //  label: 'Model',
+                    hint: 'Ex: Swift ZDI+, Activa 6G',
                     maxLength: 40,
                     textInputAction: TextInputAction.next,
                     isEnabled: isLoading ? false : true,
@@ -969,6 +980,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 ),
                 const SizedBox(
                   height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Kms Driven'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -989,10 +1004,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     ],
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Kms Driven',
-                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                      hintText: '1,45,000',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -1037,7 +1053,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
                           color: blueColor,
@@ -1047,18 +1063,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       hintStyle: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: greyColor,
+                        color: fadedColor,
                       ),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
-                      ),
-                      floatingLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: lightBlackColor,
                       ),
                     ),
                   ),
@@ -1066,20 +1077,24 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Fuel type'),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
                       hint: const Text(
-                        'Fuel type',
+                        '--Select--',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
                       ),
                       style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
                       buttonDecoration: BoxDecoration(
@@ -1087,11 +1102,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
+                        Ionicons.chevron_down,
                         size: 15,
                       ),
                       iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
+                        Ionicons.chevron_up,
                         size: 15,
                       ),
                       buttonPadding: const EdgeInsets.symmetric(
@@ -1145,7 +1160,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             hintText: 'Search for fuel type',
                             hintStyle: const TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 12,
+                              fontSize: 16,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -1170,13 +1185,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Year of Registration'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
                       hint: const Text(
-                        'Year of Registration',
+                        '--Select--',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
@@ -1191,11 +1210,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
+                        Ionicons.chevron_down,
                         size: 15,
                       ),
                       iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
+                        Ionicons.chevron_up,
                         size: 15,
                       ),
                       buttonPadding: const EdgeInsets.symmetric(
@@ -1249,7 +1268,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             hintText: 'Search for an year',
                             hintStyle: const TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 12,
+                              fontSize: 16,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -1274,13 +1293,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Color'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
                       hint: const Text(
-                        'Color',
+                        '--Select--',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
@@ -1295,11 +1318,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
+                        Ionicons.chevron_down,
                         size: 15,
                       ),
                       iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
+                        Ionicons.chevron_up,
                         size: 15,
                       ),
                       buttonPadding: const EdgeInsets.symmetric(
@@ -1353,7 +1376,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             hintText: 'Search for a color',
                             hintStyle: const TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 12,
+                              fontSize: 16,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -1378,13 +1401,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Number of Owners'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
                       hint: const Text(
-                        'Number of Owners',
+                        '--Select--',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
@@ -1399,11 +1426,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       icon: const Icon(
-                        FontAwesomeIcons.chevronDown,
+                        Ionicons.chevron_down,
                         size: 15,
                       ),
                       iconOnClick: const Icon(
-                        FontAwesomeIcons.chevronUp,
+                        Ionicons.chevron_up,
                         size: 15,
                       ),
                       buttonPadding: const EdgeInsets.symmetric(
@@ -1457,7 +1484,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             hintText: 'Search for an item...',
                             hintStyle: const TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 12,
+                              fontSize: 16,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -1499,12 +1526,15 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Description'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: descriptionController,
                     keyboardType: TextInputType.multiline,
-                    label: 'Description',
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
                     maxLength: 3000,
@@ -1526,6 +1556,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Price'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextFormField(
@@ -1545,9 +1579,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     ],
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Price',
                       hintText: 'Set a price for your product',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
@@ -1593,7 +1628,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
                           color: blueColor,
@@ -1603,18 +1638,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       hintStyle: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.normal,
-                        color: greyColor,
+                        color: fadedColor,
                       ),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
-                      ),
-                      floatingLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 15,
-                        color: lightBlackColor,
                       ),
                     ),
                   ),
@@ -1662,12 +1692,15 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: CustomTextField(
                     controller: locationController,
                     keyboardType: TextInputType.text,
-                    label: 'Location',
                     hint: 'Choose your location to list product',
                     maxLines: 2,
                     showCounterText: false,
@@ -1704,19 +1737,11 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
             top: 10,
           ),
           child: isLoading
-              ? CustomButton(
-                  text: 'Loading...',
-                  onPressed: () {},
-                  isDisabled: isLoading,
-                  icon: FontAwesomeIcons.spinner,
-                  bgColor: greyColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
-                )
+              ? const LoadingButton()
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: FontAwesomeIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

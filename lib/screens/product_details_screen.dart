@@ -6,14 +6,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
+import '../widgets/text_field_label.dart';
 import 'all_images_display_screen.dart';
 import '/screens/help_and_support_screen.dart';
 import '/screens/selling/common/edit_ad_screen.dart';
@@ -218,6 +218,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  const TextFieldLabel(labelText: 'Message'),
                   CustomTextField(
                     controller: reportTextController,
                     keyboardType: TextInputType.text,
@@ -225,22 +226,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     showCounterText: true,
                     maxLength: 1000,
                     maxLines: 3,
-                    label: 'Message',
                     hint:
                         'Explain in detail why you are reporting this product',
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  RichText(
-                    text: TextSpan(
+                  Text.rich(
+                    TextSpan(
                       text: "To include a screenshot with your report, please",
                       children: [
                         TextSpan(
                           text: " go to Help and Support",
                           style: const TextStyle(
                             color: blueColor,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                           recognizer: TapGestureRecognizer()
@@ -253,13 +253,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           text: " section and report from there.",
                           style: TextStyle(
                             color: lightBlackColor,
-                            fontSize: 15,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                       style: const TextStyle(
                         color: lightBlackColor,
-                        fontSize: 15,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -267,7 +267,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     height: 10,
                   ),
                   CustomButton(
-                    icon: FontAwesomeIcons.bug,
+                    icon: Ionicons.bug,
                     text: 'Report Product',
                     onPressed: () {
                       if (reportTextController.text.isEmpty) {
@@ -335,18 +335,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     height: 10,
                   ),
                   CustomButton(
-                    icon: FontAwesomeIcons.shareNodes,
-                    text: 'Share Product',
-                    onPressed: () {},
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButton(
-                    icon: FontAwesomeIcons.bug,
+                    icon: Ionicons.bug,
                     text: 'Report Product',
                     onPressed: () {
                       Get.back();
@@ -467,31 +456,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ? []
                   : [
                       GestureDetector(
-                        onTap: () async {
-                          var url = Uri.parse(widget.productData['images'][0]);
-                          Share.share(
-                            'I found this ${widget.productData['title']} at ${priceFormat.format(widget.productData['price'])} on BestDeal.🤩\nCheck it out now - $url',
-                            subject:
-                                'Wow! Look at this deal I found on BestDeal.',
-                          );
-                        },
-                        behavior: HitTestBehavior.opaque,
-                        child: const Icon(
-                          FontAwesomeIcons.shareNodes,
-                          color: blackColor,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      GestureDetector(
                         onTap: showOptionsDialog,
                         behavior: HitTestBehavior.opaque,
                         child: const Icon(
-                          FontAwesomeIcons.ellipsis,
+                          Ionicons.ellipsis_horizontal,
                           color: blackColor,
-                          size: 20,
+                          size: 25,
                         ),
                       ),
                       const SizedBox(
@@ -597,8 +567,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      FontAwesomeIcons
-                                                          .circleExclamation,
+                                                      Ionicons.alert_circle,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -609,7 +578,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 return const Center(
                                                   child: SpinKitFadingCircle(
                                                     color: greyColor,
-                                                    size: 20,
+                                                    size: 30,
                                                     duration: Duration(
                                                         milliseconds: 1000),
                                                   ),
@@ -627,7 +596,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 splashColor: blueColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
-                                                  FontAwesomeIcons.circleXmark,
+                                                  Ionicons.close_circle_outline,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -659,10 +628,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   itemBuilder: (context, index, realIndex) {
                                     return CachedNetworkImage(
                                       imageUrl: images[index],
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.contain,
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          FontAwesomeIcons.circleExclamation,
+                                          Ionicons.alert_circle,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -671,7 +640,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         return const Center(
                                           child: SpinKitFadingCircle(
                                             color: greyColor,
-                                            size: 20,
+                                            size: 30,
                                             duration:
                                                 Duration(milliseconds: 1000),
                                           ),
@@ -704,18 +673,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 7,
-                                    vertical: 2,
+                                    vertical: 5,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(7),
                                     color: lightBlackColor,
                                   ),
                                   child: Text(
                                     '${currentImage + 1}/${widget.productData['images'].length}',
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w500,
                                       color: whiteColor,
-                                      fontSize: 11,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -777,12 +746,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Row(
                                 children: [
                                   const Icon(
-                                    FontAwesomeIcons.eye,
-                                    size: 16,
+                                    Ionicons.eye_outline,
+                                    size: 20,
                                     color: blueColor,
                                   ),
                                   const SizedBox(
-                                    width: 7,
+                                    width: 5,
                                   ),
                                   Text(
                                     numberFormat.format(
@@ -801,12 +770,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Row(
                                 children: [
                                   const Icon(
-                                    FontAwesomeIcons.heart,
-                                    size: 16,
+                                    Ionicons.heart_outline,
+                                    size: 20,
                                     color: pinkColor,
                                   ),
                                   const SizedBox(
-                                    width: 7,
+                                    width: 5,
                                   ),
                                   Text(
                                     numberFormat.format(
@@ -847,8 +816,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.locationDot,
-                                size: 12,
+                                Ionicons.location,
+                                size: 15,
                                 color: lightBlackColor,
                               ),
                               const SizedBox(
@@ -875,8 +844,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               const Icon(
-                                FontAwesomeIcons.clock,
-                                size: 12,
+                                Ionicons.time,
+                                size: 15,
                                 color: lightBlackColor,
                               ),
                               const SizedBox(
@@ -898,6 +867,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Ionicons.list,
+                                size: 15,
+                                color: lightBlackColor,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      const TextSpan(text: 'In '),
+                                      TextSpan(
+                                        text:
+                                            '${widget.productData['catName']} > ${widget.productData['subCat']}',
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () => Get.to(
+                                                () => CategoryProductsScreen(
+                                                  catName: widget
+                                                      .productData['catName'],
+                                                  subCatName: widget
+                                                      .productData['subCat'],
+                                                ),
+                                                transition: Transition.downToUp,
+                                              ),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: blueColor,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: lightBlackColor,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(
                           height: 15,
                         ),
@@ -910,13 +927,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       horizontal: 15,
                                     ),
                                     child: CustomButton(
-                                      text: 'Promote Product',
+                                      text: 'Reach More Buyers',
                                       onPressed: () => Get.to(
                                         () => PromoteListingScreen(
                                           productId: widget.productData.id,
+                                          title: widget.productData['title'],
+                                          price: widget.productData['price']
+                                              .toDouble(),
+                                          imageUrl: widget.productData['images']
+                                              [0],
                                         ),
                                       ),
-                                      icon: FontAwesomeIcons.moneyBill1Wave,
+                                      icon: Ionicons.trending_up,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -944,7 +966,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 productData: widget.productData,
                                               ),
                                             ),
-                                      icon: FontAwesomeIcons.solidPenToSquare,
+                                      icon: Ionicons.create_outline,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
@@ -959,7 +981,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     child: CustomButton(
                                       text: 'Chat with Seller',
                                       onPressed: createChatRoom,
-                                      icon: FontAwesomeIcons.solidComment,
+                                      icon: Ionicons.chatbox,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -993,8 +1015,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 );
                               },
                               icon: isLiked
-                                  ? FontAwesomeIcons.solidHeart
-                                  : FontAwesomeIcons.heart,
+                                  ? Ionicons.heart
+                                  : Ionicons.heart_outline,
                               bgColor: whiteColor,
                               borderColor: pinkColor,
                               textIconColor: pinkColor,
@@ -1134,7 +1156,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               const Icon(
-                                                FontAwesomeIcons.user,
+                                                Ionicons.person,
                                                 size: 15,
                                                 color: blueColor,
                                               ),
@@ -1171,7 +1193,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               const Icon(
-                                                FontAwesomeIcons.gasPump,
+                                                Ionicons.funnel,
                                                 size: 15,
                                                 color: blueColor,
                                               ),
@@ -1207,7 +1229,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               const Icon(
-                                                FontAwesomeIcons.calendar,
+                                                Ionicons.calendar,
                                                 size: 15,
                                                 color: blueColor,
                                               ),
@@ -1244,7 +1266,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               const Icon(
-                                                FontAwesomeIcons.road,
+                                                Ionicons.speedometer,
                                                 size: 15,
                                                 color: blueColor,
                                               ),
@@ -1279,62 +1301,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           const SizedBox(
                                             height: 3,
                                           ),
-                                          GestureDetector(
-                                            behavior: HitTestBehavior.opaque,
-                                            onTap: () => Get.to(
-                                              () => CategoryProductsScreen(
-                                                catName: widget
-                                                    .productData['catName'],
-                                                subCatName: widget
-                                                    .productData['subCat'],
-                                              ),
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const Icon(
-                                                  FontAwesomeIcons.list,
-                                                  size: 15,
-                                                  color: blueColor,
-                                                ),
-                                                const SizedBox(
-                                                  width: 7,
-                                                ),
-                                                const Text(
-                                                  'Category',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: lightBlackColor,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.4,
-                                                  child: AutoSizeText(
-                                                    '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                                    maxLines: 2,
-                                                    softWrap: true,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    textAlign: TextAlign.end,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: blackColor,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ),
@@ -1344,102 +1310,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ],
                                 ),
                               )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'About this product',
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: blackColor,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: greyColor,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          GestureDetector(
-                                            behavior: HitTestBehavior.opaque,
-                                            onTap: () => Get.to(
-                                              () => CategoryProductsScreen(
-                                                catName: widget
-                                                    .productData['catName'],
-                                                subCatName: widget
-                                                    .productData['subCat'],
-                                              ),
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const Icon(
-                                                  FontAwesomeIcons.list,
-                                                  size: 15,
-                                                  color: blueColor,
-                                                ),
-                                                const SizedBox(
-                                                  width: 7,
-                                                ),
-                                                const Text(
-                                                  'Category',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: lightBlackColor,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.4,
-                                                  child: AutoSizeText(
-                                                    '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                                    maxLines: 2,
-                                                    softWrap: true,
-                                                    textAlign: TextAlign.end,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: blackColor,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                  ],
-                                ),
+                            : const SizedBox(
+                                height: 0,
+                                width: 0,
                               ),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -1552,7 +1425,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 color: blueColor,
                                               ),
                                               child: const Icon(
-                                                FontAwesomeIcons.userTie,
+                                                Ionicons.person,
                                                 color: whiteColor,
                                                 size: 20,
                                               ),
@@ -1575,8 +1448,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorWidget:
                                                       (context, url, error) {
                                                     return const Icon(
-                                                      FontAwesomeIcons
-                                                          .circleExclamation,
+                                                      Ionicons.alert_circle,
                                                       size: 10,
                                                       color: redColor,
                                                     );
@@ -1586,7 +1458,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       child:
                                                           SpinKitFadingCircle(
                                                         color: lightBlackColor,
-                                                        size: 10,
+                                                        size: 20,
                                                         duration: Duration(
                                                             milliseconds: 1000),
                                                       ),
@@ -1655,7 +1527,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ),
                                       const Spacer(),
                                       const Icon(
-                                        FontAwesomeIcons.chevronRight,
+                                        Ionicons.chevron_forward,
                                         color: blackColor,
                                         size: 13,
                                       ),
@@ -1758,7 +1630,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             child: Center(
               child: SpinKitFadingCircle(
                 color: lightBlackColor,
-                size: 20,
+                size: 30,
                 duration: Duration(milliseconds: 1000),
               ),
             ),
@@ -1805,14 +1677,14 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 right: 15,
               ),
               child: CustomButton(
-                text: 'See More in ${widget.subCatName}',
+                text: 'See more similar products',
                 onPressed: () => Get.to(
                   () => CategoryProductsScreen(
                     catName: widget.catName,
                     subCatName: widget.subCatName,
                   ),
                 ),
-                icon: FontAwesomeIcons.chevronRight,
+                icon: Ionicons.chevron_forward,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

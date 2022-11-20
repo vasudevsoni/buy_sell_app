@@ -1,10 +1,12 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 
+import '../widgets/loading_button.dart';
+import '../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button.dart';
@@ -62,7 +64,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         );
         return;
       }
-      if (nameController.text.isEmail) {
+      if (nameController.text.isEmpty) {
         showSnackBar(
           content: 'Please fill all the required fields',
           color: redColor,
@@ -214,12 +216,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFieldLabel(labelText: 'Name'),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CustomTextField(
                   controller: nameController,
                   keyboardType: TextInputType.text,
-                  label: 'Name',
                   hint: 'Enter you name',
                   maxLength: 80,
                   isEnabled: isLoading ? false : true,
@@ -236,12 +241,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFieldLabel(labelText: 'Bio (Optional)'),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CustomTextField(
                   controller: bioController,
                   keyboardType: TextInputType.multiline,
-                  label: 'Bio (Optional)',
                   hint: 'Enter a short bio about yourself',
                   maxLength: 200,
                   maxLines: 3,
@@ -253,14 +261,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFieldLabel(labelText: 'Date of Birth (Optional)'),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CustomTextField(
                   controller: dobController,
                   keyboardType: TextInputType.text,
-                  label: 'Date of Birth (Optional)',
                   hint: '',
-                  maxLength: 80,
+                  maxLength: 20,
                   isReadOnly: true,
                   isEnabled: isLoading ? false : true,
                   onTap: () async {
@@ -299,19 +310,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           top: 10,
         ),
         child: isLoading
-            ? CustomButton(
-                text: 'Loading...',
-                onPressed: () {},
-                isDisabled: isLoading,
-                icon: FontAwesomeIcons.spinner,
-                bgColor: greyColor,
-                borderColor: greyColor,
-                textIconColor: blackColor,
-              )
+            ? const LoadingButton()
             : CustomButton(
                 text: 'Proceed',
                 onPressed: validateForm,
-                icon: FontAwesomeIcons.arrowRight,
+                icon: Ionicons.arrow_forward,
                 bgColor: blueColor,
                 borderColor: blueColor,
                 textIconColor: whiteColor,

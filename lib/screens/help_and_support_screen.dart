@@ -1,13 +1,14 @@
-import 'package:buy_sell_app/screens/web_view/faqs.dart';
-import 'package:buy_sell_app/screens/web_view/privacy_policy_screen.dart';
-import 'package:buy_sell_app/screens/web_view/terms_of_service.dart';
-import 'package:buy_sell_app/widgets/custom_list_tile_no_image.dart';
+import 'package:buy_sell_app/screens/feedback_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
+import 'web_view/faqs.dart';
+import 'web_view/privacy_policy_screen.dart';
+import 'web_view/terms_of_service.dart';
+import '/widgets/custom_list_tile_no_image.dart';
 import '/utils/utils.dart';
-import '/report_screen.dart';
+import 'report_screen.dart';
 import '/widgets/custom_list_tile_with_subtitle.dart';
 
 class HelpAndSupportScreen extends StatefulWidget {
@@ -53,21 +54,23 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Provide Feedback',
+              text: 'Give Feedback',
               subTitle:
-                  'If you have some recommendations or improvements, please tell us here',
-              icon: FontAwesomeIcons.fedex,
+                  'If you have some feedback, recommendations or improvements for us, we would love to hear them',
+              icon: Ionicons.cafe,
               textColor: blackColor,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () {},
+              onTap: () => Get.to(
+                () => const FeedbackScreen(),
+              ),
             ),
             CustomListTileWithSubtitle(
               text: 'Report a Problem',
               subTitle: 'If something is not right, please report it here',
-              icon: FontAwesomeIcons.bug,
+              icon: Ionicons.bug,
               textColor: redColor,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const ReportScreen(),
@@ -93,8 +96,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Frequently Asked Questions',
               subTitle: 'Read our FAQ\'s for more details',
-              icon: FontAwesomeIcons.solidCircleQuestion,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.help_circle,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const FAQs(),
@@ -103,8 +106,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Terms of Service',
-              icon: FontAwesomeIcons.bookOpen,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.book,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const TermsOfService(),
@@ -113,8 +116,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Privacy Policy',
-              icon: FontAwesomeIcons.lock,
-              trailingIcon: FontAwesomeIcons.chevronRight,
+              icon: Ionicons.lock_closed,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const PrivacyPolicy(),
@@ -123,8 +126,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Version',
-              subTitle: '1.0.0',
-              icon: FontAwesomeIcons.mobile,
+              subTitle: '0.0.4',
+              icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},
             ),

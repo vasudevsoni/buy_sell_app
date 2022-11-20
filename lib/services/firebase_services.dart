@@ -44,7 +44,7 @@ class FirebaseServices {
   ) async {
     try {
       await users.doc(id).update(data);
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -55,7 +55,7 @@ class FirebaseServices {
   createChatRoomInFirebase({chatData}) async {
     try {
       await chats.doc(chatData['chatRoomId']).set(chatData);
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -71,7 +71,7 @@ class FirebaseServices {
         'lastChatTime': message['time'],
         'read': false,
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -100,7 +100,7 @@ class FirebaseServices {
           color: blueColor,
         );
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -117,10 +117,6 @@ class FirebaseServices {
         await users.doc(currentUserId).update({
           'following': FieldValue.arrayRemove([userId])
         });
-        showSnackBar(
-          content: 'Unfollowed user',
-          color: blueColor,
-        );
         return;
       }
       await users.doc(userId).update({
@@ -129,11 +125,7 @@ class FirebaseServices {
       await users.doc(currentUserId).update({
         'following': FieldValue.arrayUnion([userId])
       });
-      showSnackBar(
-        content: 'Followed user',
-        color: blueColor,
-      );
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -148,11 +140,11 @@ class FirebaseServices {
         'isSold': true,
       }).then((value) {
         showSnackBar(
-          content: 'Your product has been marked as sold',
+          content: 'The product has been marked as sold',
           color: blueColor,
         );
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -170,7 +162,7 @@ class FirebaseServices {
           color: blueColor,
         );
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -186,7 +178,7 @@ class FirebaseServices {
           color: redColor,
         );
       });
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -201,7 +193,7 @@ class FirebaseServices {
     final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
     try {
       await storageRef.delete();
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -237,19 +229,48 @@ class FirebaseServices {
       }
       await listings.doc(listingId.toString()).delete().then((value) {
         showSnackBar(
-          content: 'Product deleted',
+          content: 'Product has been deleted',
           color: redColor,
         );
       });
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException {
       showSnackBar(
-        content: 'Unable to delete product. Please try again',
+        content: 'Something has gone wrong. Please try again',
         color: redColor,
       );
     }
   }
 
-  feedbackToFirestore({
+  submitFeedback({
+    text,
+    model,
+    androidVersion,
+    securityPatch,
+  }) async {
+    try {
+      var id = uuid.v4();
+      await reports.doc(id).set({
+        'type': 'feedback',
+        'userId': user!.uid,
+        'text': text,
+        'postedAt': DateTime.now().toLocal().toString(),
+        'model': model,
+        'androidVersion': androidVersion,
+        'securityPatch': securityPatch,
+      });
+      showSnackBar(
+        content: 'Feedback submitted. Thank you so much for your effort',
+        color: blueColor,
+      );
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  reportAProblem({
     text,
     model,
     androidVersion,
@@ -271,12 +292,13 @@ class FirebaseServices {
         'model': model,
         'androidVersion': androidVersion,
         'securityPatch': securityPatch,
+        'isResolved': false,
       });
       showSnackBar(
-        content: 'Report submitted. We will try to fix it as soon as possible',
+        content: 'Report submitted. We will look into it as soon as possible',
         color: blueColor,
       );
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -293,12 +315,13 @@ class FirebaseServices {
         'userUid': user!.uid,
         'message': message,
         'postedAt': DateTime.now().toLocal().toString(),
+        'isResolved': false,
       });
       showSnackBar(
         content: 'Product reported. We will look into it as soon as possible',
         color: blueColor,
       );
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -315,16 +338,57 @@ class FirebaseServices {
         'userUid': userId,
         'message': message,
         'postedAt': DateTime.now().toLocal().toString(),
+        'isResolved': false,
       });
       showSnackBar(
         content: 'User reported. We will look into it as soon as possible',
         color: blueColor,
       );
-    } on FirebaseException catch (_) {
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
       );
     }
   }
+
+  // Future<String> createDynamicLink() async {
+  //   final dynamicLinkParams = DynamicLinkParameters(
+  //     link: Uri.parse("https://sites.google.com/view/buy-sell-app/home/"),
+  //     uriPrefix: "https://vasudevsoni.page.link",
+  //     androidParameters: const AndroidParameters(
+  //       packageName: "com.vasudevsoni.buy_sell_app",
+  //       minimumVersion: 0,
+  //     ),
+  //     iosParameters: IOSParameters(
+  //       bundleId: "com.example.app.ios",
+  //       appStoreId: "123456789",
+  //       minimumVersion: "1.0.1",
+  //       fallbackUrl:
+  //           Uri.parse('https://sites.google.com/view/buy-sell-app/home/'),
+  //     ),
+  //   );
+
+  //   final dynamicLink =
+  //       await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+  //   return dynamicLink.shortUrl.toString();
+  // }
+
+  // Future initDynamicLink() async {
+  //   final PendingDynamicLinkData? data =
+  //       await FirebaseDynamicLinks.instance.getInitialLink();
+  //   _handleDeepLink(data);
+
+  //   FirebaseDynamicLinks.instance.onLink
+  //       .listen((PendingDynamicLinkData dynamicLinkData) async {
+  //     _handleDeepLink(dynamicLinkData);
+  //   }).onError((e) {
+  //     log('Something has gone wrong: $e');
+  //   });
+  // }
+
+  // void _handleDeepLink(PendingDynamicLinkData? data) {
+  //   final Uri deepLink = data!.link;
+  //   log(deepLink.toString());
+  // }
 }

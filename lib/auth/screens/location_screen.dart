@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/loading_button.dart';
 import '/provider/location_provider.dart';
 import '/screens/selling/seller_categories_list_screen.dart';
 import '/services/firebase_services.dart';
@@ -134,21 +137,8 @@ class _LocationScreenState extends State<LocationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: greyColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                width: 100,
-                height: 100,
-                child: const Icon(
-                  FontAwesomeIcons.locationDot,
-                  size: 50,
-                  color: blueColor,
-                ),
-              ),
+            const SizedBox(
+              height: 15,
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
@@ -175,21 +165,38 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
             ),
             const Spacer(),
+            Container(
+              padding: const EdgeInsets.all(15),
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: greyColor,
+              ),
+              child: SvgPicture.network(
+                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=7fd13d95-fd72-4b9d-8874-64df71b84270',
+                semanticsLabel: 'Location image',
+                fit: BoxFit.contain,
+                placeholderBuilder: (BuildContext context) => const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Center(
+                    child: SpinKitFadingCircle(
+                      color: lightBlackColor,
+                      size: 30,
+                      duration: Duration(milliseconds: 1000),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const Spacer(),
             isLoading
                 ? Container(
                     margin: const EdgeInsets.only(
                       left: 15,
                       right: 15,
                     ),
-                    child: CustomButton(
-                      text: 'Fetching Location...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: greyColor,
-                      borderColor: greyColor,
-                      textIconColor: blackColor,
-                      isDisabled: true,
-                      onPressed: () {},
-                    ),
+                    child: const LoadingButton(),
                   )
                 : Container(
                     margin: const EdgeInsets.only(
@@ -197,8 +204,8 @@ class _LocationScreenState extends State<LocationScreen> {
                       right: 15,
                     ),
                     child: CustomButton(
-                      text: 'Set Location using GPS',
-                      icon: FontAwesomeIcons.locationCrosshairs,
+                      text: 'Use Current Location',
+                      icon: Ionicons.locate,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
@@ -238,7 +245,7 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               child: CustomButton(
                 text: 'Skip',
-                icon: FontAwesomeIcons.forward,
+                icon: Ionicons.play_skip_forward,
                 bgColor: whiteColor,
                 borderColor: blackColor,
                 textIconColor: blackColor,

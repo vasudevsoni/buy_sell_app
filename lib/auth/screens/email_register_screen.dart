@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/loading_button.dart';
+import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '../services/email_auth_service.dart';
 import '/widgets/custom_button.dart';
@@ -78,11 +80,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const TextFieldLabel(labelText: 'Name'),
               CustomTextField(
                 controller: nameController,
                 keyboardType: TextInputType.name,
-                label: 'Name',
-                hint: 'Enter your Name',
+                hint: 'John Doe',
                 maxLength: 80,
                 textInputAction: TextInputAction.next,
                 isEnabled: isLoading ? false : true,
@@ -99,11 +101,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
               const SizedBox(
                 height: 10,
               ),
+              const TextFieldLabel(labelText: 'Email address'),
               CustomTextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
-                label: 'Email address',
-                hint: 'Enter your Email address',
+                hint: 'johndoe@gmail.com',
                 maxLength: 100,
                 textInputAction: TextInputAction.next,
                 isEnabled: isLoading ? false : true,
@@ -122,6 +124,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
               const SizedBox(
                 height: 10,
               ),
+              const TextFieldLabel(labelText: 'Password'),
               Row(
                 children: [
                   Expanded(
@@ -129,8 +132,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                     child: CustomTextField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
-                      label: 'Password',
-                      hint: 'Create a password',
+                      hint: 'doejohn\$2325',
                       maxLength: 15,
                       textInputAction: TextInputAction.next,
                       isObscured: isObscured ? true : false,
@@ -154,12 +156,12 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              FontAwesomeIcons.eyeSlash,
-                              size: 20,
+                              Ionicons.eye_off_outline,
+                              size: 30,
                             )
                           : const Icon(
-                              FontAwesomeIcons.eye,
-                              size: 20,
+                              Ionicons.eye_outline,
+                              size: 30,
                             ),
                     ),
                   ),
@@ -186,18 +188,10 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                 height: 5,
               ),
               isLoading
-                  ? CustomButton(
-                      text: 'Loading...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: greyColor,
-                      borderColor: greyColor,
-                      textIconColor: blackColor,
-                      onPressed: () {},
-                      isDisabled: isLoading,
-                    )
+                  ? const LoadingButton()
                   : CustomButton(
                       text: 'Create Account',
-                      icon: FontAwesomeIcons.userPlus,
+                      icon: Ionicons.person_add,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

@@ -5,13 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import 'promotion/promotion_api.dart';
 import 'provider/location_provider.dart';
-import 'auth/screens/landing_screen.dart';
 import 'provider/main_provider.dart';
-import 'utils/utils.dart';
-import 'router.dart';
 import 'provider/seller_form_provider.dart';
+import 'screens/loading_screen.dart';
+import 'error.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +17,6 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-  await PromotionApi.init();
   runApp(
     MultiProvider(
       providers: [
@@ -40,6 +33,10 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 }
 
 class MyApp extends StatefulWidget {
@@ -56,11 +53,13 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: 'SFProDisplay'),
       debugShowCheckedModeBanner: false,
-      onGenerateRoute: (settings) => generateRoute(settings),
-      home: const Scaffold(
-        backgroundColor: whiteColor,
-        body: LandingScreen(),
-      ),
+      home: const LoadingScreen(),
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (BuildContext context) => const ErrorScreen(),
+        );
+      },
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'package:buy_sell_app/widgets/text_field_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/loading_button.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_text_field.dart';
 import '/widgets/custom_button.dart';
@@ -72,13 +74,13 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const TextFieldLabel(labelText: 'Mobile Number'),
               Row(
                 children: [
                   Expanded(
                     flex: 1,
                     child: CustomTextField(
                       controller: countryCodeController,
-                      label: 'Country',
                       hint: '',
                       keyboardType: TextInputType.text,
                       maxLength: 5,
@@ -111,10 +113,11 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       ],
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
+                        color: blackColor,
+                        fontSize: 16,
                       ),
                       decoration: InputDecoration(
-                        labelText: 'Mobile Number',
-                        hintText: 'Enter your mobile number',
+                        hintText: '9876543210',
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 15,
                           vertical: 10,
@@ -167,20 +170,15 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           ),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
                         hintStyle: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 16,
                           fontWeight: FontWeight.normal,
-                          color: greyColor,
+                          color: fadedColor,
                         ),
                         labelStyle: const TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
-                        ),
-                        floatingLabelStyle: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 15,
-                          color: lightBlackColor,
                         ),
                       ),
                     ),
@@ -188,7 +186,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 ],
               ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               const Text(
                 'We\'ll send a verification code to this number.',
@@ -199,18 +197,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               ),
               const Spacer(),
               isLoading
-                  ? CustomButton(
-                      text: 'Loading...',
-                      icon: FontAwesomeIcons.spinner,
-                      bgColor: greyColor,
-                      borderColor: greyColor,
-                      textIconColor: blackColor,
-                      onPressed: () {},
-                      isDisabled: isLoading,
-                    )
+                  ? const LoadingButton()
                   : CustomButton(
                       text: 'Proceed',
-                      icon: FontAwesomeIcons.arrowRight,
+                      icon: Ionicons.arrow_forward,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

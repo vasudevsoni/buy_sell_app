@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/screens/category_products_screen.dart';
 import '/widgets/custom_list_tile_no_image.dart';
@@ -44,7 +44,7 @@ class SubCategoriesListScreen extends StatelessWidget {
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
               return const Center(
-                child: Text('Erorr loading sub-categories.'),
+                child: Text('Erorr loading sub-categories'),
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -53,7 +53,7 @@ class SubCategoriesListScreen extends StatelessWidget {
                 child: Center(
                   child: SpinKitFadingCircle(
                     color: lightBlackColor,
-                    size: 20,
+                    size: 30,
                     duration: Duration(milliseconds: 1000),
                   ),
                 ),
@@ -67,7 +67,7 @@ class SubCategoriesListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return CustomListTileNoImage(
                   text: data[index],
-                  trailingIcon: FontAwesomeIcons.chevronRight,
+                  trailingIcon: Ionicons.chevron_forward,
                   isEnabled: true,
                   onTap: () => Get.to(
                     () => CategoryProductsScreen(

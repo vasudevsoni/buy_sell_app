@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:provider/provider.dart';
 
@@ -52,459 +52,466 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
-      child: Scaffold(
-        backgroundColor: whiteColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
+      child: WillPopScope(
+        onWillPop: () async {
+          mainProv.switchToPage(0);
+          return false;
+        },
+        child: Scaffold(
           backgroundColor: whiteColor,
-          elevation: 0.5,
-          iconTheme: const IconThemeData(color: blackColor),
-          centerTitle: true,
-          title: const Text(
-            'Messages',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: blackColor,
-              fontSize: 15,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: whiteColor,
+            elevation: 0.5,
+            iconTheme: const IconThemeData(color: blackColor),
+            centerTitle: true,
+            title: const Text(
+              'Messages',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: blackColor,
+                fontSize: 15,
+              ),
+            ),
+            bottom: const TabBar(
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorColor: blueColor,
+              indicatorWeight: 3,
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                fontFamily: 'SFProDisplay',
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                fontFamily: 'SFProDisplay',
+              ),
+              labelColor: blackColor,
+              unselectedLabelColor: lightBlackColor,
+              tabs: [
+                Tab(child: Text('All')),
+                Tab(child: Text('Buying')),
+                Tab(child: Text('Selling')),
+              ],
             ),
           ),
-          bottom: const TabBar(
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorColor: blueColor,
-            indicatorWeight: 3,
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-              fontFamily: 'SFProDisplay',
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              fontFamily: 'SFProDisplay',
-            ),
-            labelColor: blackColor,
-            unselectedLabelColor: lightBlackColor,
-            tabs: [
-              Tab(child: Text('All')),
-              Tab(child: Text('Buying')),
-              Tab(child: Text('Selling')),
+          body: TabBarView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              StreamBuilder<QuerySnapshot>(
+                stream: _services.chats
+                    .where('users', arrayContains: _services.user!.uid)
+                    .snapshots(),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text(
+                          'Something has gone wrong. Please try again',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData && snapshot.data!.size == 0) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: greyColor,
+                          ),
+                          child: SvgPicture.network(
+                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                            semanticsLabel: 'Empty messages image',
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (BuildContext context) =>
+                                const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Center(
+                                child: SpinKitFadingCircle(
+                                  color: lightBlackColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'You have got no messages!',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'When you chat with a seller, it will show here.',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: CustomButtonWithoutIcon(
+                            text: 'Explore Products',
+                            onPressed: () => setState(() {
+                              mainProv.switchToPage(0);
+                            }),
+                            bgColor: blueColor,
+                            borderColor: blueColor,
+                            textIconColor: whiteColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Center(
+                        child: SpinKitFadingCircle(
+                          color: lightBlackColor,
+                          size: 30,
+                          duration: Duration(milliseconds: 1000),
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        color: fadedColor,
+                        height: 0,
+                        indent: 15,
+                        endIndent: 15,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> data = snapshot.data!.docs[index]
+                          .data() as Map<String, dynamic>;
+                      return ChatCard(chatData: data);
+                    },
+                    itemCount: snapshot.data!.docs.length,
+                    physics: const BouncingScrollPhysics(),
+                  );
+                },
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: _services.chats
+                    .where('users', arrayContains: _services.user!.uid)
+                    .where('product.seller', isNotEqualTo: _services.user!.uid)
+                    .snapshots(),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text(
+                          'Something has gone wrong. Please try again',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData && snapshot.data!.size == 0) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: greyColor,
+                          ),
+                          child: SvgPicture.network(
+                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                            semanticsLabel: 'Empty messages image',
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (BuildContext context) =>
+                                const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Center(
+                                child: SpinKitFadingCircle(
+                                  color: lightBlackColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'You have got no messages!',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'When you chat with a seller, it will show here.',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: CustomButtonWithoutIcon(
+                            text: 'Explore Products',
+                            onPressed: () => setState(() {
+                              mainProv.switchToPage(0);
+                            }),
+                            bgColor: blueColor,
+                            borderColor: blueColor,
+                            textIconColor: whiteColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Center(
+                        child: SpinKitFadingCircle(
+                          color: lightBlackColor,
+                          size: 30,
+                          duration: Duration(milliseconds: 1000),
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        color: fadedColor,
+                        height: 0,
+                        indent: 15,
+                        endIndent: 15,
+                      );
+                    },
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> data = snapshot.data!.docs[index]
+                          .data() as Map<String, dynamic>;
+                      return ChatCard(chatData: data);
+                    },
+                    itemCount: snapshot.data!.docs.length,
+                  );
+                },
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: _services.chats
+                    .where('users', arrayContains: _services.user!.uid)
+                    .where('product.seller', isEqualTo: _services.user!.uid)
+                    .snapshots(),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text(
+                          'Something has gone wrong. Please try again',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData && snapshot.data!.size == 0) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: greyColor,
+                          ),
+                          child: SvgPicture.network(
+                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                            semanticsLabel: 'Empty messages image',
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (BuildContext context) =>
+                                const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Center(
+                                child: SpinKitFadingCircle(
+                                  color: lightBlackColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'You have got no messages!',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'When someone sends you a message, it will show here.',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: CustomButtonWithoutIcon(
+                            text: 'Start Selling',
+                            onPressed: !user!.emailVerified &&
+                                    user!.providerData[0].providerId ==
+                                        'password'
+                                ? () => Get.to(
+                                      () => const EmailVerificationScreen(),
+                                    )
+                                : onSellButtonClicked,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
+                            textIconColor: whiteColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Center(
+                        child: SpinKitFadingCircle(
+                          color: lightBlackColor,
+                          size: 30,
+                          duration: Duration(milliseconds: 1000),
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        color: fadedColor,
+                        height: 0,
+                        indent: 15,
+                        endIndent: 15,
+                      );
+                    },
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> data = snapshot.data!.docs[index]
+                          .data() as Map<String, dynamic>;
+                      return ChatCard(chatData: data);
+                    },
+                    itemCount: snapshot.data!.docs.length,
+                  );
+                },
+              ),
             ],
           ),
-        ),
-        body: TabBarView(
-          physics: const BouncingScrollPhysics(),
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: _services.chats
-                  .where('users', arrayContains: _services.user!.uid)
-                  .snapshots(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot,
-              ) {
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text(
-                        'Something has gone wrong. Please try again',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: greyColor,
-                        ),
-                        child: SvgPicture.network(
-                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
-                          semanticsLabel: 'Empty messages image',
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (BuildContext context) =>
-                              const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 20,
-                                duration: Duration(milliseconds: 1000),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'You have got no messages!',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'When you chat with a seller, it will show here.',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: CustomButtonWithoutIcon(
-                          text: 'Explore Products',
-                          onPressed: () => setState(() {
-                            mainProv.switchToPage(0);
-                          }),
-                          bgColor: blueColor,
-                          borderColor: blueColor,
-                          textIconColor: whiteColor,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 20,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      color: fadedColor,
-                      height: 0,
-                      indent: 15,
-                      endIndent: 15,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> data = snapshot.data!.docs[index]
-                        .data() as Map<String, dynamic>;
-                    return ChatCard(chatData: data);
-                  },
-                  itemCount: snapshot.data!.docs.length,
-                  physics: const BouncingScrollPhysics(),
-                );
-              },
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _services.chats
-                  .where('users', arrayContains: _services.user!.uid)
-                  .where('product.seller', isNotEqualTo: _services.user!.uid)
-                  .snapshots(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot,
-              ) {
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text(
-                        'Something has gone wrong. Please try again',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: greyColor,
-                        ),
-                        child: SvgPicture.network(
-                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
-                          semanticsLabel: 'Empty messages image',
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (BuildContext context) =>
-                              const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 20,
-                                duration: Duration(milliseconds: 1000),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'You have got no messages!',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'When you chat with a seller, it will show here.',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: CustomButtonWithoutIcon(
-                          text: 'Explore Products',
-                          onPressed: () => setState(() {
-                            mainProv.switchToPage(0);
-                          }),
-                          bgColor: blueColor,
-                          borderColor: blueColor,
-                          textIconColor: whiteColor,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 20,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      color: fadedColor,
-                      height: 0,
-                      indent: 15,
-                      endIndent: 15,
-                    );
-                  },
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> data = snapshot.data!.docs[index]
-                        .data() as Map<String, dynamic>;
-                    return ChatCard(chatData: data);
-                  },
-                  itemCount: snapshot.data!.docs.length,
-                );
-              },
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _services.chats
-                  .where('users', arrayContains: _services.user!.uid)
-                  .where('product.seller', isEqualTo: _services.user!.uid)
-                  .snapshots(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot,
-              ) {
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text(
-                        'Something has gone wrong. Please try again',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.hasData && snapshot.data!.size == 0) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: greyColor,
-                        ),
-                        child: SvgPicture.network(
-                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FOpen%20Doodles%20-%20no%20messages.svg?alt=media&token=cfa645dd-2a23-446e-8ebe-815204a6538e',
-                          semanticsLabel: 'Empty messages image',
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (BuildContext context) =>
-                              const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 20,
-                                duration: Duration(milliseconds: 1000),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'You have got no messages!',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          'When someone sends you a message, it will show here.',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: CustomButtonWithoutIcon(
-                          text: 'Start Selling',
-                          onPressed: !user!.emailVerified &&
-                                  user!.providerData[0].providerId == 'password'
-                              ? () => Get.to(
-                                    () => const EmailVerificationScreen(),
-                                  )
-                              : onSellButtonClicked,
-                          bgColor: blueColor,
-                          borderColor: blueColor,
-                          textIconColor: whiteColor,
-                        ),
-                      ),
-                    ],
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 20,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      color: fadedColor,
-                      height: 0,
-                      indent: 15,
-                      endIndent: 15,
-                    );
-                  },
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> data = snapshot.data!.docs[index]
-                        .data() as Map<String, dynamic>;
-                    return ChatCard(chatData: data);
-                  },
-                  itemCount: snapshot.data!.docs.length,
-                );
-              },
-            ),
-          ],
         ),
       ),
     );
@@ -589,6 +596,8 @@ class _ChatCardState extends State<ChatCard> {
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
+        splashFactory: InkRipple.splashFactory,
+        splashColor: greyColor,
         onTap: () => Get.to(
           () => ConversationScreen(
             chatRoomId: widget.chatData['chatRoomId'],
@@ -616,7 +625,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  FontAwesomeIcons.userTie,
+                                  Ionicons.person,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -629,14 +638,14 @@ class _ChatCardState extends State<ChatCard> {
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    FontAwesomeIcons.circleExclamation,
+                                    Ionicons.alert_circle,
                                     size: 20,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    FontAwesomeIcons.solidImage,
+                                    Ionicons.image,
                                     size: 20,
                                     color: lightBlackColor,
                                   );
@@ -652,7 +661,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  FontAwesomeIcons.userTie,
+                                  Ionicons.person,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -665,14 +674,14 @@ class _ChatCardState extends State<ChatCard> {
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    FontAwesomeIcons.circleExclamation,
+                                    Ionicons.alert_circle,
                                     size: 20,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    FontAwesomeIcons.solidImage,
+                                    Ionicons.image,
                                     size: 20,
                                     color: lightBlackColor,
                                   );
@@ -781,14 +790,14 @@ class _ChatCardState extends State<ChatCard> {
                                       fit: BoxFit.cover,
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          FontAwesomeIcons.circleExclamation,
+                                          Ionicons.alert_circle,
                                           size: 20,
                                           color: redColor,
                                         );
                                       },
                                       placeholder: (context, url) {
                                         return const Icon(
-                                          FontAwesomeIcons.solidImage,
+                                          Ionicons.image,
                                           size: 20,
                                           color: lightBlackColor,
                                         );

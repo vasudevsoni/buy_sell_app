@@ -11,7 +11,6 @@ class CustomTextField extends StatelessWidget {
   final bool autofocus;
   final bool isReadOnly;
   final bool isObscured;
-  final String label;
   final String hint;
   final int? maxLength;
   final void Function()? onTap;
@@ -28,7 +27,6 @@ class CustomTextField extends StatelessWidget {
     this.isEnabled = true,
     this.isReadOnly = false,
     this.showCounterText = false,
-    required this.label,
     this.onTap,
     this.onFieldSubmitted,
     this.isObscured = false,
@@ -62,9 +60,7 @@ class CustomTextField extends StatelessWidget {
         fontSize: 16,
       ),
       decoration: InputDecoration(
-        labelText: label,
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-        floatingLabelAlignment: FloatingLabelAlignment.start,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
         hintText: hint,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -119,7 +115,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
         ),
         hintStyle: const TextStyle(
-          fontSize: 12,
+          fontSize: 16,
           fontWeight: FontWeight.normal,
           color: fadedColor,
         ),
@@ -131,11 +127,6 @@ class CustomTextField extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: redColor,
-        ),
-        floatingLabelStyle: const TextStyle(
-          fontWeight: FontWeight.normal,
-          fontSize: 15,
-          color: lightBlackColor,
         ),
       ),
     );

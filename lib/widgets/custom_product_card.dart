@@ -3,8 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:like_button/like_button.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '/screens/product_details_screen.dart';
@@ -125,14 +124,14 @@ class _CustomProductCardState extends State<CustomProductCard> {
                             fit: BoxFit.cover,
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                FontAwesomeIcons.circleExclamation,
+                                Ionicons.alert_circle,
                                 size: 30,
                                 color: redColor,
                               );
                             },
                             placeholder: (context, url) {
                               return const Icon(
-                                FontAwesomeIcons.solidImage,
+                                Ionicons.image,
                                 size: 30,
                                 color: lightBlackColor,
                               );
@@ -207,39 +206,23 @@ class _CustomProductCardState extends State<CustomProductCard> {
               ),
               if (widget.data['sellerUid'] != services.user!.uid)
                 Positioned(
-                  top: -7,
+                  top: 0,
                   right: 0,
-                  child: LikeButton(
-                    isLiked: isLiked,
-                    likeCountPadding: const EdgeInsets.all(0),
-                    likeBuilder: (isLiked) {
-                      return Icon(
-                        isLiked
-                            ? FontAwesomeIcons.solidHeart
-                            : FontAwesomeIcons.heart,
-                        size: 20,
-                        color: isLiked ? pinkColor : lightBlackColor,
-                      );
-                    },
-                    bubblesColor: const BubblesColor(
-                      dotPrimaryColor: redColor,
-                      dotSecondaryColor: pinkColor,
-                      dotThirdColor: redColor,
-                      dotLastColor: pinkColor,
-                    ),
-                    bubblesSize: 60,
-                    circleColor:
-                        const CircleColor(start: redColor, end: blueColor),
-                    animationDuration: const Duration(milliseconds: 1300),
-                    onTap: (isLiked) async {
-                      this.isLiked = !isLiked;
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      isLiked = !isLiked;
                       services.updateFavorite(
-                        isLiked: !isLiked,
+                        isLiked: isLiked,
                         productId: widget.data.id,
                       );
                       setState(() {});
-                      return !isLiked;
                     },
+                    child: Icon(
+                      isLiked ? Ionicons.heart : Ionicons.heart_outline,
+                      size: 20,
+                      color: isLiked ? pinkColor : lightBlackColor,
+                    ),
                   ),
                 ),
             ],
