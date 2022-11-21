@@ -79,7 +79,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 5,
+                top: 15,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,7 +87,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 children: [
                   const Center(
                     child: Text(
-                      'No Connection',
+                      'Network Connection Lost',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -96,7 +96,17 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
+                  ),
+                  Image.asset(
+                    'assets/no-network.png',
+                    fit: BoxFit.contain,
+                    semanticLabel: 'no network connection',
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
@@ -107,6 +117,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ),
                     child: const Text(
                       'Please check your internet connection',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -172,6 +186,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final provider = Provider.of<SellerFormProvider>(context);
 
     updateProductOnFirebase(SellerFormProvider provider, String uid) async {
@@ -529,7 +544,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: const Text(

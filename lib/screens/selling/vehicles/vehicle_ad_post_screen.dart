@@ -105,7 +105,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 5,
+                top: 15,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +113,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 children: [
                   const Center(
                     child: Text(
-                      'No Connection',
+                      'Network Connection Lost',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -122,7 +122,17 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
+                  ),
+                  Image.asset(
+                    'assets/no-network.png',
+                    fit: BoxFit.contain,
+                    semanticLabel: 'no network connection',
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
@@ -133,6 +143,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     ),
                     child: const Text(
                       'Please check your internet connection',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -210,6 +224,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final provider = Provider.of<SellerFormProvider>(context);
 
     publishProductToFirebase(SellerFormProvider provider) async {
@@ -328,12 +343,8 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                     Opacity(
                                       opacity: 0.7,
                                       child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.2,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.2,
+                                        width: size.width * 0.2,
+                                        height: size.width * 0.2,
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -920,7 +931,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: const Text(
@@ -988,8 +999,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   child: CustomTextField(
                     controller: modelNameController,
                     keyboardType: TextInputType.text,
-                    //  label: 'Model',
-                    hint: 'Ex: Swift ZDI+, Activa 6G',
+                    hint: 'Ex: Swift ZDI+, Honda City ZX CVT',
                     maxLength: 40,
                     textInputAction: TextInputAction.next,
                     isEnabled: isLoading ? false : true,
@@ -1161,9 +1171,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         });
                       },
                       buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
+                      buttonWidth: size.width,
                       itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      dropdownMaxHeight: size.width,
                       searchController: fuelTypeSearchController,
                       searchInnerWidget: Padding(
                         padding: const EdgeInsets.only(
@@ -1269,9 +1279,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         });
                       },
                       buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
+                      buttonWidth: size.width,
                       itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      dropdownMaxHeight: size.width,
                       searchController: yorSearchController,
                       searchInnerWidget: Padding(
                         padding: const EdgeInsets.only(
@@ -1377,9 +1387,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         });
                       },
                       buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
+                      buttonWidth: size.width,
                       itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      dropdownMaxHeight: size.width,
                       searchController: colorsSearchController,
                       searchInnerWidget: Padding(
                         padding: const EdgeInsets.only(
@@ -1485,9 +1495,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         });
                       },
                       buttonHeight: 50,
-                      buttonWidth: MediaQuery.of(context).size.width,
+                      buttonWidth: size.width,
                       itemHeight: 50,
-                      dropdownMaxHeight: MediaQuery.of(context).size.width,
+                      dropdownMaxHeight: size.width,
                       searchController: noOfOwnersSearchController,
                       searchInnerWidget: Padding(
                         padding: const EdgeInsets.only(
@@ -1533,7 +1543,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   height: 20,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: const Text(
@@ -1676,7 +1686,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   height: 20,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: const Text(
@@ -1699,7 +1709,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   height: 20,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: const Text(

@@ -453,6 +453,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -524,8 +525,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.20,
-                          height: MediaQuery.of(context).size.width * 0.20,
+                          width: size.width * 0.20,
+                          height: size.width * 0.20,
                           child: Padding(
                             padding: const EdgeInsets.all(15),
                             child: ClipRRect(
@@ -590,10 +591,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 if (isActive == true)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    width: MediaQuery.of(context).size.width,
+                    width: size.width,
                     child: Wrap(
                       runSpacing: 0,
-                      spacing: 5,
+                      spacing: 7,
                       alignment: WrapAlignment.start,
                       children: [
                         if (sellerUid != _services.user!.uid)
@@ -675,7 +676,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         color: redColor,
                         height: 80,
                         padding: const EdgeInsets.all(15),
-                        width: MediaQuery.of(context).size.width,
+                        width: size.width,
                         child: const Center(
                           child: Text(
                             'This product is currently unavailable.',

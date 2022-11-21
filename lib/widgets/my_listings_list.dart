@@ -6,7 +6,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
@@ -22,6 +21,7 @@ import '/screens/product_details_screen.dart';
 import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
 import 'custom_button.dart';
+import 'svg_picture.dart';
 
 class MyListingsList extends StatefulWidget {
   const MyListingsList({super.key});
@@ -36,6 +36,7 @@ class _MyListingsListState extends State<MyListingsList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     onSellButtonClicked() {
       _services.getCurrentUserData().then((value) {
         if (value['location'] != null) {
@@ -91,26 +92,17 @@ class _MyListingsListState extends State<MyListingsList> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(15),
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width,
+                  height: size.height * 0.3,
+                  width: size.width,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: greyColor,
                   ),
-                  child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=747d5792-c4cf-4a18-801f-dfa2569778b1',
-                    semanticsLabel: 'Empty products image',
+                  child: const SVGPictureWidget(
+                    url:
+                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=747d5792-c4cf-4a18-801f-dfa2569778b1',
                     fit: BoxFit.contain,
-                    placeholderBuilder: (BuildContext context) => const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    ),
+                    semanticsLabel: 'Empty products image',
                   ),
                 ),
                 const SizedBox(
@@ -482,6 +474,7 @@ class _MyListingScreenProductCardState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return isLoading
         ? const Padding(
             padding: EdgeInsets.all(15.0),
@@ -516,8 +509,8 @@ class _MyListingScreenProductCardState
                             borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
                               imageUrl: widget.data['images'][0],
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: MediaQuery.of(context).size.width * 0.3,
+                              width: size.width * 0.3,
+                              height: size.width * 0.3,
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) {
                                 return const Icon(
@@ -643,7 +636,7 @@ class _MyListingScreenProductCardState
                               height: 10,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: redColor,
@@ -674,7 +667,7 @@ class _MyListingScreenProductCardState
                               height: 10,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: blueColor,
@@ -705,7 +698,7 @@ class _MyListingScreenProductCardState
                               height: 10,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: redColor,

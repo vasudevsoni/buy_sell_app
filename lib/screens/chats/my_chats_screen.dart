@@ -3,12 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../widgets/svg_picture.dart';
 import '/provider/main_provider.dart';
 import '/screens/chats/conversation_screen.dart';
 import '/services/firebase_services.dart';
@@ -47,6 +47,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final mainProv = Provider.of<MainProvider>(context, listen: false);
 
     return DefaultTabController(
@@ -127,27 +128,17 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(15),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width,
+                          height: size.height * 0.3,
+                          width: size.width,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: greyColor,
                           ),
-                          child: SvgPicture.network(
-                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
-                            semanticsLabel: 'Empty messages image',
+                          child: const SVGPictureWidget(
+                            url:
+                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
                             fit: BoxFit.contain,
-                            placeholderBuilder: (BuildContext context) =>
-                                const Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              ),
-                            ),
+                            semanticsLabel: 'Empty messages image',
                           ),
                         ),
                         const SizedBox(
@@ -263,27 +254,17 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(15),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width,
+                          height: size.height * 0.3,
+                          width: size.width,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: greyColor,
                           ),
-                          child: SvgPicture.network(
-                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
-                            semanticsLabel: 'Empty messages image',
+                          child: const SVGPictureWidget(
+                            url:
+                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
                             fit: BoxFit.contain,
-                            placeholderBuilder: (BuildContext context) =>
-                                const Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              ),
-                            ),
+                            semanticsLabel: 'Empty messages image',
                           ),
                         ),
                         const SizedBox(
@@ -399,27 +380,17 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(15),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width,
+                          height: size.height * 0.3,
+                          width: size.width,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: greyColor,
                           ),
-                          child: SvgPicture.network(
-                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
-                            semanticsLabel: 'Empty messages image',
+                          child: const SVGPictureWidget(
+                            url:
+                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
                             fit: BoxFit.contain,
-                            placeholderBuilder: (BuildContext context) =>
-                                const Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              ),
-                            ),
+                            semanticsLabel: 'Empty messages image',
                           ),
                         ),
                         const SizedBox(
@@ -593,6 +564,7 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
@@ -617,9 +589,8 @@ class _ChatCardState extends State<ChatCard> {
                     child: widget.chatData['users'][0] != _services.user!.uid
                         ? sellerProfileImage == ''
                             ? Container(
-                                width: MediaQuery.of(context).size.width * 0.12,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.12,
+                                width: size.width * 0.12,
+                                height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
                                   color: blueColor,
@@ -632,9 +603,8 @@ class _ChatCardState extends State<ChatCard> {
                               )
                             : CachedNetworkImage(
                                 imageUrl: sellerProfileImage,
-                                width: MediaQuery.of(context).size.width * 0.12,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.12,
+                                width: size.width * 0.12,
+                                height: size.width * 0.12,
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) {
                                   return const Icon(
@@ -653,9 +623,8 @@ class _ChatCardState extends State<ChatCard> {
                               )
                         : buyerProfileImage == ''
                             ? Container(
-                                width: MediaQuery.of(context).size.width * 0.12,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.12,
+                                width: size.width * 0.12,
+                                height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
                                   color: blueColor,
@@ -668,9 +637,8 @@ class _ChatCardState extends State<ChatCard> {
                               )
                             : CachedNetworkImage(
                                 imageUrl: buyerProfileImage,
-                                width: MediaQuery.of(context).size.width * 0.12,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.12,
+                                width: size.width * 0.12,
+                                height: size.width * 0.12,
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) {
                                   return const Icon(
@@ -779,10 +747,8 @@ class _ChatCardState extends State<ChatCard> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.1,
+                                  width: size.width * 0.1,
+                                  height: size.width * 0.1,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(6),
                                     child: CachedNetworkImage(

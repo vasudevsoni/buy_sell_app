@@ -77,7 +77,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     final ImagePicker picker = ImagePicker();
     final picked = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 80,
+      imageQuality: 75,
     );
     setState(() {
       pickedImage = picked;
@@ -88,7 +88,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     final ImagePicker picker = ImagePicker();
     final picked = await picker.pickImage(
       source: ImageSource.camera,
-      imageQuality: 80,
+      imageQuality: 75,
       preferredCameraDevice: CameraDevice.front,
     );
     setState(() {
@@ -242,6 +242,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: whiteColor,
@@ -266,8 +267,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             ),
             profileImage == ''
                 ? Container(
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: size.width * 0.3,
+                    width: size.width * 0.3,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: blueColor,
@@ -280,8 +281,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   )
                 : pickedImage == null
                     ? SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: size.width * 0.3,
+                        width: size.width * 0.3,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: CachedNetworkImage(
@@ -307,8 +308,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                         ),
                       )
                     : SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.3,
+                        height: size.width * 0.3,
+                        width: size.width * 0.3,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.file(

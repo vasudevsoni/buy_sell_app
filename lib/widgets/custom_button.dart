@@ -24,6 +24,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         HapticFeedback.vibrate();
@@ -42,7 +43,7 @@ class CustomButton extends StatelessWidget {
           ),
           color: bgColor,
         ),
-        width: MediaQuery.of(context).size.width,
+        width: size.width,
         child: Stack(
           children: [
             Center(

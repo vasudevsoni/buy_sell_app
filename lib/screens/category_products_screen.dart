@@ -2,10 +2,10 @@ import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../widgets/svg_picture.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/screens/main_screen.dart';
@@ -77,6 +77,7 @@ class _CategoryScreenProductsListState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return FirestoreQueryBuilder(
       query: _services.listings
           .orderBy(
@@ -122,26 +123,17 @@ class _CategoryScreenProductsListState
               children: [
                 Container(
                   padding: const EdgeInsets.all(15),
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width,
+                  height: size.height * 0.3,
+                  width: size.width,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: greyColor,
                   ),
-                  child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
-                    semanticsLabel: 'Empty favorites image',
+                  child: const SVGPictureWidget(
+                    url:
+                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                     fit: BoxFit.contain,
-                    placeholderBuilder: (BuildContext context) => const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    ),
+                    semanticsLabel: 'Empty favorites image',
                   ),
                 ),
                 const SizedBox(

@@ -208,7 +208,6 @@ class _ReportScreenState extends State<ReportScreen> {
               showCounterText: true,
               maxLength: 1000,
               maxLines: 3,
-              // label: 'Message',
               hint: 'Briefly explain what happened or what\'s not working',
             ),
             const SizedBox(

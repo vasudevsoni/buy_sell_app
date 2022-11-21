@@ -273,6 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -320,8 +321,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     profileImage == ''
                         ? Container(
-                            height: MediaQuery.of(context).size.width * 0.3,
-                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: size.width * 0.3,
+                            width: size.width * 0.3,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: blueColor,
@@ -416,8 +417,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                             ),
                             child: SizedBox(
-                              height: MediaQuery.of(context).size.width * 0.3,
-                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: size.width * 0.3,
+                              width: size.width * 0.3,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: CachedNetworkImage(

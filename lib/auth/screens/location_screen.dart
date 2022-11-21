@@ -10,6 +10,7 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/loading_button.dart';
+import '../../widgets/svg_picture.dart';
 import '/provider/location_provider.dart';
 import '/screens/selling/seller_categories_list_screen.dart';
 import '/services/firebase_services.dart';
@@ -116,6 +117,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       resizeToAvoidBottomInset: false,
@@ -167,26 +169,17 @@ class _LocationScreenState extends State<LocationScreen> {
             const Spacer(),
             Container(
               padding: const EdgeInsets.all(15),
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: MediaQuery.of(context).size.width,
+              height: size.height * 0.3,
+              width: size.width,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: greyColor,
               ),
-              child: SvgPicture.network(
-                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=7fd13d95-fd72-4b9d-8874-64df71b84270',
-                semanticsLabel: 'Location image',
+              child: const SVGPictureWidget(
+                url:
+                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=7fd13d95-fd72-4b9d-8874-64df71b84270',
                 fit: BoxFit.contain,
-                placeholderBuilder: (BuildContext context) => const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Center(
-                    child: SpinKitFadingCircle(
-                      color: lightBlackColor,
-                      size: 30,
-                      duration: Duration(milliseconds: 1000),
-                    ),
-                  ),
-                ),
+                semanticsLabel: 'Location image',
               ),
             ),
             const Spacer(),

@@ -73,12 +73,13 @@ class _TimerButtonState extends State<TimerButton> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return timeUpFlag
         ? GestureDetector(
             onTap: _onPressed,
             child: Container(
               height: 48,
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: widget.color,
@@ -103,7 +104,7 @@ class _TimerButtonState extends State<TimerButton> {
             onTap: null,
             child: Container(
               height: 48,
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: widget.disabledColor,

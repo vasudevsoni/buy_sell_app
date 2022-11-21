@@ -90,6 +90,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final mainProv = Provider.of<MainProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
@@ -99,7 +100,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       child: Scaffold(
         body: SafeArea(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: size.height,
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -132,12 +133,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         children: [
                                           Center(
                                             child: Container(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              height: size.width,
+                                              width: size.width,
                                               color: blueColor,
                                               child: const Icon(
                                                 Ionicons.person,
@@ -196,8 +193,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 },
                               ),
                               child: Container(
-                                height: MediaQuery.of(context).size.width * 0.3,
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: size.width * 0.3,
+                                width: size.width * 0.3,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   color: blueColor,
@@ -315,8 +312,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 },
                               ),
                               child: SizedBox(
-                                height: MediaQuery.of(context).size.width * 0.3,
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: size.width * 0.3,
+                                width: size.width * 0.3,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: CachedNetworkImage(
@@ -346,7 +343,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: size.width,
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Stack(
                       children: [

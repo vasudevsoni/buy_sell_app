@@ -20,6 +20,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     FirebaseServices service = FirebaseServices();
 
     return Scaffold(
@@ -38,7 +39,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
         ),
       ),
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: size.height,
         child: FutureBuilder<DocumentSnapshot>(
           future: service.categories.doc(doc.id).get(),
           builder:

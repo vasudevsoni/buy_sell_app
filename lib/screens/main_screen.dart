@@ -59,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 5,
+                top: 15,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   const Center(
                     child: Text(
-                      'No Connection',
+                      'Network Connection Lost',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -76,7 +76,17 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
+                  ),
+                  Image.asset(
+                    'assets/no-network.png',
+                    fit: BoxFit.contain,
+                    semanticLabel: 'no network connection',
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
@@ -87,6 +97,10 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     child: const Text(
                       'Please check your internet connection',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,

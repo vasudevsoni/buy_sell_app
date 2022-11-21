@@ -10,6 +10,7 @@ import '/utils/utils.dart';
 import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
 import 'custom_product_card.dart';
+import 'svg_picture.dart';
 
 class MyFavoritesProductsList extends StatefulWidget {
   const MyFavoritesProductsList({super.key});
@@ -24,6 +25,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final mainProv = Provider.of<MainProvider>(context, listen: false);
     return FirestoreQueryBuilder(
       query: services.listings
@@ -63,26 +65,17 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
             children: [
               Container(
                 padding: const EdgeInsets.all(15),
-                height: MediaQuery.of(context).size.height * 0.3,
-                width: MediaQuery.of(context).size.width,
+                height: size.height * 0.3,
+                width: size.width,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: greyColor,
                 ),
-                child: SvgPicture.network(
-                  'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=72cb7455-45f3-4a48-a395-6e0d4ec601cf',
-                  semanticsLabel: 'Empty favorites image',
+                child: const SVGPictureWidget(
+                  url:
+                      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=72cb7455-45f3-4a48-a395-6e0d4ec601cf',
                   fit: BoxFit.contain,
-                  placeholderBuilder: (BuildContext context) => const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                    ),
-                  ),
+                  semanticsLabel: 'Empty favorites image',
                 ),
               ),
               const SizedBox(

@@ -21,6 +21,7 @@ class HelpAndSupportScreen extends StatefulWidget {
 class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -42,7 +43,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
         child: Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: const Text(
                 'Actions',
@@ -83,7 +84,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               child: const Text(
                 'About',
                 style: TextStyle(

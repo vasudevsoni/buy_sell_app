@@ -1,10 +1,10 @@
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/svg_picture.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_product_card.dart';
@@ -44,6 +44,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -65,17 +66,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         ),
       ),
       body: FirestoreQueryBuilder(
-        query:
-            // isLocationEmpty ?
-            _services.listings
-                .where('searchQueries', arrayContains: widget.query)
-                .where('isActive', isEqualTo: true)
-                .orderBy('postedAt', descending: true),
-        // : _services.listings
-        //     .where('searchQueries', arrayContains: widget.query)
-        //     .where('isActive', isEqualTo: true)
-        //     .orderBy('postedAt', descending: true)
-        //     .where('location.city', isEqualTo: city),
+        query: _services.listings
+            .where('searchQueries', arrayContains: widget.query)
+            .where('isActive', isEqualTo: true)
+            .orderBy('postedAt', descending: true),
         pageSize: 6,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
@@ -113,27 +107,17 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(15),
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      width: MediaQuery.of(context).size.width,
+                      height: size.height * 0.3,
+                      width: size.width,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: greyColor,
                       ),
-                      child: SvgPicture.network(
-                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
-                        semanticsLabel: 'Empty search image',
+                      child: const SVGPictureWidget(
+                        url:
+                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                         fit: BoxFit.contain,
-                        placeholderBuilder: (BuildContext context) =>
-                            const Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Center(
-                            child: SpinKitFadingCircle(
-                              color: lightBlackColor,
-                              size: 30,
-                              duration: Duration(milliseconds: 1000),
-                            ),
-                          ),
-                        ),
+                        semanticsLabel: 'Empty search image',
                       ),
                     ),
                     const SizedBox(
@@ -171,7 +155,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                   ),
                   child: Text(
                     'Results',
-                    // isLocationEmpty ? 'Results' : 'Results in $city',
                     maxLines: 1,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,

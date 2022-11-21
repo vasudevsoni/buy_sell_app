@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/svg_picture.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '../services/google_auth_service.dart';
 import '../services/phone_auth_service.dart';
@@ -66,7 +65,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 15,
                 left: 15,
                 right: 15,
-                top: 5,
+                top: 15,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,7 +73,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 children: [
                   const Center(
                     child: Text(
-                      'No Connection',
+                      'Network Connection Lost',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -83,7 +82,17 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
+                  ),
+                  Image.asset(
+                    'assets/no-network.png',
+                    fit: BoxFit.contain,
+                    semanticLabel: 'no network connection',
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Container(
                     padding: const EdgeInsets.all(15),
@@ -94,6 +103,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                     child: const Text(
                       'Please check your internet connection',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -154,6 +167,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     List images = [
       'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Exchange.svg?alt=media&token=bcc01462-9a38-4f32-8a17-51146abac817',
       'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Show.svg?alt=media&token=4bc3f85b-6c89-4eac-98e9-3fe707eb9982',
@@ -186,24 +200,16 @@ class _LandingScreenState extends State<LandingScreen> {
               itemBuilder: (context, index, realIndex) {
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   child: Column(
                     children: [
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: SvgPicture.network(
-                            images[index],
+                          child: SVGPictureWidget(
+                            url: images[index],
                             fit: BoxFit.fitHeight,
-                            placeholderBuilder: (context) {
-                              return const Center(
-                                child: SpinKitFadingCircle(
-                                  color: greyColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              );
-                            },
+                            semanticsLabel: 'Landing screen pictures',
                           ),
                         ),
                       ),
@@ -337,17 +343,6 @@ class _LandingScreenState extends State<LandingScreen> {
                       PhoneAuthService auth = PhoneAuthService();
                       auth.addUser(user);
                     },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButton(
-                    text: 'Facebook',
-                    icon: Ionicons.logo_facebook,
-                    bgColor: whiteColor,
-                    borderColor: lightBlackColor,
-                    textIconColor: blackColor,
-                    onPressed: () async {},
                   ),
                   const SizedBox(
                     height: 10,

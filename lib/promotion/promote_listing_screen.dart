@@ -60,6 +60,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -97,8 +98,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.20,
-                          height: MediaQuery.of(context).size.width * 0.20,
+                          width: size.width * 0.20,
+                          height: size.width * 0.20,
                           child: Padding(
                             padding: const EdgeInsets.all(15),
                             child: ClipRRect(
@@ -239,11 +240,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       CachedNetworkImage(
                                         imageUrl:
                                             'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fboost-to-top-gif.gif?alt=media&token=47bde363-ba46-4263-95ca-692052662b4c',
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.7,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        height: size.height * 0.7,
+                                        width: size.width,
                                         fit: BoxFit.contain,
                                       ),
                                       const SizedBox(

@@ -50,7 +50,7 @@ class PhoneAuthService {
     final QuerySnapshot result =
         await users.where('uid', isEqualTo: user!.uid).get();
     List<DocumentSnapshot> document = result.docs;
-    //if user does not exists in database, add him and then navigate to main screen
+    //if user does not exists in database, add her and then navigate to main screen
     if (document.isEmpty) {
       try {
         return users.doc(user.uid).set({
@@ -76,7 +76,7 @@ class PhoneAuthService {
       }
       return;
     }
-    //if user already exists in database, just navigate him
+    //if user already exists in database, just navigate her to main screen
     Get.offAll(() => const MainScreen(selectedIndex: 0));
   }
 }

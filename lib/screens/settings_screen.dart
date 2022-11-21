@@ -150,6 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -171,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: const Text(
                 'Account',
@@ -231,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: lightBlackColor,
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: const Text(
                 'Actions',
@@ -280,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             //   color: lightBlackColor,
             // ),
             // Container(
-            //   width: MediaQuery.of(context).size.width,
+            //   width: size.width,
             //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             //   child: const Text(
             //     'Danger Zone',

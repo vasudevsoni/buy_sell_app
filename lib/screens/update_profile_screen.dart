@@ -56,6 +56,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     validateForm() async {
       if (!_formKey.currentState!.validate()) {
         showSnackBar(
@@ -207,7 +208,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width,
+                width: size.width,
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 color: blackColor,
                 child: const Text(

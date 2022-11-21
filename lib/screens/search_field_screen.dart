@@ -56,7 +56,6 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
               controller: searchController,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.search,
-              // label: 'Search for anything',
               autofocus: true,
               hint: 'Start typing',
               maxLength: 50,

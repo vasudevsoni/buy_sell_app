@@ -78,6 +78,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -119,7 +120,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
-                width: MediaQuery.of(context).size.width,
+                width: size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: greyColor,

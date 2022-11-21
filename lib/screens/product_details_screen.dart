@@ -127,8 +127,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     };
 
     List<String> users = [
-      widget.sellerData['uid'], //seller uid
-      services.user!.uid, //buyer uid
+      widget.sellerData['uid'],
+      services.user!.uid,
     ];
 
     String chatRoomId =
@@ -161,6 +161,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     var sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
       widget.sellerData['dateJoined'],
     );
@@ -406,7 +407,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       height: 15,
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: size.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: redColor,
@@ -508,7 +509,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         if (isSold == true)
                           Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: size.width,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
@@ -589,7 +590,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                     color: greyColor,
                                                     size: 30,
                                                     duration: Duration(
-                                                        milliseconds: 1000),
+                                                      milliseconds: 1000,
+                                                    ),
                                                   ),
                                                 );
                                               },
@@ -629,9 +631,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             children: [
                               Container(
                                 color: blackColor,
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
+                                width: size.width,
+                                height: size.height * 0.4,
                                 child: CarouselSlider.builder(
                                   itemCount: images.length,
                                   itemBuilder: (context, index, realIndex) {
@@ -659,7 +660,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   },
                                   options: CarouselOptions(
                                     viewportFraction: 1,
-                                    height: MediaQuery.of(context).size.height,
+                                    height: size.height,
                                     enlargeCenterPage: false,
                                     enableInfiniteScroll:
                                         images.length == 1 ? false : true,
@@ -1056,7 +1057,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       height: 5,
                                     ),
                                     Container(
-                                      width: MediaQuery.of(context).size.width,
+                                      width: size.width,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: greyColor,
@@ -1349,7 +1350,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 15),
-                            width: MediaQuery.of(context).size.width,
+                            width: size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: greyColor,
@@ -1404,7 +1405,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ),
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width,
+                                  width: size.width,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: greyColor,
@@ -1420,14 +1421,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     children: [
                                       profileImage == ''
                                           ? Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
+                                              height: size.width * 0.1,
+                                              width: size.width * 0.1,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(50),
@@ -1440,14 +1435,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               ),
                                             )
                                           : SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
+                                              height: size.width * 0.1,
+                                              width: size.width * 0.1,
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(50),
@@ -1487,10 +1476,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           widget.sellerData['name'] == null
                                               ? SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.5,
+                                                  width: size.width * 0.5,
                                                   child: const Text(
                                                     'BestDeal User',
                                                     maxLines: 1,
@@ -1506,10 +1492,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   ),
                                                 )
                                               : SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.5,
+                                                  width: size.width * 0.5,
                                                   child: Text(
                                                     widget.sellerData['name'],
                                                     maxLines: 1,

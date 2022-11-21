@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '/utils/utils.dart';
+import 'svg_picture.dart';
 
 class CustomListTile extends StatelessWidget {
   final String text;
@@ -35,18 +34,10 @@ class CustomListTile extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(15),
-                child: SvgPicture.network(
-                  url,
+                child: SVGPictureWidget(
+                  url: url,
                   fit: BoxFit.contain,
-                  placeholderBuilder: (context) {
-                    return const Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
-                    );
-                  },
+                  semanticsLabel: 'category image',
                 ),
               ),
             ),

@@ -15,6 +15,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -131,7 +132,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                       },
                     ),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      height: size.height * 0.3,
                       width: double.infinity,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),

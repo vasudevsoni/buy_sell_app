@@ -32,6 +32,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Scaffold(
@@ -69,7 +70,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   numberOfParticles: 80,
                 ),
                 const Text(
-                  '🥳 Congratulations!',
+                  'Congratulations!',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w800,
@@ -80,7 +81,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   height: 10,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/svg_picture.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
 import '/auth/screens/location_screen.dart';
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen>
             isLocationEmpty: isLocationEmpty,
             tabBarController: tabBarController,
           ),
-          //everywhere screen
+          //all products screen
           AllProductsScreen(
             city: city,
             tabBarController: tabBarController,
@@ -287,8 +287,8 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //   ),
           // ),
           // SizedBox(
-          //   height: MediaQuery.of(context).size.height * 0.2,
-          //   width: MediaQuery.of(context).size.width,
+          //   height: size.height * 0.2,
+          //   width: size.width,
           //   child: FutureBuilder<QuerySnapshot>(
           //     future: widget._services.categories
           //         .orderBy('sortId', descending: false)
@@ -326,7 +326,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //         options: CarouselOptions(
           //           viewportFraction: 0.9,
           //           pageSnapping: true,
-          //           height: MediaQuery.of(context).size.height,
+          //           height: size.height,
           //           enlargeCenterPage: false,
           //           enableInfiniteScroll: true,
           //           reverse: false,
@@ -347,7 +347,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //               ),
           //               margin: const EdgeInsets.symmetric(horizontal: 5),
           //               child: SizedBox(
-          //                 width: MediaQuery.of(context).size.width,
+          //                 width: size.width,
           //                 child: Stack(
           //                   children: [
           //                     ClipRRect(
@@ -355,7 +355,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           //                       child: CachedNetworkImage(
           //                         imageUrl: doc['image'],
           //                         fit: BoxFit.cover,
-          //                         width: MediaQuery.of(context).size.width,
+          //                         width: size.width,
           //                         errorWidget: (context, url, error) {
           //                           return const Icon(
           //                             Ionicons.alert_circle,
@@ -513,6 +513,7 @@ class _ProductsListState extends State<ProductsList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return widget.isLocationEmpty && widget.showAll == false
         ? Padding(
             padding: const EdgeInsets.all(15),
@@ -521,26 +522,17 @@ class _ProductsListState extends State<ProductsList> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(15),
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width,
+                  height: size.height * 0.3,
+                  width: size.width,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: greyColor,
                   ),
-                  child: SvgPicture.network(
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
-                    semanticsLabel: 'Empty favorites image',
+                  child: const SVGPictureWidget(
+                    url:
+                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                     fit: BoxFit.contain,
-                    placeholderBuilder: (BuildContext context) => const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    ),
+                    semanticsLabel: 'Empty products image',
                   ),
                 ),
                 const SizedBox(
@@ -627,27 +619,17 @@ class _ProductsListState extends State<ProductsList> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(15),
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
+                        height: size.height * 0.3,
+                        width: size.width,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: greyColor,
                         ),
-                        child: SvgPicture.network(
-                          'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
-                          semanticsLabel: 'Empty favorites image',
+                        child: const SVGPictureWidget(
+                          url:
+                              'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
                           fit: BoxFit.contain,
-                          placeholderBuilder: (BuildContext context) =>
-                              const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 30,
-                                duration: Duration(milliseconds: 1000),
-                              ),
-                            ),
-                          ),
+                          semanticsLabel: 'Empty products image',
                         ),
                       ),
                       const SizedBox(

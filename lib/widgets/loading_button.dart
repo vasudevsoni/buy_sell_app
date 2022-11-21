@@ -13,7 +13,7 @@ class LoadingButton extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         color: blueColor,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(50),
       ),
       child: const Center(
         child: SpinKitFadingCircle(
