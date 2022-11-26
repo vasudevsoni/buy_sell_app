@@ -63,7 +63,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: whiteColor,
-            elevation: 0.5,
+            elevation: 0.2,
             iconTheme: const IconThemeData(color: blackColor),
             centerTitle: true,
             title: const Text(
@@ -74,23 +74,24 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 fontSize: 15,
               ),
             ),
-            bottom: const TabBar(
+            bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: blueColor,
               indicatorWeight: 3,
-              labelStyle: TextStyle(
+              splashBorderRadius: BorderRadius.circular(10),
+              labelStyle: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
                 fontFamily: 'SFProDisplay',
               ),
-              unselectedLabelStyle: TextStyle(
+              unselectedLabelStyle: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
                 fontFamily: 'SFProDisplay',
               ),
               labelColor: blackColor,
               unselectedLabelColor: lightBlackColor,
-              tabs: [
+              tabs: const [
                 Tab(child: Text('All')),
                 Tab(child: Text('Buying')),
                 Tab(child: Text('Selling')),
@@ -216,8 +217,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       );
                     },
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> data = snapshot.data!.docs[index]
-                          .data() as Map<String, dynamic>;
+                      final Map<String, dynamic> data =
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>;
                       return ChatCard(chatData: data);
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -343,8 +345,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     },
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> data = snapshot.data!.docs[index]
-                          .data() as Map<String, dynamic>;
+                      final Map<String, dynamic> data =
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>;
                       return ChatCard(chatData: data);
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -473,8 +476,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     },
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> data = snapshot.data!.docs[index]
-                          .data() as Map<String, dynamic>;
+                      final Map<String, dynamic> data =
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>;
                       return ChatCard(chatData: data);
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -565,6 +569,7 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
@@ -668,7 +673,7 @@ class _ChatCardState extends State<ChatCard> {
                               ? RichText(
                                   text: TextSpan(
                                     text: buyerName == ''
-                                        ? 'BestDeal User •'
+                                        ? 'BechDe User •'
                                         : '$buyerName •',
                                     children: const [
                                       TextSpan(
@@ -693,7 +698,7 @@ class _ChatCardState extends State<ChatCard> {
                               : RichText(
                                   text: TextSpan(
                                     text: sellerName == ''
-                                        ? 'BestDeal User •'
+                                        ? 'BechDe User •'
                                         : '$sellerName •',
                                     children: const [
                                       TextSpan(

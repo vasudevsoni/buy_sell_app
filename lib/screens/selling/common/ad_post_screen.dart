@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
-import '/screens/selling/congratulations_screen.dart';
+import '../congratulations_screen.dart';
 import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button_without_icon.dart';
@@ -34,11 +35,11 @@ class AdPostScreen extends StatefulWidget {
 
 class _AdPostScreenState extends State<AdPostScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController subCatNameController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
+  final TextEditingController subCatNameController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
   final FirebaseServices _services = FirebaseServices();
   String area = '';
   String city = '';
@@ -52,26 +53,24 @@ class _AdPostScreenState extends State<AdPostScreen> {
 
   getUserLocation() async {
     await _services.getCurrentUserData().then((value) async {
-      setState(() {
-        locationController.text =
-            '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-        area = value['location']['area'];
-        city = value['location']['city'];
-        state = value['location']['state'];
-        country = value['location']['country'];
-      });
+      if (mounted) {
+        setState(() {
+          locationController.text =
+              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+          area = value['location']['area'];
+          city = value['location']['city'];
+          state = value['location']['state'];
+          country = value['location']['country'];
+        });
+      }
     });
   }
 
   @override
   void initState() {
-    if (mounted) {
-      getConnectivity();
-      setState(() {
-        subCatNameController.text = '${widget.catName} > ${widget.subCatName}';
-      });
-      getUserLocation();
-    }
+    getConnectivity();
+    subCatNameController.text = '${widget.catName} > ${widget.subCatName}';
+    getUserLocation();
     super.initState();
   }
 
@@ -211,18 +210,20 @@ class _AdPostScreenState extends State<AdPostScreen> {
     final provider = Provider.of<SellerFormProvider>(context);
 
     publishProductToFirebase(SellerFormProvider provider) async {
-      return await _services.listings
-          .doc()
-          .set(provider.dataToFirestore)
-          .then((value) {
-        Get.off(
-          () => const CongratulationsScreen(),
-        );
-        provider.clearDataAfterSubmitListing();
-        setState(() {
-          isLoading = false;
+      try {
+        await _services.listings
+            .doc()
+            .set(provider.dataToFirestore)
+            .then((value) {
+          Get.off(
+            () => const CongratulationsScreen(),
+          );
+          provider.clearDataAfterSubmitListing();
+          setState(() {
+            isLoading = false;
+          });
         });
-      }).catchError((err) {
+      } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
@@ -230,7 +231,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
         setState(() {
           isLoading = false;
         });
-      });
+      }
     }
 
     validateForm() async {
@@ -733,9 +734,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0.5,
+          elevation: 0.2,
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,

@@ -7,13 +7,14 @@ class PromotionApi {
 
   static Future init() async {
     await Purchases.setDebugLogsEnabled(true);
-    PurchasesConfiguration configuration = PurchasesConfiguration(_apiKey);
+    final PurchasesConfiguration configuration =
+        PurchasesConfiguration(_apiKey);
     await Purchases.configure(configuration);
   }
 
   static Future<List<Offering>> fetchOffers() async {
     try {
-      Offerings offerings = await Purchases.getOfferings();
+      final Offerings offerings = await Purchases.getOfferings();
       final current = offerings.current;
       return current == null ? [] : [current];
     } on PlatformException catch (_) {

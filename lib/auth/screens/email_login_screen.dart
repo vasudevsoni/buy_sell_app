@@ -21,16 +21,15 @@ class EmailLoginScreen extends StatefulWidget {
 }
 
 class _EmailLoginScreenState extends State<EmailLoginScreen> {
-  final _loginformKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _loginformKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final EmailAuthService _service = EmailAuthService();
   bool isObscured = true;
   bool isLoading = false;
 
-  final EmailAuthService _service = EmailAuthService();
-
   _validateEmail() async {
-    if (_loginformKey.currentState!.validate()) {
+    if (_loginformKey.currentState!.validate() && mounted) {
       setState(() {
         isLoading = true;
       });
@@ -58,7 +57,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       backgroundColor: whiteColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,

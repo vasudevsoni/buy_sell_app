@@ -64,7 +64,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -130,6 +130,17 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+                                priceFormat.format(widget.price),
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                  color: whiteColor,
+                                ),
+                              ),
+                              Text(
                                 widget.title,
                                 maxLines: 1,
                                 softWrap: true,
@@ -140,17 +151,6 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                   color: whiteColor,
                                 ),
                               ),
-                              Text(
-                                priceFormat.format(widget.price),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: whiteColor,
-                                ),
-                              )
                             ],
                           ),
                         ),
@@ -392,6 +392,23 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                               const SizedBox(
                                 height: 15,
                               ),
+                              const Center(
+                                child: Text(
+                                  'View Example',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: greyColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
                               CustomButton(
                                 text: 'Buy Now',
                                 onPressed: () async {
@@ -405,10 +422,13 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     return;
                                   }
                                 },
-                                icon: Ionicons.lock_closed,
+                                icon: Ionicons.bag_check,
                                 borderColor: whiteColor,
                                 bgColor: whiteColor,
                                 textIconColor: blueColor,
+                              ),
+                              const SizedBox(
+                                height: 10,
                               ),
                             ],
                           ),

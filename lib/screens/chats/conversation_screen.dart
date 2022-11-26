@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '/utils/utils.dart';
 import '/screens/product_details_screen.dart';
-import '/screens/chats/chat_stream.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_button_without_icon.dart';
@@ -31,6 +31,7 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   final FirebaseServices _services = FirebaseServices();
+  final ScrollController scrollController = ScrollController();
   final TextEditingController chatMessageController = TextEditingController();
   final TextEditingController offerPriceController = TextEditingController();
 
@@ -38,6 +39,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String imageUrl = '';
   String title = '';
   int price = 0;
+  String name = '';
   bool isActive = true;
   late DocumentSnapshot prod;
   late DocumentSnapshot sellerData;
@@ -46,7 +48,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     getDetails();
+
     super.initState();
+  }
+
+  scrollDown() {
+    final double end = scrollController.position.maxScrollExtent;
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        end,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.linear,
+      );
+    }
   }
 
   getDetails() async {
@@ -67,6 +81,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       if (mounted) {
         setState(() {
           sellerData = value;
+          name = value['name'];
         });
       }
     });
@@ -84,7 +99,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   sendOfferMessage(String offer) async {
-    Map<String, dynamic> message = {
+    final Map<String, dynamic> message = {
       'message': offer,
       'sentBy': _services.user!.uid,
       'time': DateTime.now().microsecondsSinceEpoch,
@@ -95,6 +110,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       message: message,
     );
     offerPriceController.clear();
+    scrollDown();
   }
 
   showMakeOfferDialog() {
@@ -431,7 +447,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   sendMessage(String text) async {
-    Map<String, dynamic> message = {
+    final Map<String, dynamic> message = {
       'message': text,
       'sentBy': _services.user!.uid,
       'time': DateTime.now().microsecondsSinceEpoch,
@@ -442,23 +458,55 @@ class _ConversationScreenState extends State<ConversationScreen> {
       chatRoomId: widget.chatRoomId,
       message: message,
     );
+    scrollDown();
   }
 
   @override
   void dispose() {
     offerPriceController.dispose();
     chatMessageController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         actions: [
+          Container(
+            margin:
+                const EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 10),
+            decoration: const BoxDecoration(
+              color: greyColor,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) {
+                  return const Icon(
+                    Ionicons.alert_circle,
+                    size: 15,
+                    color: redColor,
+                  );
+                },
+                placeholder: (context, url) {
+                  return const Icon(
+                    Ionicons.image,
+                    size: 15,
+                    color: lightBlackColor,
+                  );
+                },
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
@@ -475,29 +523,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: sellerUid == _services.user!.uid
-            ? const Text(
-                'Chat with buyer',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                  fontSize: 15,
-                ),
-              )
-            : const Text(
-                'Chat with seller',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                  fontSize: 15,
-                ),
-              ),
+        title: Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: true,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: blackColor,
+            fontSize: 15,
+          ),
+        ),
       ),
       body: isLoading
           ? const Padding(
@@ -512,90 +548,337 @@ class _ConversationScreenState extends State<ConversationScreen> {
             )
           : Column(
               children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => Get.to(
-                    () => ProductDetailsScreen(
-                      productData: prod,
-                      sellerData: sellerData,
+                if (!isKeyboard)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Get.to(
+                      () => ProductDetailsScreen(
+                        productData: prod,
+                        sellerData: sellerData,
+                      ),
                     ),
-                  ),
-                  child: Container(
-                    color: blueColor,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: size.width * 0.20,
-                          height: size.width * 0.20,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    Ionicons.alert_circle,
-                                    size: 15,
-                                    color: redColor,
-                                  );
-                                },
-                                placeholder: (context, url) {
-                                  return const Icon(
-                                    Ionicons.image,
-                                    size: 15,
-                                    color: lightBlackColor,
-                                  );
-                                },
+                    child: Container(
+                      color: blueColor,
+                      height: 40,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: whiteColor,
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: whiteColor,
-                                ),
+                          Expanded(
+                            child: Text(
+                              priceFormat.format(price),
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: whiteColor,
                               ),
-                              Text(
-                                priceFormat.format(price),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: whiteColor,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
                 Expanded(
-                  child: ChatStream(chatRoomId: widget.chatRoomId),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _services.chats
+                        .doc(widget.chatRoomId)
+                        .collection('messages')
+                        .orderBy('time')
+                        .snapshots(),
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot,
+                    ) {
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Text(
+                              'Something has gone wrong. Please try again',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData && snapshot.data!.size == 0) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Text(
+                                'No messages here yet!',
+                                maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Start by sending a Hi',
+                              maxLines: 2,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: Center(
+                            child: SpinKitFadingCircle(
+                              color: lightBlackColor,
+                              size: 30,
+                              duration: Duration(milliseconds: 1000),
+                            ),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        controller: scrollController,
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        itemBuilder: (context, index) {
+                          final date = DateFormat.yMMMd().format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                              snapshot.data!.docs[index]['time'],
+                            ),
+                          );
+                          final time = DateFormat.jm().format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                              snapshot.data!.docs[index]['time'],
+                            ),
+                          );
+                          final String sentBy =
+                              snapshot.data!.docs[index]['sentBy'];
+                          final String me = _services.user!.uid;
+                          return Column(
+                            children: [
+                              snapshot.data!.docs[index]['isOffer'] == true
+                                  ? Align(
+                                      alignment: sentBy == me
+                                          ? Alignment.centerRight
+                                          : Alignment.centerLeft,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 15,
+                                          right: 15,
+                                          top: 5,
+                                          bottom: 2,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: sentBy == me
+                                              ? const BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(10),
+                                                  bottomRight:
+                                                      Radius.circular(3),
+                                                )
+                                              : const BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(3),
+                                                  bottomRight:
+                                                      Radius.circular(10),
+                                                ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              sentBy == me
+                                                  ? 'YOUR OFFER'
+                                                  : 'BUYER\'S OFFER',
+                                              style: const TextStyle(
+                                                color: whiteColor,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              snapshot.data!.docs[index]
+                                                  ['message'],
+                                              style: const TextStyle(
+                                                color: whiteColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Align(
+                                      alignment: sentBy == me
+                                          ? Alignment.centerRight
+                                          : Alignment.centerLeft,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 15,
+                                          right: 15,
+                                          top: 5,
+                                          bottom: 2,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: sentBy == me
+                                              ? blueColor
+                                              : greyColor,
+                                          borderRadius: sentBy == me
+                                              ? const BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(10),
+                                                  bottomRight:
+                                                      Radius.circular(3),
+                                                )
+                                              : const BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight: Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(3),
+                                                  bottomRight:
+                                                      Radius.circular(10),
+                                                ),
+                                        ),
+                                        child: Text(
+                                          snapshot.data!.docs[index]['message'],
+                                          style: TextStyle(
+                                            color: sentBy == me
+                                                ? whiteColor
+                                                : blackColor,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                              Align(
+                                alignment: sentBy == me
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: sentBy == me
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              time,
+                                              style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(
+                                              date,
+                                              style: const TextStyle(
+                                                color: fadedColor,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              date,
+                                              style: const TextStyle(
+                                                color: fadedColor,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(
+                                              time,
+                                              style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: snapshot.data!.docs.length,
+                      );
+                    },
+                  ),
                 ),
                 if (isActive == true)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.only(left: 15),
+                    height: 50,
                     width: size.width,
-                    child: Wrap(
-                      runSpacing: 0,
-                      spacing: 7,
-                      alignment: WrapAlignment.start,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
                       children: [
                         if (sellerUid != _services.user!.uid)
                           ActionChip(
@@ -612,6 +895,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
+                        if (sellerUid != _services.user!.uid)
+                          const SizedBox(
+                            width: 5,
+                          ),
                         ActionChip(
                           pressElevation: 5,
                           label: const Text('Is it available?'),
@@ -625,6 +912,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
+                        ),
+                        const SizedBox(
+                          width: 5,
                         ),
                         ActionChip(
                           pressElevation: 5,
@@ -640,6 +930,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         ActionChip(
                           pressElevation: 5,
                           label: const Text('Please reply'),
@@ -654,6 +947,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         ActionChip(
                           pressElevation: 5,
                           label: const Text('Not interested'),
@@ -667,6 +963,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
+                        ),
+                        const SizedBox(
+                          width: 15,
                         ),
                       ],
                     ),

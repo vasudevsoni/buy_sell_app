@@ -57,6 +57,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     validateForm() async {
       if (!_formKey.currentState!.validate()) {
         showSnackBar(
@@ -186,7 +187,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -283,7 +284,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   isReadOnly: true,
                   isEnabled: isLoading ? false : true,
                   onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
+                    final DateTime? pickedDate = await showDatePicker(
                       context: context,
                       helpText: 'SELECT DATE OF BIRTH',
                       locale: const Locale('en', 'IN'),
@@ -296,7 +297,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     if (pickedDate == null) {
                       return;
                     }
-                    String formattedDate =
+                    final String formattedDate =
                         DateFormat.yMMMd().format(pickedDate);
                     setState(() {
                       dobController.text = formattedDate;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -27,7 +26,7 @@ class CustomProductCard extends StatefulWidget {
 }
 
 class _CustomProductCardState extends State<CustomProductCard> {
-  FirebaseServices services = FirebaseServices();
+  final FirebaseServices services = FirebaseServices();
   late DocumentSnapshot sellerDetails;
   List fav = [];
   bool isLiked = false;
@@ -40,11 +39,9 @@ class _CustomProductCardState extends State<CustomProductCard> {
   }
 
   getDetails() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
+    setState(() {
+      isLoading = true;
+    });
     await services.getUserData(widget.data['sellerUid']).then((value) {
       if (mounted) {
         setState(() {
@@ -59,29 +56,24 @@ class _CustomProductCardState extends State<CustomProductCard> {
         });
       }
       if (fav.contains(services.user!.uid)) {
-        if (mounted) {
-          setState(() {
-            isLiked = true;
-          });
-        }
+        setState(() {
+          isLiked = true;
+        });
         return;
       }
-      if (mounted) {
-        setState(() {
-          isLiked = false;
-        });
-      }
-    });
-    if (mounted) {
       setState(() {
-        isLoading = false;
+        isLiked = false;
       });
-    }
+    });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return isLoading
         ? const Padding(
             padding: EdgeInsets.all(15.0),
@@ -111,15 +103,21 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: whiteColor,
+                    border: Border.all(
+                      color: greyColor,
+                      width: 1,
+                    ),
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: size.width * 0.3,
                         height: size.width * 0.3,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          ),
                           child: CachedNetworkImage(
                             imageUrl: widget.data['images'][0],
                             fit: BoxFit.cover,
@@ -141,62 +139,90 @@ class _CustomProductCardState extends State<CustomProductCard> {
                         ),
                       ),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 20),
+                        child: Container(
+                          height: size.width * 0.3,
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                widget.data['title'],
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: blackColor,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              AutoSizeText(
                                 priceFormat.format(widget.data['price']),
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: blueColor,
-                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                  color: blackColor,
+                                  fontSize: 16,
                                 ),
                               ),
                               const SizedBox(
-                                height: 5,
+                                height: 3,
                               ),
-                              RichText(
-                                text: TextSpan(
-                                  text: '${timeago.format(widget.time)} •',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13,
-                                    color: lightBlackColor,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          ' ${widget.data['location']['area']}, ${widget.data['location']['city']}, ${widget.data['location']['state']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                        color: lightBlackColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
+                              Text(
+                                widget.data['title'],
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: blackColor,
+                                  fontSize: 15,
+                                ),
                               ),
+                              const Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      timeago.format(widget.time),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.start,
+                                      style: const TextStyle(
+                                        color: lightBlackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      widget.data['location']['area'],
+                                      maxLines: 2,
+                                      textAlign: TextAlign.end,
+                                      style: const TextStyle(
+                                        color: lightBlackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Text.rich(
+                              //   TextSpan(
+                              //     text: '${timeago.format(widget.time)} •',
+                              //     children: [
+                              //       TextSpan(
+                              //         text:
+                              //             ' ${widget.data['location']['area']}, ${widget.data['location']['city']}, ${widget.data['location']['state']}',
+                              //         style: const TextStyle(
+                              //           color: lightBlackColor,
+                              //           fontSize: 12,
+                              //           fontWeight: FontWeight.w500,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //     style: const TextStyle(
+                              //       color: lightBlackColor,
+                              //       fontWeight: FontWeight.w500,
+                              //       fontSize: 12,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -207,8 +233,8 @@ class _CustomProductCardState extends State<CustomProductCard> {
               ),
               if (widget.data['sellerUid'] != services.user!.uid)
                 Positioned(
-                  top: 0,
-                  right: 0,
+                  top: 10,
+                  right: 10,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
@@ -217,11 +243,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                         isLiked: isLiked,
                         productId: widget.data.id,
                       );
-                      setState(() {});
                     },
                     child: Icon(
                       isLiked ? Ionicons.heart : Ionicons.heart_outline,
-                      size: 20,
+                      size: 22,
                       color: isLiked ? pinkColor : lightBlackColor,
                     ),
                   ),

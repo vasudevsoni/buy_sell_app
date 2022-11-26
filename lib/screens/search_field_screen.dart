@@ -28,7 +28,7 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
       backgroundColor: whiteColor,
       appBar: AppBar(
         backgroundColor: whiteColor,
-        elevation: 0.5,
+        elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: const Text(

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -16,6 +18,7 @@ import '/screens/search_field_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_product_card.dart';
 import 'categories/categories_list_screen.dart';
+import 'categories/sub_categories_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final LocationData? locationData;
@@ -32,11 +35,10 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabBarController;
   final FirebaseServices _services = FirebaseServices();
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
   String area = '';
   String city = '';
   String state = '';
-  String country = '';
   bool isLocationEmpty = false;
 
   @override
@@ -62,17 +64,18 @@ class _HomeScreenState extends State<HomeScreen>
           area = value['location']['area'];
           city = value['location']['city'];
           state = value['location']['state'];
-          country = value['location']['country'];
         });
       }
     });
   }
 
   getEmptyLocationUI() async {
-    setState(() {
-      isLocationEmpty = true;
-      tabBarController.animateTo(1);
-    });
+    if (mounted) {
+      setState(() {
+        isLocationEmpty = true;
+        tabBarController.animateTo(1);
+      });
+    }
   }
 
   @override
@@ -86,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         automaticallyImplyLeading: false,
@@ -104,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,8 +129,8 @@ class _HomeScreenState extends State<HomeScreen>
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
                               color: blackColor,
                             ),
                           ),
@@ -144,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   if (isLocationEmpty == false)
                     Text(
-                      '$city, $state, $country',
+                      '$city, $state',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -203,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: tabBarController,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
           //near me screen
           NearbyProductsScreen(
@@ -239,178 +243,67 @@ class AllProductsScreen extends StatefulWidget {
 
 class _AllProductsScreenState extends State<AllProductsScreen>
     with AutomaticKeepAliveClientMixin {
+  final FirebaseServices _services = FirebaseServices();
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     super.build(context);
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(
-          //     left: 15,
-          //     right: 15,
-          //     top: 10,
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //       const Expanded(
-          //         child: Text(
-          //           'Browse Categories',
-          //           maxLines: 2,
-          //           overflow: TextOverflow.ellipsis,
-          //           softWrap: true,
-          //           style: TextStyle(
-          //             fontWeight: FontWeight.w800,
-          //             fontSize: 20,
-          //           ),
-          //         ),
-          //       ),
-          //       TextButton(
-          //         onPressed: () => Get.toNamed(CategoriesListScreen.routeName),
-          //         child: const Text(
-          //           'See all',
-          //           style: TextStyle(
-          //             fontWeight: FontWeight.w600,
-          //             fontSize: 14,
-          //             color: blueColor,
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: size.height * 0.2,
-          //   width: size.width,
-          //   child: FutureBuilder<QuerySnapshot>(
-          //     future: widget._services.categories
-          //         .orderBy('sortId', descending: false)
-          //         .get(),
-          //     builder: (BuildContext context,
-          //         AsyncSnapshot<QuerySnapshot> snapshot) {
-          //       if (snapshot.hasError) {
-          //         return const Center(
-          //           child: Padding(
-          //             padding: EdgeInsets.all(15.0),
-          //             child: Text(
-          //               'Something has gone wrong. Please try again',
-          //               style: TextStyle(
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 15,
-          //               ),
-          //             ),
-          //           ),
-          //         );
-          //       }
-          //       if (snapshot.connectionState == ConnectionState.waiting) {
-          //         return const Padding(
-          //           padding: EdgeInsets.all(15.0),
-          //           child: Center(
-          //             child: SpinKitFadingCircle(
-          //               color: lightBlackColor,
-          //               size: 30,
-          //               duration: Duration(milliseconds: 1000),
-          //             ),
-          //           ),
-          //         );
-          //       }
-          //       return CarouselSlider.builder(
-          //         itemCount: 6,
-          //         options: CarouselOptions(
-          //           viewportFraction: 0.9,
-          //           pageSnapping: true,
-          //           height: size.height,
-          //           enlargeCenterPage: false,
-          //           enableInfiniteScroll: true,
-          //           reverse: false,
-          //           scrollDirection: Axis.horizontal,
-          //           scrollPhysics: const BouncingScrollPhysics(),
-          //         ),
-          //         itemBuilder: (context, index, realIndex) {
-          //           var doc = snapshot.data!.docs[index];
-          //           return GestureDetector(
-          //             behavior: HitTestBehavior.opaque,
-          //             onTap: () => Get.to(
-          //               () => SubCategoriesListScreen(doc: doc),
-          //             ),
-          //             child: Container(
-          //               decoration: BoxDecoration(
-          //                 borderRadius: BorderRadius.circular(10),
-          //                 color: greyColor,
-          //               ),
-          //               margin: const EdgeInsets.symmetric(horizontal: 5),
-          //               child: SizedBox(
-          //                 width: size.width,
-          //                 child: Stack(
-          //                   children: [
-          //                     ClipRRect(
-          //                       borderRadius: BorderRadius.circular(10),
-          //                       child: CachedNetworkImage(
-          //                         imageUrl: doc['image'],
-          //                         fit: BoxFit.cover,
-          //                         width: size.width,
-          //                         errorWidget: (context, url, error) {
-          //                           return const Icon(
-          //                             Ionicons.alert_circle,
-          //                             size: 30,
-          //                             color: redColor,
-          //                           );
-          //                         },
-          //                         placeholder: (context, url) {
-          //                           return const Center(
-          //                             child: SpinKitFadingCircle(
-          //                               color: lightBlackColor,
-          //                               size: 30,
-          //                               duration: Duration(milliseconds: 1000),
-          //                             ),
-          //                           );
-          //                         },
-          //                       ),
-          //                     ),
-          //                     Align(
-          //                       alignment: Alignment.center,
-          //                       child: Text(
-          //                         doc['catName'],
-          //                         maxLines: 1,
-          //                         softWrap: true,
-          //                         overflow: TextOverflow.ellipsis,
-          //                         style: const TextStyle(
-          //                           fontWeight: FontWeight.w900,
-          //                           fontSize: 38,
-          //                           color: whiteColor,
-          //                           shadows: <Shadow>[
-          //                             Shadow(
-          //                               offset: Offset(0, 2),
-          //                               blurRadius: 10.0,
-          //                               color: lightBlackColor,
-          //                             ),
-          //                           ],
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Browse Categories',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => widget.tabBarController.animateTo(2),
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: blueColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CategoriesListView(size: size, services: _services),
           const SizedBox(
             height: 20,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            child: AutoSizeText(
+            child: Text(
               'Latest Products',
               maxLines: 1,
               softWrap: true,
@@ -428,6 +321,130 @@ class _AllProductsScreenState extends State<AllProductsScreen>
             showAll: true,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CategoriesListView extends StatelessWidget {
+  final Size size;
+  final FirebaseServices _services;
+
+  const CategoriesListView({
+    Key? key,
+    required this.size,
+    required FirebaseServices services,
+  })  : _services = services,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width,
+      height: size.height * 0.10,
+      child: FutureBuilder<QuerySnapshot>(
+        future: _services.categories.orderBy('sortId', descending: false).get(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text(
+                  'Something has gone wrong. Please try again',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Center(
+                child: SpinKitFadingCircle(
+                  color: lightBlackColor,
+                  size: 30,
+                  duration: Duration(milliseconds: 1000),
+                ),
+              ),
+            );
+          }
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return const SizedBox(
+                width: 10,
+              );
+            },
+            itemCount: 6,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final doc = snapshot.data!.docs[index];
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Get.to(
+                  () => SubCategoriesListScreen(doc: doc),
+                ),
+                child: Container(
+                  width: size.height * 0.15,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: greyColor,
+                      width: 1,
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: CachedNetworkImage(
+                            imageUrl: doc['image'],
+                            fit: BoxFit.fitHeight,
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                Ionicons.alert_circle,
+                                size: 30,
+                                color: redColor,
+                              );
+                            },
+                            placeholder: (context, url) {
+                              return const Center(
+                                child: SpinKitFadingCircle(
+                                  color: lightBlackColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Text(
+                        doc['catName'],
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: lightBlackColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -451,12 +468,15 @@ class NearbyProductsScreen extends StatefulWidget {
 
 class _NearbyProductsScreenState extends State<NearbyProductsScreen>
     with AutomaticKeepAliveClientMixin {
+  final FirebaseServices _services = FirebaseServices();
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     super.build(context);
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -465,9 +485,50 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
           const SizedBox(
             height: 20,
           ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              bottom: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Browse Categories',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => widget.tabBarController.animateTo(2),
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: blueColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CategoriesListView(size: size, services: _services),
+          const SizedBox(
+            height: 20,
+          ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            child: AutoSizeText(
+            child: Text(
               'Nearby Products',
               maxLines: 1,
               softWrap: true,
@@ -638,7 +699,7 @@ class _ProductsListState extends State<ProductsList> {
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          'No products found in your region',
+                          'No products are currently available',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
@@ -649,19 +710,6 @@ class _ProductsListState extends State<ProductsList> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      CustomButton(
-                        text: 'Show All Products',
-                        onPressed: () {
-                          widget.tabController.animateTo(1);
-                        },
-                        icon: Ionicons.earth,
-                        borderColor: blueColor,
-                        bgColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
                     ],
                   ),
                 );
@@ -669,7 +717,7 @@ class _ProductsListState extends State<ProductsList> {
               return ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 13,
+                    height: 10,
                   );
                 },
                 scrollDirection: Axis.vertical,
@@ -682,10 +730,11 @@ class _ProductsListState extends State<ProductsList> {
                 ),
                 itemCount: snapshot.docs.length,
                 itemBuilder: (context, index) {
-                  var data = snapshot.docs[index];
-                  var time =
+                  final data = snapshot.docs[index];
+                  final time =
                       DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                  var sellerDetails = _services.getUserData(data['sellerUid']);
+                  final sellerDetails =
+                      _services.getUserData(data['sellerUid']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;

@@ -17,14 +17,13 @@ class CategoriesListScreen extends StatefulWidget {
 
 class _CategoriesListScreenState extends State<CategoriesListScreen>
     with AutomaticKeepAliveClientMixin {
+  final FirebaseServices service = FirebaseServices();
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    FirebaseServices service = FirebaseServices();
-
     return FutureBuilder<QuerySnapshot>(
       future: service.categories
           .orderBy(

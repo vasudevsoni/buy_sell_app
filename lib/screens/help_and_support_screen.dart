@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'web_view/faqs.dart';
+import 'web_view/icons8.dart';
 import 'web_view/privacy_policy_screen.dart';
 import 'web_view/terms_of_service.dart';
 import '/widgets/custom_list_tile_no_image.dart';
@@ -11,21 +12,16 @@ import '/utils/utils.dart';
 import 'report_screen.dart';
 import '/widgets/custom_list_tile_with_subtitle.dart';
 
-class HelpAndSupportScreen extends StatefulWidget {
+class HelpAndSupportScreen extends StatelessWidget {
   const HelpAndSupportScreen({super.key});
 
-  @override
-  State<HelpAndSupportScreen> createState() => _HelpAndSupportScreenState();
-}
-
-class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -123,6 +119,15 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               onTap: () => Get.to(
                 () => const PrivacyPolicy(),
                 transition: Transition.downToUp,
+              ),
+            ),
+            CustomListTileNoImage(
+              text: 'Icons by Icons8',
+              icon: Ionicons.balloon,
+              trailingIcon: Ionicons.chevron_forward,
+              isEnabled: true,
+              onTap: () => Get.to(
+                () => const Icons8(),
               ),
             ),
             CustomListTileWithSubtitle(

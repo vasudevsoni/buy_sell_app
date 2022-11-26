@@ -33,11 +33,11 @@ class _EditAdScreenState extends State<EditAdScreen> {
   final FirebaseServices _services = FirebaseServices();
   bool isLoading = false;
 
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController subCatNameController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController subCatNameController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
@@ -190,20 +190,22 @@ class _EditAdScreenState extends State<EditAdScreen> {
     final provider = Provider.of<SellerFormProvider>(context);
 
     updateProductOnFirebase(SellerFormProvider provider, String uid) async {
-      return await _services.listings
-          .doc(uid)
-          .update(provider.updatedDataToFirestore)
-          .then((_) {
-        Get.back();
-        provider.clearDataAfterUpdateListing();
-        setState(() {
-          isLoading = false;
+      try {
+        await _services.listings
+            .doc(uid)
+            .update(provider.updatedDataToFirestore)
+            .then((_) {
+          Get.back();
+          provider.clearDataAfterUpdateListing();
+          setState(() {
+            isLoading = false;
+          });
+          showSnackBar(
+            content: 'Details updated. Product will be live once reviewed',
+            color: blueColor,
+          );
         });
-        showSnackBar(
-          content: 'Details updated. Product will be live once reviewed',
-          color: blueColor,
-        );
-      }).catchError((err) {
+      } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
@@ -211,7 +213,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
         setState(() {
           isLoading = false;
         });
-      });
+      }
     }
 
     validateForm() async {
@@ -515,9 +517,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0.5,
+          elevation: 0.2,
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           leading: IconButton(

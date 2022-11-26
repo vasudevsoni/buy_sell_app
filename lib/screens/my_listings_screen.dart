@@ -13,7 +13,7 @@ class MyListingsScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: whiteColor,
-        elevation: 0.5,
+        elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: const Text(

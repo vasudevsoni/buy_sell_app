@@ -29,16 +29,15 @@ class _ReportScreenState extends State<ReportScreen> {
   Future getImageFromGallery() async {
     final XFile? pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 60);
-    if (pickedFile == null) {
-      return;
+    if (pickedFile != null && mounted) {
+      setState(() {
+        reportImage = File(pickedFile.path);
+      });
     }
-    setState(() {
-      reportImage = File(pickedFile.path);
-    });
   }
 
   void requestGalleryPermission() async {
-    var status = await Permission.storage.status;
+    final status = await Permission.storage.status;
     if (status.isGranted) {
       getImageFromGallery();
     } else if (status.isDenied) {
@@ -182,7 +181,7 @@ class _ReportScreenState extends State<ReportScreen> {
       backgroundColor: whiteColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,

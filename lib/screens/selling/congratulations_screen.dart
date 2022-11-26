@@ -36,6 +36,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: whiteColor,
           appBar: AppBar(
             backgroundColor: transparentColor,
             elevation: 0.0,

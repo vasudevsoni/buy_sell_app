@@ -27,7 +27,7 @@ class UpdateProfileImageScreen extends StatefulWidget {
 
 class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   final FirebaseServices services = FirebaseServices();
-  var uuid = const Uuid();
+  final uuid = const Uuid();
   String profileImage = '';
   XFile? pickedImage;
   String downloadUrl = '';
@@ -35,24 +35,21 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   @override
   void initState() {
-    setState(() {
-      getUserProfileImage();
-    });
+    getUserProfileImage();
     super.initState();
   }
 
   getUserProfileImage() async {
     await services.getCurrentUserData().then((value) {
-      if (!mounted) {
-        return;
+      if (mounted) {
+        setState(() {
+          if (value['profileImage'] != null) {
+            profileImage = value['profileImage'];
+            return;
+          }
+          profileImage = '';
+        });
       }
-      setState(() {
-        if (value['profileImage'] != null) {
-          profileImage = value['profileImage'];
-          return;
-        }
-        profileImage = '';
-      });
     });
   }
 
@@ -79,9 +76,11 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
       source: ImageSource.gallery,
       imageQuality: 75,
     );
-    setState(() {
-      pickedImage = picked;
-    });
+    if (mounted) {
+      setState(() {
+        pickedImage = picked;
+      });
+    }
   }
 
   takePhoto() async {
@@ -91,9 +90,11 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
       imageQuality: 75,
       preferredCameraDevice: CameraDevice.front,
     );
-    setState(() {
-      pickedImage = picked;
-    });
+    if (mounted) {
+      setState(() {
+        pickedImage = picked;
+      });
+    }
   }
 
   void requestCameraPermission() async {
@@ -243,133 +244,131 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
+
+    return Scaffold(
+      backgroundColor: whiteColor,
+      appBar: AppBar(
+        elevation: 0.2,
         backgroundColor: whiteColor,
-        appBar: AppBar(
-          elevation: 0.5,
-          backgroundColor: whiteColor,
-          iconTheme: const IconThemeData(color: blackColor),
-          centerTitle: true,
-          title: const Text(
-            'Update profile image',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: blackColor,
-              fontSize: 15,
-            ),
+        iconTheme: const IconThemeData(color: blackColor),
+        centerTitle: true,
+        title: const Text(
+          'Update profile image',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: blackColor,
+            fontSize: 15,
           ),
         ),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            profileImage == ''
-                ? Container(
-                    height: size.width * 0.3,
-                    width: size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: blueColor,
-                    ),
-                    child: const Icon(
-                      Ionicons.person,
-                      color: whiteColor,
-                      size: 45,
-                    ),
-                  )
-                : pickedImage == null
-                    ? SizedBox(
-                        height: size.width * 0.3,
-                        width: size.width * 0.3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: CachedNetworkImage(
-                            imageUrl: profileImage,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                Ionicons.alert_circle,
+      ),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          profileImage == ''
+              ? Container(
+                  height: size.width * 0.3,
+                  width: size.width * 0.3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: blueColor,
+                  ),
+                  child: const Icon(
+                    Ionicons.person,
+                    color: whiteColor,
+                    size: 45,
+                  ),
+                )
+              : pickedImage == null
+                  ? SizedBox(
+                      height: size.width * 0.3,
+                      width: size.width * 0.3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          imageUrl: profileImage,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return const Icon(
+                              Ionicons.alert_circle,
+                              size: 30,
+                              color: redColor,
+                            );
+                          },
+                          placeholder: (context, url) {
+                            return const Center(
+                              child: SpinKitFadingCircle(
+                                color: lightBlackColor,
                                 size: 30,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                    : SizedBox(
-                        height: size.width * 0.3,
-                        width: size.width * 0.3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.file(
-                            File(pickedImage!.path),
-                            fit: BoxFit.cover,
-                          ),
+                                duration: Duration(milliseconds: 1000),
+                              ),
+                            );
+                          },
                         ),
                       ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomButton(
-                text: 'Take Photo',
-                onPressed: requestCameraPermission,
-                icon: Ionicons.camera,
-                bgColor: whiteColor,
-                borderColor: blackColor,
-                textIconColor: blackColor,
-                isDisabled: isLoading,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomButton(
-                text: 'Choose Photo',
-                onPressed: requestGalleryPermission,
-                icon: Ionicons.image,
-                bgColor: whiteColor,
-                borderColor: blackColor,
-                textIconColor: blackColor,
-                isDisabled: isLoading,
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          color: greyColor,
-          padding: const EdgeInsets.only(
-            left: 15,
-            right: 15,
-            bottom: 10,
-            top: 10,
+                    )
+                  : SizedBox(
+                      height: size.width * 0.3,
+                      width: size.width * 0.3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.file(
+                          File(pickedImage!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+          const SizedBox(
+            height: 20,
           ),
-          child: isLoading
-              ? const LoadingButton()
-              : CustomButton(
-                  text: 'Proceed',
-                  onPressed:
-                      pickedImage != null ? showConfirmationDialog : () {},
-                  icon: Ionicons.arrow_forward,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: CustomButton(
+              text: 'Take Photo',
+              onPressed: requestCameraPermission,
+              icon: Ionicons.camera,
+              bgColor: whiteColor,
+              borderColor: blackColor,
+              textIconColor: blackColor,
+              isDisabled: isLoading,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: CustomButton(
+              text: 'Choose Photo',
+              onPressed: requestGalleryPermission,
+              icon: Ionicons.image,
+              bgColor: whiteColor,
+              borderColor: blackColor,
+              textIconColor: blackColor,
+              isDisabled: isLoading,
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        color: greyColor,
+        padding: const EdgeInsets.only(
+          left: 15,
+          right: 15,
+          bottom: 10,
+          top: 10,
         ),
+        child: isLoading
+            ? const LoadingButton()
+            : CustomButton(
+                text: 'Proceed',
+                onPressed: pickedImage != null ? showConfirmationDialog : () {},
+                icon: Ionicons.arrow_forward,
+                bgColor: blueColor,
+                borderColor: blueColor,
+                textIconColor: whiteColor,
+              ),
       ),
     );
   }

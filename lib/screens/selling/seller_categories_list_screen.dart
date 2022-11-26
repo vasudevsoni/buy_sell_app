@@ -14,11 +14,12 @@ class SellerCategoriesListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    FirebaseServices service = FirebaseServices();
+    final FirebaseServices service = FirebaseServices();
 
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -71,7 +72,7 @@ class SellerCategoriesListScreen extends StatelessWidget {
               itemCount: snapshot.data!.docs.length,
               padding: const EdgeInsets.all(15),
               itemBuilder: (context, index) {
-                var doc = snapshot.data!.docs[index];
+                final doc = snapshot.data!.docs[index];
                 return CustomListTile(
                   text: doc['catName'],
                   url: doc['image'],

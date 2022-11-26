@@ -60,7 +60,7 @@ class ErrorScreen extends StatelessWidget {
                 onPressed: () => Get.offAll(
                   () => const MainScreen(selectedIndex: 0),
                 ),
-                icon: Ionicons.home,
+                icon: Ionicons.home_outline,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

@@ -22,33 +22,15 @@ class SearchResultsScreen extends StatefulWidget {
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   final FirebaseServices _services = FirebaseServices();
-  bool isLocationEmpty = false;
-  String city = '';
-
-  @override
-  void initState() {
-    _services.getCurrentUserData().then((value) {
-      if (value['location'] != null) {
-        setState(() {
-          city = value['location']['city'];
-          isLocationEmpty = false;
-        });
-        return;
-      }
-      setState(() {
-        isLocationEmpty = true;
-      });
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -167,7 +149,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 ListView.separated(
                   separatorBuilder: (context, index) {
                     return const SizedBox(
-                      height: 13,
+                      height: 10,
                     );
                   },
                   padding: const EdgeInsets.only(
@@ -180,10 +162,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                   scrollDirection: Axis.vertical,
                   itemCount: snapshot.docs.length,
                   itemBuilder: (context, index) {
-                    var data = snapshot.docs[index];
-                    var time =
+                    final data = snapshot.docs[index];
+                    final time =
                         DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                    var sellerDetails =
+                    final sellerDetails =
                         _services.getUserData(data['sellerUid']);
                     final hasMoreReached = snapshot.hasMore &&
                         index + 1 == snapshot.docs.length &&

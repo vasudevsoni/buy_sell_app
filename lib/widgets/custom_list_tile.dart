@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '/utils/utils.dart';
-import 'svg_picture.dart';
 
 class CustomListTile extends StatelessWidget {
   final String text;
@@ -24,7 +24,11 @@ class CustomListTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: greyColor,
+          color: whiteColor,
+          border: Border.all(
+            color: greyColor,
+            width: 1,
+          ),
         ),
         width: double.infinity,
         height: double.infinity,
@@ -33,13 +37,16 @@ class CustomListTile extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: SVGPictureWidget(
-                  url: url,
-                  fit: BoxFit.contain,
-                  semanticsLabel: 'category image',
-                ),
-              ),
+                  padding: const EdgeInsets.all(15),
+                  child: CachedNetworkImage(
+                    imageUrl: url,
+                  )
+                  // SVGPictureWidget(
+                  //   url: url,
+                  //   fit: BoxFit.contain,
+                  //   semanticsLabel: 'category image',
+                  // ),
+                  ),
             ),
             Padding(
               padding: const EdgeInsets.only(

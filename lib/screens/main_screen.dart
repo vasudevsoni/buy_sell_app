@@ -42,96 +42,91 @@ class _MainScreenState extends State<MainScreen> {
       enableDrag: false,
       isScrollControlled: false,
       builder: (context) {
-        return WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
-          child: SafeArea(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+              left: 15,
+              right: 15,
+              top: 15,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Center(
+                  child: Text(
+                    'Network Connection Lost',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                color: whiteColor,
-              ),
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 15,
-                left: 15,
-                right: 15,
-                top: 15,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Center(
-                    child: Text(
-                      'Network Connection Lost',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
+                const SizedBox(
+                  height: 15,
+                ),
+                Image.asset(
+                  'assets/no-network.png',
+                  fit: BoxFit.contain,
+                  semanticLabel: 'no network connection',
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: greyColor,
+                  ),
+                  child: const Text(
+                    'Please check your internet connection',
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Image.asset(
-                    'assets/no-network.png',
-                    fit: BoxFit.contain,
-                    semanticLabel: 'no network connection',
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(15),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: greyColor,
-                    ),
-                    child: const Text(
-                      'Please check your internet connection',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'OK',
-                    onPressed: () async {
-                      Get.back();
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButtonWithoutIcon(
+                  text: 'OK',
+                  onPressed: () async {
+                    Get.back();
+                    setState(() {
+                      isAlertSet = false;
+                    });
+                    isDeviceConnected =
+                        await InternetConnectionChecker().hasConnection;
+                    if (!isDeviceConnected) {
+                      showNetworkError();
                       setState(() {
-                        isAlertSet = false;
+                        isAlertSet = true;
                       });
-                      isDeviceConnected =
-                          await InternetConnectionChecker().hasConnection;
-                      if (!isDeviceConnected) {
-                        showNetworkError();
-                        setState(() {
-                          isAlertSet = true;
-                        });
-                      }
-                    },
-                    borderColor: redColor,
-                    bgColor: redColor,
-                    textIconColor: whiteColor,
-                  ),
-                ],
-              ),
+                    }
+                  },
+                  borderColor: redColor,
+                  bgColor: redColor,
+                  textIconColor: whiteColor,
+                ),
+              ],
             ),
           ),
         );
@@ -163,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final locationProv = Provider.of<LocationProvider>(context);
     final mainProv = Provider.of<MainProvider>(context);
-    int selectedIndex = mainProv.currentPageIndex;
+    final int selectedIndex = mainProv.currentPageIndex;
 
     final pages = [
       HomeScreen(

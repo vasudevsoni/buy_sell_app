@@ -20,16 +20,15 @@ class EmailRegisterScreen extends StatefulWidget {
 }
 
 class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
-  final _registerformKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
+  final GlobalKey<FormState> _registerformKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final EmailAuthService _service = EmailAuthService();
   bool isLoading = false;
 
   _validateEmail() async {
-    if (_registerformKey.currentState!.validate()) {
+    if (_registerformKey.currentState!.validate() && mounted) {
       setState(() {
         isLoading = true;
       });
@@ -60,7 +59,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,

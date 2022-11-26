@@ -1,18 +1,32 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../utils/utils.dart';
 
-class PrivacyPolicy extends StatelessWidget {
+class PrivacyPolicy extends StatefulWidget {
   const PrivacyPolicy({super.key});
+
+  @override
+  State<PrivacyPolicy> createState() => _PrivacyPolicyState();
+}
+
+class _PrivacyPolicyState extends State<PrivacyPolicy> {
+  @override
+  void initState() {
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: whiteColor,
-        elevation: 0.5,
+        elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: const Text(

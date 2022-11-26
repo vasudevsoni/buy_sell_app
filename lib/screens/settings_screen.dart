@@ -21,29 +21,27 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final FirebaseServices _services = FirebaseServices();
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
   String signInMethod = '';
   String address = '';
   String country = '';
 
   @override
   void initState() {
-    if (!mounted) {
-      return;
-    }
     _services.getCurrentUserData().then((value) {
-      if (value['location'] == null) {
-        return;
+      if (value['location'] != null && mounted) {
+        setState(() {
+          address =
+              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
+          country = value['location']['country'];
+        });
       }
+    });
+    if (mounted) {
       setState(() {
-        address =
-            '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
-        country = value['location']['country'];
+        signInMethod = user!.providerData[0].providerId.toString();
       });
-    });
-    setState(() {
-      signInMethod = user!.providerData[0].providerId.toString();
-    });
+    }
     super.initState();
   }
 
@@ -151,10 +149,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -255,15 +254,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 StoreRedirect.redirect();
               },
             ),
+
             CustomListTileWithSubtitle(
-              text: 'Invite friends to BestDeal',
-              subTitle: 'Invite your friends to buy and sell',
+              text: 'Invite friends to BechDe',
+              subTitle: 'Invite your friends to buy and sell on BechDe',
               icon: Ionicons.people,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {
                 Share.share(
-                    'I found some really amazing deals on the BestDeal app. Download it now - https://play.google.com/store/apps/details?id=com.vasudevsoni.buy_sell_app');
+                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
               },
             ),
             CustomListTileWithSubtitle(

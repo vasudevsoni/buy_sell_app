@@ -15,7 +15,6 @@ import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  static const String routeName = '/image-picker-screen';
   final bool isButtonDisabled;
 
   const ImagePickerWidget({
@@ -42,7 +41,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
 
     Future getImageFromCamera() async {
-      XFile? pickedFile = await picker.pickImage(
+      final XFile? pickedFile = await picker.pickImage(
         source: ImageSource.camera,
         imageQuality: 85,
         preferredCameraDevice: CameraDevice.rear,
@@ -56,7 +55,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
 
     void requestCameraPermission() async {
-      var status = await Permission.camera.status;
+      final status = await Permission.camera.status;
       if (status.isGranted) {
         getImageFromCamera();
       } else if (status.isDenied) {
@@ -95,7 +94,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
 
     void requestGalleryPermission() async {
-      var status = await Permission.storage.status;
+      final status = await Permission.storage.status;
       if (status.isGranted) {
         getImageFromGallery();
       } else if (status.isDenied) {

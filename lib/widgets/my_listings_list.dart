@@ -189,10 +189,11 @@ class _MyListingsListState extends State<MyListingsList> {
                 scrollDirection: Axis.vertical,
                 itemCount: snapshot.docs.length,
                 itemBuilder: (context, index) {
-                  var data = snapshot.docs[index];
-                  var time = DateFormat.yMMMEd().format(
+                  final data = snapshot.docs[index];
+                  final time = DateFormat.yMMMEd().format(
                       DateTime.fromMillisecondsSinceEpoch(data['postedAt']));
-                  var sellerDetails = _services.getUserData(data['sellerUid']);
+                  final sellerDetails =
+                      _services.getUserData(data['sellerUid']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
@@ -248,11 +249,11 @@ class MyListingScreenProductCard extends StatefulWidget {
 
 class _MyListingScreenProductCardState
     extends State<MyListingScreenProductCard> {
-  FirebaseServices services = FirebaseServices();
+  final FirebaseServices services = FirebaseServices();
   late DocumentSnapshot sellerDetails;
   bool isLoading = false;
 
-  NumberFormat numberFormat = NumberFormat.compact();
+  final NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
@@ -475,6 +476,7 @@ class _MyListingScreenProductCardState
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return isLoading
         ? const Padding(
             padding: EdgeInsets.all(15.0),
@@ -530,36 +532,38 @@ class _MyListingScreenProductCardState
                           ),
                           Expanded(
                             child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 15),
+                              height: size.width * 0.3,
+                              padding: const EdgeInsets.all(10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    widget.data['title'],
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: blackColor,
-                                      fontSize: 14,
-                                    ),
-                                  ),
                                   AutoSizeText(
                                     priceFormat.format(widget.data['price']),
                                     maxLines: 1,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: blueColor,
-                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                      color: blackColor,
+                                      fontSize: 16,
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 5,
+                                    height: 3,
                                   ),
+                                  Text(
+                                    widget.data['title'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: blackColor,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const Spacer(),
                                   Text(
                                     'Posted on - ${widget.time}',
                                     maxLines: 2,

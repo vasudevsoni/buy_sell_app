@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.vasudevsoni.buy_sell_app"
+        applicationId "com.bechde.buy_sell_app"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -79,5 +79,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform("com.google.firebase:firebase-bom:31.0.2")
+    implementation platform("com.google.firebase:firebase-bom:31.1.0")
+    implementation "com.google.firebase:firebase-auth"
 }

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_text_field.dart';
@@ -41,9 +42,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime dateJoined = DateTime.now();
   int followers = 0;
   int following = 0;
+
   bool isFollowing = false;
 
-  NumberFormat numberFormat = NumberFormat.compact();
+  final NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
@@ -53,49 +55,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getUserData() async {
     await services.getUserData(widget.userId).then((value) {
-      if (!mounted) {
-        return;
+      if (mounted) {
+        setState(() {
+          if (value['name'] == null) {
+            name = 'BechDe User';
+          } else {
+            name = value['name'];
+          }
+          if (value['bio'] == null) {
+            bio = '';
+          } else {
+            bio = value['bio'];
+          }
+          if (value['profileImage'] == null) {
+            profileImage = '';
+          } else {
+            profileImage = value['profileImage'];
+          }
+          if (value['location'] == null) {
+            address == '';
+          } else {
+            address =
+                '${value['location']['city']}, ${value['location']['state']}';
+          }
+          if (value['followers'].contains(user!.uid)) {
+            isFollowing = true;
+          } else {
+            isFollowing = false;
+          }
+          if (value['followers'].isEmpty) {
+            followers = 0;
+          } else {
+            followers = value['followers'].length;
+          }
+          if (value['following'].isEmpty) {
+            following = 0;
+          } else {
+            following = value['following'].length;
+          }
+          sellerUid = value['uid'];
+          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+        });
       }
-      setState(() {
-        if (value['name'] == null) {
-          name = 'BestDeal User';
-        } else {
-          name = value['name'];
-        }
-        if (value['bio'] == null) {
-          bio = '';
-        } else {
-          bio = value['bio'];
-        }
-        if (value['profileImage'] == null) {
-          profileImage = '';
-        } else {
-          profileImage = value['profileImage'];
-        }
-        if (value['location'] == null) {
-          address == '';
-        } else {
-          address =
-              '${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-        }
-        if (value['followers'].contains(user!.uid)) {
-          isFollowing = true;
-        } else {
-          isFollowing = false;
-        }
-        if (value['followers'].isEmpty) {
-          followers = 0;
-        } else {
-          followers = value['followers'].length;
-        }
-        if (value['following'].isEmpty) {
-          following = 0;
-        } else {
-          following = value['following'].length;
-        }
-        sellerUid = value['uid'];
-        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-      });
     });
   }
 
@@ -274,10 +275,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -321,8 +323,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     profileImage == ''
                         ? Container(
-                            height: size.width * 0.3,
-                            width: size.width * 0.3,
+                            height: size.width * 0.25,
+                            width: size.width * 0.25,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: blueColor,
@@ -417,8 +419,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                             ),
                             child: SizedBox(
-                              height: size.width * 0.3,
-                              width: size.width * 0.3,
+                              height: size.width * 0.25,
+                              width: size.width * 0.25,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: CachedNetworkImage(
@@ -452,19 +454,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Builder(builder: (context) {
-                                return Text(
-                                  numberFormat.format(followers),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  style: const TextStyle(
-                                    color: blackColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                );
-                              }),
+                              Text(
+                                numberFormat.format(followers),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(
+                                  color: blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                               const Text(
                                 'Followers',
                                 maxLines: 1,
@@ -540,7 +540,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       bio,
                       maxLines: 3,
                       softWrap: true,
-                      textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: blackColor,
@@ -556,7 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  'Member since - ${DateFormat.yMMM().format(dateJoined)}',
+                  'Joined - ${timeago.format(dateJoined)}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
@@ -729,7 +728,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
         return ListView.separated(
           separatorBuilder: (context, index) {
             return const SizedBox(
-              height: 13,
+              height: 10,
             );
           },
           padding: const EdgeInsets.only(
@@ -742,9 +741,9 @@ class _SellerProductsListState extends State<SellerProductsList> {
           scrollDirection: Axis.vertical,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
-            var data = snapshot.docs[index];
-            var time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-            var sellerDetails = _services.getUserData(data['sellerUid']);
+            final data = snapshot.docs[index];
+            final time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
+            final sellerDetails = _services.getUserData(data['sellerUid']);
             final hasMoreReached = snapshot.hasMore &&
                 index + 1 == snapshot.docs.length &&
                 !snapshot.isFetchingMore;

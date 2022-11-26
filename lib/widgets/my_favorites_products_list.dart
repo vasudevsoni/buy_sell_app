@@ -26,6 +26,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final mainProv = Provider.of<MainProvider>(context, listen: false);
+
     return FirestoreQueryBuilder(
       query: services.listings
           .orderBy('title', descending: false)
@@ -119,9 +120,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: CustomButtonWithoutIcon(
                   text: 'Explore Products',
-                  onPressed: () => setState(() {
-                    mainProv.switchToPage(0);
-                  }),
+                  onPressed: () => mainProv.switchToPage(0),
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,
@@ -154,7 +153,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
               ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 13,
+                    height: 10,
                   );
                 },
                 padding: const EdgeInsets.only(
@@ -167,10 +166,10 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 scrollDirection: Axis.vertical,
                 itemCount: snapshot.docs.length,
                 itemBuilder: (context, index) {
-                  var data = snapshot.docs[index];
-                  var time =
+                  final data = snapshot.docs[index];
+                  final time =
                       DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                  var sellerDetails = services.getUserData(data['sellerUid']);
+                  final sellerDetails = services.getUserData(data['sellerUid']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;

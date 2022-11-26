@@ -12,7 +12,7 @@ import '/screens/main_screen.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
 
-class CategoryProductsScreen extends StatefulWidget {
+class CategoryProductsScreen extends StatelessWidget {
   final String catName;
   final String subCatName;
   const CategoryProductsScreen({
@@ -22,21 +22,16 @@ class CategoryProductsScreen extends StatefulWidget {
   });
 
   @override
-  State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
-}
-
-class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          '${widget.catName} > ${widget.subCatName}',
+          '$catName > $subCatName',
           maxLines: 1,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
@@ -49,8 +44,8 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
       ),
       body: SafeArea(
         child: CategoryScreenProductsList(
-          catName: widget.catName,
-          subCatName: widget.subCatName,
+          catName: catName,
+          subCatName: subCatName,
         ),
       ),
     );
@@ -192,7 +187,7 @@ class _CategoryScreenProductsListState
               ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 13,
+                    height: 10,
                   );
                 },
                 padding: const EdgeInsets.only(

@@ -35,17 +35,19 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
   final FirebaseServices _services = FirebaseServices();
   bool isLoading = false;
 
-  TextEditingController subCatNameController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController brandNameController = TextEditingController();
-  TextEditingController modelNameController = TextEditingController();
-  TextEditingController kmDrivenController = TextEditingController();
-  TextEditingController fuelTypeSearchController = TextEditingController();
-  TextEditingController yorSearchController = TextEditingController();
-  TextEditingController colorsSearchController = TextEditingController();
-  TextEditingController noOfOwnersSearchController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  final TextEditingController subCatNameController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController brandNameController = TextEditingController();
+  final TextEditingController modelNameController = TextEditingController();
+  final TextEditingController kmDrivenController = TextEditingController();
+  final TextEditingController fuelTypeSearchController =
+      TextEditingController();
+  final TextEditingController yorSearchController = TextEditingController();
+  final TextEditingController colorsSearchController = TextEditingController();
+  final TextEditingController noOfOwnersSearchController =
+      TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   String? fuelTypeSelectedValue;
   String? yorSelectedValue;
@@ -214,20 +216,22 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     final provider = Provider.of<SellerFormProvider>(context);
 
     updateProductOnFirebase(SellerFormProvider provider, String uid) async {
-      return await _services.listings
-          .doc(uid)
-          .update(provider.updatedDataToFirestore)
-          .then((_) {
-        Get.back();
-        provider.clearDataAfterUpdateListing();
-        setState(() {
-          isLoading = false;
+      try {
+        await _services.listings
+            .doc(uid)
+            .update(provider.updatedDataToFirestore)
+            .then((_) {
+          Get.back();
+          provider.clearDataAfterUpdateListing();
+          setState(() {
+            isLoading = false;
+          });
+          showSnackBar(
+            content: 'Details updated. Product will be live once reviewed',
+            color: blueColor,
+          );
         });
-        showSnackBar(
-          content: 'Details updated. Product will be live once reviewed',
-          color: blueColor,
-        );
-      }).catchError((err) {
+      } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
@@ -235,7 +239,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
         setState(() {
           isLoading = false;
         });
-      });
+      }
     }
 
     validateForm() async {
@@ -675,9 +679,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 0.5,
+          elevation: 0.2,
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           leading: IconButton(

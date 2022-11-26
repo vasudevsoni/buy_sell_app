@@ -18,12 +18,12 @@ class SubCategoriesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseServices service = FirebaseServices();
+    final FirebaseServices service = FirebaseServices();
 
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,

@@ -60,7 +60,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       await user!.sendEmailVerification();
       showSnackBar(
         content: 'Verification email sent successfully',
-        color: redColor,
+        color: blueColor,
       );
     } on FirebaseAuthException catch (_) {
       showSnackBar(
@@ -80,8 +80,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,

@@ -54,7 +54,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isLoading = false;
   String location = '';
 
-  NumberFormat numberFormat = NumberFormat.compact();
+  final NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
@@ -118,7 +118,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   createChatRoom() {
-    Map<String, dynamic> product = {
+    final Map<String, dynamic> product = {
       'productId': widget.productData.id,
       'productImage': widget.productData['images'][0],
       'price': widget.productData['price'],
@@ -126,15 +126,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       'seller': widget.productData['sellerUid'],
     };
 
-    List<String> users = [
+    final List<String> users = [
       widget.sellerData['uid'],
       services.user!.uid,
     ];
 
-    String chatRoomId =
+    final String chatRoomId =
         '${widget.sellerData['uid']}.${services.user!.uid}.${widget.productData.id}';
 
-    Map<String, dynamic> chatData = {
+    final Map<String, dynamic> chatData = {
       'users': users,
       'chatRoomId': chatRoomId,
       'read': false,
@@ -162,13 +162,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    var sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
+    final sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
       widget.sellerData['dateJoined'],
     );
-    var productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
+    final productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
       widget.productData['postedAt'],
     );
-    List images = widget.productData['images'];
+    final List images = widget.productData['images'];
 
     showReportDialog() {
       showModalBottomSheet<dynamic>(
@@ -344,7 +344,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: CustomButton(
-                      icon: Ionicons.bug,
+                      icon: Ionicons.shield_half,
                       text: 'Report Product',
                       onPressed: () {
                         Get.back();
@@ -375,9 +375,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     return isActive == false && isSold == false
         ? Scaffold(
+            backgroundColor: whiteColor,
             appBar: AppBar(
               backgroundColor: whiteColor,
-              elevation: 0.5,
+              elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: true,
               title: const Text(
@@ -479,7 +480,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                     ],
               backgroundColor: whiteColor,
-              elevation: 0.5,
+              elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: true,
               title: const Text(
@@ -632,7 +633,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 color: blackColor,
                                 width: size.width,
-                                height: size.height * 0.4,
+                                height: size.height * 0.35,
                                 child: CarouselSlider.builder(
                                   itemCount: images.length,
                                   itemBuilder: (context, index, realIndex) {
@@ -744,9 +745,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: blueColor,
-                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: blackColor,
+                                    fontSize: 17,
                                     decoration: isSold
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
@@ -761,7 +762,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: blueColor,
                                   ),
                                   const SizedBox(
-                                    width: 5,
+                                    width: 3,
                                   ),
                                   Text(
                                     numberFormat.format(
@@ -785,7 +786,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: pinkColor,
                                   ),
                                   const SizedBox(
-                                    width: 5,
+                                    width: 3,
                                   ),
                                   Text(
                                     numberFormat.format(
@@ -801,6 +802,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: Text(
@@ -811,7 +815,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               color: blackColor,
-                              fontSize: 18,
+                              fontSize: 15,
                               decoration: isSold
                                   ? TextDecoration.lineThrough
                                   : TextDecoration.none,
@@ -820,62 +824,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(
                           height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Ionicons.location,
-                                size: 15,
-                                color: lightBlackColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  location,
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: lightBlackColor,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Ionicons.time,
-                                size: 15,
-                                color: lightBlackColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  timeago.format(productCreatedTime),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: lightBlackColor,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
@@ -919,6 +867,62 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       color: lightBlackColor,
                                       fontSize: 14,
                                     ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Ionicons.location,
+                                size: 15,
+                                color: lightBlackColor,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  location,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: lightBlackColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Ionicons.time,
+                                size: 15,
+                                color: lightBlackColor,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  timeago.format(productCreatedTime),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: lightBlackColor,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
@@ -1478,7 +1482,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               ? SizedBox(
                                                   width: size.width * 0.5,
                                                   child: const Text(
-                                                    'BestDeal User',
+                                                    'BechDe User',
                                                     maxLines: 1,
                                                     softWrap: true,
                                                     overflow:
@@ -1549,6 +1553,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         MoreLikeThisProductsList(
                           catName: widget.productData['catName'],
                           subCatName: widget.productData['subCat'],
+                          postedAt: widget.productData['postedAt'],
                         ),
                       ],
                     ),
@@ -1560,10 +1565,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 class MoreLikeThisProductsList extends StatefulWidget {
   final String catName;
   final String subCatName;
+  final int postedAt;
   const MoreLikeThisProductsList({
     super.key,
     required this.catName,
     required this.subCatName,
+    required this.postedAt,
   });
 
   @override
@@ -1580,7 +1587,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
       stream: _services.listings
           .where('catName', isEqualTo: widget.catName)
           .where('subCat', isEqualTo: widget.subCatName)
-          .where('')
+          .where('postedAt', isNotEqualTo: widget.postedAt)
           .where('isActive', isEqualTo: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -1634,7 +1641,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             ListView.separated(
               separatorBuilder: (context, index) {
                 return const SizedBox(
-                  height: 13,
+                  height: 10,
                 );
               },
               padding: const EdgeInsets.only(
@@ -1647,10 +1654,10 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               scrollDirection: Axis.vertical,
               itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
               itemBuilder: (context, index) {
-                var data = snapshot.data!.docs[index];
-                var time =
+                final data = snapshot.data!.docs[index];
+                final time =
                     DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                var sellerDetails = _services.getUserData(data['sellerUid']);
+                final sellerDetails = _services.getUserData(data['sellerUid']);
                 return CustomProductCard(
                   data: data,
                   sellerDetails: sellerDetails,

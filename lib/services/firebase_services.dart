@@ -6,37 +6,38 @@ import 'package:uuid/uuid.dart';
 import '/utils/utils.dart';
 
 class FirebaseServices {
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
+  final Uuid uuid = const Uuid();
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
 
-  CollectionReference categories =
+  final CollectionReference categories =
       FirebaseFirestore.instance.collection('categories');
 
-  CollectionReference listings =
+  final CollectionReference listings =
       FirebaseFirestore.instance.collection('listings');
 
-  CollectionReference chats = FirebaseFirestore.instance.collection('chats');
+  final CollectionReference chats =
+      FirebaseFirestore.instance.collection('chats');
 
-  CollectionReference reports =
+  final CollectionReference reports =
       FirebaseFirestore.instance.collection('reports');
 
   Future<DocumentSnapshot> getCurrentUserData() async {
-    DocumentSnapshot doc = await users.doc(user!.uid).get();
+    final DocumentSnapshot doc = await users.doc(user!.uid).get();
     return doc;
   }
 
   Future<DocumentSnapshot> getUserData(id) async {
-    DocumentSnapshot doc = await users.doc(id).get();
+    final DocumentSnapshot doc = await users.doc(id).get();
     return doc;
   }
 
   Future<DocumentSnapshot> getProductDetails(String id) async {
-    DocumentSnapshot doc = await listings.doc(id).get();
+    final DocumentSnapshot doc = await listings.doc(id).get();
     return doc;
   }
-
-  final Uuid uuid = const Uuid();
 
   updateUserDetails(
     id,
@@ -248,7 +249,7 @@ class FirebaseServices {
     securityPatch,
   }) async {
     try {
-      var id = uuid.v4();
+      final id = uuid.v4();
       await reports.doc(id).set({
         'type': 'feedback',
         'userId': user!.uid,
@@ -277,12 +278,12 @@ class FirebaseServices {
     securityPatch,
     screenshot,
   }) async {
-    var id = uuid.v4();
+    final id = uuid.v4();
     try {
-      Reference storageReference =
+      final Reference storageReference =
           FirebaseStorage.instance.ref().child('reportImages/${user!.uid}/$id');
-      UploadTask uploadTask = storageReference.putFile(screenshot);
-      String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      final UploadTask uploadTask = storageReference.putFile(screenshot);
+      final String downloadUrl = await (await uploadTask).ref.getDownloadURL();
       await reports.doc(id).set({
         'type': 'screenshotReport',
         'userId': user!.uid,
@@ -307,7 +308,7 @@ class FirebaseServices {
   }
 
   reportItem({listingId, message}) async {
-    var id = uuid.v4();
+    final id = uuid.v4();
     try {
       await reports.doc(id).set({
         'type': 'productReport',
@@ -330,7 +331,7 @@ class FirebaseServices {
   }
 
   reportUser({userId, message}) async {
-    var id = uuid.v4();
+    final id = uuid.v4();
     try {
       await reports.doc(id).set({
         'type': 'userReport',
@@ -357,15 +358,8 @@ class FirebaseServices {
   //     link: Uri.parse("https://sites.google.com/view/buy-sell-app/home/"),
   //     uriPrefix: "https://vasudevsoni.page.link",
   //     androidParameters: const AndroidParameters(
-  //       packageName: "com.vasudevsoni.buy_sell_app",
+  //       packageName: "com.bechde.buy_sell_app",
   //       minimumVersion: 0,
-  //     ),
-  //     iosParameters: IOSParameters(
-  //       bundleId: "com.example.app.ios",
-  //       appStoreId: "123456789",
-  //       minimumVersion: "1.0.1",
-  //       fallbackUrl:
-  //           Uri.parse('https://sites.google.com/view/buy-sell-app/home/'),
   //     ),
   //   );
 

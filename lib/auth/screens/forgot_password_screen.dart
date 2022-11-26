@@ -18,31 +18,31 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final _forgotformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _forgotformKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
   bool isLoading = false;
 
-  TextEditingController emailController = TextEditingController();
-
   _validateEmail() async {
-    if (_forgotformKey.currentState!.validate()) {
+    if (_forgotformKey.currentState!.validate() && mounted) {
       setState(() {
         isLoading = true;
       });
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailController.text)
-          .then((value) {
-        showSnackBar(
-          content: 'Link to reset password sent on your email',
-          color: redColor,
-        );
-      }).then((value) {
-        Get.back();
-      }).catchError((onError) {
+      try {
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: emailController.text)
+            .then((value) {
+          showSnackBar(
+            content: 'Link to reset password sent on your email',
+            color: redColor,
+          );
+          Get.back();
+        });
+      } on FirebaseAuthException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
-      });
+      }
       setState(() {
         isLoading = false;
       });
@@ -60,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -120,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
-                      onPressed: () => _validateEmail(),
+                      onPressed: _validateEmail,
                     ),
             ],
           ),

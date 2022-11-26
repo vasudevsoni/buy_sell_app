@@ -6,7 +6,8 @@ import '/screens/main_screen.dart';
 import '/utils/utils.dart';
 
 class EmailAuthService {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
 
   Future<void> loginUser({
     context,

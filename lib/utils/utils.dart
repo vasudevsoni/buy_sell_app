@@ -31,14 +31,14 @@ void showSnackBar({
   );
 }
 
-var priceFormat = NumberFormat.currency(
+final priceFormat = NumberFormat.currency(
   locale: 'HI',
   decimalDigits: 0,
   symbol: '₹',
   name: '',
 );
 
-var kmFormat = NumberFormat.currency(
+final kmFormat = NumberFormat.currency(
   locale: 'HI',
   decimalDigits: 0,
   symbol: '',
@@ -54,4 +54,4 @@ const blackColor = Color(0xff190101);
 const lightBlackColor = Colors.black54;
 const fadedColor = Colors.black45;
 const greyColor = Color(0xffecf1f6);
-const googleLoginColor = Color(0xffea4335);
+const googleLoginColor = Color(0xff4285F4);

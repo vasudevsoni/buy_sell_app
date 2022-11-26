@@ -26,12 +26,12 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  bool isLoading = false;
   final FirebaseServices _services = FirebaseServices();
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
+  final Location location = Location();
   late bool serviceEnabled;
-  Location location = Location();
   late PermissionStatus permissionGranted;
+  bool isLoading = false;
 
   Future<bool> getAddress() async {
     final locationProv = Provider.of<LocationProvider>(context, listen: false);
@@ -120,7 +120,7 @@ class _LocationScreenState extends State<LocationScreen> {
       backgroundColor: whiteColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0.5,
+        elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
@@ -206,12 +206,18 @@ class _LocationScreenState extends State<LocationScreen> {
                         });
                         await getUserLocation().then((value) {
                           if (!value) {
+                            setState(() {
+                              isLoading = false;
+                            });
                             return;
                           }
                           if (!widget.isOpenedFromSellButton) {
                             Get.offAll(
                               () => const MainScreen(selectedIndex: 0),
                             );
+                            setState(() {
+                              isLoading = false;
+                            });
                             return;
                           }
                           Get.back();

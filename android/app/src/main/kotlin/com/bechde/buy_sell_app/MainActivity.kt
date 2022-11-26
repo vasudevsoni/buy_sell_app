@@ -1,4 +1,4 @@
-package com.vasudevsoni.buy_sell_app
+package com.bechde.buy_sell_app
 
 import io.flutter.embedding.android.FlutterActivity
 
