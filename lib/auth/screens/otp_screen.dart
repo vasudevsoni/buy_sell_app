@@ -180,7 +180,7 @@
 //               child: const Text(
 //                 'Change mobile number',
 //                 style: TextStyle(
-//                   color: blueColor,
+//                   color: greenColor,
 //                   fontWeight: FontWeight.w600,
 //                   fontSize: 15,
 //                 ),
@@ -212,7 +212,7 @@
 //                       });
 //                     },
 //                     disabledColor: greyColor,
-//                     color: blueColor,
+//                     color: greenColor,
 //                   )
 //                 : CustomButtonWithoutIcon(
 //                     text: 'OTP Limit Exceeded',

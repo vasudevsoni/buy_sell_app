@@ -29,7 +29,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: Container(
-        height: 48,
+        height: 45,
         padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),

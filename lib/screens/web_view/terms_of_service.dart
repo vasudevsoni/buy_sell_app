@@ -40,7 +40,7 @@ class _TermsOfServiceState extends State<TermsOfService> {
       ),
       body: const WebView(
         javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: 'https://sites.google.com/view/buy-sell-app/terms',
+        initialUrl: 'https://www.bechdeapp.com/terms',
       ),
     );
   }

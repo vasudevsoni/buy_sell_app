@@ -35,7 +35,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     showMaximumError() {
       showSnackBar(
-        content: 'Maximum 15 images are allowed',
+        content: 'Maximum 20 images are allowed',
         color: redColor,
       );
     }
@@ -82,7 +82,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (pickedFiles!.isEmpty) {
         return;
       }
-      if (pickedFiles.length > 15) {
+      if (pickedFiles.length > 20) {
         showMaximumError();
         return;
       }
@@ -146,162 +146,161 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Opacity(
-                                opacity: 0.8,
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return Dismissible(
-                                        key: UniqueKey(),
-                                        direction: DismissDirection.down,
-                                        onDismissed: (direction) {
-                                          pageController.dispose();
-                                          Get.back();
-                                        },
-                                        child: Material(
-                                          color: blackColor,
-                                          child: Stack(
-                                            children: [
-                                              PhotoViewGallery.builder(
-                                                scrollPhysics:
-                                                    const BouncingScrollPhysics(),
-                                                itemCount:
-                                                    provider.imagePaths.length,
-                                                pageController: pageController,
-                                                builder: (BuildContext context,
-                                                    int index) {
-                                                  return PhotoViewGalleryPageOptions(
-                                                    imageProvider: FileImage(
-                                                      provider
-                                                          .imagePaths[index],
-                                                    ),
-                                                    filterQuality:
-                                                        FilterQuality.high,
-                                                    initialScale:
-                                                        PhotoViewComputedScale
-                                                                .contained *
-                                                            1,
-                                                    minScale:
-                                                        PhotoViewComputedScale
-                                                                .contained *
-                                                            1,
-                                                    maxScale:
-                                                        PhotoViewComputedScale
-                                                                .contained *
-                                                            5,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      return const Icon(
-                                                        Ionicons.alert_circle,
-                                                        size: 20,
-                                                        color: redColor,
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                                loadingBuilder:
-                                                    (context, event) {
-                                                  return const Icon(
-                                                    Ionicons.image,
-                                                    size: 20,
-                                                    color: lightBlackColor,
-                                                  );
-                                                },
-                                              ),
-                                              Positioned(
-                                                top: 15,
-                                                right: 15,
-                                                child: IconButton(
-                                                  onPressed: () {
-                                                    pageController.dispose();
-                                                    Get.back();
-                                                  },
-                                                  icon: const Icon(
-                                                    Ionicons
-                                                        .close_circle_outline,
-                                                    size: 30,
-                                                    color: whiteColor,
-                                                    shadows: [
-                                                      BoxShadow(
-                                                        offset: Offset(0, 0),
-                                                        blurRadius: 15,
-                                                        spreadRadius: 15,
-                                                      ),
-                                                    ],
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () => showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dismissible(
+                                      key: UniqueKey(),
+                                      direction: DismissDirection.down,
+                                      onDismissed: (direction) {
+                                        pageController.dispose();
+                                        Get.back();
+                                      },
+                                      child: Material(
+                                        color: blackColor,
+                                        child: Stack(
+                                          children: [
+                                            PhotoViewGallery.builder(
+                                              scrollPhysics:
+                                                  const ClampingScrollPhysics(),
+                                              itemCount:
+                                                  provider.imagePaths.length,
+                                              pageController: pageController,
+                                              builder: (BuildContext context,
+                                                  int index) {
+                                                return PhotoViewGalleryPageOptions(
+                                                  imageProvider: FileImage(
+                                                    provider.imagePaths[index],
                                                   ),
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  initialScale:
+                                                      PhotoViewComputedScale
+                                                              .contained *
+                                                          1,
+                                                  minScale:
+                                                      PhotoViewComputedScale
+                                                              .contained *
+                                                          1,
+                                                  maxScale:
+                                                      PhotoViewComputedScale
+                                                              .contained *
+                                                          5,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return const Icon(
+                                                      Ionicons.alert_circle,
+                                                      size: 20,
+                                                      color: redColor,
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              loadingBuilder: (context, event) {
+                                                return const Icon(
+                                                  Ionicons.image,
+                                                  size: 20,
+                                                  color: lightBlackColor,
+                                                );
+                                              },
+                                            ),
+                                            Positioned(
+                                              top: 15,
+                                              right: 15,
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  pageController.dispose();
+                                                  Get.back();
+                                                },
+                                                icon: const Icon(
+                                                  Ionicons.close_circle_outline,
+                                                  size: 30,
+                                                  color: whiteColor,
+                                                  shadows: [
+                                                    BoxShadow(
+                                                      offset: Offset(0, 0),
+                                                      blurRadius: 15,
+                                                      spreadRadius: 15,
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(
+                                    provider.imagePaths[index],
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Ionicons.alert_circle,
+                                        size: 20,
+                                        color: redColor,
                                       );
                                     },
+                                    fit: BoxFit.cover,
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.file(
-                                      provider.imagePaths[index],
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(
-                                          Ionicons.alert_circle,
-                                          size: 20,
-                                          color: redColor,
-                                        );
-                                      },
-                                      fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: index == 0 ? greenColor : fadedColor,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    index == 0 ? 'Cover' : '${index + 1}',
+                                    style: const TextStyle(
+                                      color: whiteColor,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
                               ),
                               Positioned(
                                 top: 0,
-                                left: 0,
                                 right: 0,
-                                bottom: 0,
-                                child: Center(
-                                  child: Text(
-                                    '${index + 1}',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 30,
-                                      color: whiteColor,
-                                      shadows: [
-                                        Shadow(
-                                          offset: Offset(0, 2),
-                                          blurRadius: 10.0,
-                                          color: lightBlackColor,
+                                child: Tooltip(
+                                  message: 'Delete image',
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () => widget.isButtonDisabled
+                                        ? null
+                                        : setState(() {
+                                            provider.imagePaths.removeAt(index);
+                                            provider.imagesCount -= 1;
+                                          }),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(
+                                        color: redColor,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: -10,
-                                right: -10,
-                                child: IconButton(
-                                  tooltip: 'Delete image',
-                                  onPressed: () => widget.isButtonDisabled
-                                      ? null
-                                      : setState(() {
-                                          provider.imagePaths.removeAt(index);
-                                          provider.imagesCount -= 1;
-                                        }),
-                                  icon: const Icon(
-                                    Ionicons.close_circle_outline,
-                                    size: 15,
-                                    color: whiteColor,
-                                    shadows: [
-                                      BoxShadow(
-                                        offset: Offset(0, 0),
-                                        blurRadius: 5,
-                                        spreadRadius: 5,
                                       ),
-                                    ],
+                                      child: const Icon(
+                                        Ionicons.close,
+                                        size: 20,
+                                        color: whiteColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -318,7 +317,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       height: 100,
                       child: const Center(
                         child: Text(
-                          'Uploaded pics will show here.',
+                          'Upload some pictures of the product',
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -332,7 +331,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ),
               if (provider.imagePaths.isNotEmpty)
                 Text(
-                  '${provider.imagePaths.length} / 15',
+                  '${provider.imagePaths.length} / 20',
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     color: fadedColor,
@@ -349,7 +348,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: CustomButton(
             text: 'Take Photo',
-            onPressed: provider.imagesCount >= 15
+            onPressed: provider.imagesCount >= 20
                 ? showMaximumError
                 : requestCameraPermission,
             icon: Ionicons.camera,
@@ -366,7 +365,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: CustomButton(
             text: 'Choose Photos',
-            onPressed: provider.imagesCount >= 15
+            onPressed: provider.imagesCount >= 20
                 ? showMaximumError
                 : requestGalleryPermission,
             icon: Ionicons.images,

@@ -49,6 +49,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   final TextEditingController colorsSearchController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final FirebaseServices _services = FirebaseServices();
+  double latitude = 0;
+  double longitude = 0;
+  String street = '';
   String area = '';
   String city = '';
   String state = '';
@@ -63,11 +66,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
       if (mounted) {
         setState(() {
           locationController.text =
-              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+              '${value['location']['street']}, ${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+          street = value['location']['street'];
           area = value['location']['area'];
           city = value['location']['city'];
           state = value['location']['state'];
           country = value['location']['country'];
+          latitude = value['location']['latitude'];
+          longitude = value['location']['longitude'];
         });
       }
     });
@@ -158,7 +164,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'OK',
+                    text: 'Re-Connect',
                     onPressed: () async {
                       Get.back();
                       setState(() {
@@ -421,7 +427,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: blueColor,
+                                        color: greenColor,
                                         fontSize: 15,
                                       ),
                                     ),
@@ -445,7 +451,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 const Icon(
                                   Ionicons.person,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -468,7 +474,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 const Icon(
                                   Ionicons.funnel,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -494,7 +500,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 const Icon(
                                   Ionicons.calendar,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -520,7 +526,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 const Icon(
                                   Ionicons.speedometer,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -638,6 +644,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           subCatName: widget.subCatName.toLowerCase(),
                         ),
                         'location': {
+                          'latitude': latitude,
+                          'longitude': longitude,
+                          'street': street,
                           'area': area,
                           'city': city,
                           'state': state,
@@ -645,11 +654,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         },
                         'isSold': false,
                         'isActive': false,
+                        'isRejected': false,
                       });
                       publishProductToFirebase(provider);
                     },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -928,7 +938,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -996,7 +1006,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Model/Variant'),
+                  child: TextFieldLabel(labelText: 'Model and Variant'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1084,7 +1094,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1093,7 +1103,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1659,7 +1669,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1668,7 +1678,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1779,8 +1789,8 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
         ),

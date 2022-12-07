@@ -57,7 +57,7 @@ class _MyListingsListState extends State<MyListingsList> {
       query: _services.listings
           .orderBy('postedAt', descending: true)
           .where('sellerUid', isEqualTo: _services.user!.uid),
-      pageSize: 6,
+      pageSize: 15,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Center(
@@ -153,8 +153,8 @@ class _MyListingsListState extends State<MyListingsList> {
                               () => const EmailVerificationScreen(),
                             )
                         : onSellButtonClicked,
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                 ),
@@ -163,7 +163,7 @@ class _MyListingsListState extends State<MyListingsList> {
           );
         }
         return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -252,6 +252,7 @@ class _MyListingScreenProductCardState
   final FirebaseServices services = FirebaseServices();
   late DocumentSnapshot sellerDetails;
   bool isLoading = false;
+  int selectedValue = 0;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
@@ -262,9 +263,11 @@ class _MyListingScreenProductCardState
   }
 
   getSellerDetails() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     await services.getUserData(widget.data['sellerUid']).then((value) {
       if (mounted) {
         setState(() {
@@ -272,9 +275,11 @@ class _MyListingScreenProductCardState
         });
       }
     });
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   showMarskasSoldModal() {
@@ -335,7 +340,7 @@ class _MyListingScreenProductCardState
                     color: greyColor,
                   ),
                   child: const Text(
-                    'Your product will be marked as sold. This action cannot be reversed.',
+                    'Your product will be marked as sold and deactivated. This action cannot be reversed.',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -354,8 +359,8 @@ class _MyListingScreenProductCardState
                     Get.back();
                   },
                   bgColor: whiteColor,
-                  borderColor: blueColor,
-                  textIconColor: blueColor,
+                  borderColor: greenColor,
+                  textIconColor: greenColor,
                 ),
                 const SizedBox(
                   height: 10,
@@ -492,7 +497,7 @@ class _MyListingScreenProductCardState
             children: [
               InkWell(
                 splashFactory: InkRipple.splashFactory,
-                splashColor: greyColor,
+                splashColor: fadedColor,
                 borderRadius: BorderRadius.circular(10),
                 onTap: () => Get.to(
                   () => ProductDetailsScreen(
@@ -592,7 +597,7 @@ class _MyListingScreenProductCardState
                               const Icon(
                                 Ionicons.eye_outline,
                                 size: 20,
-                                color: blueColor,
+                                color: greenColor,
                               ),
                               const SizedBox(
                                 width: 5,
@@ -615,7 +620,7 @@ class _MyListingScreenProductCardState
                               const Icon(
                                 Ionicons.heart_outline,
                                 size: 20,
-                                color: pinkColor,
+                                color: redColor,
                               ),
                               const SizedBox(
                                 width: 5,
@@ -633,7 +638,8 @@ class _MyListingScreenProductCardState
                         ],
                       ),
                       if (widget.data['isActive'] == false &&
-                          widget.data['isSold'] == false)
+                          widget.data['isSold'] == false &&
+                          widget.data['isRejected'] == false)
                         Column(
                           children: [
                             const SizedBox(
@@ -650,9 +656,41 @@ class _MyListingScreenProductCardState
                                 vertical: 10,
                               ),
                               child: const Text(
-                                'Product is currently unavailable',
+                                'Product is currently under review',
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (widget.data['isActive'] == false &&
+                          widget.data['isRejected'] == true)
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: redColor,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: const Text(
+                                'Product has been rejected as it goes against our guidelines. Please edit it and make sure all guidelines are followed.',
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 style: TextStyle(
@@ -674,7 +712,7 @@ class _MyListingScreenProductCardState
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: blueColor,
+                                color: greenColor,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -730,10 +768,11 @@ class _MyListingScreenProductCardState
                   ),
                 ),
               ),
-              if (widget.data['isActive'] == true)
+              if (widget.data['isActive'] == true ||
+                  widget.data['isRejected'] == true)
                 Positioned(
-                  top: 0,
-                  right: 0,
+                  top: 10,
+                  right: 10,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => showModalBottomSheet(
@@ -768,27 +807,34 @@ class _MyListingScreenProductCardState
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                CustomButton(
-                                  icon: Ionicons.trending_up,
-                                  text: 'Reach More Buyers',
-                                  onPressed: () {
-                                    Get.back();
-                                    Get.to(
-                                      () => PromoteListingScreen(
-                                        productId: widget.data.id,
-                                        title: widget.data['title'],
-                                        price: widget.data['price'].toDouble(),
-                                        imageUrl: widget.data['images'][0],
+                                if (widget.data['isRejected'] == false)
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
                                       ),
-                                    );
-                                  },
-                                  bgColor: blueColor,
-                                  borderColor: blueColor,
-                                  textIconColor: whiteColor,
-                                ),
+                                      CustomButton(
+                                        icon: Ionicons.trending_up,
+                                        text: 'Reach More Buyers',
+                                        onPressed: () {
+                                          Get.back();
+                                          Get.to(
+                                            () => PromoteListingScreen(
+                                              productId: widget.data.id,
+                                              title: widget.data['title'],
+                                              price: widget.data['price']
+                                                  .toDouble(),
+                                              imageUrl: widget.data['images']
+                                                  [0],
+                                            ),
+                                          );
+                                        },
+                                        bgColor: greenColor,
+                                        borderColor: greenColor,
+                                        textIconColor: whiteColor,
+                                      ),
+                                    ],
+                                  ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -809,20 +855,25 @@ class _MyListingScreenProductCardState
                                   borderColor: blackColor,
                                   textIconColor: blackColor,
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                CustomButton(
-                                  icon: Ionicons.checkmark_done,
-                                  text: 'Mark as Sold',
-                                  onPressed: () {
-                                    Get.back();
-                                    showMarskasSoldModal();
-                                  },
-                                  bgColor: whiteColor,
-                                  borderColor: blueColor,
-                                  textIconColor: blueColor,
-                                ),
+                                if (widget.data['isRejected'] == false)
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      CustomButton(
+                                        icon: Ionicons.checkmark_done,
+                                        text: 'Mark as Sold',
+                                        onPressed: () {
+                                          Get.back();
+                                          showMarskasSoldModal();
+                                        },
+                                        bgColor: whiteColor,
+                                        borderColor: greenColor,
+                                        textIconColor: greenColor,
+                                      ),
+                                    ],
+                                  ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -855,7 +906,7 @@ class _MyListingScreenProductCardState
                     ),
                     child: const Icon(
                       Ionicons.ellipsis_vertical,
-                      size: 25,
+                      size: 22,
                     ),
                   ),
                 ),

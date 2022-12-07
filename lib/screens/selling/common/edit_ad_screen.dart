@@ -131,7 +131,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'OK',
+                    text: 'Re-Connect',
                     onPressed: () async {
                       Get.back();
                       setState(() {
@@ -202,7 +202,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           });
           showSnackBar(
             content: 'Details updated. Product will be live once reviewed',
-            color: blueColor,
+            color: greenColor,
           );
         });
       } on FirebaseException {
@@ -315,7 +315,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: blueColor,
+                                color: greenColor,
                                 fontSize: 15,
                               ),
                             ),
@@ -390,11 +390,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               widget.productData['subCat'].toLowerCase(),
                         ),
                         'isActive': false,
+                        'isRejected': false,
                       });
                       await updateProductOnFirebase(provider, uid);
                     },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -540,7 +541,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -590,8 +591,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   child: CustomTextField(
                     controller: titleController,
                     keyboardType: TextInputType.text,
-                    hint: 'Enter the title',
-                    maxLength: 40,
+                    hint: 'Mention key features of your item',
+                    maxLength: 70,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -706,7 +707,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -715,7 +716,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -754,8 +755,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
         ),

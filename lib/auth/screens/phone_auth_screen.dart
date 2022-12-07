@@ -156,7 +156,7 @@
 //                         ),
 //                         focusedBorder: OutlineInputBorder(
 //                           borderSide: const BorderSide(
-//                             color: blueColor,
+//                             color: greenColor,
 //                             width: 1.5,
 //                             strokeAlign: StrokeAlign.inside,
 //                           ),
@@ -164,7 +164,7 @@
 //                         ),
 //                         focusedErrorBorder: OutlineInputBorder(
 //                           borderSide: const BorderSide(
-//                             color: blueColor,
+//                             color: greenColor,
 //                             width: 1.5,
 //                             strokeAlign: StrokeAlign.inside,
 //                           ),
@@ -201,8 +201,8 @@
 //                   : CustomButton(
 //                       text: 'Proceed',
 //                       icon: Ionicons.arrow_forward,
-//                       bgColor: blueColor,
-//                       borderColor: blueColor,
+//                       bgColor: greenColor,
+//                       borderColor: greenColor,
 //                       textIconColor: whiteColor,
 //                       onPressed: _validateMobile,
 //                     ),

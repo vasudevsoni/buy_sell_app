@@ -44,6 +44,8 @@ class _LocationScreenState extends State<LocationScreen> {
       );
       await _services.updateUserDetails(user!.uid, {
         'location': {
+          'latitude': locationProv.locationData!.latitude,
+          'longitude': locationProv.locationData!.longitude,
           'street': placemarks[0].street.toString(),
           'area': placemarks[0].subLocality == ''
               ? placemarks[0].locality.toString()
@@ -59,7 +61,7 @@ class _LocationScreenState extends State<LocationScreen> {
           content: placemarks[0].subLocality == ''
               ? 'Location set to ${placemarks[0].locality.toString()}'
               : 'Location set to ${placemarks[0].subLocality.toString()}',
-          color: blueColor,
+          color: greenColor,
         );
       }
       return true;
@@ -197,8 +199,8 @@ class _LocationScreenState extends State<LocationScreen> {
                     child: CustomButton(
                       text: 'Use Current Location',
                       icon: Ionicons.locate,
-                      bgColor: blueColor,
-                      borderColor: blueColor,
+                      bgColor: greenColor,
+                      borderColor: greenColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
                         setState(() {

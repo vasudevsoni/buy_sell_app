@@ -23,7 +23,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool isLoading = false;
 
   _validateEmail() async {
-    if (_forgotformKey.currentState!.validate() && mounted) {
+    if (_forgotformKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
@@ -117,8 +117,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   : CustomButton(
                       text: 'Send',
                       icon: Ionicons.arrow_forward,
-                      bgColor: blueColor,
-                      borderColor: blueColor,
+                      bgColor: greenColor,
+                      borderColor: greenColor,
                       textIconColor: whiteColor,
                       onPressed: _validateEmail,
                     ),

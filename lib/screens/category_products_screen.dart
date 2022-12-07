@@ -82,7 +82,7 @@ class _CategoryScreenProductsListState
           .where('catName', isEqualTo: widget.catName)
           .where('subCat', isEqualTo: widget.subCatName)
           .where('isActive', isEqualTo: true),
-      pageSize: 6,
+      pageSize: 15,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -156,8 +156,8 @@ class _CategoryScreenProductsListState
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: Ionicons.home,
-                  borderColor: blueColor,
-                  bgColor: blueColor,
+                  borderColor: greenColor,
+                  bgColor: greenColor,
                   textIconColor: whiteColor,
                 ),
               ],
@@ -165,7 +165,7 @@ class _CategoryScreenProductsListState
           );
         }
         return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -230,7 +230,7 @@ class _CategoryScreenProductsListState
                     ],
                   );
                 },
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
               ),
             ],
           ),

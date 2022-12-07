@@ -10,9 +10,9 @@ class LoadingButton extends StatelessWidget {
     return AnimatedContainer(
       curve: Curves.easeIn,
       duration: const Duration(milliseconds: 1000),
-      height: 48,
+      height: 45,
       decoration: BoxDecoration(
-        color: blueColor,
+        color: greenColor,
         borderRadius: BorderRadius.circular(50),
       ),
       child: const Center(

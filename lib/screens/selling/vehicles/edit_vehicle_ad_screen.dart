@@ -151,7 +151,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'OK',
+                    text: 'Re-Connect',
                     onPressed: () async {
                       Get.back();
                       setState(() {
@@ -228,7 +228,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
           });
           showSnackBar(
             content: 'Details updated. Product will be live once reviewed',
-            color: blueColor,
+            color: greenColor,
           );
         });
       } on FirebaseException {
@@ -347,7 +347,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: blueColor,
+                                color: greenColor,
                                 fontSize: 15,
                               ),
                             ),
@@ -367,7 +367,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 const Icon(
                                   Ionicons.person,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -390,7 +390,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 const Icon(
                                   Ionicons.funnel,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -416,7 +416,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 const Icon(
                                   Ionicons.calendar,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -442,7 +442,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 const Icon(
                                   Ionicons.speedometer,
                                   size: 13,
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 const SizedBox(
                                   width: 7,
@@ -552,11 +552,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               widget.productData['subCat'].toLowerCase(),
                         ),
                         'isActive': false,
+                        'isRejected': false,
                       });
                       await updateProductOnFirebase(provider, uid);
                     },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -702,7 +703,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -770,7 +771,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Model/Variant'),
+                  child: TextFieldLabel(labelText: 'Model and Variant'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -858,7 +859,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -867,7 +868,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1433,7 +1434,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1442,7 +1443,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1481,8 +1482,8 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
         ),

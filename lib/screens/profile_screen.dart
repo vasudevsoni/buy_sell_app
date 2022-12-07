@@ -12,6 +12,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/external_link_icon_widget.dart';
 import '../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -39,11 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String profileImage = '';
   String sellerUid = '';
   String address = '';
+  String instagramLink = '';
+  String facebookLink = '';
+  String websiteLink = '';
   DateTime dateJoined = DateTime.now();
-  int followers = 0;
-  int following = 0;
+  // int followers = 0;
+  // int following = 0;
 
-  bool isFollowing = false;
+  // bool isFollowing = false;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
@@ -76,23 +80,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             address == '';
           } else {
             address =
-                '${value['location']['city']}, ${value['location']['state']}';
+                '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
           }
-          if (value['followers'].contains(user!.uid)) {
-            isFollowing = true;
+          if (value['instagramLink'] == null) {
+            instagramLink = '';
           } else {
-            isFollowing = false;
+            instagramLink = value['instagramLink'];
           }
-          if (value['followers'].isEmpty) {
-            followers = 0;
+          if (value['facebookLink'] == null) {
+            facebookLink = '';
           } else {
-            followers = value['followers'].length;
+            facebookLink = value['facebookLink'];
           }
-          if (value['following'].isEmpty) {
-            following = 0;
+          if (value['websiteLink'] == null) {
+            websiteLink = '';
           } else {
-            following = value['following'].length;
+            websiteLink = value['websiteLink'];
           }
+          // if (value['followers'].contains(user!.uid)) {
+          //   isFollowing = true;
+          // } else {
+          //   isFollowing = false;
+          // }
+          // if (value['followers'].isEmpty) {
+          //   followers = 0;
+          // } else {
+          //   followers = value['followers'].length;
+          // }
+          // if (value['following'].isEmpty) {
+          //   following = 0;
+          // } else {
+          //   following = value['following'].length;
+          // }
           sellerUid = value['uid'];
           dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
         });
@@ -308,34 +327,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    profileImage == ''
-                        ? Container(
+              Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 150,
+                    width: size.width,
+                    margin: EdgeInsets.only(bottom: size.width * 0.125),
+                    color: greyColor,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://images.wallpapersden.com/image/download/artistic-5k-mesmerizing-landscape_bWplbmiUmZqaraWkpJRqZmdlrWdtbWU.jpg',
+                      filterQuality: FilterQuality.medium,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomCenter,
+                      errorWidget: (context, url, error) {
+                        return const Icon(
+                          Ionicons.alert_circle,
+                          size: 30,
+                          color: redColor,
+                        );
+                      },
+                      placeholder: (context, url) {
+                        return const Center(
+                          child: SpinKitFadingCircle(
+                            color: lightBlackColor,
+                            size: 30,
+                            duration: Duration(milliseconds: 1000),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  profileImage == ''
+                      ? Positioned(
+                          top: 150 - (size.width * 0.125),
+                          child: Container(
                             height: size.width * 0.25,
                             width: size.width * 0.25,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              color: blueColor,
+                              color: greenColor,
                             ),
                             child: const Icon(
                               Ionicons.person,
                               color: whiteColor,
                               size: 40,
                             ),
-                          )
-                        : GestureDetector(
+                          ),
+                        )
+                      : Positioned(
+                          top: 150 - (size.width * 0.125),
+                          child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () => showDialog(
                               context: context,
@@ -352,7 +400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       children: [
                                         PhotoViewGallery.builder(
                                           scrollPhysics:
-                                              const BouncingScrollPhysics(),
+                                              const ClampingScrollPhysics(),
                                           itemCount: 1,
                                           builder: (BuildContext context,
                                               int index) {
@@ -396,7 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           right: 15,
                                           child: IconButton(
                                             onPressed: () => Get.back(),
-                                            splashColor: blueColor,
+                                            splashColor: greenColor,
                                             splashRadius: 30,
                                             icon: const Icon(
                                               Ionicons.close_circle_outline,
@@ -418,9 +466,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               },
                             ),
-                            child: SizedBox(
+                            child: Container(
                               height: size.width * 0.25,
                               width: size.width * 0.25,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              padding: const EdgeInsets.all(3),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: CachedNetworkImage(
@@ -446,70 +499,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                numberFormat.format(followers),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  color: blackColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const Text(
-                                'Followers',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                numberFormat.format(following),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  color: blackColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const Text(
-                                'Following',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                        ),
+                ],
               ),
               const SizedBox(
                 height: 15,
@@ -549,9 +540,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-              const SizedBox(
-                height: 5,
-              ),
+              if (instagramLink == '' &&
+                  facebookLink == '' &&
+                  websiteLink == '')
+                const SizedBox(
+                  height: 5,
+                ),
+              if (instagramLink != '' ||
+                  facebookLink != '' ||
+                  websiteLink != '')
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (instagramLink != '')
+                          ExternalLinkIcon(
+                            icon: Ionicons.logo_instagram,
+                            iconColor: const Color(0xffdd2a7b),
+                            link: instagramLink,
+                          ),
+                        if (facebookLink != '')
+                          ExternalLinkIcon(
+                            icon: Ionicons.logo_facebook,
+                            iconColor: const Color(0xff1778f2),
+                            link: facebookLink,
+                          ),
+                        if (websiteLink != '')
+                          ExternalLinkIcon(
+                            icon: Ionicons.link,
+                            iconColor: greenColor,
+                            link: websiteLink,
+                          ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
@@ -581,47 +611,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: isFollowing
-                    ? CustomButton(
-                        text: 'Unfollow',
-                        onPressed: () {
-                          services.followUser(
-                            currentUserId: user!.uid,
-                            userId: sellerUid,
-                            isFollowed: false,
-                          );
-                          setState(() {
-                            isFollowing = false;
-                          });
-                        },
-                        icon: Ionicons.person_remove,
-                        borderColor: blackColor,
-                        bgColor: blackColor,
-                        textIconColor: whiteColor,
-                      )
-                    : CustomButton(
-                        text: 'Follow',
-                        onPressed: () {
-                          services.followUser(
-                            currentUserId: user!.uid,
-                            userId: sellerUid,
-                            isFollowed: true,
-                          );
-                          setState(() {
-                            isFollowing = true;
-                          });
-                        },
-                        icon: Ionicons.person_add,
-                        borderColor: blueColor,
-                        bgColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   child: isFollowing
+              //       ? CustomButton(
+              //           text: 'Unfollow',
+              //           onPressed: () {
+              //             services.followUser(
+              //               currentUserId: user!.uid,
+              //               userId: sellerUid,
+              //               isFollowed: false,
+              //             );
+              //             setState(() {
+              //               isFollowing = false;
+              //             });
+              //           },
+              //           icon: Ionicons.person_remove,
+              //           borderColor: blackColor,
+              //           bgColor: blackColor,
+              //           textIconColor: whiteColor,
+              //         )
+              //       : CustomButton(
+              //           text: 'Follow',
+              //           onPressed: () {
+              //             services.followUser(
+              //               currentUserId: user!.uid,
+              //               userId: sellerUid,
+              //               isFollowed: true,
+              //             );
+              //             setState(() {
+              //               isFollowing = true;
+              //             });
+              //           },
+              //           icon: Ionicons.person_add,
+              //           borderColor: greenColor,
+              //           bgColor: greenColor,
+              //           textIconColor: whiteColor,
+              //         ),
+              // ),
               const SizedBox(
                 height: 20,
               ),
@@ -679,7 +709,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 6,
+      pageSize: 15,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -770,7 +800,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
               ],
             );
           },
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
         );
       },
     );

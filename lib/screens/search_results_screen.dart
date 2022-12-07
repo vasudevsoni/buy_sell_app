@@ -52,7 +52,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             .where('searchQueries', arrayContains: widget.query)
             .where('isActive', isEqualTo: true)
             .orderBy('postedAt', descending: true),
-        pageSize: 6,
+        pageSize: 15,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(
@@ -125,7 +125,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             );
           }
           return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

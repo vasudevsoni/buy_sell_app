@@ -107,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
                   height: 10,
                 ),
                 CustomButtonWithoutIcon(
-                  text: 'OK',
+                  text: 'Re-Connect',
                   onPressed: () async {
                     Get.back();
                     setState(() {
@@ -186,7 +186,7 @@ class _MainScreenState extends State<MainScreen> {
         unselectedItemColor: fadedColor,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        iconSize: 25,
+        iconSize: 27,
         elevation: 0,
         backgroundColor: greyColor,
         items: const [

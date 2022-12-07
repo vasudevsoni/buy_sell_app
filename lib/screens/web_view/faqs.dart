@@ -28,19 +28,10 @@ class _FAQsState extends State<FAQs> {
         backgroundColor: whiteColor,
         elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
-        centerTitle: true,
-        title: const Text(
-          'Frequently asked questions',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: blackColor,
-            fontSize: 15,
-          ),
-        ),
       ),
       body: const WebView(
         javascriptMode: JavascriptMode.disabled,
-        initialUrl: 'https://sites.google.com/view/buy-sell-app/faqs',
+        initialUrl: 'https://www.bechdeapp.com/faqs',
       ),
     );
   }

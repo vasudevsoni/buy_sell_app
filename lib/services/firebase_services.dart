@@ -98,7 +98,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'Added to favorites',
-          color: blueColor,
+          color: greenColor,
         );
       });
     } on FirebaseException {
@@ -109,30 +109,30 @@ class FirebaseServices {
     }
   }
 
-  followUser({currentUserId, userId, isFollowed}) async {
-    try {
-      if (!isFollowed) {
-        await users.doc(userId).update({
-          'followers': FieldValue.arrayRemove([currentUserId])
-        });
-        await users.doc(currentUserId).update({
-          'following': FieldValue.arrayRemove([userId])
-        });
-        return;
-      }
-      await users.doc(userId).update({
-        'followers': FieldValue.arrayUnion([currentUserId])
-      });
-      await users.doc(currentUserId).update({
-        'following': FieldValue.arrayUnion([userId])
-      });
-    } on FirebaseException {
-      showSnackBar(
-        content: 'Something has gone wrong. Please try again',
-        color: redColor,
-      );
-    }
-  }
+  // followUser({currentUserId, userId, isFollowed}) async {
+  //   try {
+  //     if (!isFollowed) {
+  //       await users.doc(userId).update({
+  //         'followers': FieldValue.arrayRemove([currentUserId])
+  //       });
+  //       await users.doc(currentUserId).update({
+  //         'following': FieldValue.arrayRemove([userId])
+  //       });
+  //       return;
+  //     }
+  //     await users.doc(userId).update({
+  //       'followers': FieldValue.arrayUnion([currentUserId])
+  //     });
+  //     await users.doc(currentUserId).update({
+  //       'following': FieldValue.arrayUnion([userId])
+  //     });
+  //   } on FirebaseException {
+  //     showSnackBar(
+  //       content: 'Something has gone wrong. Please try again',
+  //       color: redColor,
+  //     );
+  //   }
+  // }
 
   markAsSold({productId}) async {
     try {
@@ -142,7 +142,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'The product has been marked as sold',
-          color: blueColor,
+          color: greenColor,
         );
       });
     } on FirebaseException {
@@ -160,7 +160,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'Listing succesfully boosted to top',
-          color: blueColor,
+          color: greenColor,
         );
       });
     } on FirebaseException {
@@ -261,7 +261,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Feedback submitted. Thank you so much for your effort',
-        color: blueColor,
+        color: greenColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -297,7 +297,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Report submitted. We will look into it as soon as possible',
-        color: blueColor,
+        color: greenColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -320,7 +320,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Product reported. We will look into it as soon as possible',
-        color: blueColor,
+        color: greenColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -343,7 +343,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'User reported. We will look into it as soon as possible',
-        color: blueColor,
+        color: greenColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -355,7 +355,7 @@ class FirebaseServices {
 
   // Future<String> createDynamicLink() async {
   //   final dynamicLinkParams = DynamicLinkParameters(
-  //     link: Uri.parse("https://sites.google.com/view/buy-sell-app/home/"),
+  //     link: Uri.parse("https://www.bechdeapp.com/home"),
   //     uriPrefix: "https://vasudevsoni.page.link",
   //     androidParameters: const AndroidParameters(
   //       packageName: "com.bechde.buy_sell_app",

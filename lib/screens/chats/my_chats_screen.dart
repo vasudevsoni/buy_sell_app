@@ -76,7 +76,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             ),
             bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: blueColor,
+              indicatorColor: greenColor,
               indicatorWeight: 3,
               splashBorderRadius: BorderRadius.circular(10),
               labelStyle: const TextStyle(
@@ -99,7 +99,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             ),
           ),
           body: TabBarView(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             children: [
               StreamBuilder<QuerySnapshot>(
                 stream: _services.chats
@@ -187,8 +187,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             onPressed: () => setState(() {
                               mainProv.switchToPage(0);
                             }),
-                            bgColor: blueColor,
-                            borderColor: blueColor,
+                            bgColor: greenColor,
+                            borderColor: greenColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -223,7 +223,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       return ChatCard(chatData: data);
                     },
                     itemCount: snapshot.data!.docs.length,
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                   );
                 },
               ),
@@ -314,8 +314,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             onPressed: () => setState(() {
                               mainProv.switchToPage(0);
                             }),
-                            bgColor: blueColor,
-                            borderColor: blueColor,
+                            bgColor: greenColor,
+                            borderColor: greenColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -343,7 +343,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         endIndent: 15,
                       );
                     },
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       final Map<String, dynamic> data =
                           snapshot.data!.docs[index].data()
@@ -445,8 +445,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                                       () => const EmailVerificationScreen(),
                                     )
                                 : onSellButtonClicked,
-                            bgColor: blueColor,
-                            borderColor: blueColor,
+                            bgColor: greenColor,
+                            borderColor: greenColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -474,7 +474,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         endIndent: 15,
                       );
                     },
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       final Map<String, dynamic> data =
                           snapshot.data!.docs[index].data()
@@ -574,7 +574,7 @@ class _ChatCardState extends State<ChatCard> {
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
         splashFactory: InkRipple.splashFactory,
-        splashColor: greyColor,
+        splashColor: fadedColor,
         onTap: () => Get.to(
           () => ConversationScreen(
             chatRoomId: widget.chatData['chatRoomId'],
@@ -598,7 +598,7 @@ class _ChatCardState extends State<ChatCard> {
                                 height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 child: const Icon(
                                   Ionicons.person,
@@ -632,7 +632,7 @@ class _ChatCardState extends State<ChatCard> {
                                 height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: blueColor,
+                                  color: greenColor,
                                 ),
                                 child: const Icon(
                                   Ionicons.person,
@@ -706,7 +706,7 @@ class _ChatCardState extends State<ChatCard> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
-                                          color: blueColor,
+                                          color: greenColor,
                                         ),
                                       ),
                                     ],
@@ -729,7 +729,7 @@ class _ChatCardState extends State<ChatCard> {
                               style: widget.chatData['read'] == false
                                   ? const TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: blueColor,
+                                      color: greenColor,
                                       fontSize: 14,
                                     )
                                   : const TextStyle(

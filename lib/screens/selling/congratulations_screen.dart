@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -32,11 +32,11 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Scaffold(
           backgroundColor: whiteColor,
+          extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: transparentColor,
             elevation: 0.0,
@@ -56,72 +56,83 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                ConfettiWidget(
-                  confettiController: controller,
-                  shouldLoop: false,
-                  colors: const [
-                    blueColor,
-                    redColor,
-                    pinkColor,
-                    blackColor,
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomConfettiWidget(
+                      controller: controller,
+                      blastDirection: 225,
+                    ),
+                    CustomConfettiWidget(
+                      controller: controller,
+                      blastDirection: 180,
+                    ),
                   ],
-                  blastDirectionality: BlastDirectionality.directional,
-                  emissionFrequency: 0,
-                  blastDirection: pi / -2,
-                  numberOfParticles: 80,
                 ),
                 const Text(
-                  'Congratulations!',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  '👍',
                   textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: greyColor,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  child: const Text(
-                    'Your product will be live once it is reviewed.',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.w900,
+                    color: greenColor,
                   ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 const Text(
-                  'Sit back and relax.😊',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  'Congratulations!',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
+                    color: greenColor,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text(
+                  'Your product will be live once it is reviewed.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: blackColor,
+                  ),
+                ),
+                const Text(
+                  'In the meantime, browse some products, or just sit back and relax.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: blackColor,
+                  ),
                 ),
                 const Spacer(),
+                CustomButton(
+                  text: 'Invite your Friends',
+                  onPressed: () => Share.share(
+                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
+                  ),
+                  icon: Ionicons.share_social,
+                  bgColor: blackColor,
+                  borderColor: blackColor,
+                  textIconColor: whiteColor,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 CustomButton(
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: Ionicons.home,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
               ],
@@ -129,6 +140,40 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CustomConfettiWidget extends StatelessWidget {
+  const CustomConfettiWidget({
+    Key? key,
+    required this.controller,
+    required this.blastDirection,
+  }) : super(key: key);
+
+  final ConfettiController controller;
+  final double blastDirection;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConfettiWidget(
+      confettiController: controller,
+      shouldLoop: false,
+      colors: const [
+        greenColor,
+        redColor,
+        Colors.blue,
+        Colors.yellow,
+      ],
+      blastDirectionality: BlastDirectionality.directional,
+      emissionFrequency: 0.01,
+      maxBlastForce: 50,
+      minBlastForce: 10,
+      blastDirection: blastDirection,
+      minimumSize: const Size(10, 10),
+      maximumSize: const Size(50, 50),
+      numberOfParticles: 10,
+      gravity: 0.1,
     );
   }
 }

@@ -48,7 +48,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       timer!.cancel();
       showSnackBar(
         content: 'Email has been verified',
-        color: blueColor,
+        color: greenColor,
       );
       Get.offAll(() => const MainScreen(selectedIndex: 3));
     }
@@ -60,7 +60,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       await user!.sendEmailVerification();
       showSnackBar(
         content: 'Verification email sent successfully',
-        color: blueColor,
+        color: greenColor,
       );
     } on FirebaseAuthException catch (_) {
       showSnackBar(
@@ -103,7 +103,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               padding: const EdgeInsets.only(left: 15, top: 15),
               child: const Icon(
                 Ionicons.shield_checkmark,
-                color: blueColor,
+                color: greenColor,
                 size: 60,
               ),
             ),

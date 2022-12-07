@@ -40,7 +40,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
       ),
       body: const WebView(
         javascriptMode: JavascriptMode.disabled,
-        initialUrl: 'https://sites.google.com/view/buy-sell-app/privacy-policy',
+        initialUrl: 'https://www.bechdeapp.com/privacy-policy',
       ),
     );
   }

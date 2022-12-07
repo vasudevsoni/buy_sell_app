@@ -89,7 +89,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
             children: [
               InkWell(
                 splashFactory: InkRipple.splashFactory,
-                splashColor: greyColor,
+                splashColor: fadedColor,
                 borderRadius: BorderRadius.circular(10),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
@@ -190,8 +190,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      widget.data['location']['area'],
+                                      '${widget.data['location']['street']}, ${widget.data['location']['area']}',
                                       maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.end,
                                       style: const TextStyle(
                                         color: lightBlackColor,
@@ -247,7 +249,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     child: Icon(
                       isLiked ? Ionicons.heart : Ionicons.heart_outline,
                       size: 22,
-                      color: isLiked ? pinkColor : lightBlackColor,
+                      color: isLiked ? redColor : lightBlackColor,
                     ),
                   ),
                 ),

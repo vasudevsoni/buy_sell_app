@@ -100,7 +100,7 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: blueColor,
+            color: greenColor,
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),
@@ -108,7 +108,7 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: blueColor,
+            color: greenColor,
             width: 1.5,
             strokeAlign: StrokeAlign.inside,
           ),

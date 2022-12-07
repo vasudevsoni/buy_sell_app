@@ -207,7 +207,7 @@ class _ReportScreenState extends State<ReportScreen> {
               showCounterText: true,
               maxLength: 1000,
               maxLines: 3,
-              hint: 'Briefly explain what happened or what\'s not working',
+              hint: 'Please describe the issue you\'re encountering',
             ),
             const SizedBox(
               height: 10,
@@ -277,7 +277,7 @@ class _ReportScreenState extends State<ReportScreen> {
             const Spacer(),
             CustomButton(
               icon: Ionicons.arrow_forward,
-              text: 'Send Report',
+              text: 'Proceed',
               onPressed: () {
                 if (reportTextController.text.isEmpty || reportImage == null) {
                   return;

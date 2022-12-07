@@ -217,7 +217,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: blueColor,
+                        color: greenColor,
                         width: 1.5,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -225,7 +225,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: blueColor,
+                        color: greenColor,
                         width: 1.5,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -259,8 +259,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         'I would like to buy this for $offerPrice');
                     Get.back();
                   },
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -380,72 +380,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
-  showOptionsDialog() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: transparentColor,
-      builder: (context) {
-        return SafeArea(
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              color: whiteColor,
-            ),
-            padding: const EdgeInsets.only(
-              left: 15,
-              top: 5,
-              right: 15,
-              bottom: 15,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Container(
-                    width: 80.0,
-                    height: 5.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: fadedColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButton(
-                  icon: Ionicons.trash_bin,
-                  text: 'Delete Chat',
-                  onPressed: () {
-                    Get.back();
-                    showDeleteDialog();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   sendMessage(String text) async {
     final Map<String, dynamic> message = {
       'message': text,
@@ -508,11 +442,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
           ),
           GestureDetector(
-            onTap: showOptionsDialog,
+            onTap: showDeleteDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              Ionicons.ellipsis_horizontal,
-              color: blackColor,
+              Ionicons.trash_bin,
+              color: redColor,
               size: 25,
             ),
           ),
@@ -558,7 +492,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                     ),
                     child: Container(
-                      color: blueColor,
+                      color: greenColor,
                       height: 40,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 5),
@@ -670,7 +604,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       }
                       return ListView.builder(
                         controller: scrollController,
-                        physics: const BouncingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         itemBuilder: (context, index) {
                           final date = DateFormat.yMMMd().format(
@@ -705,7 +639,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           vertical: 5,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.green,
+                                          color: greenColor,
                                           borderRadius: sentBy == me
                                               ? const BorderRadius.only(
                                                   topLeft: Radius.circular(10),
@@ -769,7 +703,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: sentBy == me
-                                              ? blueColor
+                                              ? greenColor
                                               : greyColor,
                                           borderRadius: sentBy == me
                                               ? const BorderRadius.only(
@@ -884,7 +818,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ActionChip(
                             pressElevation: 5,
                             label: const Text('Make offer'),
-                            backgroundColor: Colors.green,
+                            backgroundColor: greenColor,
                             labelStyle: const TextStyle(
                               color: whiteColor,
                               fontWeight: FontWeight.w600,
@@ -1017,7 +951,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   }
                                 },
                                 tooltip: 'Send message',
-                                backgroundColor: blueColor,
+                                backgroundColor: greenColor,
                                 elevation: 0,
                                 highlightElevation: 0,
                                 shape: RoundedRectangleBorder(

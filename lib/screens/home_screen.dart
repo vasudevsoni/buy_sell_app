@@ -9,11 +9,11 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
 
+import '../auth/screens/location_screen.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/svg_picture.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
-import '/auth/screens/location_screen.dart';
 import '/screens/search_field_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_product_card.dart';
@@ -78,6 +78,84 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  // showFilterBottomSheet() {
+  //   showModalBottomSheet<dynamic>(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: transparentColor,
+  //     builder: (context) {
+  //       return SafeArea(
+  //         child: Container(
+  //           decoration: const BoxDecoration(
+  //             borderRadius: BorderRadius.only(
+  //               topLeft: Radius.circular(10),
+  //               topRight: Radius.circular(10),
+  //             ),
+  //             color: whiteColor,
+  //           ),
+  //           padding: const EdgeInsets.only(
+  //             top: 5,
+  //             left: 15,
+  //             right: 15,
+  //             bottom: 15,
+  //           ),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Center(
+  //                 child: Container(
+  //                   width: 80.0,
+  //                   height: 5.0,
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(10.0),
+  //                     color: fadedColor,
+  //                   ),
+  //                 ),
+  //               ),
+  //               const SizedBox(
+  //                 height: 10,
+  //               ),
+  //               const Center(
+  //                 child: Text(
+  //                   'Filter your Results',
+  //                   style: TextStyle(
+  //                     fontSize: 20,
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                   textAlign: TextAlign.start,
+  //                 ),
+  //               ),
+  //               const SizedBox(
+  //                 height: 10,
+  //               ),
+  //               CustomButtonWithoutIcon(
+  //                 text: 'Show Products in My Area',
+  //                 onPressed: () async {
+  //                   Get.back();
+  //                 },
+  //                 bgColor: greenColor,
+  //                 borderColor: greenColor,
+  //                 textIconColor: whiteColor,
+  //               ),
+  //               const SizedBox(
+  //                 height: 10,
+  //               ),
+  //               CustomButtonWithoutIcon(
+  //                 text: 'Show Products in My City',
+  //                 onPressed: () => Get.back(),
+  //                 bgColor: greenColor,
+  //                 borderColor: greenColor,
+  //                 textIconColor: whiteColor,
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   void dispose() {
     tabBarController.dispose();
@@ -88,6 +166,17 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
+      // floatingActionButton: FloatingActionButton.small(
+      //   onPressed: showFilterBottomSheet,
+      //   backgroundColor: greenColor,
+      //   elevation: 0,
+      //   focusElevation: 0,
+      //   hoverElevation: 0,
+      //   disabledElevation: 0,
+      //   highlightElevation: 0,
+      //   child: const Icon(Ionicons.filter),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         elevation: 0.2,
         backgroundColor: whiteColor,
@@ -99,26 +188,27 @@ class _HomeScreenState extends State<HomeScreen>
             const Icon(
               Ionicons.location,
               size: 25,
-              color: blueColor,
+              color: greenColor,
             ),
             const SizedBox(
               width: 5,
             ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: GestureDetector(
-                          onTap: () => Get.to(
-                            () => const LocationScreen(
-                              isOpenedFromSellButton: false,
-                            ),
-                          ),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Get.to(
+                  () => const LocationScreen(
+                    isOpenedFromSellButton: false,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
                           child: AutoSizeText(
                             isLocationEmpty == true
                                 ? 'Set location'
@@ -135,30 +225,30 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      const Icon(
-                        Ionicons.caret_down,
-                        size: 15,
-                        color: blackColor,
-                      ),
-                    ],
-                  ),
-                  if (isLocationEmpty == false)
-                    Text(
-                      '$city, $state',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: true,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 11,
-                        color: fadedColor,
-                      ),
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        const Icon(
+                          Ionicons.caret_down,
+                          size: 15,
+                          color: blackColor,
+                        ),
+                      ],
                     ),
-                ],
+                    if (isLocationEmpty == false)
+                      Text(
+                        '$city, $state',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 11,
+                          color: fadedColor,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
             GestureDetector(
@@ -177,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen>
         bottom: TabBar(
           controller: tabBarController,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: blueColor,
+          indicatorColor: greenColor,
           indicatorWeight: 3,
           splashBorderRadius: BorderRadius.circular(10),
           labelStyle: const TextStyle(
@@ -207,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: tabBarController,
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         children: [
           //near me screen
           NearbyProductsScreen(
@@ -253,7 +343,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
     super.build(context);
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -290,7 +380,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: blueColor,
+                      color: greenColor,
                     ),
                   ),
                 ),
@@ -378,7 +468,7 @@ class CategoriesListView extends StatelessWidget {
               );
             },
             itemCount: 6,
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 15),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
@@ -478,7 +568,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
     super.build(context);
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -515,7 +605,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: blueColor,
+                      color: greenColor,
                     ),
                   ),
                 ),
@@ -622,8 +712,8 @@ class _ProductsListState extends State<ProductsList> {
                     widget.tabController.animateTo(1);
                   },
                   icon: Ionicons.earth,
-                  borderColor: blueColor,
-                  bgColor: blueColor,
+                  borderColor: greenColor,
+                  bgColor: greenColor,
                   textIconColor: whiteColor,
                 ),
               ],
@@ -644,7 +734,7 @@ class _ProductsListState extends State<ProductsList> {
                     )
                     .where('isActive', isEqualTo: true)
                     .where('location.city', isEqualTo: widget.city),
-            pageSize: 6,
+            pageSize: 15,
             builder: (context, snapshot, child) {
               if (snapshot.isFetching) {
                 return const Padding(

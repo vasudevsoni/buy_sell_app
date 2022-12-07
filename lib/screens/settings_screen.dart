@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:store_redirect/store_redirect.dart';
 
 import '../widgets/custom_button_without_icon.dart';
 import '/auth/screens/location_screen.dart';
@@ -21,6 +21,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final FirebaseServices _services = FirebaseServices();
+  final InAppReview inAppReview = InAppReview.instance;
   final User? user = FirebaseAuth.instance.currentUser;
   String signInMethod = '';
   String address = '';
@@ -167,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Container(
@@ -194,14 +195,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               isEnabled: true,
             ),
-            if (signInMethod == 'phone')
-              CustomListTileWithSubtitle(
-                text: 'Signed in using',
-                subTitle: 'Mobile Number',
-                icon: Ionicons.log_in,
-                isEnabled: false,
-                onTap: () {},
-              ),
             if (signInMethod == 'google.com')
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
@@ -243,15 +236,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Rate us on Play Store',
+              text: 'Leave us a review',
               subTitle:
-                  'If you love our app, please take a moment to rate it on the Play Store',
+                  'If you love our app, please take a moment to leave a review. It makes a huge difference.',
               icon: Ionicons.star,
-              textColor: blueColor,
+              textColor: greenColor,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {
-                StoreRedirect.redirect();
+                inAppReview.openStoreListing();
               },
             ),
 

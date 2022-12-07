@@ -78,7 +78,7 @@ class _TimerButtonState extends State<TimerButton> {
         ? GestureDetector(
             onTap: _onPressed,
             child: Container(
-              height: 48,
+              height: 45,
               width: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
@@ -103,7 +103,7 @@ class _TimerButtonState extends State<TimerButton> {
         : GestureDetector(
             onTap: null,
             child: Container(
-              height: 48,
+              height: 45,
               width: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),

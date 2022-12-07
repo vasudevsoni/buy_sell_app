@@ -1,6 +1,5 @@
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:buy_sell_app/widgets/text_field_label.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -108,8 +107,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     });
                     Get.back();
                   },
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -147,7 +146,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: const Text(
-          'Give feedback',
+          'Make a suggestion',
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: blackColor,
@@ -160,7 +159,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TextFieldLabel(labelText: 'Write your feedback'),
             CustomTextField(
               controller: feedbackTextController,
               keyboardType: TextInputType.text,
@@ -168,7 +166,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               showCounterText: true,
               maxLength: 1000,
               maxLines: 3,
-              hint: 'Explain your feedback in a few words',
+              hint:
+                  'Please describe the feature or change you would like to see! We review all suggestions and welcome your feedback.',
             ),
             const Spacer(),
             CustomButton(
@@ -180,8 +179,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 }
                 showConfirmation();
               },
-              bgColor: blueColor,
-              borderColor: blueColor,
+              bgColor: greenColor,
+              borderColor: greenColor,
               textIconColor: whiteColor,
             ),
           ],

@@ -1,5 +1,8 @@
 import 'package:buy_sell_app/screens/feedback_screen.dart';
+import 'package:buy_sell_app/services/firebase_services.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -12,12 +15,40 @@ import '/utils/utils.dart';
 import 'report_screen.dart';
 import '/widgets/custom_list_tile_with_subtitle.dart';
 
-class HelpAndSupportScreen extends StatelessWidget {
+class HelpAndSupportScreen extends StatefulWidget {
   const HelpAndSupportScreen({super.key});
 
   @override
+  State<HelpAndSupportScreen> createState() => _HelpAndSupportScreenState();
+}
+
+class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
+  final FirebaseServices _services = FirebaseServices();
+  String uid = '';
+
+  @override
+  void initState() {
+    setState(() {
+      uid = _services.user!.uid;
+    });
+    super.initState();
+  }
+
+  openMail(email) async {
+    await FlutterEmailSender.send(email);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final Email dataDeleteEmail = Email(
+      body:
+          '**Do not delete this.\nHi, I would like to delete my data and account for BechDe.\nUserId - $uid **',
+      subject: 'Delete BechDe Data',
+      recipients: ['support@bechdeapp.com'],
+      isHTML: false,
+    );
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -35,7 +66,7 @@ class HelpAndSupportScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Container(
@@ -51,9 +82,9 @@ class HelpAndSupportScreen extends StatelessWidget {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Give Feedback',
+              text: 'Make a suggestion',
               subTitle:
-                  'If you have some feedback, recommendations or improvements for us, we would love to hear them',
+                  'If you have some feedback, suggestions or improvements for our app, we would love to hear them',
               icon: Ionicons.cafe,
               textColor: blackColor,
               trailingIcon: Ionicons.chevron_forward,
@@ -63,7 +94,7 @@ class HelpAndSupportScreen extends StatelessWidget {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Report a Problem',
+              text: 'Report a problem',
               subTitle: 'If something is not right, please report it here',
               icon: Ionicons.bug,
               textColor: redColor,
@@ -90,9 +121,8 @@ class HelpAndSupportScreen extends StatelessWidget {
                 ),
               ),
             ),
-            CustomListTileWithSubtitle(
-              text: 'Frequently Asked Questions',
-              subTitle: 'Read our FAQ\'s for more details',
+            CustomListTileNoImage(
+              text: 'FAQs',
               icon: Ionicons.help_circle,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
@@ -136,6 +166,56 @@ class HelpAndSupportScreen extends StatelessWidget {
               icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},
+            ),
+            const Divider(
+              height: 0,
+              indent: 15,
+              color: lightBlackColor,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              width: size.width,
+              child: const Text(
+                'Data',
+                style: TextStyle(
+                  color: blackColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                          text:
+                              'If you would like your data to be deleted, please contact us at'),
+                      TextSpan(
+                        text: ' support@bechdeapp.com',
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => openMail(dataDeleteEmail),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: greenColor,
+                        ),
+                      ),
+                    ],
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
           ],
         ),

@@ -58,10 +58,12 @@ class EmailAuthService {
         'bio': null,
         'location': null,
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
-        'dob': null,
         'profileImage': null,
-        'followers': [],
-        'following': [],
+        'instagramLink': null,
+        'facebookLink': null,
+        'websiteLink': null,
+        // 'followers': [],
+        // 'following': [],
       }).then((value) async {
         //send to main screen
         Get.offAll(() => const MainScreen(selectedIndex: 0));

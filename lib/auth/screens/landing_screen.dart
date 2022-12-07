@@ -118,7 +118,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'OK',
+                    text: 'Re-Connect',
                     onPressed: () async {
                       Get.back();
                       setState(() {
@@ -253,7 +253,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     pauseAutoPlayOnManualNavigate: true,
                     pauseAutoPlayOnTouch: true,
                     autoPlayInterval: const Duration(seconds: 4),
-                    scrollPhysics: const BouncingScrollPhysics(),
+                    scrollPhysics: const ClampingScrollPhysics(),
                     reverse: false,
                     scrollDirection: Axis.horizontal,
                     onPageChanged: (index, reason) {
@@ -278,7 +278,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: currentImage == index ? blueColor : greyColor,
+                    color: currentImage == index ? greenColor : greyColor,
                   ),
                 );
               }).toList(),
@@ -324,8 +324,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: CustomButton(
                       text: 'Google',
                       icon: Ionicons.logo_google,
-                      bgColor: googleLoginColor,
-                      borderColor: googleLoginColor,
+                      bgColor: greenColor,
+                      borderColor: greenColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
                         setState(() {
@@ -383,7 +383,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: greenColor,
                       ),
                     ),
                     const TextSpan(text: ' and'),
@@ -397,7 +397,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: greenColor,
                       ),
                     ),
                   ],

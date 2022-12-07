@@ -41,6 +41,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final FirebaseServices _services = FirebaseServices();
+  double latitude = 0;
+  double longitude = 0;
+  String street = '';
   String area = '';
   String city = '';
   String state = '';
@@ -56,11 +59,14 @@ class _AdPostScreenState extends State<AdPostScreen> {
       if (mounted) {
         setState(() {
           locationController.text =
-              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+              '${value['location']['street']}, ${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+          street = value['location']['street'];
           area = value['location']['area'];
           city = value['location']['city'];
           state = value['location']['state'];
           country = value['location']['country'];
+          latitude = value['location']['latitude'];
+          longitude = value['location']['longitude'];
         });
       }
     });
@@ -151,7 +157,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     height: 10,
                   ),
                   CustomButtonWithoutIcon(
-                    text: 'OK',
+                    text: 'Re-Connect',
                     onPressed: () async {
                       Get.back();
                       setState(() {
@@ -219,18 +225,22 @@ class _AdPostScreenState extends State<AdPostScreen> {
             () => const CongratulationsScreen(),
           );
           provider.clearDataAfterSubmitListing();
-          setState(() {
-            isLoading = false;
-          });
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
         });
       } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
-        setState(() {
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
 
@@ -396,7 +406,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: blueColor,
+                                        color: greenColor,
                                         fontSize: 15,
                                       ),
                                     ),
@@ -492,6 +502,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                           subCatName: widget.subCatName.toLowerCase(),
                         ),
                         'location': {
+                          'latitude': latitude,
+                          'longitude': longitude,
+                          'street': street,
                           'area': area,
                           'city': city,
                           'state': state,
@@ -499,11 +512,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         },
                         'isSold': false,
                         'isActive': false,
+                        'isRejected': false,
                       });
                       publishProductToFirebase(provider);
                     },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -770,7 +784,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -820,8 +834,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   child: CustomTextField(
                     controller: titleController,
                     keyboardType: TextInputType.text,
-                    hint: 'Sony PlayStation 5 in good codition',
-                    maxLength: 40,
+                    hint: 'Mention key features of your item',
+                    maxLength: 70,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -936,7 +950,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -944,7 +958,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: blueColor,
+                          color: greenColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1056,8 +1070,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
         ),

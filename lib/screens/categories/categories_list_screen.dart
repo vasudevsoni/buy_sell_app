@@ -57,7 +57,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
             childAspectRatio: 1.3 / 1,
           ),
           scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           itemCount: snapshot.data!.docs.length,
           padding: const EdgeInsets.all(15),
           itemBuilder: (context, index) {

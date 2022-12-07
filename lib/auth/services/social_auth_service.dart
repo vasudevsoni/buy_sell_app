@@ -25,10 +25,12 @@ class SocialAuthService {
           'bio': null,
           'location': null,
           'dateJoined': DateTime.now().millisecondsSinceEpoch,
-          'dob': null,
           'profileImage': user.photoURL,
-          'followers': [],
-          'following': [],
+          'instagramLink': null,
+          'facebookLink': null,
+          'websiteLink': null,
+          // 'followers': [],
+          // 'following': [],
         }).then((value) {
           Get.offAll(() => const MainScreen(selectedIndex: 0));
         });

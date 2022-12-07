@@ -35,7 +35,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
@@ -68,7 +68,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                             child: Stack(
                               children: [
                                 PhotoViewGallery.builder(
-                                  scrollPhysics: const BouncingScrollPhysics(),
+                                  scrollPhysics: const ClampingScrollPhysics(),
                                   itemCount: images.length,
                                   pageController: pageController,
                                   builder: (BuildContext context, int index) {
@@ -110,7 +110,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                                       pageController.dispose();
                                       Get.back();
                                     },
-                                    splashColor: blueColor,
+                                    splashColor: greenColor,
                                     splashRadius: 30,
                                     icon: const Icon(
                                       Ionicons.close_circle_outline,

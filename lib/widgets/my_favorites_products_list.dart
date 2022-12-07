@@ -31,7 +31,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
       query: services.listings
           .orderBy('title', descending: false)
           .where('favorites', arrayContains: services.user!.uid),
-      pageSize: 6,
+      pageSize: 15,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -121,8 +121,8 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 child: CustomButtonWithoutIcon(
                   text: 'Explore Products',
                   onPressed: () => mainProv.switchToPage(0),
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
               ),
@@ -130,7 +130,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
           );
         }
         return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

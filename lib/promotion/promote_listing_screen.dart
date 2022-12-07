@@ -89,12 +89,12 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
               ),
             )
           : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    color: blueColor,
+                    color: greenColor,
                     child: Row(
                       children: [
                         SizedBox(
@@ -180,7 +180,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: InkWell(
                       splashFactory: InkRipple.splashFactory,
-                      splashColor: greyColor,
+                      splashColor: fadedColor,
                       borderRadius: BorderRadius.circular(10),
                       onTap: () {
                         showModalBottomSheet<dynamic>(
@@ -190,7 +190,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                           builder: (context) {
                             return SafeArea(
                               child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
+                                physics: const ClampingScrollPhysics(),
                                 child: Container(
                                   decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.only(
@@ -266,7 +266,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: blueColor,
+                          color: greenColor,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -425,7 +425,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 icon: Ionicons.bag_check,
                                 borderColor: whiteColor,
                                 bgColor: whiteColor,
-                                textIconColor: blueColor,
+                                textIconColor: greenColor,
                               ),
                               const SizedBox(
                                 height: 10,

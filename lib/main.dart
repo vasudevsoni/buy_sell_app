@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -106,6 +107,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'BechDe',
+      color: greenColor,
+      themeMode: ThemeMode.light,
       theme: ThemeData(fontFamily: 'SFProDisplay'),
       debugShowCheckedModeBanner: false,
       home: const LoadingScreen(),

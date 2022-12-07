@@ -2,7 +2,6 @@ import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../widgets/loading_button.dart';
@@ -25,7 +24,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final FirebaseServices _services = FirebaseServices();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
+  final TextEditingController instaController = TextEditingController();
+  final TextEditingController fbController = TextEditingController();
+  final TextEditingController linkController = TextEditingController();
   bool isLoading = false;
   String uid = '';
 
@@ -39,9 +40,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       value['bio'] == null
           ? bioController.text = ''
           : bioController.text = value['bio'];
-      value['dob'] == null
-          ? dobController.text == ''
-          : dobController.text = value['dob'];
+      value['instagramLink'] == null
+          ? instaController.text = ''
+          : instaController.text = value['instagramLink'];
+      value['facebookLink'] == null
+          ? fbController.text = ''
+          : fbController.text = value['facebookLink'];
+      value['websiteLink'] == null
+          ? linkController.text = ''
+          : linkController.text = value['websiteLink'];
     });
     super.initState();
   }
@@ -50,14 +57,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   void dispose() {
     nameController.dispose();
     bioController.dispose();
-    dobController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     validateForm() async {
       if (!_formKey.currentState!.validate()) {
         showSnackBar(
@@ -69,6 +73,41 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       if (nameController.text.isEmpty) {
         showSnackBar(
           content: 'Please fill all the required fields',
+          color: redColor,
+        );
+        return;
+      }
+      if (instaController.text.isNotEmpty &&
+          !instaController.text.startsWith('https://instagram.com/') &&
+          !instaController.text.startsWith('https://www.instagram.com/') &&
+          !instaController.text.startsWith('http://instagram.com/') &&
+          !instaController.text.startsWith('http://www.instagram.com/')) {
+        showSnackBar(
+          content: 'Please enter a valid instagram profile link',
+          color: redColor,
+        );
+        return;
+      }
+      if (fbController.text.isNotEmpty &&
+          !fbController.text.startsWith('https://facebook.com/') &&
+          !fbController.text.startsWith('https://www.facebook.com/') &&
+          !fbController.text.startsWith('http://facebook.com/') &&
+          !fbController.text.startsWith('http://www.facebook.com/') &&
+          !fbController.text.startsWith('http://fb.com/') &&
+          !fbController.text.startsWith('http://www.fb.com/')) {
+        showSnackBar(
+          content: 'Please enter a valid facebook profile link',
+          color: redColor,
+        );
+        return;
+      }
+      if (linkController.text.isNotEmpty &&
+          !linkController.text.startsWith('https://') &&
+          !linkController.text.startsWith('http://') &&
+          !linkController.text.startsWith('https://www') &&
+          !linkController.text.startsWith('http://www')) {
+        showSnackBar(
+          content: 'Please enter a valid website/app link',
           color: redColor,
         );
         return;
@@ -153,17 +192,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         'bio': bioController.text.isEmpty
                             ? null
                             : bioController.text,
-                        'dob': dobController.text.isEmpty
+                        'instagramLink': instaController.text.isEmpty
                             ? null
-                            : dobController.text,
+                            : instaController.text,
+                        'facebookLink': fbController.text.isEmpty
+                            ? null
+                            : fbController.text,
+                        'websiteLink': linkController.text.isEmpty
+                            ? null
+                            : linkController.text,
                       });
                       setState(() {
                         isLoading = false;
                       });
                       Get.offAll(() => const MainScreen(selectedIndex: 3));
                     },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
+                    bgColor: greenColor,
+                    borderColor: greenColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -186,6 +231,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     return Scaffold(
       backgroundColor: whiteColor,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0.2,
         backgroundColor: whiteColor,
@@ -202,26 +248,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       ),
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: size.width,
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                color: blackColor,
-                child: const Text(
-                  'Profile Details',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: whiteColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 20,
               ),
@@ -272,39 +304,61 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextFieldLabel(labelText: 'Date of Birth (Optional)'),
+                child: TextFieldLabel(labelText: 'Instagram Link (Optional)'),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: CustomTextField(
-                  controller: dobController,
+                  controller: instaController,
                   keyboardType: TextInputType.text,
-                  hint: '',
-                  maxLength: 20,
-                  isReadOnly: true,
+                  hint: 'https://www.instagram.com/your_username/',
+                  maxLength: 100,
+                  maxLines: 1,
                   isEnabled: isLoading ? false : true,
-                  onTap: () async {
-                    final DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      helpText: 'SELECT DATE OF BIRTH',
-                      locale: const Locale('en', 'IN'),
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now().subtract(
-                        const Duration(days: 54750),
-                      ),
-                      lastDate: DateTime.now(),
-                    );
-                    if (pickedDate == null) {
-                      return;
-                    }
-                    final String formattedDate =
-                        DateFormat.yMMMd().format(pickedDate);
-                    setState(() {
-                      dobController.text = formattedDate;
-                    });
-                  },
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                 ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFieldLabel(labelText: 'Facebook Link (Optional)'),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: CustomTextField(
+                  controller: fbController,
+                  keyboardType: TextInputType.text,
+                  hint:
+                      'https://www.facebook.com/profile.php?id=100072729246997',
+                  maxLength: 100,
+                  maxLines: 1,
+                  isEnabled: isLoading ? false : true,
+                  textInputAction: TextInputAction.done,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFieldLabel(labelText: 'Website/App Link (Optional)'),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: CustomTextField(
+                  controller: linkController,
+                  keyboardType: TextInputType.text,
+                  hint: 'https://www.yourwebsite.com/',
+                  maxLength: 100,
+                  maxLines: 1,
+                  isEnabled: isLoading ? false : true,
+                  textInputAction: TextInputAction.done,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
               ),
             ],
           ),
@@ -324,8 +378,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 text: 'Proceed',
                 onPressed: validateForm,
                 icon: Ionicons.arrow_forward,
-                bgColor: blueColor,
-                borderColor: blueColor,
+                bgColor: greenColor,
+                borderColor: greenColor,
                 textIconColor: whiteColor,
               ),
       ),

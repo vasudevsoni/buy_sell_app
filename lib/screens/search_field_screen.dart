@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../widgets/text_field_label.dart';
 import 'search_results_screen.dart';
 import '/widgets/custom_text_field.dart';
 import '/utils/utils.dart';
@@ -46,10 +45,6 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
           const SizedBox(
             height: 15,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: TextFieldLabel(labelText: 'Search for anything'),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomTextField(
@@ -57,7 +52,7 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.search,
               autofocus: true,
-              hint: 'Start typing',
+              hint: 'Search for mobiles, cars, dresses and more...',
               maxLength: 50,
               onFieldSubmitted: (query) {
                 query.length > 2

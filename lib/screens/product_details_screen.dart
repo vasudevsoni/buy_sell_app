@@ -8,10 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 import '../widgets/custom_text_field.dart';
 import '../widgets/text_field_label.dart';
@@ -23,11 +25,11 @@ import 'category_products_screen.dart';
 import '/screens/chats/conversation_screen.dart';
 import 'full_decription_screen.dart';
 import 'help_and_support_screen.dart';
-import 'profile_screen.dart';
 import '/screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
+import 'profile_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final DocumentSnapshot productData;
@@ -45,6 +47,7 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
   final TextEditingController reportTextController = TextEditingController();
+  final MapController mapController = MapController();
   int currentImage = 0;
   List fav = [];
   bool isLiked = false;
@@ -53,6 +56,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isSold = false;
   bool isLoading = false;
   String location = '';
+  double latitude = 0;
+  double longitude = 0;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
@@ -72,7 +77,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ? profileImage = ''
             : profileImage = widget.sellerData['profileImage'];
         location =
-            '${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
+            '${widget.productData['location']['street']}, ${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
+        latitude = widget.productData['location']['latitude'];
+        longitude = widget.productData['location']['longitude'];
       });
       if (widget.productData['isActive'] == false) {
         setState(() {
@@ -155,6 +162,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   void dispose() {
+    mapController.dispose();
     reportTextController.dispose();
     super.dispose();
   }
@@ -242,7 +250,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         TextSpan(
                           text: " go to Help and Support",
                           style: const TextStyle(
-                            color: blueColor,
+                            color: greenColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -445,13 +453,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               fontSize: 14,
                             ),
                           ),
-                          Text(
-                            '3) The product has been sold.',
-                            style: TextStyle(
-                              color: whiteColor,
-                              fontSize: 14,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -504,7 +505,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   )
                 : SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -554,7 +555,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           children: [
                                             PhotoViewGallery.builder(
                                               scrollPhysics:
-                                                  const BouncingScrollPhysics(),
+                                                  const ClampingScrollPhysics(),
                                               itemCount: images.length,
                                               pageController: pageController,
                                               builder: (BuildContext context,
@@ -605,7 +606,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   pageController.dispose();
                                                   Get.back();
                                                 },
-                                                splashColor: blueColor,
+                                                splashColor: greenColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
                                                   Ionicons.close_circle_outline,
@@ -669,7 +670,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     reverse: false,
                                     scrollDirection: Axis.horizontal,
                                     scrollPhysics:
-                                        const BouncingScrollPhysics(),
+                                        const ClampingScrollPhysics(),
                                     onPageChanged: (index, reason) {
                                       setState(() {
                                         currentImage = index;
@@ -720,7 +721,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: currentImage == index
-                                              ? blueColor
+                                              ? greenColor
                                               : lightBlackColor,
                                         ),
                                       );
@@ -759,7 +760,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   const Icon(
                                     Ionicons.eye_outline,
                                     size: 20,
-                                    color: blueColor,
+                                    color: greenColor,
                                   ),
                                   const SizedBox(
                                     width: 3,
@@ -783,7 +784,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   const Icon(
                                     Ionicons.heart_outline,
                                     size: 20,
-                                    color: pinkColor,
+                                    color: redColor,
                                   ),
                                   const SizedBox(
                                     width: 3,
@@ -857,7 +858,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               ),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          color: blueColor,
+                                          color: greenColor,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -953,8 +954,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ),
                                       ),
                                       icon: Ionicons.trending_up,
-                                      bgColor: blueColor,
-                                      borderColor: blueColor,
+                                      bgColor: greenColor,
+                                      borderColor: greenColor,
                                       textIconColor: whiteColor,
                                     ),
                                   ),
@@ -996,8 +997,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       text: 'Chat with Seller',
                                       onPressed: createChatRoom,
                                       icon: Ionicons.chatbox,
-                                      bgColor: blueColor,
-                                      borderColor: blueColor,
+                                      bgColor: greenColor,
+                                      borderColor: greenColor,
                                       textIconColor: whiteColor,
                                     ),
                                   )
@@ -1032,8 +1033,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ? Ionicons.heart
                                   : Ionicons.heart_outline,
                               bgColor: whiteColor,
-                              borderColor: pinkColor,
-                              textIconColor: pinkColor,
+                              borderColor: redColor,
+                              textIconColor: redColor,
                             ),
                           ),
                         const SizedBox(
@@ -1086,15 +1087,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   fontSize: 15,
                                                 ),
                                               ),
-                                              Text(
-                                                widget.productData['brandName'],
-                                                softWrap: true,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
+                                              Expanded(
+                                                child: Text(
+                                                  widget
+                                                      .productData['brandName'],
+                                                  softWrap: true,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: blackColor,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1116,15 +1121,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   fontSize: 15,
                                                 ),
                                               ),
-                                              Text(
-                                                widget.productData['modelName'],
-                                                softWrap: true,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
+                                              Expanded(
+                                                child: Text(
+                                                  widget
+                                                      .productData['modelName'],
+                                                  softWrap: true,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: blackColor,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1146,15 +1155,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   fontSize: 15,
                                                 ),
                                               ),
-                                              Text(
-                                                widget.productData['color'],
-                                                softWrap: true,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
+                                              Expanded(
+                                                child: Text(
+                                                  widget.productData['color'],
+                                                  softWrap: true,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: blackColor,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1172,7 +1184,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.person,
                                                 size: 15,
-                                                color: blueColor,
+                                                color: greenColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1209,7 +1221,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.funnel,
                                                 size: 15,
-                                                color: blueColor,
+                                                color: greenColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1245,7 +1257,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.calendar,
                                                 size: 15,
-                                                color: blueColor,
+                                                color: greenColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1282,7 +1294,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.speedometer,
                                                 size: 15,
-                                                color: blueColor,
+                                                color: greenColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1376,6 +1388,91 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'Product Location',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: blackColor,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: SizedBox(
+                            height: size.height * 0.3,
+                            width: size.width,
+                            child: FlutterMap(
+                              mapController: mapController,
+                              options: MapOptions(
+                                center: LatLng(
+                                  latitude,
+                                  longitude,
+                                ),
+                                zoom: 15.0,
+                                maxZoom: 16.0,
+                                maxBounds: LatLngBounds(
+                                  LatLng(-90, -180.0),
+                                  LatLng(90.0, 180.0),
+                                ),
+                                interactiveFlags: InteractiveFlag.all &
+                                    ~InteractiveFlag.rotate,
+                              ),
+                              nonRotatedChildren: [
+                                AttributionWidget.defaultWidget(
+                                  source: 'OpenStreetMap contributors',
+                                ),
+                              ],
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName:
+                                      'com.bechde.buy_sell_app',
+                                  subdomains: const ['a', 'b', 'c'],
+                                  backgroundColor: greyColor,
+                                ),
+                                CircleLayer(
+                                  circles: [
+                                    CircleMarker(
+                                      point: LatLng(
+                                        latitude,
+                                        longitude,
+                                      ),
+                                      radius: 40,
+                                      borderColor: greenColor,
+                                      borderStrokeWidth: 5,
+                                      color: fadedColor,
+                                    ),
+                                  ],
+                                ),
+                                // MarkerLayer(
+                                //   markers: [
+                                //     Marker(
+                                //       point: LatLng(51.509364, -0.128928),
+                                //       builder: (context) => const Icon(
+                                //         Ionicons.location,
+                                //         size: 40,
+                                //         color: blackColor,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
                         if (widget.productData['sellerUid'] !=
                             services.user!.uid)
                           Column(
@@ -1430,7 +1527,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(50),
-                                                color: blueColor,
+                                                color: greenColor,
                                               ),
                                               child: const Icon(
                                                 Ionicons.person,
@@ -1684,8 +1781,8 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                   ),
                 ),
                 icon: Ionicons.chevron_forward,
-                borderColor: blueColor,
-                bgColor: blueColor,
+                borderColor: greenColor,
+                bgColor: greenColor,
                 textIconColor: whiteColor,
               ),
             ),

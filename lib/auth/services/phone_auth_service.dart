@@ -51,7 +51,6 @@
   //         'bio': null,
   //         'location': null,
   //         'dateJoined': DateTime.now().millisecondsSinceEpoch,
-  //         'dob': null,
   //         'profileImage': null,
   //         'followers': [],
   //         'following': [],

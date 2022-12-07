@@ -28,7 +28,7 @@ class FullDescriptionScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(

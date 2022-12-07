@@ -1,13 +1,13 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -41,14 +41,18 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   getUserProfileImage() async {
     await services.getCurrentUserData().then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['profileImage'] != null) {
+      if (value['profileImage'] != null) {
+        if (mounted) {
+          setState(() {
             profileImage = value['profileImage'];
             return;
-          }
-          profileImage = '';
-        });
+          });
+        }
+        if (mounted) {
+          setState(() {
+            profileImage = '';
+          });
+        }
       }
     });
   }
@@ -57,14 +61,27 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     setState(() {
       isLoading = true;
     });
-    Reference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('profileImages/${services.user!.uid}/${uuid.v1()}');
-    UploadTask uploadTask = storageReference.putFile(image);
-    downloadUrl = await (await uploadTask).ref.getDownloadURL();
-    services.users.doc(services.user!.uid).update({
-      'profileImage': downloadUrl,
-    });
+    try {
+      final Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profileImages/${services.user!.uid}/${uuid.v1()}');
+      final UploadTask uploadTask = storageReference.putFile(image);
+      downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      await services.users.doc(services.user!.uid).update({
+        'profileImage': downloadUrl,
+      });
+      setState(() {
+        isLoading = false;
+      });
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+      setState(() {
+        isLoading = false;
+      });
+    }
     setState(() {
       isLoading = false;
     });
@@ -213,13 +230,13 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 CustomButtonWithoutIcon(
                   text: 'Confirm & Update',
                   onPressed: () async {
-                    await uploadImage(File(pickedImage!.path));
                     Get.back();
+                    await uploadImage(File(pickedImage!.path));
                     Get.offAll(() => const MainScreen(selectedIndex: 3));
                   },
-                  bgColor: blueColor,
+                  bgColor: greenColor,
                   isDisabled: isLoading,
-                  borderColor: blueColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -266,59 +283,72 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           const SizedBox(
             height: 20,
           ),
-          profileImage == ''
-              ? Container(
-                  height: size.width * 0.3,
-                  width: size.width * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: blueColor,
-                  ),
-                  child: const Icon(
-                    Ionicons.person,
-                    color: whiteColor,
-                    size: 45,
-                  ),
-                )
-              : pickedImage == null
-                  ? SizedBox(
-                      height: size.width * 0.3,
-                      width: size.width * 0.3,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          imageUrl: profileImage,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) {
-                            return const Icon(
-                              Ionicons.alert_circle,
-                              size: 30,
-                              color: redColor,
-                            );
-                          },
-                          placeholder: (context, url) {
-                            return const Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 30,
-                                duration: Duration(milliseconds: 1000),
-                              ),
-                            );
-                          },
-                        ),
+          if (profileImage == '' && pickedImage == null)
+            Container(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: greenColor,
+              ),
+              child: const Icon(
+                Ionicons.person,
+                color: whiteColor,
+                size: 45,
+              ),
+            ),
+          if (profileImage != '' && pickedImage == null)
+            SizedBox(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: CachedNetworkImage(
+                  imageUrl: profileImage,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) {
+                    return const Icon(
+                      Ionicons.alert_circle,
+                      size: 30,
+                      color: redColor,
+                    );
+                  },
+                  placeholder: (context, url) {
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: lightBlackColor,
+                        size: 30,
+                        duration: Duration(milliseconds: 1000),
                       ),
-                    )
-                  : SizedBox(
-                      height: size.width * 0.3,
-                      width: size.width * 0.3,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.file(
-                          File(pickedImage!.path),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          if (profileImage == '' && pickedImage != null)
+            SizedBox(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.file(
+                  File(pickedImage!.path),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          if (profileImage != '' && pickedImage != null)
+            SizedBox(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.file(
+                  File(pickedImage!.path),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           const SizedBox(
             height: 20,
           ),
@@ -331,7 +361,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               bgColor: whiteColor,
               borderColor: blackColor,
               textIconColor: blackColor,
-              isDisabled: isLoading,
+              isDisabled: isLoading ? true : false,
             ),
           ),
           const SizedBox(
@@ -346,7 +376,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               bgColor: whiteColor,
               borderColor: blackColor,
               textIconColor: blackColor,
-              isDisabled: isLoading,
+              isDisabled: isLoading ? true : false,
             ),
           ),
         ],
@@ -365,8 +395,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 text: 'Proceed',
                 onPressed: pickedImage != null ? showConfirmationDialog : () {},
                 icon: Ionicons.arrow_forward,
-                bgColor: blueColor,
-                borderColor: blueColor,
+                bgColor: greenColor,
+                borderColor: greenColor,
                 textIconColor: whiteColor,
               ),
       ),

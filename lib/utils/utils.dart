@@ -45,13 +45,11 @@ final kmFormat = NumberFormat.currency(
   name: '',
 );
 
-const transparentColor = Colors.transparent;
+const greenColor = Color(0xff02b866);
 const whiteColor = Color(0xffffffff);
-const pinkColor = Color(0xffff4d6d);
-const redColor = Color(0xffe5383b);
-const blueColor = Color(0xff4895ef);
+const redColor = Color(0xffe01212);
 const blackColor = Color(0xff190101);
+const greyColor = Color(0xffecf1f6);
+const transparentColor = Colors.transparent;
 const lightBlackColor = Colors.black54;
 const fadedColor = Colors.black45;
-const greyColor = Color(0xffecf1f6);
-const googleLoginColor = Color(0xff4285F4);

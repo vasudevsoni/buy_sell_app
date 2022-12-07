@@ -65,7 +65,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
             var data = snapshot.data!['subCat'];
             return ListView.builder(
               scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return CustomListTileNoImage(
