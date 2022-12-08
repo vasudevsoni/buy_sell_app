@@ -17,7 +17,7 @@ class LoadingButton extends StatelessWidget {
       ),
       child: const Center(
         child: SpinKitFadingCircle(
-          color: whiteColor,
+          color: blackColor,
           size: 30,
           duration: Duration(milliseconds: 1000),
         ),

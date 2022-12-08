@@ -862,15 +862,15 @@ class _MyListingScreenProductCardState
                                         height: 10,
                                       ),
                                       CustomButton(
-                                        icon: Ionicons.checkmark_done,
+                                        icon: Ionicons.checkmark_circle,
                                         text: 'Mark as Sold',
                                         onPressed: () {
                                           Get.back();
                                           showMarskasSoldModal();
                                         },
                                         bgColor: whiteColor,
-                                        borderColor: greenColor,
-                                        textIconColor: greenColor,
+                                        borderColor: blackColor,
+                                        textIconColor: blackColor,
                                       ),
                                     ],
                                   ),

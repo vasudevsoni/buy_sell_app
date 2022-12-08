@@ -425,7 +425,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 icon: Ionicons.bag_check,
                                 borderColor: whiteColor,
                                 bgColor: whiteColor,
-                                textIconColor: greenColor,
+                                textIconColor: blackColor,
                               ),
                               const SizedBox(
                                 height: 10,
