@@ -98,7 +98,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'Added to favorites',
-          color: greenColor,
+          color: blueColor,
         );
       });
     } on FirebaseException {
@@ -142,7 +142,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'The product has been marked as sold',
-          color: greenColor,
+          color: blueColor,
         );
       });
     } on FirebaseException {
@@ -160,7 +160,7 @@ class FirebaseServices {
       }).then((value) {
         showSnackBar(
           content: 'Listing succesfully boosted to top',
-          color: greenColor,
+          color: blueColor,
         );
       });
     } on FirebaseException {
@@ -261,7 +261,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Feedback submitted. Thank you so much for your effort',
-        color: greenColor,
+        color: blueColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -297,7 +297,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Report submitted. We will look into it as soon as possible',
-        color: greenColor,
+        color: blueColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -320,7 +320,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'Product reported. We will look into it as soon as possible',
-        color: greenColor,
+        color: blueColor,
       );
     } on FirebaseException {
       showSnackBar(
@@ -343,7 +343,7 @@ class FirebaseServices {
       });
       showSnackBar(
         content: 'User reported. We will look into it as soon as possible',
-        color: greenColor,
+        color: blueColor,
       );
     } on FirebaseException {
       showSnackBar(

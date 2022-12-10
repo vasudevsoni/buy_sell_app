@@ -113,12 +113,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const Spacer(),
               isLoading
-                  ? const LoadingButton()
+                  ? const LoadingButton(
+                      bgColor: blueColor,
+                    )
                   : CustomButton(
                       text: 'Send',
                       icon: Ionicons.arrow_forward,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: _validateEmail,
                     ),

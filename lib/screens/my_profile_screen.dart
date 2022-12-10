@@ -186,7 +186,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     //   right: 10,
                     //   child: ActionChip(
                     //     onPressed: () {},
-                    //     backgroundColor: greenColor,
+                    //     backgroundColor: blueColor,
                     //     avatar: const Icon(
                     //       Ionicons.diamond,
                     //       color: whiteColor,
@@ -201,44 +201,47 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     //   ),
                     // ),
                     profileImage == ''
-                        ? Stack(
-                            children: [
-                              Container(
-                                height: size.width * 0.25,
-                                width: size.width * 0.25,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: greenColor,
-                                ),
-                                child: const Icon(
-                                  Ionicons.person,
-                                  color: whiteColor,
-                                  size: 50,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    Get.to(
-                                      () => const UpdateProfileImageScreen(),
-                                    );
-                                  },
+                        ? Positioned(
+                            top: 150 - (size.width * 0.125),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: size.width * 0.25,
+                                  width: size.width * 0.25,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: blueColor,
+                                  ),
                                   child: const Icon(
-                                    Ionicons.create_outline,
-                                    color: lightBlackColor,
-                                    shadows: [
-                                      Shadow(
-                                        color: lightBlackColor,
-                                        blurRadius: 2,
-                                      ),
-                                    ],
+                                    Ionicons.person,
+                                    color: whiteColor,
+                                    size: 50,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      Get.to(
+                                        () => const UpdateProfileImageScreen(),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Ionicons.create_outline,
+                                      color: lightBlackColor,
+                                      shadows: [
+                                        Shadow(
+                                          color: lightBlackColor,
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         : Positioned(
                             top: 150 - (size.width * 0.125),
@@ -303,7 +306,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                             right: 15,
                                             child: IconButton(
                                               onPressed: () => Get.back(),
-                                              splashColor: greenColor,
+                                              splashColor: blueColor,
                                               splashRadius: 30,
                                               icon: const Icon(
                                                 Ionicons.close_circle_outline,
@@ -461,7 +464,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           if (websiteLink != '')
                             ExternalLinkIcon(
                               icon: Ionicons.link,
-                              iconColor: greenColor,
+                              iconColor: blueColor,
                               link: websiteLink,
                             ),
                         ],
@@ -530,8 +533,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             )
                         : onSellButtonClicked,
                     icon: Ionicons.bag_add,
-                    bgColor: greenColor,
-                    borderColor: greenColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: whiteColor,
                   ),
                 ),
@@ -580,7 +583,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       ),
                       MyProfileItemWidget(
                         icon: Ionicons.star,
-                        iconColor: greenColor,
+                        iconColor: blueColor,
                         text: 'Leave a Review',
                         onTap: () {
                           inAppReview.openStoreListing();

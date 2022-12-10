@@ -76,7 +76,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             ),
             bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: greenColor,
+              indicatorColor: blueColor,
               indicatorWeight: 3,
               splashBorderRadius: BorderRadius.circular(10),
               labelStyle: const TextStyle(
@@ -137,7 +137,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           ),
                           child: const SVGPictureWidget(
                             url:
-                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
                             fit: BoxFit.contain,
                             semanticsLabel: 'Empty messages image',
                           ),
@@ -187,8 +187,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             onPressed: () => setState(() {
                               mainProv.switchToPage(0);
                             }),
-                            bgColor: greenColor,
-                            borderColor: greenColor,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -264,7 +264,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           ),
                           child: const SVGPictureWidget(
                             url:
-                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
                             fit: BoxFit.contain,
                             semanticsLabel: 'Empty messages image',
                           ),
@@ -314,8 +314,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             onPressed: () => setState(() {
                               mainProv.switchToPage(0);
                             }),
-                            bgColor: greenColor,
-                            borderColor: greenColor,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -391,7 +391,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           ),
                           child: const SVGPictureWidget(
                             url:
-                                'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=904e6812-0428-4dc7-b6f3-b0f992811bd3',
+                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
                             fit: BoxFit.contain,
                             semanticsLabel: 'Empty messages image',
                           ),
@@ -445,8 +445,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                                       () => const EmailVerificationScreen(),
                                     )
                                 : onSellButtonClicked,
-                            bgColor: greenColor,
-                            borderColor: greenColor,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
                             textIconColor: whiteColor,
                           ),
                         ),
@@ -598,7 +598,7 @@ class _ChatCardState extends State<ChatCard> {
                                 height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: greenColor,
+                                  color: blueColor,
                                 ),
                                 child: const Icon(
                                   Ionicons.person,
@@ -632,7 +632,7 @@ class _ChatCardState extends State<ChatCard> {
                                 height: size.width * 0.12,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: greenColor,
+                                  color: blueColor,
                                 ),
                                 child: const Icon(
                                   Ionicons.person,
@@ -706,7 +706,7 @@ class _ChatCardState extends State<ChatCard> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
-                                          color: greenColor,
+                                          color: blueColor,
                                         ),
                                       ),
                                     ],
@@ -729,7 +729,7 @@ class _ChatCardState extends State<ChatCard> {
                               style: widget.chatData['read'] == false
                                   ? const TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: greenColor,
+                                      color: blueColor,
                                       fontSize: 14,
                                     )
                                   : const TextStyle(

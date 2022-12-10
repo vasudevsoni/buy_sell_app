@@ -207,8 +207,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       });
                       Get.offAll(() => const MainScreen(selectedIndex: 3));
                     },
-                    bgColor: greenColor,
-                    borderColor: greenColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -373,13 +373,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           top: 10,
         ),
         child: isLoading
-            ? const LoadingButton()
+            ? const LoadingButton(
+                bgColor: blueColor,
+              )
             : CustomButton(
                 text: 'Proceed',
                 onPressed: validateForm,
                 icon: Ionicons.arrow_forward,
-                bgColor: greenColor,
-                borderColor: greenColor,
+                bgColor: blueColor,
+                borderColor: blueColor,
                 textIconColor: whiteColor,
               ),
       ),

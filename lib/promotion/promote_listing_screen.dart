@@ -94,7 +94,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    color: greenColor,
+                    color: blueColor,
                     child: Row(
                       children: [
                         SizedBox(
@@ -239,7 +239,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       ),
                                       CachedNetworkImage(
                                         imageUrl:
-                                            'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fboost-to-top-gif.gif?alt=media&token=47bde363-ba46-4263-95ca-692052662b4c',
+                                            'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fboost-to-top-gif.gif?alt=media&token=32974617-e3d5-4263-98a8-c40a7fb263c9',
                                         height: size.height * 0.7,
                                         width: size.width,
                                         fit: BoxFit.contain,
@@ -266,7 +266,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: greenColor,
+                          color: blueColor,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -428,7 +428,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 textIconColor: blackColor,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                             ],
                           ),

@@ -61,7 +61,7 @@ class _LocationScreenState extends State<LocationScreen> {
           content: placemarks[0].subLocality == ''
               ? 'Location set to ${placemarks[0].locality.toString()}'
               : 'Location set to ${placemarks[0].subLocality.toString()}',
-          color: greenColor,
+          color: blueColor,
         );
       }
       return true;
@@ -177,7 +177,7 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               child: const SVGPictureWidget(
                 url:
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=7fd13d95-fd72-4b9d-8874-64df71b84270',
+                    'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=04fc1ba9-a0ba-4088-9f3e-d0311825b5bc',
                 fit: BoxFit.contain,
                 semanticsLabel: 'Location image',
               ),
@@ -189,7 +189,9 @@ class _LocationScreenState extends State<LocationScreen> {
                       left: 15,
                       right: 15,
                     ),
-                    child: const LoadingButton(),
+                    child: const LoadingButton(
+                      bgColor: blueColor,
+                    ),
                   )
                 : Container(
                     margin: const EdgeInsets.only(
@@ -199,8 +201,8 @@ class _LocationScreenState extends State<LocationScreen> {
                     child: CustomButton(
                       text: 'Use Current Location',
                       icon: Ionicons.locate,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
                         setState(() {

@@ -217,7 +217,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: greenColor,
+                        color: blueColor,
                         width: 1.5,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -225,7 +225,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: greenColor,
+                        color: blueColor,
                         width: 1.5,
                         strokeAlign: StrokeAlign.inside,
                       ),
@@ -259,8 +259,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         'I would like to buy this for $offerPrice');
                     Get.back();
                   },
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -492,7 +492,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                     ),
                     child: Container(
-                      color: greenColor,
+                      color: blueColor,
                       height: 40,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 5),
@@ -639,7 +639,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           vertical: 5,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: greenColor,
+                                          color: blueColor,
                                           borderRadius: sentBy == me
                                               ? const BorderRadius.only(
                                                   topLeft: Radius.circular(10),
@@ -703,7 +703,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: sentBy == me
-                                              ? greenColor
+                                              ? blueColor
                                               : greyColor,
                                           borderRadius: sentBy == me
                                               ? const BorderRadius.only(
@@ -818,7 +818,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ActionChip(
                             pressElevation: 5,
                             label: const Text('Make offer'),
-                            backgroundColor: greenColor,
+                            backgroundColor: blueColor,
                             labelStyle: const TextStyle(
                               color: whiteColor,
                               fontWeight: FontWeight.w600,
@@ -951,7 +951,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   }
                                 },
                                 tooltip: 'Send message',
-                                backgroundColor: greenColor,
+                                backgroundColor: blueColor,
                                 elevation: 0,
                                 highlightElevation: 0,
                                 shape: RoundedRectangleBorder(

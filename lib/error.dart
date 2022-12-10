@@ -32,7 +32,7 @@ class ErrorScreen extends StatelessWidget {
               ),
               child: const SVGPictureWidget(
                 url:
-                    'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FBeep%20Beep%20-%20UFO.svg?alt=media&token=4c178203-bb92-4391-b773-942eb26e6012',
+                    'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FBeep%20Beep%20-%20UFO.svg?alt=media&token=a040e797-0090-4bf9-ad81-7fa8246dc152',
                 fit: BoxFit.contain,
                 semanticsLabel: 'Error picture',
               ),
@@ -61,8 +61,8 @@ class ErrorScreen extends StatelessWidget {
                   () => const MainScreen(selectedIndex: 0),
                 ),
                 icon: Ionicons.home_outline,
-                borderColor: greenColor,
-                bgColor: greenColor,
+                borderColor: blueColor,
+                bgColor: blueColor,
                 textIconColor: whiteColor,
               ),
             ),

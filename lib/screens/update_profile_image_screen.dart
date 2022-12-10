@@ -234,9 +234,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                     await uploadImage(File(pickedImage!.path));
                     Get.offAll(() => const MainScreen(selectedIndex: 3));
                   },
-                  bgColor: greenColor,
+                  bgColor: blueColor,
                   isDisabled: isLoading,
-                  borderColor: greenColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -289,7 +289,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               width: size.width * 0.3,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: greenColor,
+                color: blueColor,
               ),
               child: const Icon(
                 Ionicons.person,
@@ -390,13 +390,15 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           top: 10,
         ),
         child: isLoading
-            ? const LoadingButton()
+            ? const LoadingButton(
+                bgColor: blueColor,
+              )
             : CustomButton(
                 text: 'Proceed',
                 onPressed: pickedImage != null ? showConfirmationDialog : () {},
                 icon: Ionicons.arrow_forward,
-                bgColor: greenColor,
-                borderColor: greenColor,
+                bgColor: blueColor,
+                borderColor: blueColor,
                 textIconColor: whiteColor,
               ),
       ),

@@ -100,7 +100,7 @@ class _MyListingsListState extends State<MyListingsList> {
                   ),
                   child: const SVGPictureWidget(
                     url:
-                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=747d5792-c4cf-4a18-801f-dfa2569778b1',
+                        'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=dd69ad93-939f-48d8-80d3-e06f6b4eee1a',
                     fit: BoxFit.contain,
                     semanticsLabel: 'Empty products image',
                   ),
@@ -153,8 +153,8 @@ class _MyListingsListState extends State<MyListingsList> {
                               () => const EmailVerificationScreen(),
                             )
                         : onSellButtonClicked,
-                    bgColor: greenColor,
-                    borderColor: greenColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: whiteColor,
                   ),
                 ),
@@ -359,8 +359,8 @@ class _MyListingScreenProductCardState
                     Get.back();
                   },
                   bgColor: whiteColor,
-                  borderColor: greenColor,
-                  textIconColor: greenColor,
+                  borderColor: blueColor,
+                  textIconColor: blueColor,
                 ),
                 const SizedBox(
                   height: 10,
@@ -597,7 +597,7 @@ class _MyListingScreenProductCardState
                               const Icon(
                                 Ionicons.eye_outline,
                                 size: 20,
-                                color: greenColor,
+                                color: blueColor,
                               ),
                               const SizedBox(
                                 width: 5,
@@ -712,7 +712,7 @@ class _MyListingScreenProductCardState
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: greenColor,
+                                color: blueColor,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -829,8 +829,8 @@ class _MyListingScreenProductCardState
                                             ),
                                           );
                                         },
-                                        bgColor: greenColor,
-                                        borderColor: greenColor,
+                                        bgColor: blueColor,
+                                        borderColor: blueColor,
                                         textIconColor: whiteColor,
                                       ),
                                     ],

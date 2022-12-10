@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class PromotionApi {
-  static const _apiKey = 'goog_YqVpOhJguHsmKVtIsDuyQSYCPLe';
+  static const _apiKey = 'goog_buwpVOVcvMsRCbXmUmMUTtROgtK';
 
   static Future init() async {
     await Purchases.setDebugLogsEnabled(true);

@@ -178,7 +178,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                   softWrap: true,
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: greenColor,
+                    color: blueColor,
                     fontSize: 15,
                   ),
                 ),
@@ -187,12 +187,14 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                 height: 5,
               ),
               isLoading
-                  ? const LoadingButton()
+                  ? const LoadingButton(
+                      bgColor: blueColor,
+                    )
                   : CustomButton(
                       text: 'Create Account',
                       icon: Ionicons.person_add,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),

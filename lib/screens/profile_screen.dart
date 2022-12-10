@@ -372,7 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: size.width * 0.25,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              color: greenColor,
+                              color: blueColor,
                             ),
                             child: const Icon(
                               Ionicons.person,
@@ -444,7 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           right: 15,
                                           child: IconButton(
                                             onPressed: () => Get.back(),
-                                            splashColor: greenColor,
+                                            splashColor: blueColor,
                                             splashRadius: 30,
                                             icon: const Icon(
                                               Ionicons.close_circle_outline,
@@ -572,7 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (websiteLink != '')
                           ExternalLinkIcon(
                             icon: Ionicons.link,
-                            iconColor: greenColor,
+                            iconColor: blueColor,
                             link: websiteLink,
                           ),
                       ],
@@ -647,8 +647,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //             });
               //           },
               //           icon: Ionicons.person_add,
-              //           borderColor: greenColor,
-              //           bgColor: greenColor,
+              //           borderColor: blueColor,
+              //           bgColor: blueColor,
               //           textIconColor: whiteColor,
               //         ),
               // ),

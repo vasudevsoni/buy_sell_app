@@ -110,7 +110,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                                       pageController.dispose();
                                       Get.back();
                                     },
-                                    splashColor: greenColor,
+                                    splashColor: blueColor,
                                     splashRadius: 30,
                                     icon: const Icon(
                                       Ionicons.close_circle_outline,

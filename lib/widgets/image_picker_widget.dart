@@ -258,7 +258,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: index == 0 ? greenColor : fadedColor,
+                                    color: index == 0 ? blueColor : fadedColor,
                                     borderRadius: const BorderRadius.only(
                                       bottomLeft: Radius.circular(10),
                                       topRight: Radius.circular(10),

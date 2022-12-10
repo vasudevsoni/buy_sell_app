@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingButton extends StatelessWidget {
-  const LoadingButton({super.key});
+  final Color bgColor;
+  const LoadingButton({
+    super.key,
+    required this.bgColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,12 +16,12 @@ class LoadingButton extends StatelessWidget {
       duration: const Duration(milliseconds: 1000),
       height: 45,
       decoration: BoxDecoration(
-        color: greenColor,
+        color: bgColor,
         borderRadius: BorderRadius.circular(50),
       ),
       child: const Center(
         child: SpinKitFadingCircle(
-          color: blackColor,
+          color: whiteColor,
           size: 30,
           duration: Duration(milliseconds: 1000),
         ),

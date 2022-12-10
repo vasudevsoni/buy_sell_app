@@ -134,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen>
   //                 onPressed: () async {
   //                   Get.back();
   //                 },
-  //                 bgColor: greenColor,
-  //                 borderColor: greenColor,
+  //                 bgColor: blueColor,
+  //                 borderColor: blueColor,
   //                 textIconColor: whiteColor,
   //               ),
   //               const SizedBox(
@@ -144,8 +144,8 @@ class _HomeScreenState extends State<HomeScreen>
   //               CustomButtonWithoutIcon(
   //                 text: 'Show Products in My City',
   //                 onPressed: () => Get.back(),
-  //                 bgColor: greenColor,
-  //                 borderColor: greenColor,
+  //                 bgColor: blueColor,
+  //                 borderColor: blueColor,
   //                 textIconColor: whiteColor,
   //               ),
   //             ],
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen>
       backgroundColor: whiteColor,
       // floatingActionButton: FloatingActionButton.small(
       //   onPressed: showFilterBottomSheet,
-      //   backgroundColor: greenColor,
+      //   backgroundColor: blueColor,
       //   elevation: 0,
       //   focusElevation: 0,
       //   hoverElevation: 0,
@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen>
             const Icon(
               Ionicons.location,
               size: 25,
-              color: greenColor,
+              color: blueColor,
             ),
             const SizedBox(
               width: 5,
@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen>
         bottom: TabBar(
           controller: tabBarController,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: greenColor,
+          indicatorColor: blueColor,
           indicatorWeight: 3,
           splashBorderRadius: BorderRadius.circular(10),
           labelStyle: const TextStyle(
@@ -380,7 +380,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: greenColor,
+                      color: blueColor,
                     ),
                   ),
                 ),
@@ -605,7 +605,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: greenColor,
+                      color: blueColor,
                     ),
                   ),
                 ),
@@ -681,7 +681,7 @@ class _ProductsListState extends State<ProductsList> {
                   ),
                   child: const SVGPictureWidget(
                     url:
-                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
+                        'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=6a2d5433-d3df-4338-8646-e709a9247d97',
                     fit: BoxFit.contain,
                     semanticsLabel: 'Empty products image',
                   ),
@@ -712,8 +712,8 @@ class _ProductsListState extends State<ProductsList> {
                     widget.tabController.animateTo(1);
                   },
                   icon: Ionicons.earth,
-                  borderColor: greenColor,
-                  bgColor: greenColor,
+                  borderColor: blueColor,
+                  bgColor: blueColor,
                   textIconColor: whiteColor,
                 ),
               ],
@@ -778,7 +778,7 @@ class _ProductsListState extends State<ProductsList> {
                         ),
                         child: const SVGPictureWidget(
                           url:
-                              'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
+                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=6a2d5433-d3df-4338-8646-e709a9247d97',
                           fit: BoxFit.contain,
                           semanticsLabel: 'Empty products image',
                         ),

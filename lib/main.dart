@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'BechDe',
-      color: greenColor,
+      color: blueColor,
       themeMode: ThemeMode.light,
       theme: ThemeData(fontFamily: 'SFProDisplay'),
       debugShowCheckedModeBanner: false,

@@ -45,3 +45,6 @@ app.*.map.json
 
 #Firebase files
 /android/app/google-services.json
+
+#RevenueCat JSON
+/bechde-buy-sell-10ce42e0d94e.json

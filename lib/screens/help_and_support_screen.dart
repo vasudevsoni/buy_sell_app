@@ -201,7 +201,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: greenColor,
+                          color: blueColor,
                         ),
                       ),
                     ],

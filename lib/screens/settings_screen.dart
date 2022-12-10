@@ -240,7 +240,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subTitle:
                   'If you love our app, please take a moment to leave a review. It makes a huge difference.',
               icon: Ionicons.star,
-              textColor: greenColor,
+              textColor: blueColor,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {

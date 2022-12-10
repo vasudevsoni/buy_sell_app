@@ -73,7 +73,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 ),
                 child: const SVGPictureWidget(
                   url:
-                      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=72cb7455-45f3-4a48-a395-6e0d4ec601cf',
+                      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=6d0db557-0c12-46ee-8019-77b3b3b1e446',
                   fit: BoxFit.contain,
                   semanticsLabel: 'Empty favorites image',
                 ),
@@ -121,8 +121,8 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 child: CustomButtonWithoutIcon(
                   text: 'Explore Products',
                   onPressed: () => mainProv.switchToPage(0),
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
               ),

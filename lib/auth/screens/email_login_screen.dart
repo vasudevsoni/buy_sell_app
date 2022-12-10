@@ -157,7 +157,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       'Forgot password?',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: greenColor,
+                        color: blueColor,
                         fontSize: 15,
                       ),
                     ),
@@ -177,7 +177,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: greenColor,
+                    color: blueColor,
                     fontSize: 15,
                   ),
                 ),
@@ -186,12 +186,14 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                 height: 5,
               ),
               isLoading
-                  ? const LoadingButton()
+                  ? const LoadingButton(
+                      bgColor: blueColor,
+                    )
                   : CustomButton(
                       text: 'Login',
                       icon: Ionicons.log_in,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),

@@ -250,7 +250,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         TextSpan(
                           text: " go to Help and Support",
                           style: const TextStyle(
-                            color: greenColor,
+                            color: blueColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -606,7 +606,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   pageController.dispose();
                                                   Get.back();
                                                 },
-                                                splashColor: greenColor,
+                                                splashColor: blueColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
                                                   Ionicons.close_circle_outline,
@@ -721,7 +721,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: currentImage == index
-                                              ? greenColor
+                                              ? blueColor
                                               : lightBlackColor,
                                         ),
                                       );
@@ -760,7 +760,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   const Icon(
                                     Ionicons.eye_outline,
                                     size: 20,
-                                    color: greenColor,
+                                    color: blueColor,
                                   ),
                                   const SizedBox(
                                     width: 3,
@@ -858,7 +858,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               ),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          color: greenColor,
+                                          color: blueColor,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -954,8 +954,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ),
                                       ),
                                       icon: Ionicons.trending_up,
-                                      bgColor: greenColor,
-                                      borderColor: greenColor,
+                                      bgColor: blueColor,
+                                      borderColor: blueColor,
                                       textIconColor: whiteColor,
                                     ),
                                   ),
@@ -997,8 +997,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       text: 'Chat with Seller',
                                       onPressed: createChatRoom,
                                       icon: Ionicons.chatbox,
-                                      bgColor: greenColor,
-                                      borderColor: greenColor,
+                                      bgColor: blueColor,
+                                      borderColor: blueColor,
                                       textIconColor: whiteColor,
                                     ),
                                   )
@@ -1184,7 +1184,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.person,
                                                 size: 15,
-                                                color: greenColor,
+                                                color: blueColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1221,7 +1221,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.funnel,
                                                 size: 15,
-                                                color: greenColor,
+                                                color: blueColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1257,7 +1257,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.calendar,
                                                 size: 15,
-                                                color: greenColor,
+                                                color: blueColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1294,7 +1294,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               const Icon(
                                                 Ionicons.speedometer,
                                                 size: 15,
-                                                color: greenColor,
+                                                color: blueColor,
                                               ),
                                               const SizedBox(
                                                 width: 7,
@@ -1451,7 +1451,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         longitude,
                                       ),
                                       radius: 40,
-                                      borderColor: greenColor,
+                                      borderColor: blueColor,
                                       borderStrokeWidth: 5,
                                       color: fadedColor,
                                     ),
@@ -1527,7 +1527,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(50),
-                                                color: greenColor,
+                                                color: blueColor,
                                               ),
                                               child: const Icon(
                                                 Ionicons.person,
@@ -1781,8 +1781,8 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                   ),
                 ),
                 icon: Ionicons.chevron_forward,
-                borderColor: greenColor,
-                bgColor: greenColor,
+                borderColor: blueColor,
+                bgColor: blueColor,
                 textIconColor: whiteColor,
               ),
             ),

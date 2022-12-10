@@ -107,8 +107,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     });
                     Get.back();
                   },
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
@@ -179,8 +179,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 }
                 showConfirmation();
               },
-              bgColor: greenColor,
-              borderColor: greenColor,
+              bgColor: blueColor,
+              borderColor: blueColor,
               textIconColor: whiteColor,
             ),
           ],

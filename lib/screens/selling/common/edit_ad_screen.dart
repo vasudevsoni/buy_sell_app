@@ -202,7 +202,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           });
           showSnackBar(
             content: 'Details updated. Product will be live once reviewed',
-            color: greenColor,
+            color: blueColor,
           );
         });
       } on FirebaseException {
@@ -315,7 +315,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: greenColor,
+                                color: blueColor,
                                 fontSize: 15,
                               ),
                             ),
@@ -394,8 +394,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       });
                       await updateProductOnFirebase(provider, uid);
                     },
-                    bgColor: greenColor,
-                    borderColor: greenColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -707,7 +707,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: greenColor,
+                          color: blueColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -716,7 +716,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: greenColor,
+                          color: blueColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -750,13 +750,15 @@ class _EditAdScreenState extends State<EditAdScreen> {
             top: 10,
           ),
           child: isLoading
-              ? const LoadingButton()
+              ? const LoadingButton(
+                  bgColor: blueColor,
+                )
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
         ),

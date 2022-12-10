@@ -126,7 +126,7 @@ class _CategoryScreenProductsListState
                   ),
                   child: const SVGPictureWidget(
                     url:
-                        'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=0d3a7bf1-cc6d-4448-bca9-7cf352dda71b',
+                        'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=6a2d5433-d3df-4338-8646-e709a9247d97',
                     fit: BoxFit.contain,
                     semanticsLabel: 'Empty favorites image',
                   ),
@@ -156,8 +156,8 @@ class _CategoryScreenProductsListState
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: Ionicons.home,
-                  borderColor: greenColor,
-                  bgColor: greenColor,
+                  borderColor: blueColor,
+                  bgColor: blueColor,
                   textIconColor: whiteColor,
                 ),
               ],

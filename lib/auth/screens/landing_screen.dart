@@ -170,10 +170,10 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     List images = [
-      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fexchange.svg?alt=media&token=d98a817d-bd66-4b6b-a06c-61dd7fb96515',
-      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fshow.svg?alt=media&token=66201338-289a-4381-b7b9-a46062d32083',
-      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fchat.svg?alt=media&token=e1a5a0b0-5129-4d8d-b9c2-31144b62ec4d',
-      'https://firebasestorage.googleapis.com/v0/b/buy-sell-app-ff3ee.appspot.com/o/illustrations%2Fphone.svg?alt=media&token=3aa7a100-1df2-4f45-9aac-c63a000314e3',
+      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fexchange.svg?alt=media&token=4634b16e-2db4-4823-b4c0-627ff396b057',
+      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fshow.svg?alt=media&token=bfebb25c-e57b-459c-ae9d-97027e2ca71d',
+      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fchat.svg?alt=media&token=5b60cd1b-d170-4934-a84a-0421179a8013',
+      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fphone.svg?alt=media&token=b10cbbcd-56ea-4f8c-8708-748a3abefad3',
     ];
 
     List texts = [
@@ -278,7 +278,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: currentImage == index ? greenColor : greyColor,
+                    color: currentImage == index ? blueColor : greyColor,
                   ),
                 );
               }).toList(),
@@ -317,15 +317,17 @@ class _LandingScreenState extends State<LandingScreen> {
             isLoading
                 ? const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: LoadingButton(),
+                    child: LoadingButton(
+                      bgColor: googleColor,
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: CustomButton(
                       text: 'Google',
                       icon: Ionicons.logo_google,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
+                      bgColor: googleColor,
+                      borderColor: googleColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
                         setState(() {
@@ -340,7 +342,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           return;
                         }
                         //login successful, add user to db and proceed
-                        SocialAuthService auth = SocialAuthService();
+                        final SocialAuthService auth = SocialAuthService();
                         auth.addUser(user);
                         setState(() {
                           isLoading = false;
@@ -351,19 +353,26 @@ class _LandingScreenState extends State<LandingScreen> {
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomButton(
-                text: 'Email',
-                icon: Ionicons.mail,
-                bgColor: whiteColor,
-                borderColor: lightBlackColor,
-                textIconColor: blackColor,
-                onPressed: () => Get.to(
-                  () => const EmailLoginScreen(),
-                ),
-              ),
-            ),
+            isLoading
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: LoadingButton(
+                      bgColor: blackColor,
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: CustomButton(
+                      text: 'Email',
+                      icon: Ionicons.mail,
+                      bgColor: blackColor,
+                      borderColor: blackColor,
+                      textIconColor: whiteColor,
+                      onPressed: () => Get.to(
+                        () => const EmailLoginScreen(),
+                      ),
+                    ),
+                  ),
             const SizedBox(
               height: 10,
             ),
@@ -383,7 +392,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: greenColor,
+                        color: blueColor,
                       ),
                     ),
                     const TextSpan(text: ' and'),
@@ -397,7 +406,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: greenColor,
+                        color: blueColor,
                       ),
                     ),
                   ],

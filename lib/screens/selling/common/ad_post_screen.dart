@@ -406,7 +406,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: greenColor,
+                                        color: blueColor,
                                         fontSize: 15,
                                       ),
                                     ),
@@ -516,8 +516,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       });
                       publishProductToFirebase(provider);
                     },
-                    bgColor: greenColor,
-                    borderColor: greenColor,
+                    bgColor: blueColor,
+                    borderColor: blueColor,
                     textIconColor: whiteColor,
                   ),
                   const SizedBox(
@@ -950,7 +950,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: greenColor,
+                          color: blueColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -958,7 +958,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: greenColor,
+                          color: blueColor,
                           width: 1.5,
                           strokeAlign: StrokeAlign.inside,
                         ),
@@ -1065,13 +1065,15 @@ class _AdPostScreenState extends State<AdPostScreen> {
             top: 10,
           ),
           child: isLoading
-              ? const LoadingButton()
+              ? const LoadingButton(
+                  bgColor: blueColor,
+                )
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
                   icon: Ionicons.arrow_forward,
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
         ),

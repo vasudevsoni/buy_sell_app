@@ -76,7 +76,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.w900,
-                    color: greenColor,
+                    color: blueColor,
                   ),
                 ),
                 const SizedBox(
@@ -88,7 +88,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w900,
-                    color: greenColor,
+                    color: blueColor,
                   ),
                 ),
                 const SizedBox(
@@ -131,8 +131,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: Ionicons.home,
-                  bgColor: greenColor,
-                  borderColor: greenColor,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
                   textIconColor: whiteColor,
                 ),
               ],
@@ -160,7 +160,7 @@ class CustomConfettiWidget extends StatelessWidget {
       confettiController: controller,
       shouldLoop: false,
       colors: const [
-        greenColor,
+        blueColor,
         redColor,
         Colors.blue,
         Colors.yellow,
