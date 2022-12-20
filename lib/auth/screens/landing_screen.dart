@@ -174,20 +174,23 @@ class _LandingScreenState extends State<LandingScreen> {
       'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fshow.svg?alt=media&token=bfebb25c-e57b-459c-ae9d-97027e2ca71d',
       'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fchat.svg?alt=media&token=5b60cd1b-d170-4934-a84a-0421179a8013',
       'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fphone.svg?alt=media&token=b10cbbcd-56ea-4f8c-8708-748a3abefad3',
+      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fearth.svg?alt=media&token=3f0c3aac-ac37-4c65-8a42-174b2bd0b877',
     ];
 
     List texts = [
-      'Turn old stuff into money',
-      'Discover quality products',
-      'Chat instantly',
+      'Turn old stuff into cash',
+      'Find high-quality items',
+      'Instant messaging',
       'Sell without limits',
+      'Save the planet'
     ];
 
     List subtitles = [
-      'Make money by selling your old products',
+      'Make money by selling gently used products',
       'Each listing is thoroughly reviewed by us',
-      'Chat with buyers and sellers without hassle',
+      'Chat freely with buyers and sellers',
       'Listing a product is completely free, now and always',
+      'Help the planet by reducing waste and supporting sustainable living'
     ];
 
     return Scaffold(
@@ -222,11 +225,11 @@ class _LandingScreenState extends State<LandingScreen> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 22,
+                            fontSize: 20,
                           ),
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 3,
                         ),
                         Text(
                           subtitles[index],
@@ -235,9 +238,9 @@ class _LandingScreenState extends State<LandingScreen> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             color: lightBlackColor,
-                            fontSize: 15,
+                            fontSize: 18,
                           ),
                         ),
                       ],
@@ -286,6 +289,9 @@ class _LandingScreenState extends State<LandingScreen> {
             const SizedBox(
               height: 10,
             ),
+            Row(
+              children: const [],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
@@ -318,7 +324,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ? const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: LoadingButton(
-                      bgColor: googleColor,
+                      bgColor: greenColor,
                     ),
                   )
                 : Padding(
@@ -326,13 +332,15 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: CustomButton(
                       text: 'Google',
                       icon: Ionicons.logo_google,
-                      bgColor: googleColor,
-                      borderColor: googleColor,
+                      bgColor: greenColor,
+                      borderColor: greenColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                        }
                         User? user =
                             await GoogleAuthentication.signinWithGoogle();
                         if (user == null) {
@@ -344,9 +352,11 @@ class _LandingScreenState extends State<LandingScreen> {
                         //login successful, add user to db and proceed
                         final SocialAuthService auth = SocialAuthService();
                         auth.addUser(user);
-                        setState(() {
-                          isLoading = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
                       },
                     ),
                   ),
@@ -390,28 +400,32 @@ class _LandingScreenState extends State<LandingScreen> {
                               transition: Transition.downToUp,
                             ),
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: blackColor,
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
                     const TextSpan(text: ' and'),
                     TextSpan(
-                      text: ' Privacy Policy.',
+                      text: ' Privacy Policy',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () => Get.to(
                               () => const PrivacyPolicy(),
                               transition: Transition.downToUp,
                             ),
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: blackColor,
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
                   ],
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.w400,
                     color: blackColor,
                   ),

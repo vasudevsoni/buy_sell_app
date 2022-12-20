@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,11 +11,23 @@ class Icons8 extends StatefulWidget {
 }
 
 class _Icons8State extends State<Icons8> {
-  @override
-  void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-    super.initState();
-  }
+  final WebViewController controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.disabled)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://icons8.com')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://icons8.com'));
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +48,8 @@ class _Icons8State extends State<Icons8> {
           ),
         ),
       ),
-      body: const WebView(
-        javascriptMode: JavascriptMode.disabled,
-        initialUrl: 'https://icons8.com',
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

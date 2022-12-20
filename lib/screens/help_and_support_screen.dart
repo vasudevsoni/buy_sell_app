@@ -1,6 +1,5 @@
 import 'package:buy_sell_app/screens/feedback_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
@@ -44,6 +43,12 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
       body:
           '**Do not delete this.\nHi, I would like to delete my data and account for BechDe.\nUserId - $uid **',
       subject: 'Delete BechDe Data',
+      recipients: ['support@bechdeapp.com'],
+      isHTML: false,
+    );
+    final Email contactUsEmail = Email(
+      body:
+          'Contact us regarding any issue you are facing. We will get back to you very soon.\nExplain in detail the problem you are facing.',
       recipients: ['support@bechdeapp.com'],
       isHTML: false,
     );
@@ -92,6 +97,15 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               onTap: () => Get.to(
                 () => const FeedbackScreen(),
               ),
+            ),
+            CustomListTileWithSubtitle(
+              text: 'Contact Us',
+              subTitle: 'Contact us for any issues you are facing',
+              icon: Ionicons.mail,
+              textColor: blackColor,
+              trailingIcon: Ionicons.chevron_forward,
+              isEnabled: true,
+              onTap: () => openMail(contactUsEmail),
             ),
             CustomListTileWithSubtitle(
               text: 'Report a problem',
@@ -162,7 +176,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Version',
-              subTitle: '0.0.4',
+              subTitle: '1.0.0',
               icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},
@@ -184,35 +198,15 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      const TextSpan(
-                          text:
-                              'If you would like your data to be deleted, please contact us at'),
-                      TextSpan(
-                        text: ' support@bechdeapp.com',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => openMail(dataDeleteEmail),
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: blueColor,
-                        ),
-                      ),
-                    ],
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: blackColor,
-                    ),
-                  ),
-                ),
-              ),
+            CustomListTileWithSubtitle(
+              text: 'Request Account Deletion',
+              subTitle:
+                  'If you would like to delete your account and data, leave us a request here',
+              icon: Ionicons.trash,
+              textColor: redColor,
+              trailingIcon: Ionicons.chevron_forward,
+              isEnabled: true,
+              onTap: () => openMail(dataDeleteEmail),
             ),
             const SizedBox(
               height: 15,

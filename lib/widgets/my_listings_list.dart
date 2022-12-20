@@ -702,6 +702,32 @@ class _MyListingScreenProductCardState
                             ),
                           ],
                         ),
+                      if (widget.data['isActive'] == true &&
+                          widget.data['isRejected'] == false)
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomButton(
+                              icon: Ionicons.trending_up,
+                              text: 'Reach More Buyers',
+                              onPressed: () {
+                                Get.to(
+                                  () => PromoteListingScreen(
+                                    productId: widget.data.id,
+                                    title: widget.data['title'],
+                                    price: widget.data['price'].toDouble(),
+                                    imageUrl: widget.data['images'][0],
+                                  ),
+                                );
+                              },
+                              bgColor: blueColor,
+                              borderColor: blueColor,
+                              textIconColor: whiteColor,
+                            ),
+                          ],
+                        ),
                       if (widget.data['isActive'] == true)
                         Column(
                           children: [
@@ -807,34 +833,6 @@ class _MyListingScreenProductCardState
                                     ),
                                   ),
                                 ),
-                                if (widget.data['isRejected'] == false)
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      CustomButton(
-                                        icon: Ionicons.trending_up,
-                                        text: 'Reach More Buyers',
-                                        onPressed: () {
-                                          Get.back();
-                                          Get.to(
-                                            () => PromoteListingScreen(
-                                              productId: widget.data.id,
-                                              title: widget.data['title'],
-                                              price: widget.data['price']
-                                                  .toDouble(),
-                                              imageUrl: widget.data['images']
-                                                  [0],
-                                            ),
-                                          );
-                                        },
-                                        bgColor: blueColor,
-                                        borderColor: blueColor,
-                                        textIconColor: whiteColor,
-                                      ),
-                                    ],
-                                  ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -869,8 +867,8 @@ class _MyListingScreenProductCardState
                                           showMarskasSoldModal();
                                         },
                                         bgColor: whiteColor,
-                                        borderColor: blackColor,
-                                        textIconColor: blackColor,
+                                        borderColor: blueColor,
+                                        textIconColor: blueColor,
                                       ),
                                     ],
                                   ),
@@ -878,7 +876,7 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: Ionicons.trash_bin,
+                                  icon: Ionicons.trash,
                                   text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();

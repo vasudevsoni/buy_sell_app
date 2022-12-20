@@ -26,7 +26,7 @@ class UpdateProfileImageScreen extends StatefulWidget {
 }
 
 class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
-  final FirebaseServices services = FirebaseServices();
+  final FirebaseServices _services = FirebaseServices();
   final uuid = const Uuid();
   String profileImage = '';
   XFile? pickedImage;
@@ -35,26 +35,18 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   @override
   void initState() {
-    getUserProfileImage();
-    super.initState();
-  }
-
-  getUserProfileImage() async {
-    await services.getCurrentUserData().then((value) {
+    _services.getCurrentUserData().then((value) {
       if (value['profileImage'] != null) {
-        if (mounted) {
-          setState(() {
-            profileImage = value['profileImage'];
-            return;
-          });
-        }
-        if (mounted) {
-          setState(() {
-            profileImage = '';
-          });
-        }
+        setState(() {
+          profileImage = value['profileImage'];
+          return;
+        });
+        setState(() {
+          profileImage = '';
+        });
       }
     });
+    super.initState();
   }
 
   uploadImage(File image) async {
@@ -64,10 +56,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     try {
       final Reference storageReference = FirebaseStorage.instance
           .ref()
-          .child('profileImages/${services.user!.uid}/${uuid.v1()}');
+          .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
       final UploadTask uploadTask = storageReference.putFile(image);
       downloadUrl = await (await uploadTask).ref.getDownloadURL();
-      await services.users.doc(services.user!.uid).update({
+      await _services.users.doc(_services.user!.uid).update({
         'profileImage': downloadUrl,
       });
       setState(() {
@@ -283,20 +275,6 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           const SizedBox(
             height: 20,
           ),
-          if (profileImage == '' && pickedImage == null)
-            Container(
-              height: size.width * 0.3,
-              width: size.width * 0.3,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: blueColor,
-              ),
-              child: const Icon(
-                Ionicons.person,
-                color: whiteColor,
-                size: 45,
-              ),
-            ),
           if (profileImage != '' && pickedImage == null)
             SizedBox(
               height: size.width * 0.3,
@@ -324,8 +302,22 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   },
                 ),
               ),
-            ),
-          if (profileImage == '' && pickedImage != null)
+            )
+          else if (profileImage == '' && pickedImage == null)
+            Container(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: blueColor,
+              ),
+              child: const Icon(
+                Ionicons.person,
+                color: whiteColor,
+                size: 45,
+              ),
+            )
+          else if (profileImage == '' && pickedImage != null)
             SizedBox(
               height: size.width * 0.3,
               width: size.width * 0.3,
@@ -336,8 +328,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-          if (profileImage != '' && pickedImage != null)
+            )
+          else if (profileImage != '' && pickedImage != null)
             SizedBox(
               height: size.width * 0.3,
               width: size.width * 0.3,

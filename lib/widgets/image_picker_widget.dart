@@ -77,9 +77,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
 
     Future getImageFromGallery() async {
-      final List<XFile>? pickedFiles =
+      final List<XFile> pickedFiles =
           await picker.pickMultiImage(imageQuality: 85);
-      if (pickedFiles!.isEmpty) {
+      if (pickedFiles.isEmpty) {
         return;
       }
       if (pickedFiles.length > 20) {

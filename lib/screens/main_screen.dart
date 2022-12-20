@@ -183,9 +183,14 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedIndex,
         selectedItemColor: blackColor,
-        unselectedItemColor: fadedColor,
-        showSelectedLabels: false,
+        unselectedItemColor: lightBlackColor,
+        showSelectedLabels: true,
         showUnselectedLabels: false,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+        enableFeedback: true,
         iconSize: 27,
         elevation: 0,
         backgroundColor: greyColor,
@@ -193,12 +198,12 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Ionicons.home_outline),
             activeIcon: Icon(Ionicons.home),
-            label: '',
+            label: 'HOME',
           ),
           BottomNavigationBarItem(
             icon: Icon(Ionicons.chatbubbles_outline),
             activeIcon: Icon(Ionicons.chatbubbles),
-            label: '',
+            label: 'INBOX',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -207,12 +212,12 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(
               Ionicons.heart,
             ),
-            label: '',
+            label: 'FAVORITES',
           ),
           BottomNavigationBarItem(
             icon: Icon(Ionicons.person_circle_outline),
             activeIcon: Icon(Ionicons.person_circle),
-            label: '',
+            label: 'PROFILE',
           ),
         ],
       ),

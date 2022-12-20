@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,7 +24,6 @@ import 'update_profile_image_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
-import 'update_profile_screen.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -48,9 +46,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   String facebookLink = '';
   String websiteLink = '';
   var iconSize = 16;
-  DateTime dateJoined = DateTime.now();
 
-  final NumberFormat numberFormat = NumberFormat.compact();
+  DateTime dateJoined = DateTime.now();
 
   @override
   void initState() {
@@ -148,250 +145,190 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      height: 150,
-                      width: size.width,
-                      margin: EdgeInsets.only(bottom: size.width * 0.125),
-                      color: greyColor,
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            'https://images.wallpapersden.com/image/download/artistic-5k-mesmerizing-landscape_bWplbmiUmZqaraWkpJRqZmdlrWdtbWU.jpg',
-                        filterQuality: FilterQuality.medium,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.bottomCenter,
-                        errorWidget: (context, url, error) {
-                          return const Icon(
-                            Ionicons.alert_circle,
-                            size: 30,
-                            color: redColor,
-                          );
-                        },
-                        placeholder: (context, url) {
-                          return const Center(
-                            child: SpinKitFadingCircle(
-                              color: lightBlackColor,
-                              size: 30,
-                              duration: Duration(milliseconds: 1000),
+                const SizedBox(
+                  height: 25,
+                ),
+                profileImage == ''
+                    ? Stack(
+                        children: [
+                          Container(
+                            height: size.width * 0.25,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: blueColor,
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    // Positioned(
-                    //   top: 10,
-                    //   right: 10,
-                    //   child: ActionChip(
-                    //     onPressed: () {},
-                    //     backgroundColor: blueColor,
-                    //     avatar: const Icon(
-                    //       Ionicons.diamond,
-                    //       color: whiteColor,
-                    //     ),
-                    //     label: const Text(
-                    //       '200 coins',
-                    //       style: TextStyle(
-                    //         color: whiteColor,
-                    //         fontWeight: FontWeight.w700,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    profileImage == ''
-                        ? Positioned(
-                            top: 150 - (size.width * 0.125),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: size.width * 0.25,
-                                  width: size.width * 0.25,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: blueColor,
-                                  ),
-                                  child: const Icon(
-                                    Ionicons.person,
-                                    color: whiteColor,
-                                    size: 50,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      Get.to(
-                                        () => const UpdateProfileImageScreen(),
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Ionicons.create_outline,
-                                      color: lightBlackColor,
-                                      shadows: [
-                                        Shadow(
-                                          color: lightBlackColor,
-                                          blurRadius: 2,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            child: const Icon(
+                              Ionicons.person,
+                              color: whiteColor,
+                              size: 50,
                             ),
-                          )
-                        : Positioned(
-                            top: 150 - (size.width * 0.125),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
                             child: GestureDetector(
                               behavior: HitTestBehavior.opaque,
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (_) {
-                                  return Dismissible(
-                                    key: UniqueKey(),
-                                    direction: DismissDirection.down,
-                                    onDismissed: (direction) {
-                                      Get.back();
-                                    },
-                                    child: Material(
-                                      color: blackColor,
-                                      child: Stack(
-                                        children: [
-                                          PhotoViewGallery.builder(
-                                            scrollPhysics:
-                                                const ClampingScrollPhysics(),
-                                            itemCount: 1,
-                                            builder: (BuildContext context,
-                                                int index) {
-                                              return PhotoViewGalleryPageOptions(
-                                                imageProvider: NetworkImage(
-                                                  profileImage,
-                                                ),
-                                                initialScale:
-                                                    PhotoViewComputedScale
-                                                            .contained *
-                                                        1,
-                                                minScale: PhotoViewComputedScale
-                                                        .contained *
-                                                    1,
-                                                maxScale: PhotoViewComputedScale
-                                                        .contained *
-                                                    2,
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const Icon(
-                                                    Ionicons.alert_circle,
-                                                    size: 20,
-                                                    color: redColor,
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            loadingBuilder: (context, event) {
-                                              return const Center(
-                                                child: SpinKitFadingCircle(
-                                                  color: greyColor,
-                                                  size: 30,
-                                                  duration: Duration(
-                                                      milliseconds: 1000),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          Positioned(
-                                            top: 15,
-                                            right: 15,
-                                            child: IconButton(
-                                              onPressed: () => Get.back(),
-                                              splashColor: blueColor,
-                                              splashRadius: 30,
-                                              icon: const Icon(
-                                                Ionicons.close_circle_outline,
-                                                size: 30,
-                                                color: whiteColor,
-                                                shadows: [
-                                                  BoxShadow(
-                                                    offset: Offset(0, 0),
-                                                    blurRadius: 15,
-                                                    spreadRadius: 15,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: size.width * 0.25,
-                                    width: size.width * 0.25,
-                                    decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    padding: const EdgeInsets.all(3),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: CachedNetworkImage(
-                                        imageUrl: profileImage,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return const Icon(
-                                            Ionicons.alert_circle,
-                                            size: 30,
-                                            color: redColor,
-                                          );
-                                        },
-                                        placeholder: (context, url) {
-                                          return const Center(
-                                            child: SpinKitFadingCircle(
-                                              color: lightBlackColor,
-                                              size: 30,
-                                              duration:
-                                                  Duration(milliseconds: 1000),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        Get.to(
-                                          () =>
-                                              const UpdateProfileImageScreen(),
-                                        );
-                                      },
-                                      child: const Icon(
-                                        Ionicons.create_outline,
-                                        color: blackColor,
-                                        shadows: [
-                                          Shadow(
-                                            color: lightBlackColor,
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                              onTap: () {
+                                Get.to(
+                                  () => const UpdateProfileImageScreen(),
+                                );
+                              },
+                              child: const Icon(
+                                Ionicons.create_outline,
+                                color: lightBlackColor,
+                                shadows: [
+                                  Shadow(
+                                    color: lightBlackColor,
+                                    blurRadius: 2,
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                  ],
-                ),
+                        ],
+                      )
+                    : GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (_) {
+                            return Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.down,
+                              onDismissed: (direction) {
+                                Get.back();
+                              },
+                              child: Material(
+                                color: blackColor,
+                                child: Stack(
+                                  children: [
+                                    PhotoViewGallery.builder(
+                                      scrollPhysics:
+                                          const ClampingScrollPhysics(),
+                                      itemCount: 1,
+                                      builder:
+                                          (BuildContext context, int index) {
+                                        return PhotoViewGalleryPageOptions(
+                                          imageProvider: NetworkImage(
+                                            profileImage,
+                                          ),
+                                          initialScale:
+                                              PhotoViewComputedScale.contained *
+                                                  1,
+                                          minScale:
+                                              PhotoViewComputedScale.contained *
+                                                  1,
+                                          maxScale:
+                                              PhotoViewComputedScale.contained *
+                                                  2,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Ionicons.alert_circle,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                        );
+                                      },
+                                      loadingBuilder: (context, event) {
+                                        return const Center(
+                                          child: SpinKitFadingCircle(
+                                            color: greyColor,
+                                            size: 30,
+                                            duration:
+                                                Duration(milliseconds: 1000),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Positioned(
+                                      top: 15,
+                                      right: 15,
+                                      child: IconButton(
+                                        onPressed: () => Get.back(),
+                                        splashColor: blueColor,
+                                        splashRadius: 30,
+                                        icon: const Icon(
+                                          Ionicons.close_circle_outline,
+                                          size: 30,
+                                          color: whiteColor,
+                                          shadows: [
+                                            BoxShadow(
+                                              offset: Offset(0, 0),
+                                              blurRadius: 15,
+                                              spreadRadius: 15,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: size.width * 0.25,
+                              width: size.width * 0.25,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              padding: const EdgeInsets.all(3),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: profileImage,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      Ionicons.alert_circle,
+                                      size: 30,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Center(
+                                      child: SpinKitFadingCircle(
+                                        color: lightBlackColor,
+                                        size: 30,
+                                        duration: Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  Get.to(
+                                    () => const UpdateProfileImageScreen(),
+                                  );
+                                },
+                                child: const Icon(
+                                  Ionicons.create_outline,
+                                  color: blackColor,
+                                  shadows: [
+                                    Shadow(
+                                      color: lightBlackColor,
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -506,36 +443,54 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomButton(
-                    text: 'Edit Profile',
-                    onPressed: () => Get.to(
-                      () => const UpdateProfileScreen(),
-                    ),
-                    icon: Ionicons.create_outline,
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: greyColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomButton(
-                    text: 'Sell a Product',
-                    onPressed: !user!.emailVerified &&
-                            user!.providerData[0].providerId == 'password'
-                        ? () => Get.to(
-                              () => const EmailVerificationScreen(),
-                            )
-                        : onSellButtonClicked,
-                    icon: Ionicons.bag_add,
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Make money selling on BechDe 💸',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        'Sell your items fast - plenty of buyers are waiting',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: lightBlackColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      CustomButton(
+                        text: 'List a Product',
+                        onPressed: !user!.emailVerified &&
+                                user!.providerData[0].providerId == 'password'
+                            ? () => Get.to(
+                                  () => const EmailVerificationScreen(),
+                                )
+                            : onSellButtonClicked,
+                        icon: Ionicons.bag_add,
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -546,8 +501,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   child: Row(
                     children: [
                       MyProfileItemWidget(
-                        icon: Ionicons.list,
-                        text: 'My Products',
+                        icon: Ionicons.albums_outline,
+                        text: 'My Listings',
                         onTap: () => Get.to(
                           () => const MyListingsScreen(),
                         ),
@@ -556,7 +511,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         width: 10,
                       ),
                       MyProfileItemWidget(
-                        icon: Ionicons.cog,
+                        icon: Ionicons.cog_outline,
                         text: 'Settings',
                         onTap: () => Get.to(
                           () => const SettingsScreen(),
@@ -572,7 +527,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       MyProfileItemWidget(
                         iconColor: blackColor,
-                        icon: Ionicons.headset,
+                        icon: Ionicons.headset_outline,
                         text: 'Help & Support',
                         onTap: () => Get.to(
                           () => const HelpAndSupportScreen(),
@@ -582,7 +537,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         width: 10,
                       ),
                       MyProfileItemWidget(
-                        icon: Ionicons.star,
+                        icon: Ionicons.star_outline,
                         iconColor: blueColor,
                         text: 'Leave a Review',
                         onTap: () {

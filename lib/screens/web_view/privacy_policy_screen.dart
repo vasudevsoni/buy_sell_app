@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,11 +11,23 @@ class PrivacyPolicy extends StatefulWidget {
 }
 
 class _PrivacyPolicyState extends State<PrivacyPolicy> {
-  @override
-  void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-    super.initState();
-  }
+  final WebViewController controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.disabled)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://www.bechdeapp.com')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://www.bechdeapp.com/privacy-policy'));
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +48,8 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           ),
         ),
       ),
-      body: const WebView(
-        javascriptMode: JavascriptMode.disabled,
-        initialUrl: 'https://www.bechdeapp.com/privacy-policy',
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

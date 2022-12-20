@@ -17,7 +17,7 @@ class MyListingsScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: const Text(
-          'My products',
+          'My listings',
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: blackColor,

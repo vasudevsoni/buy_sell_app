@@ -36,11 +36,13 @@ class CustomListTileNoImage extends StatelessWidget {
         color: lightBlackColor,
       ),
       minLeadingWidth: icon == null ? 0 : 40,
-      leading: Icon(
-        icon,
-        size: 22,
-        color: blackColor,
-      ),
+      leading: icon == null
+          ? null
+          : Icon(
+              icon,
+              size: 22,
+              color: blackColor,
+            ),
       horizontalTitleGap: 0,
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
     );

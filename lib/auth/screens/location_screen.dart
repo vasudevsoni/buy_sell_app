@@ -147,7 +147,7 @@ class _LocationScreenState extends State<LocationScreen> {
               child: Text(
                 'Set your location to get nearby product recommendations and to sell your own products',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -166,13 +166,13 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
             ),
-            const Spacer(),
             Container(
               padding: const EdgeInsets.all(15),
-              height: size.height * 0.3,
-              width: size.width,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
+              margin: const EdgeInsets.all(15),
+              height: size.height * 0.2,
+              width: size.height * 0.2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
                 color: greyColor,
               ),
               child: const SVGPictureWidget(

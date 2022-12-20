@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -34,7 +33,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseServices services = FirebaseServices();
   final TextEditingController reportTextController = TextEditingController();
-  final User? user = FirebaseAuth.instance.currentUser;
   String name = '';
   String bio = '';
   String profileImage = '';
@@ -43,6 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String instagramLink = '';
   String facebookLink = '';
   String websiteLink = '';
+
   DateTime dateJoined = DateTime.now();
   // int followers = 0;
   // int following = 0;
@@ -331,177 +330,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: 150,
-                    width: size.width,
-                    margin: EdgeInsets.only(bottom: size.width * 0.125),
-                    color: greyColor,
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          'https://images.wallpapersden.com/image/download/artistic-5k-mesmerizing-landscape_bWplbmiUmZqaraWkpJRqZmdlrWdtbWU.jpg',
-                      filterQuality: FilterQuality.medium,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.bottomCenter,
-                      errorWidget: (context, url, error) {
-                        return const Icon(
-                          Ionicons.alert_circle,
-                          size: 30,
-                          color: redColor,
-                        );
-                      },
-                      placeholder: (context, url) {
-                        return const Center(
-                          child: SpinKitFadingCircle(
-                            color: lightBlackColor,
-                            size: 30,
-                            duration: Duration(milliseconds: 1000),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  profileImage == ''
-                      ? Positioned(
-                          top: 150 - (size.width * 0.125),
-                          child: Container(
-                            height: size.width * 0.25,
-                            width: size.width * 0.25,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: blueColor,
-                            ),
-                            child: const Icon(
-                              Ionicons.person,
-                              color: whiteColor,
-                              size: 40,
-                            ),
-                          ),
-                        )
-                      : Positioned(
-                          top: 150 - (size.width * 0.125),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dismissible(
-                                  key: UniqueKey(),
-                                  direction: DismissDirection.down,
-                                  onDismissed: (direction) {
-                                    Get.back();
-                                  },
-                                  child: Material(
-                                    color: blackColor,
-                                    child: Stack(
-                                      children: [
-                                        PhotoViewGallery.builder(
-                                          scrollPhysics:
-                                              const ClampingScrollPhysics(),
-                                          itemCount: 1,
-                                          builder: (BuildContext context,
-                                              int index) {
-                                            return PhotoViewGalleryPageOptions(
-                                              imageProvider: NetworkImage(
-                                                profileImage,
-                                              ),
-                                              initialScale:
-                                                  PhotoViewComputedScale
-                                                          .contained *
-                                                      1,
-                                              minScale: PhotoViewComputedScale
-                                                      .contained *
-                                                  1,
-                                              maxScale: PhotoViewComputedScale
-                                                      .contained *
-                                                  2,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return const Icon(
-                                                  Ionicons.alert_circle,
-                                                  size: 20,
-                                                  color: redColor,
-                                                );
-                                              },
-                                            );
-                                          },
-                                          loadingBuilder: (context, event) {
-                                            return const Center(
-                                              child: SpinKitFadingCircle(
-                                                color: greyColor,
-                                                size: 30,
-                                                duration: Duration(
-                                                    milliseconds: 1000),
-                                              ),
-                                            );
-                                          },
+              const SizedBox(
+                height: 25,
+              ),
+              profileImage == ''
+                  ? Container(
+                      height: size.width * 0.25,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: blueColor,
+                      ),
+                      child: const Icon(
+                        Ionicons.person,
+                        color: whiteColor,
+                        size: 40,
+                      ),
+                    )
+                  : GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.down,
+                            onDismissed: (direction) {
+                              Get.back();
+                            },
+                            child: Material(
+                              color: blackColor,
+                              child: Stack(
+                                children: [
+                                  PhotoViewGallery.builder(
+                                    scrollPhysics:
+                                        const ClampingScrollPhysics(),
+                                    itemCount: 1,
+                                    builder: (BuildContext context, int index) {
+                                      return PhotoViewGalleryPageOptions(
+                                        imageProvider: NetworkImage(
+                                          profileImage,
                                         ),
-                                        Positioned(
-                                          top: 15,
-                                          right: 15,
-                                          child: IconButton(
-                                            onPressed: () => Get.back(),
-                                            splashColor: blueColor,
-                                            splashRadius: 30,
-                                            icon: const Icon(
-                                              Ionicons.close_circle_outline,
-                                              size: 30,
-                                              color: whiteColor,
-                                              shadows: [
-                                                BoxShadow(
-                                                  offset: Offset(0, 0),
-                                                  blurRadius: 15,
-                                                  spreadRadius: 15,
-                                                ),
-                                              ],
-                                            ),
+                                        initialScale:
+                                            PhotoViewComputedScale.contained *
+                                                1,
+                                        minScale:
+                                            PhotoViewComputedScale.contained *
+                                                1,
+                                        maxScale:
+                                            PhotoViewComputedScale.contained *
+                                                2,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Icon(
+                                            Ionicons.alert_circle,
+                                            size: 20,
+                                            color: redColor,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    loadingBuilder: (context, event) {
+                                      return const Center(
+                                        child: SpinKitFadingCircle(
+                                          color: greyColor,
+                                          size: 30,
+                                          duration:
+                                              Duration(milliseconds: 1000),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Positioned(
+                                    top: 15,
+                                    right: 15,
+                                    child: IconButton(
+                                      onPressed: () => Get.back(),
+                                      splashColor: blueColor,
+                                      splashRadius: 30,
+                                      icon: const Icon(
+                                        Ionicons.close_circle_outline,
+                                        size: 30,
+                                        color: whiteColor,
+                                        shadows: [
+                                          BoxShadow(
+                                            offset: Offset(0, 0),
+                                            blurRadius: 15,
+                                            spreadRadius: 15,
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                            child: Container(
-                              height: size.width * 0.25,
-                              width: size.width * 0.25,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(100),
+                                ],
                               ),
-                              padding: const EdgeInsets.all(3),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl: profileImage,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      Ionicons.alert_circle,
-                                      size: 30,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Center(
-                                      child: SpinKitFadingCircle(
-                                        color: lightBlackColor,
-                                        size: 30,
-                                        duration: Duration(milliseconds: 1000),
-                                      ),
-                                    );
-                                  },
+                            ),
+                          );
+                        },
+                      ),
+                      child: Container(
+                        height: size.width * 0.25,
+                        width: size.width * 0.25,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        padding: const EdgeInsets.all(3),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: CachedNetworkImage(
+                            imageUrl: profileImage,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                Ionicons.alert_circle,
+                                size: 30,
+                                color: redColor,
+                              );
+                            },
+                            placeholder: (context, url) {
+                              return const Center(
+                                child: SpinKitFadingCircle(
+                                  color: lightBlackColor,
+                                  size: 30,
+                                  duration: Duration(milliseconds: 1000),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
-                ],
-              ),
+                      ),
+                    ),
               const SizedBox(
                 height: 15,
               ),

@@ -63,7 +63,14 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
               );
             }
             var data = snapshot.data!['subCat'];
-            return ListView.builder(
+            return ListView.separated(
+              separatorBuilder: (context, index) {
+                return const Divider(
+                  height: 0,
+                  color: fadedColor,
+                  indent: 15,
+                );
+              },
               scrollDirection: Axis.vertical,
               physics: const ClampingScrollPhysics(),
               itemCount: data.length,

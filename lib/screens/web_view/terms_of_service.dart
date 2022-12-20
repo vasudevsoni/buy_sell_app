@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,12 +11,23 @@ class TermsOfService extends StatefulWidget {
 }
 
 class _TermsOfServiceState extends State<TermsOfService> {
-  @override
-  void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-    super.initState();
-  }
-
+  final WebViewController controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.disabled)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://www.bechdeapp.com')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://www.bechdeapp.com/terms'));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +47,8 @@ class _TermsOfServiceState extends State<TermsOfService> {
           ),
         ),
       ),
-      body: const WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: 'https://www.bechdeapp.com/terms',
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

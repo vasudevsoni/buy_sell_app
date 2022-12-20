@@ -94,7 +94,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    color: blueColor,
+                    color: blackColor,
                     child: Row(
                       children: [
                         SizedBox(

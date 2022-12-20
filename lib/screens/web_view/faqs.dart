@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,11 +11,23 @@ class FAQs extends StatefulWidget {
 }
 
 class _FAQsState extends State<FAQs> {
-  @override
-  void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-    super.initState();
-  }
+  final WebViewController controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.disabled)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://www.bechdeapp.com')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://www.bechdeapp.com/faqs'));
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +39,8 @@ class _FAQsState extends State<FAQs> {
         elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
       ),
-      body: const WebView(
-        javascriptMode: JavascriptMode.disabled,
-        initialUrl: 'https://www.bechdeapp.com/faqs',
+      body: WebViewWidget(
+        controller: controller,
       ),
     );
   }

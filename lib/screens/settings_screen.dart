@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../widgets/custom_button_without_icon.dart';
 import '/auth/screens/location_screen.dart';
@@ -11,6 +10,7 @@ import '/widgets/custom_list_tile_with_subtitle.dart';
 import '/services/firebase_services.dart';
 import '/auth/screens/landing_screen.dart';
 import '/utils/utils.dart';
+import 'update_profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -184,8 +184,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Location',
-              subTitle: address == '' ? 'No location selected' : address,
+              text: 'Edit Profile',
+              icon: Ionicons.create,
+              subTitle: 'Edit your name, bio or add social links',
+              trailingIcon: Ionicons.chevron_forward,
+              onTap: () => Get.to(
+                () => const UpdateProfileScreen(),
+              ),
+              isEnabled: true,
+            ),
+            CustomListTileWithSubtitle(
+              text: 'Change Location',
+              subTitle: address == ''
+                  ? 'No location selected'
+                  : 'Current location - $address',
               icon: Ionicons.location,
               trailingIcon: Ionicons.chevron_forward,
               onTap: () => Get.to(
@@ -206,7 +218,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             if (signInMethod == 'password')
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
-                subTitle: 'Email Address',
+                subTitle: 'Email',
                 icon: Ionicons.log_in,
                 isEnabled: false,
                 onTap: () {},
@@ -247,18 +259,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 inAppReview.openStoreListing();
               },
             ),
-
-            CustomListTileWithSubtitle(
-              text: 'Invite friends to BechDe',
-              subTitle: 'Invite your friends to buy and sell on BechDe',
-              icon: Ionicons.people,
-              trailingIcon: Ionicons.chevron_forward,
-              isEnabled: true,
-              onTap: () {
-                Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
-              },
-            ),
+            // CustomListTileWithSubtitle(
+            //   text: 'Invite friends to BechDe',
+            //   subTitle: 'Invite your friends to buy and sell on BechDe',
+            //   icon: Ionicons.people,
+            //   trailingIcon: Ionicons.chevron_forward,
+            //   isEnabled: true,
+            //   onTap: () {
+            //     Share.share(
+            //         'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
+            //   },
+            // ),
             CustomListTileWithSubtitle(
               text: 'Log out',
               subTitle: 'Log out of your account from this device',

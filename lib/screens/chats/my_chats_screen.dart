@@ -67,7 +67,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             iconTheme: const IconThemeData(color: blackColor),
             centerTitle: true,
             title: const Text(
-              'Messages',
+              'Inbox',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: blackColor,

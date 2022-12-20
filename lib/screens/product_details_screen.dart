@@ -352,7 +352,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: CustomButton(
-                      icon: Ionicons.shield_half,
+                      icon: Ionicons.flag,
                       text: 'Report Product',
                       onPressed: () {
                         Get.back();
@@ -722,7 +722,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           shape: BoxShape.circle,
                                           color: currentImage == index
                                               ? blueColor
-                                              : lightBlackColor,
+                                              : greyColor,
                                         ),
                                       );
                                     }).toList(),
@@ -733,7 +733,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 15, right: 15, top: 15),
+                            left: 15,
+                            right: 15,
+                            top: 15,
+                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -756,6 +759,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                               ),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Icon(
                                     Ionicons.eye_outline,
@@ -780,6 +784,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 width: 10,
                               ),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Icon(
                                     Ionicons.heart_outline,
@@ -831,7 +836,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               const Icon(
-                                Ionicons.list,
+                                Ionicons.list_outline,
                                 size: 15,
                                 color: lightBlackColor,
                               ),
@@ -879,7 +884,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               const Icon(
-                                Ionicons.location,
+                                Ionicons.location_outline,
                                 size: 15,
                                 color: lightBlackColor,
                               ),
@@ -907,7 +912,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               const Icon(
-                                Ionicons.time,
+                                Ionicons.time_outline,
                                 size: 15,
                                 color: lightBlackColor,
                               ),
@@ -1292,7 +1297,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 MainAxisAlignment.start,
                                             children: [
                                               const Icon(
-                                                Ionicons.speedometer,
+                                                Ionicons.car_sport,
                                                 size: 15,
                                                 color: blueColor,
                                               ),
@@ -1457,18 +1462,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     ),
                                   ],
                                 ),
-                                // MarkerLayer(
-                                //   markers: [
-                                //     Marker(
-                                //       point: LatLng(51.509364, -0.128928),
-                                //       builder: (context) => const Icon(
-                                //         Ionicons.location,
-                                //         size: 40,
-                                //         color: blackColor,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               ],
                             ),
                           ),

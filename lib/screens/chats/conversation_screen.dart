@@ -413,39 +413,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
       appBar: AppBar(
         elevation: 0.2,
         actions: [
-          Container(
-            margin:
-                const EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 10),
-            decoration: const BoxDecoration(
-              color: greyColor,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) {
-                  return const Icon(
-                    Ionicons.alert_circle,
-                    size: 15,
-                    color: redColor,
-                  );
-                },
-                placeholder: (context, url) {
-                  return const Icon(
-                    Ionicons.image,
-                    size: 15,
-                    color: lightBlackColor,
-                  );
-                },
-              ),
-            ),
-          ),
           GestureDetector(
             onTap: showDeleteDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              Ionicons.trash_bin,
+              Ionicons.trash_outline,
               color: redColor,
               size: 25,
             ),
@@ -492,40 +464,66 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                     ),
                     child: Container(
-                      color: blueColor,
-                      height: 40,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
+                      color: blackColor,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Text(
-                              title,
-                              maxLines: 1,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: whiteColor,
+                          SizedBox(
+                            width: size.width * 0.20,
+                            height: size.width * 0.20,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      Ionicons.alert_circle,
+                                      size: 15,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(
+                                      Ionicons.image,
+                                      size: 15,
+                                      color: lightBlackColor,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              priceFormat.format(price),
-                              maxLines: 1,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                                color: whiteColor,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  priceFormat.format(price),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -639,7 +637,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           vertical: 5,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: blueColor,
+                                          color: greenColor,
                                           borderRadius: sentBy == me
                                               ? const BorderRadius.only(
                                                   topLeft: Radius.circular(10),
@@ -658,31 +656,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                                       Radius.circular(10),
                                                 ),
                                         ),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              sentBy == me
-                                                  ? 'YOUR OFFER'
-                                                  : 'BUYER\'S OFFER',
-                                              style: const TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              snapshot.data!.docs[index]
-                                                  ['message'],
-                                              style: const TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ],
+                                        child: Text(
+                                          snapshot.data!.docs[index]['message'],
+                                          style: const TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                     )
@@ -740,60 +720,34 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: sentBy == me
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              time,
-                                              style: const TextStyle(
-                                                color: blackColor,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              date,
-                                              style: const TextStyle(
-                                                color: fadedColor,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              date,
-                                              style: const TextStyle(
-                                                color: fadedColor,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              time,
-                                              style: const TextStyle(
-                                                color: blackColor,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: Row(
+                                      mainAxisAlignment: sentBy == me
+                                          ? MainAxisAlignment.end
+                                          : MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          time,
+                                          style: const TextStyle(
+                                            color: blackColor,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                ),
+                                        const SizedBox(
+                                          width: 3,
+                                        ),
+                                        Text(
+                                          date,
+                                          style: const TextStyle(
+                                            color: fadedColor,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                               ),
                               const SizedBox(
                                 height: 2,
@@ -818,7 +772,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ActionChip(
                             pressElevation: 5,
                             label: const Text('Make offer'),
-                            backgroundColor: blueColor,
+                            backgroundColor: greenColor,
                             labelStyle: const TextStyle(
                               color: whiteColor,
                               fontWeight: FontWeight.w600,
@@ -942,25 +896,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 maxLength: 500,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: FloatingActionButton(
-                                onPressed: () {
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Tooltip(
+                              message: 'Send message',
+                              child: GestureDetector(
+                                onTap: () {
                                   if (chatMessageController.text.isNotEmpty) {
                                     sendMessage(chatMessageController.text);
                                   }
                                 },
-                                tooltip: 'Send message',
-                                backgroundColor: blueColor,
-                                elevation: 0,
-                                highlightElevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
                                 child: const Icon(
                                   Ionicons.send,
                                   size: 25,
-                                  color: whiteColor,
+                                  color: blueColor,
                                 ),
                               ),
                             ),

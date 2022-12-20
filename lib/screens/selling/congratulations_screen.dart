@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -113,19 +112,19 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   ),
                 ),
                 const Spacer(),
-                CustomButton(
-                  text: 'Invite your Friends',
-                  onPressed: () => Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
-                  ),
-                  icon: Ionicons.share_social,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                // CustomButton(
+                //   text: 'Invite your Friends',
+                //   onPressed: () => Share.share(
+                //     'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
+                //   ),
+                //   icon: Ionicons.share_social,
+                //   bgColor: blackColor,
+                //   borderColor: blackColor,
+                //   textIconColor: whiteColor,
+                // ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
                 CustomButton(
                   text: 'Go to Home',
                   onPressed: () =>
