@@ -374,17 +374,35 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     ),
                   ),
                 ),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => widget.tabBarController.animateTo(2),
-                  child: const Text(
-                    'See all',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                      color: blueColor,
-                    ),
+                ActionChip(
+                  label: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'See all',
+                        style: TextStyle(
+                          color: blueColor,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Icon(
+                        Ionicons.arrow_forward,
+                        color: blueColor,
+                        size: 12,
+                      ),
+                    ],
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  side: const BorderSide(
+                    color: blueColor,
+                  ),
+                  backgroundColor: whiteColor,
+                  onPressed: () => widget.tabBarController.animateTo(2),
                 ),
               ],
             ),
@@ -599,17 +617,35 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     ),
                   ),
                 ),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => widget.tabBarController.animateTo(2),
-                  child: const Text(
-                    'See all',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                      color: blueColor,
-                    ),
+                ActionChip(
+                  label: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'See all',
+                        style: TextStyle(
+                          color: blueColor,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Icon(
+                        Ionicons.arrow_forward,
+                        color: blueColor,
+                        size: 12,
+                      ),
+                    ],
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  side: const BorderSide(
+                    color: blueColor,
+                  ),
+                  backgroundColor: whiteColor,
+                  onPressed: () => widget.tabBarController.animateTo(2),
                 ),
               ],
             ),
