@@ -77,7 +77,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ? profileImage = ''
             : profileImage = widget.sellerData['profileImage'];
         location =
-            '${widget.productData['location']['street']}, ${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
+            '${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
         latitude = widget.productData['location']['latitude'];
         longitude = widget.productData['location']['longitude'];
       });

@@ -53,440 +53,430 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
-      child: WillPopScope(
-        onWillPop: () async {
-          mainProv.switchToPage(0);
-          return false;
-        },
-        child: Scaffold(
+      child: Scaffold(
+        backgroundColor: whiteColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: whiteColor,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: whiteColor,
-            elevation: 0.2,
-            iconTheme: const IconThemeData(color: blackColor),
-            centerTitle: true,
-            title: const Text(
-              'Inbox',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: blackColor,
-                fontSize: 15,
-              ),
-            ),
-            bottom: TabBar(
-              indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: blueColor,
-              indicatorWeight: 3,
-              splashBorderRadius: BorderRadius.circular(10),
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                fontFamily: 'SFProDisplay',
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                fontFamily: 'SFProDisplay',
-              ),
-              labelColor: blackColor,
-              unselectedLabelColor: lightBlackColor,
-              tabs: const [
-                Tab(child: Text('All')),
-                Tab(child: Text('Buying')),
-                Tab(child: Text('Selling')),
-              ],
+          elevation: 0.2,
+          iconTheme: const IconThemeData(color: blackColor),
+          centerTitle: true,
+          title: const Text(
+            'Inbox',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: blackColor,
+              fontSize: 15,
             ),
           ),
-          body: TabBarView(
-            physics: const ClampingScrollPhysics(),
-            children: [
-              StreamBuilder<QuerySnapshot>(
-                stream: _services.chats
-                    .where('users', arrayContains: _services.user!.uid)
-                    .snapshots(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text(
-                          'Something has gone wrong. Please try again',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasData && snapshot.data!.size == 0) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          height: size.height * 0.3,
-                          width: size.width,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: greyColor,
-                          ),
-                          child: const SVGPictureWidget(
-                            url:
-                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
-                            fit: BoxFit.contain,
-                            semanticsLabel: 'Empty messages image',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'You have got no messages!',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'When you chat with a seller, it will show here.',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          child: CustomButtonWithoutIcon(
-                            text: 'Explore Products',
-                            onPressed: () => setState(() {
-                              mainProv.switchToPage(0);
-                            }),
-                            bgColor: blueColor,
-                            borderColor: blueColor,
-                            textIconColor: whiteColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: fadedColor,
-                        height: 0,
-                        indent: 15,
-                        endIndent: 15,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      final Map<String, dynamic> data =
-                          snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>;
-                      return ChatCard(chatData: data);
-                    },
-                    itemCount: snapshot.data!.docs.length,
-                    physics: const ClampingScrollPhysics(),
-                  );
-                },
-              ),
-              StreamBuilder<QuerySnapshot>(
-                stream: _services.chats
-                    .where('users', arrayContains: _services.user!.uid)
-                    .where('product.seller', isNotEqualTo: _services.user!.uid)
-                    .snapshots(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text(
-                          'Something has gone wrong. Please try again',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasData && snapshot.data!.size == 0) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          height: size.height * 0.3,
-                          width: size.width,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: greyColor,
-                          ),
-                          child: const SVGPictureWidget(
-                            url:
-                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
-                            fit: BoxFit.contain,
-                            semanticsLabel: 'Empty messages image',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'You have got no messages!',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'When you chat with a seller, it will show here.',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          child: CustomButtonWithoutIcon(
-                            text: 'Explore Products',
-                            onPressed: () => setState(() {
-                              mainProv.switchToPage(0);
-                            }),
-                            bgColor: blueColor,
-                            borderColor: blueColor,
-                            textIconColor: whiteColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: fadedColor,
-                        height: 0,
-                        indent: 15,
-                        endIndent: 15,
-                      );
-                    },
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final Map<String, dynamic> data =
-                          snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>;
-                      return ChatCard(chatData: data);
-                    },
-                    itemCount: snapshot.data!.docs.length,
-                  );
-                },
-              ),
-              StreamBuilder<QuerySnapshot>(
-                stream: _services.chats
-                    .where('users', arrayContains: _services.user!.uid)
-                    .where('product.seller', isEqualTo: _services.user!.uid)
-                    .snapshots(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text(
-                          'Something has gone wrong. Please try again',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasData && snapshot.data!.size == 0) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          height: size.height * 0.3,
-                          width: size.width,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: greyColor,
-                          ),
-                          child: const SVGPictureWidget(
-                            url:
-                                'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
-                            fit: BoxFit.contain,
-                            semanticsLabel: 'Empty messages image',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'You have got no messages!',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'When someone sends you a message, it will show here.',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          child: CustomButtonWithoutIcon(
-                            text: 'Start Selling',
-                            onPressed: !user!.emailVerified &&
-                                    user!.providerData[0].providerId ==
-                                        'password'
-                                ? () => Get.to(
-                                      () => const EmailVerificationScreen(),
-                                    )
-                                : onSellButtonClicked,
-                            bgColor: blueColor,
-                            borderColor: blueColor,
-                            textIconColor: whiteColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Center(
-                        child: SpinKitFadingCircle(
-                          color: lightBlackColor,
-                          size: 30,
-                          duration: Duration(milliseconds: 1000),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: fadedColor,
-                        height: 0,
-                        indent: 15,
-                        endIndent: 15,
-                      );
-                    },
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final Map<String, dynamic> data =
-                          snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>;
-                      return ChatCard(chatData: data);
-                    },
-                    itemCount: snapshot.data!.docs.length,
-                  );
-                },
-              ),
+          bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: blueColor,
+            indicatorWeight: 3,
+            splashBorderRadius: BorderRadius.circular(10),
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              fontFamily: 'SFProDisplay',
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              fontFamily: 'SFProDisplay',
+            ),
+            labelColor: blackColor,
+            unselectedLabelColor: lightBlackColor,
+            tabs: const [
+              Tab(child: Text('All')),
+              Tab(child: Text('Buying')),
+              Tab(child: Text('Selling')),
             ],
           ),
+        ),
+        body: TabBarView(
+          physics: const ClampingScrollPhysics(),
+          children: [
+            StreamBuilder<QuerySnapshot>(
+              stream: _services.chats
+                  .where('users', arrayContains: _services.user!.uid)
+                  .snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        'Something has gone wrong. Please try again',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: size.height * 0.3,
+                        width: size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: const SVGPictureWidget(
+                          url:
+                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                          fit: BoxFit.contain,
+                          semanticsLabel: 'Empty messages image',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When you chat with a seller, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Explore Products',
+                          onPressed: () => setState(() {
+                            mainProv.switchToPage(0);
+                          }),
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Center(
+                      child: SpinKitFadingCircle(
+                        color: lightBlackColor,
+                        size: 30,
+                        duration: Duration(milliseconds: 1000),
+                      ),
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    final Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
+                  physics: const ClampingScrollPhysics(),
+                );
+              },
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _services.chats
+                  .where('users', arrayContains: _services.user!.uid)
+                  .where('product.seller', isNotEqualTo: _services.user!.uid)
+                  .snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        'Something has gone wrong. Please try again',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: size.height * 0.3,
+                        width: size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: const SVGPictureWidget(
+                          url:
+                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                          fit: BoxFit.contain,
+                          semanticsLabel: 'Empty messages image',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When you chat with a seller, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Explore Products',
+                          onPressed: () => setState(() {
+                            mainProv.switchToPage(0);
+                          }),
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Center(
+                      child: SpinKitFadingCircle(
+                        color: lightBlackColor,
+                        size: 30,
+                        duration: Duration(milliseconds: 1000),
+                      ),
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
+                    );
+                  },
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
+                );
+              },
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _services.chats
+                  .where('users', arrayContains: _services.user!.uid)
+                  .where('product.seller', isEqualTo: _services.user!.uid)
+                  .snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        'Something has gone wrong. Please try again',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data!.size == 0) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(15),
+                        height: size.height * 0.3,
+                        width: size.width,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: greyColor,
+                        ),
+                        child: const SVGPictureWidget(
+                          url:
+                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                          fit: BoxFit.contain,
+                          semanticsLabel: 'Empty messages image',
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'You have got no messages!',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'When someone sends you a message, it will show here.',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: CustomButtonWithoutIcon(
+                          text: 'Start Selling',
+                          onPressed: !user!.emailVerified &&
+                                  user!.providerData[0].providerId == 'password'
+                              ? () => Get.to(
+                                    () => const EmailVerificationScreen(),
+                                  )
+                              : onSellButtonClicked,
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Center(
+                      child: SpinKitFadingCircle(
+                        color: lightBlackColor,
+                        size: 30,
+                        duration: Duration(milliseconds: 1000),
+                      ),
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: fadedColor,
+                      height: 0,
+                      indent: 15,
+                      endIndent: 15,
+                    );
+                  },
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final Map<String, dynamic> data = snapshot.data!.docs[index]
+                        .data() as Map<String, dynamic>;
+                    return ChatCard(chatData: data);
+                  },
+                  itemCount: snapshot.data!.docs.length,
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

@@ -190,7 +190,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      '${widget.data['location']['street']}, ${widget.data['location']['area']}',
+                                      '${widget.data['location']['area']}, ${widget.data['location']['city']}',
                                       maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,

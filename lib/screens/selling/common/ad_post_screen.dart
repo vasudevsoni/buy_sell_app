@@ -43,7 +43,6 @@ class _AdPostScreenState extends State<AdPostScreen> {
   final FirebaseServices _services = FirebaseServices();
   double latitude = 0;
   double longitude = 0;
-  String street = '';
   String area = '';
   String city = '';
   String state = '';
@@ -59,8 +58,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
       if (mounted) {
         setState(() {
           locationController.text =
-              '${value['location']['street']}, ${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-          street = value['location']['street'];
+              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
           area = value['location']['area'];
           city = value['location']['city'];
           state = value['location']['state'];
@@ -504,7 +502,6 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         'location': {
                           'latitude': latitude,
                           'longitude': longitude,
-                          'street': street,
                           'area': area,
                           'city': city,
                           'state': state,

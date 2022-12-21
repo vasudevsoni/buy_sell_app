@@ -41,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen>
   String state = '';
   bool isLocationEmpty = false;
 
+  late DateTime currentBackPressTime;
+
   @override
   void initState() {
     tabBarController = TabController(

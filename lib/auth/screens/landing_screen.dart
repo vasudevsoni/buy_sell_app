@@ -343,19 +343,23 @@ class _LandingScreenState extends State<LandingScreen> {
                         }
                         User? user =
                             await GoogleAuthentication.signinWithGoogle();
-                        if (user == null) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                          return;
-                        }
                         //login successful, add user to db and proceed
-                        final SocialAuthService auth = SocialAuthService();
-                        auth.addUser(user);
-                        if (mounted) {
-                          setState(() {
-                            isLoading = false;
-                          });
+                        if (user != null) {
+                          final SocialAuthService auth = SocialAuthService();
+                          await auth.addUser(user);
+                          if (mounted) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                          return;
+                        } else {
+                          if (mounted) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                          return;
                         }
                       },
                     ),

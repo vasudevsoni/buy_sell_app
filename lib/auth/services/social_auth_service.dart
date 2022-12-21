@@ -17,7 +17,7 @@ class SocialAuthService {
     //if user does not exists in database, add her and then navigate to main screen
     if (document.isEmpty) {
       try {
-        return users.doc(user.uid).set({
+        await users.doc(user.uid).set({
           'uid': user.uid,
           'mobile': null,
           'email': user.providerData[0].email,
@@ -31,18 +31,21 @@ class SocialAuthService {
           'websiteLink': null,
           // 'followers': [],
           // 'following': [],
-        }).then((value) {
-          Get.offAll(() => const MainScreen(selectedIndex: 0));
         });
+        Get.offAll(() => const MainScreen(selectedIndex: 0));
+        return;
       } on FirebaseAuthException catch (_) {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
           color: redColor,
         );
+        return;
       }
-      return;
     }
     //if user already exists in database, just navigate her to main screen
-    Get.offAll(() => const MainScreen(selectedIndex: 0));
+    if (document.isNotEmpty) {
+      Get.offAll(() => const MainScreen(selectedIndex: 0));
+      return;
+    }
   }
 }
