@@ -141,7 +141,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       fontSize: 18,
                     ),
                   ),

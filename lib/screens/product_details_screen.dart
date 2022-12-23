@@ -409,7 +409,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       style: TextStyle(
                         color: blackColor,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(
@@ -523,7 +523,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: whiteColor,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -694,7 +694,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   child: Text(
                                     '${currentImage + 1}/${widget.productData['images'].length}',
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: whiteColor,
                                       fontSize: 12,
                                     ),
@@ -749,7 +749,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w700,
                                     color: blackColor,
                                     fontSize: 17,
                                     decoration: isSold
@@ -767,14 +767,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: blueColor,
                                   ),
                                   const SizedBox(
-                                    width: 3,
+                                    width: 5,
                                   ),
                                   Text(
                                     numberFormat.format(
                                         widget.productData['views'].length),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       color: blackColor,
                                     ),
                                   ),
@@ -792,14 +792,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: redColor,
                                   ),
                                   const SizedBox(
-                                    width: 3,
+                                    width: 5,
                                   ),
                                   Text(
                                     numberFormat.format(
                                         widget.productData['favorites'].length),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       color: blackColor,
                                     ),
                                   ),
@@ -864,14 +864,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w500,
                                           color: blueColor,
-                                          fontSize: 14,
+                                          fontSize: 13,
                                         ),
                                       ),
                                     ],
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: lightBlackColor,
-                                      fontSize: 14,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ),
@@ -900,7 +900,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: lightBlackColor,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   ),
                                 ),
                               ),
@@ -928,7 +928,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: lightBlackColor,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   ),
                                 ),
                               ),
@@ -1053,7 +1053,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      'About this product',
+                                      'About this vehicle',
                                       maxLines: 1,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
@@ -1089,7 +1089,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               Expanded(
@@ -1103,7 +1103,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     color: blackColor,
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                   ),
                                                 ),
                                               ),
@@ -1123,7 +1123,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               Expanded(
@@ -1137,7 +1137,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     color: blackColor,
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                   ),
                                                 ),
                                               ),
@@ -1157,7 +1157,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               Expanded(
@@ -1170,7 +1170,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     color: blackColor,
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                   ),
                                                 ),
                                               ),
@@ -1199,7 +1199,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -1209,7 +1209,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: blackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ],
@@ -1236,7 +1236,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -1245,7 +1245,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: blackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ],
@@ -1272,7 +1272,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -1282,7 +1282,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: blackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ],
@@ -1309,7 +1309,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: lightBlackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -1324,7 +1324,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   color: blackColor,
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                 ),
                                               ),
                                             ],
@@ -1348,7 +1348,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
-                            'Product description from the seller',
+                            'Description',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
@@ -1388,7 +1388,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: blackColor,
-                                fontSize: 15,
+                                fontSize: 14,
                               ),
                             ),
                           ),
@@ -1436,7 +1436,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               nonRotatedChildren: [
                                 AttributionWidget.defaultWidget(
-                                  source: 'OpenStreetMap contributors',
+                                  source: 'OpenStreetMap',
                                 ),
                               ],
                               children: [
@@ -1581,7 +1581,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       color: blackColor,
-                                                      fontSize: 15,
+                                                      fontSize: 14,
                                                     ),
                                                   ),
                                                 )
@@ -1597,7 +1597,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       fontWeight:
                                                           FontWeight.w500,
                                                       color: blackColor,
-                                                      fontSize: 15,
+                                                      fontSize: 14,
                                                     ),
                                                   ),
                                                 ),
@@ -1606,7 +1606,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w500,
                                               color: fadedColor,
-                                              fontSize: 13,
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ],

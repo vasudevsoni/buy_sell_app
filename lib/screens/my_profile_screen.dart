@@ -333,7 +333,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   style: const TextStyle(
                     color: blackColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -412,7 +412,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   style: const TextStyle(
                     color: lightBlackColor,
                     fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -427,12 +427,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     style: const TextStyle(
                       color: lightBlackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 ),
               const SizedBox(
-                height: 20,
+                height: 15,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -450,7 +450,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       style: TextStyle(
                         color: blackColor,
                         fontWeight: FontWeight.w700,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                     const SizedBox(
@@ -462,7 +462,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       style: TextStyle(
                         color: lightBlackColor,
                         fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                        fontSize: 13,
                       ),
                     ),
                     const SizedBox(
@@ -492,7 +492,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: Ionicons.albums_outline,
+                      url:
+                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fmy-listings.png?alt=media&token=4f365c98-668b-40a5-a40a-16ab778f9d3b',
                       text: 'My Listings',
                       onTap: () => Get.to(
                         () => const MyListingsScreen(),
@@ -502,7 +503,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: Ionicons.cog_outline,
+                      url:
+                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fsettings.png?alt=media&token=739c3c6e-10fc-4538-b3e7-86a99f559303',
                       text: 'Settings',
                       onTap: () => Get.to(
                         () => const SettingsScreen(),
@@ -517,8 +519,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      iconColor: blackColor,
-                      icon: Ionicons.headset_outline,
+                      url:
+                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fhelp.png?alt=media&token=f09f3d38-e8b7-4f41-8b05-679e5dbb3295',
                       text: 'Help & Support',
                       onTap: () => Get.to(
                         () => const HelpAndSupportScreen(),
@@ -528,8 +530,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: Ionicons.star_outline,
-                      iconColor: blueColor,
+                      url:
+                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Freview.png?alt=media&token=fb33bc9b-a414-49a6-9856-71163b3f04ed',
                       text: 'Leave a Review',
                       onTap: () {
                         inAppReview.openStoreListing();
@@ -566,7 +568,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           'Made with ',
                           style: TextStyle(
                             fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             color: lightBlackColor,
                           ),
                         ),
@@ -579,7 +581,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ' in India',
                           style: TextStyle(
                             fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             color: lightBlackColor,
                           ),
                         ),
@@ -600,16 +602,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 }
 
 class MyProfileItemWidget extends StatelessWidget {
-  final IconData icon;
+  final String url;
   final String text;
   final void Function()? onTap;
-  final Color? iconColor;
   const MyProfileItemWidget({
     Key? key,
-    required this.icon,
+    required this.url,
     required this.text,
     required this.onTap,
-    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -619,7 +619,7 @@ class MyProfileItemWidget extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
-          height: 90,
+          height: 100,
           padding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 5,
@@ -636,10 +636,19 @@ class MyProfileItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(
-                icon,
-                size: 30,
-                color: iconColor,
+              Expanded(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              // Icon(
+              //   icon,
+              //   size: 30,
+              //   color: iconColor,
+              // ),
+              const SizedBox(
+                height: 5,
               ),
               AutoSizeText(
                 text,
@@ -647,7 +656,7 @@ class MyProfileItemWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
                 style: const TextStyle(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),

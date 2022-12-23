@@ -75,53 +75,53 @@ class _TimerButtonState extends State<TimerButton> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return timeUpFlag
-        ? GestureDetector(
-            onTap: _onPressed,
-            child: Container(
-              height: 45,
-              width: size.width,
-              decoration: BoxDecoration(
+        ? ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.color,
+              elevation: 0,
+              splashFactory: InkRipple.splashFactory,
+              enableFeedback: true,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
-                color: widget.color,
               ),
-              child: Center(
-                child: AutoSizeText(
-                  widget.label,
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.5,
-                    color: whiteColor,
-                  ),
-                ),
+              fixedSize: Size(size.width, 45),
+            ),
+            onPressed: _onPressed,
+            child: AutoSizeText(
+              widget.label,
+              maxLines: 2,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: whiteColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.5,
               ),
             ),
           )
-        : GestureDetector(
-            onTap: null,
-            child: Container(
-              height: 45,
-              width: size.width,
-              decoration: BoxDecoration(
+        : ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.disabledColor,
+              elevation: 0,
+              splashFactory: InkRipple.splashFactory,
+              enableFeedback: true,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
-                color: widget.disabledColor,
               ),
-              child: Center(
-                child: AutoSizeText(
-                  'Please wait for $_timerText',
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.5,
-                    color: blackColor,
-                  ),
-                ),
+              fixedSize: Size(size.width, 45),
+            ),
+            onPressed: null,
+            child: AutoSizeText(
+              'Please wait for $_timerText',
+              maxLines: 2,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: whiteColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.5,
               ),
             ),
           );

@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
       title: 'BechDe',
       color: blueColor,
       themeMode: ThemeMode.light,
-      theme: ThemeData(fontFamily: 'SFProDisplay'),
+      theme: ThemeData(fontFamily: 'Rubik'),
       debugShowCheckedModeBanner: false,
       home: const LoadingScreen(),
       onUnknownRoute: (RouteSettings settings) {

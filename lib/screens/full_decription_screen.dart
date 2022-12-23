@@ -36,7 +36,7 @@ class FullDescriptionScreen extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               color: blackColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         ),

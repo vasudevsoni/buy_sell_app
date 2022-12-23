@@ -238,9 +238,9 @@ class _LandingScreenState extends State<LandingScreen> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                             color: lightBlackColor,
-                            fontSize: 18,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -308,7 +308,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: lightBlackColor,
-                        fontSize: 12,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -404,23 +404,23 @@ class _LandingScreenState extends State<LandingScreen> {
                               transition: Transition.downToUp,
                             ),
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                         decoration: TextDecoration.underline,
                         decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
-                    const TextSpan(text: ' and'),
+                    const TextSpan(text: ' and '),
                     TextSpan(
-                      text: ' Privacy Policy',
+                      text: 'Privacy Policy',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () => Get.to(
                               () => const PrivacyPolicy(),
                               transition: Transition.downToUp,
                             ),
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                         decoration: TextDecoration.underline,
@@ -429,7 +429,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                   ],
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 9,
                     fontWeight: FontWeight.w400,
                     color: blackColor,
                   ),

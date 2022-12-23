@@ -16,7 +16,7 @@ void showSnackBar({
         overflow: TextOverflow.ellipsis,
         softWrap: true,
         style: const TextStyle(
-          fontSize: 15,
+          fontSize: 13,
           fontWeight: FontWeight.w600,
           color: whiteColor,
         ),

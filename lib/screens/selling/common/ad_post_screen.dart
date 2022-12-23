@@ -360,7 +360,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                             '+${(provider.imagesCount - 1).toString()}',
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
-                                              fontWeight: FontWeight.w900,
+                                              fontWeight: FontWeight.w800,
                                               fontSize: 30,
                                               color: whiteColor,
                                               shadows: [

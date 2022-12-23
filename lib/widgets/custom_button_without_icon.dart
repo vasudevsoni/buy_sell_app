@@ -22,37 +22,38 @@ class CustomButtonWithoutIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    final size = MediaQuery.of(context).size;
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        elevation: 0,
+        splashFactory: InkRipple.splashFactory,
+        enableFeedback: true,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        fixedSize: Size(size.width, 45),
+        side: BorderSide(
+          color: borderColor,
+          strokeAlign: StrokeAlign.center,
+          width: 1.2,
+        ),
+      ),
+      onPressed: () {
         HapticFeedback.vibrate();
         onPressed();
       },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 45,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: borderColor,
-            strokeAlign: StrokeAlign.center,
-            width: 1.2,
-          ),
-          color: bgColor,
-        ),
-        child: Center(
-          child: AutoSizeText(
-            text,
-            maxLines: 2,
-            softWrap: true,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 14.5,
-              color: textIconColor,
-            ),
-          ),
+      child: AutoSizeText(
+        text,
+        maxLines: 2,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: textIconColor,
+          fontWeight: FontWeight.w600,
+          fontSize: 14.5,
         ),
       ),
     );

@@ -8,23 +8,9 @@ class MyFavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: whiteColor,
-      appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: whiteColor,
-        iconTheme: const IconThemeData(color: blackColor),
-        centerTitle: true,
-        title: const Text(
-          'My favorites',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: blackColor,
-            fontSize: 15,
-          ),
-        ),
-      ),
-      body: const MyFavoritesProductsList(),
+      body: MyFavoritesProductsList(),
     );
   }
 }

@@ -76,13 +76,13 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             splashBorderRadius: BorderRadius.circular(10),
             labelStyle: const TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
-              fontFamily: 'SFProDisplay',
+              fontSize: 13,
+              fontFamily: 'Rubik',
             ),
             unselectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
-              fontFamily: 'SFProDisplay',
+              fontSize: 13,
+              fontFamily: 'Rubik',
             ),
             labelColor: blackColor,
             unselectedLabelColor: lightBlackColor,
@@ -149,25 +149,23 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          'When you chat with a seller, it will show here.',
+                          'When you chat with a seller, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
+                            color: lightBlackColor,
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -275,25 +273,23 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          'When you chat with a seller, it will show here.',
+                          'When you chat with a seller, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
+                            color: lightBlackColor,
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -401,25 +397,23 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
-                          'When someone sends you a message, it will show here.',
+                          'When someone sends you a message, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
+                            color: lightBlackColor,
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -718,7 +712,7 @@ class _ChatCardState extends State<ChatCard> {
                               softWrap: true,
                               style: widget.chatData['read'] == false
                                   ? const TextStyle(
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.w600,
                                       color: blueColor,
                                       fontSize: 14,
                                     )
@@ -776,9 +770,9 @@ class _ChatCardState extends State<ChatCard> {
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                       color: lightBlackColor,
-                                      fontSize: 13,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),

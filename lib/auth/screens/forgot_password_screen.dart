@@ -108,7 +108,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   color: lightBlackColor,
-                  fontSize: 14,
+                  fontSize: 13,
                 ),
               ),
               const Spacer(),

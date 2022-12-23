@@ -268,7 +268,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                     index == 0 ? 'Cover' : '${index + 1}',
                                     style: const TextStyle(
                                       color: whiteColor,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -297,7 +298,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                       ),
                                       child: const Icon(
                                         Ionicons.close,
-                                        size: 20,
+                                        size: 18,
                                         color: whiteColor,
                                       ),
                                     ),

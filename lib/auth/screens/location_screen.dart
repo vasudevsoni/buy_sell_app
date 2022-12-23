@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/widgets/custom_button_without_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
@@ -148,7 +149,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 'Set your location to get nearby product recommendations and to sell your own products',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
@@ -160,9 +161,9 @@ class _LocationScreenState extends State<LocationScreen> {
               child: Text(
                 'To enjoy all that we have to offer, we need to know where to look for them',
                 style: TextStyle(
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   color: lightBlackColor,
-                  fontSize: 14,
+                  fontSize: 13,
                 ),
               ),
             ),
@@ -244,9 +245,8 @@ class _LocationScreenState extends State<LocationScreen> {
                 right: 15,
                 bottom: 15,
               ),
-              child: CustomButton(
+              child: CustomButtonWithoutIcon(
                 text: 'Skip',
-                icon: Ionicons.play_skip_forward,
                 bgColor: whiteColor,
                 borderColor: blackColor,
                 textIconColor: blackColor,

@@ -474,7 +474,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: const TextStyle(
                     color: blackColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -551,7 +551,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: const TextStyle(
                     color: lightBlackColor,
                     fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -566,7 +566,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: const TextStyle(
                       color: lightBlackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 ),

@@ -81,8 +81,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 'Actions',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
@@ -130,8 +130,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 'About',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
@@ -176,7 +176,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Version',
-              subTitle: '1.0.0',
+              subTitle: '1.0.3',
               icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},
@@ -193,8 +193,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 'Data',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),

@@ -167,8 +167,8 @@ class AllImagesDisplayScreen extends StatelessWidget {
                       '${index + 1}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
                             offset: Offset(0, 2),

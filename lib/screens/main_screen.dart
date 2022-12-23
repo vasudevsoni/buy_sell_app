@@ -198,12 +198,12 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Ionicons.home_outline),
             activeIcon: Icon(Ionicons.home),
-            label: 'HOME',
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Ionicons.chatbubbles_outline),
             activeIcon: Icon(Ionicons.chatbubbles),
-            label: 'INBOX',
+            label: 'Inbox',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -212,12 +212,12 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(
               Ionicons.heart,
             ),
-            label: 'FAVORITES',
+            label: 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Ionicons.person_circle_outline),
             activeIcon: Icon(Ionicons.person_circle),
-            label: 'PROFILE',
+            label: 'Profile',
           ),
         ],
       ),

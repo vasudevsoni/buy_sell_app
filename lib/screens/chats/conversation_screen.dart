@@ -506,7 +506,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w700,
                                     color: whiteColor,
                                   ),
                                 ),
@@ -516,7 +516,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: whiteColor,
                                   ),
@@ -566,13 +566,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 20,
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5,
                             ),
                             Text(
                               'Start by sending a Hi',
@@ -581,8 +578,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 14,
+                                color: lightBlackColor,
                               ),
                             ),
                           ],
@@ -660,8 +658,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           snapshot.data!.docs[index]['message'],
                                           style: const TextStyle(
                                             color: whiteColor,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -709,8 +707,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                             color: sentBy == me
                                                 ? whiteColor
                                                 : blackColor,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -731,8 +729,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           time,
                                           style: const TextStyle(
                                             color: blackColor,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         const SizedBox(
@@ -742,8 +740,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           date,
                                           style: const TextStyle(
                                             color: fadedColor,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ],

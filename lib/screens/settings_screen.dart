@@ -178,8 +178,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'Account',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
@@ -242,8 +242,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'Actions',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),

@@ -151,9 +151,9 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w700,
                                   color: blackColor,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                 ),
                               ),
                               const SizedBox(
@@ -167,7 +167,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: blackColor,
-                                  fontSize: 15,
+                                  fontSize: 14,
                                 ),
                               ),
                               const Spacer(),
@@ -183,7 +183,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(
                                         color: lightBlackColor,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -197,7 +197,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                       textAlign: TextAlign.end,
                                       style: const TextStyle(
                                         color: lightBlackColor,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                       ),
                                     ),

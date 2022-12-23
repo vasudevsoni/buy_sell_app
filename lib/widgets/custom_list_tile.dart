@@ -37,16 +37,11 @@ class CustomListTile extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: CachedNetworkImage(
-                    imageUrl: url,
-                  )
-                  // SVGPictureWidget(
-                  //   url: url,
-                  //   fit: BoxFit.contain,
-                  //   semanticsLabel: 'category image',
-                  // ),
-                  ),
+                padding: const EdgeInsets.all(15),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -60,8 +55,8 @@ class CustomListTile extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
                   color: blackColor,
                 ),
               ),

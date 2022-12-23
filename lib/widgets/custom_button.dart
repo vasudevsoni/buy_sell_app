@@ -25,52 +25,42 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        elevation: 0,
+        splashFactory: InkRipple.splashFactory,
+        enableFeedback: true,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        fixedSize: Size(size.width, 45),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        side: BorderSide(
+          color: borderColor,
+          strokeAlign: StrokeAlign.center,
+          width: 1.2,
+        ),
+      ),
+      onPressed: () {
         HapticFeedback.vibrate();
         onPressed();
       },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 45,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: borderColor,
-            strokeAlign: StrokeAlign.center,
-            width: 1.2,
-          ),
-          color: bgColor,
-        ),
-        width: size.width,
-        child: Stack(
-          children: [
-            Center(
-              child: AutoSizeText(
-                text,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: textIconColor,
-                  fontSize: 14.5,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              right: 0,
-              child: Icon(
-                icon,
-                color: textIconColor,
-                size: 23,
-              ),
-            ),
-          ],
+      icon: Icon(
+        icon,
+        color: textIconColor,
+        size: 23,
+      ),
+      label: AutoSizeText(
+        text,
+        maxLines: 2,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: textIconColor,
+          fontWeight: FontWeight.w600,
+          fontSize: 14.5,
         ),
       ),
     );

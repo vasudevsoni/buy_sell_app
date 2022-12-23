@@ -28,7 +28,7 @@ class CustomListTileWithSubtitle extends StatelessWidget {
       title: Text(
         text,
         style: TextStyle(
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
           fontSize: 15,
           color: textColor,
         ),

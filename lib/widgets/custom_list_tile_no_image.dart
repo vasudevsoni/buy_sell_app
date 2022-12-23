@@ -24,7 +24,7 @@ class CustomListTileNoImage extends StatelessWidget {
       title: Text(
         text,
         style: const TextStyle(
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
           fontSize: 15,
         ),
       ),

@@ -136,7 +136,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w700,
                                   color: whiteColor,
                                 ),
                               ),
@@ -146,7 +146,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: whiteColor,
                                 ),
@@ -285,8 +285,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     child: Text(
                                       product!.title.toString(),
                                       style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                         color: whiteColor,
                                       ),
                                     ),
@@ -296,8 +296,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       product!.priceString.toString(),
                                       textAlign: TextAlign.end,
                                       style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800,
                                         color: whiteColor,
                                       ),
                                     ),
@@ -325,7 +325,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
                                       ),
@@ -353,7 +353,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
                                       ),
@@ -381,7 +381,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
                                       ),
@@ -400,9 +400,10 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     color: greyColor,
                                     decoration: TextDecoration.underline,
+                                    decorationStyle: TextDecorationStyle.dashed,
                                   ),
                                 ),
                               ),

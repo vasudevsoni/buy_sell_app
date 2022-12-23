@@ -73,8 +73,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   '👍',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w800,
                     color: blueColor,
                   ),
                 ),
@@ -86,7 +86,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                     color: blueColor,
                   ),
                 ),
@@ -98,7 +98,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: blackColor,
                   ),
                 ),
@@ -107,7 +107,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: blackColor,
                   ),
                 ),

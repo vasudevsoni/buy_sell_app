@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                               fontSize: 14,
                               color: blackColor,
                             ),
@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         const Icon(
                           Ionicons.caret_down,
-                          size: 15,
+                          size: 14,
                           color: blackColor,
                         ),
                       ],
@@ -274,13 +274,13 @@ class _HomeScreenState extends State<HomeScreen>
           splashBorderRadius: BorderRadius.circular(10),
           labelStyle: const TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: 14,
-            fontFamily: 'SFProDisplay',
+            fontSize: 13,
+            fontFamily: 'Rubik',
           ),
           unselectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w500,
-            fontSize: 14,
-            fontFamily: 'SFProDisplay',
+            fontSize: 13,
+            fontFamily: 'Rubik',
           ),
           labelColor: blackColor,
           unselectedLabelColor: lightBlackColor,
@@ -369,8 +369,8 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -383,6 +383,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                         'See all',
                         style: TextStyle(
                           color: blueColor,
+                          fontSize: 12,
                         ),
                       ),
                       SizedBox(
@@ -419,8 +420,8 @@ class _AllProductsScreenState extends State<AllProductsScreen>
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
               ),
             ),
           ),
@@ -543,8 +544,8 @@ class CategoriesListView extends StatelessWidget {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                           color: lightBlackColor,
                         ),
                       ),
@@ -612,8 +613,8 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -626,6 +627,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                         'See all',
                         style: TextStyle(
                           color: blueColor,
+                          fontSize: 12,
                         ),
                       ),
                       SizedBox(
@@ -662,8 +664,8 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
               ),
             ),
           ),

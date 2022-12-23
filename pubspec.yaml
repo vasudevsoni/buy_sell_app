@@ -3,7 +3,7 @@ description: Sell & Buy Used Goods Nearby.
 
 publish_to: 'none'
 
-version: 1.0.2+13
+version: 1.0.3+14
 
 environment:
   sdk: '>=2.18.1 <3.0.0'
@@ -70,21 +70,19 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   fonts:
-    - family: SFProDisplay
+    - family: Rubik
       fonts:
-        - asset: assets/SF-Pro-Display-Black.otf
-          weight: 900
-        - asset: assets/SF-Pro-Display-Bold.otf
+        - asset: assets/Rubik-ExtraBold.ttf
           weight: 800
-        - asset: assets/SF-Pro-Display-Heavy.otf
+        - asset: assets/Rubik-Bold.ttf
           weight: 700
-        - asset: assets/SF-Pro-Display-Light.otf
+        - asset: assets/Rubik-SemiBold.ttf
           weight: 600
-        - asset: assets/SF-Pro-Display-Medium.otf
+        - asset: assets/Rubik-Medium.ttf
           weight: 500
-        - asset: assets/SF-Pro-Display-Semibold.otf
+        - asset: assets/Rubik-Regular.ttf
           weight: 400
-        - asset: assets/SF-Pro-Display-Regular.otf
+        - asset: assets/Rubik-Light.ttf
           weight: 300
 
   assets:

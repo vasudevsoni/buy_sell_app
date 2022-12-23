@@ -179,7 +179,7 @@ class _CategoryScreenProductsListState
                   'Results',
                   maxLines: 1,
                   style: TextStyle(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                     fontSize: 18,
                   ),
                 ),
