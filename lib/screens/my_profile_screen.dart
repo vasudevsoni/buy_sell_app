@@ -492,8 +492,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      url:
-                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fmy-listings.png?alt=media&token=4f365c98-668b-40a5-a40a-16ab778f9d3b',
+                      icon: Ionicons.albums_outline,
+                      iconColor: blackColor,
                       text: 'My Listings',
                       onTap: () => Get.to(
                         () => const MyListingsScreen(),
@@ -503,8 +503,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      url:
-                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fsettings.png?alt=media&token=739c3c6e-10fc-4538-b3e7-86a99f559303',
+                      icon: Ionicons.cog_outline,
+                      iconColor: blackColor,
                       text: 'Settings',
                       onTap: () => Get.to(
                         () => const SettingsScreen(),
@@ -519,8 +519,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      url:
-                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fhelp.png?alt=media&token=f09f3d38-e8b7-4f41-8b05-679e5dbb3295',
+                      icon: Ionicons.help_circle_outline,
+                      iconColor: redColor,
                       text: 'Help & Support',
                       onTap: () => Get.to(
                         () => const HelpAndSupportScreen(),
@@ -530,8 +530,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      url:
-                          'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Freview.png?alt=media&token=fb33bc9b-a414-49a6-9856-71163b3f04ed',
+                      icon: Ionicons.star_outline,
+                      iconColor: blueColor,
                       text: 'Leave a Review',
                       onTap: () {
                         inAppReview.openStoreListing();
@@ -602,12 +602,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 }
 
 class MyProfileItemWidget extends StatelessWidget {
-  final String url;
+  final Color iconColor;
+  final IconData icon;
   final String text;
   final void Function()? onTap;
   const MyProfileItemWidget({
     Key? key,
-    required this.url,
+    required this.iconColor,
+    required this.icon,
     required this.text,
     required this.onTap,
   }) : super(key: key);
@@ -619,7 +621,7 @@ class MyProfileItemWidget extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
-          height: 100,
+          height: 90,
           padding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 5,
@@ -636,19 +638,10 @@ class MyProfileItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: CachedNetworkImage(
-                  imageUrl: url,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-              // Icon(
-              //   icon,
-              //   size: 30,
-              //   color: iconColor,
-              // ),
-              const SizedBox(
-                height: 5,
+              Icon(
+                icon,
+                size: 30,
+                color: iconColor,
               ),
               AutoSizeText(
                 text,

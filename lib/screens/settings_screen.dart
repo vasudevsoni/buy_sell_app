@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../widgets/custom_button_without_icon.dart';
 import '/auth/screens/location_screen.dart';
@@ -259,17 +260,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 inAppReview.openStoreListing();
               },
             ),
-            // CustomListTileWithSubtitle(
-            //   text: 'Invite friends to BechDe',
-            //   subTitle: 'Invite your friends to buy and sell on BechDe',
-            //   icon: Ionicons.people,
-            //   trailingIcon: Ionicons.chevron_forward,
-            //   isEnabled: true,
-            //   onTap: () {
-            //     Share.share(
-            //         'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
-            //   },
-            // ),
+            CustomListTileWithSubtitle(
+              text: 'Invite friends to BechDe',
+              subTitle: 'Invite your friends to buy and sell on BechDe',
+              icon: Ionicons.people,
+              trailingIcon: Ionicons.chevron_forward,
+              isEnabled: true,
+              onTap: () {
+                Share.share(
+                    'Hey! I found some really amazing deals on the BechDe app.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
+              },
+            ),
             CustomListTileWithSubtitle(
               text: 'Log out',
               subTitle: 'Log out of your account from this device',

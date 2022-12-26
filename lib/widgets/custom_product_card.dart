@@ -39,9 +39,11 @@ class _CustomProductCardState extends State<CustomProductCard> {
   }
 
   getDetails() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     await services.getUserData(widget.data['sellerUid']).then((value) {
       if (mounted) {
         setState(() {
@@ -56,18 +58,24 @@ class _CustomProductCardState extends State<CustomProductCard> {
         });
       }
       if (fav.contains(services.user!.uid)) {
-        setState(() {
-          isLiked = true;
-        });
+        if (mounted) {
+          setState(() {
+            isLiked = true;
+          });
+        }
         return;
       }
+      if (mounted) {
+        setState(() {
+          isLiked = false;
+        });
+      }
+    });
+    if (mounted) {
       setState(() {
-        isLiked = false;
+        isLoading = false;
       });
-    });
-    setState(() {
-      isLoading = false;
-    });
+    }
   }
 
   @override
