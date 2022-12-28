@@ -28,11 +28,18 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future getImageFromGallery() async {
     final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 60);
+        await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null && mounted) {
-      setState(() {
-        reportImage = File(pickedFile.path);
-      });
+      final compressedFile =
+          await services.compressImage(File(pickedFile.path));
+      if (compressedFile.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          reportImage = compressedFile;
+        });
+      }
     }
   }
 

@@ -29,7 +29,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   final FirebaseServices _services = FirebaseServices();
   final uuid = const Uuid();
   String profileImage = '';
-  XFile? pickedImage;
+  File? pickedImage;
   String downloadUrl = '';
   bool isLoading = false;
 
@@ -81,28 +81,33 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   choosePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 75,
-    );
-    if (mounted) {
-      setState(() {
-        pickedImage = picked;
-      });
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null && mounted) {
+      final compressedImage = await _services.compressImage(File(picked.path));
+      if (compressedImage.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          pickedImage = compressedImage;
+        });
+      }
     }
   }
 
   takePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 75,
-      preferredCameraDevice: CameraDevice.front,
-    );
-    if (mounted) {
-      setState(() {
-        pickedImage = picked;
-      });
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked != null && mounted) {
+      final compressedImage = await _services.compressImage(File(picked.path));
+      if (compressedImage.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          pickedImage = compressedImage;
+        });
+      }
     }
   }
 

@@ -176,7 +176,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Version',
-              subTitle: '1.0.3',
+              subTitle: '1.0.7',
               icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},

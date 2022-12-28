@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,6 +29,7 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   final ImagePicker picker = ImagePicker();
+  final FirebaseServices _services = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +43,42 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
 
     Future getImageFromCamera() async {
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 85,
-        preferredCameraDevice: CameraDevice.rear,
-      );
-      if (pickedFile == null) {
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.camera);
+      if (pickedFile != null && mounted) {
+        final compressedImage =
+            await _services.compressImage(File(pickedFile.path));
+        if (compressedImage.lengthSync() >= 2000000) {
+          showSnackBar(
+              color: redColor, content: 'Maximum image size allowed is 2MB');
+        } else {
+          provider.addImageToPaths(compressedImage);
+          provider.imagesCount += 1;
+          setState(() {});
+        }
+      }
+    }
+
+    Future getImageFromGallery() async {
+      final List<XFile> pickedFiles = await picker.pickMultiImage();
+      if (pickedFiles.isEmpty) {
         return;
       }
-      provider.addImageToPaths(File(pickedFile.path));
-      provider.imagesCount += 1;
-      setState(() {});
+      if (pickedFiles.length > 20) {
+        showMaximumError();
+        return;
+      }
+      for (var i in pickedFiles) {
+        final compressedImage = await _services.compressImage(File(i.path));
+        if (compressedImage.lengthSync() >= 2000000) {
+          showSnackBar(
+              color: redColor, content: 'Maximum image size allowed is 2MB');
+        } else {
+          provider.addImageToPaths(compressedImage);
+          provider.imagesCount += pickedFiles.length;
+          setState(() {});
+        }
+      }
     }
 
     void requestCameraPermission() async {
@@ -74,23 +101,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         );
         openAppSettings();
       }
-    }
-
-    Future getImageFromGallery() async {
-      final List<XFile> pickedFiles =
-          await picker.pickMultiImage(imageQuality: 85);
-      if (pickedFiles.isEmpty) {
-        return;
-      }
-      if (pickedFiles.length > 20) {
-        showMaximumError();
-        return;
-      }
-      for (var i in pickedFiles) {
-        provider.addImageToPaths(File(i.path));
-      }
-      provider.imagesCount += pickedFiles.length;
-      setState(() {});
     }
 
     void requestGalleryPermission() async {

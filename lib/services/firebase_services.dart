@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:uuid/uuid.dart';
 
 import '/utils/utils.dart';
@@ -351,6 +354,16 @@ class FirebaseServices {
         color: redColor,
       );
     }
+  }
+
+  Future<File> compressImage(File file) async {
+    var result = await FlutterNativeImage.compressImage(file.path,
+        quality: file.lengthSync() <= 1000000
+            ? 60
+            : file.lengthSync() > 1000000 && file.lengthSync() <= 3000000
+                ? 25
+                : 12);
+    return result;
   }
 
   // Future<String> createDynamicLink() async {
