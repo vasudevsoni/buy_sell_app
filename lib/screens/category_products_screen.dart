@@ -203,7 +203,6 @@ class _CategoryScreenProductsListState
                   var data = snapshot.docs[index];
                   var time =
                       DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                  var sellerDetails = _services.getUserData(data['sellerUid']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
@@ -212,7 +211,6 @@ class _CategoryScreenProductsListState
                     children: [
                       CustomProductCard(
                         data: data,
-                        sellerDetails: sellerDetails,
                         time: time,
                       ),
                       if (hasMoreReached)

@@ -280,32 +280,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
             ),
-            // const Divider(
-            //   height: 0,
-            //   indent: 15,
-            //   color: lightBlackColor,
-            // ),
-            // Container(
-            //   width: size.width,
-            //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            //   child: const Text(
-            //     'Danger Zone',
-            //     style: TextStyle(
-            //       color: blackColor,
-            //       fontSize: 18,
-            //       fontWeight: FontWeight.w700,
-            //     ),
-            //   ),
-            // ),
-            // CustomListTileWithSubtitle(
-            //   text: 'Delete account',
-            //   subTitle: 'This will delete all your data',
-            //   onTap: () {},
-            //   textColor: redColor,
-            //   icon: FontAwesomeIcons.trash,
-            //   trailingIcon: Ionicons.chevron_forward,
-            //   isEnabled: true,
-            // ),
           ],
         ),
       ),

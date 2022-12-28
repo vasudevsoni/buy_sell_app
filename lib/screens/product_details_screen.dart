@@ -33,11 +33,9 @@ import 'profile_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final DocumentSnapshot productData;
-  final DocumentSnapshot sellerData;
   const ProductDetailsScreen({
     super.key,
     required this.productData,
-    required this.sellerData,
   });
 
   @override
@@ -52,6 +50,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   List fav = [];
   bool isLiked = false;
   String profileImage = '';
+  String sellerName = '';
+  int dateJoined = 0;
   bool isActive = true;
   bool isSold = false;
   bool isLoading = false;
@@ -72,10 +72,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       setState(() {
         isLoading = true;
       });
+      await services.getUserData(widget.productData['sellerUid']).then((value) {
+        setState(() {
+          value['profileImage'] == null
+              ? profileImage = ''
+              : profileImage = value['profileImage'];
+          dateJoined = value['dateJoined'];
+          sellerName = value['name'];
+        });
+      });
       setState(() {
-        widget.sellerData['profileImage'] == null
-            ? profileImage = ''
-            : profileImage = widget.sellerData['profileImage'];
         location =
             '${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
         latitude = widget.productData['location']['latitude'];
@@ -134,12 +140,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     };
 
     final List<String> users = [
-      widget.sellerData['uid'],
+      widget.productData['sellerUid'],
       services.user!.uid,
     ];
 
     final String chatRoomId =
-        '${widget.sellerData['uid']}.${services.user!.uid}.${widget.productData.id}';
+        '${widget.productData['sellerUid']}.${services.user!.uid}.${widget.productData.id}';
 
     final Map<String, dynamic> chatData = {
       'users': users,
@@ -171,7 +177,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
-      widget.sellerData['dateJoined'],
+      dateJoined,
     );
     final productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
       widget.productData['postedAt'],
@@ -1495,7 +1501,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () => Get.to(
                                   () => ProfileScreen(
-                                    userId: widget.sellerData['uid'],
+                                    userId: widget.productData['sellerUid'],
                                   ),
                                 ),
                                 child: Container(
@@ -1568,39 +1574,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          widget.sellerData['name'] == null
-                                              ? SizedBox(
-                                                  width: size.width * 0.5,
-                                                  child: const Text(
-                                                    'BechDe User',
-                                                    maxLines: 1,
-                                                    softWrap: true,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: blackColor,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                )
-                                              : SizedBox(
-                                                  width: size.width * 0.5,
-                                                  child: Text(
-                                                    widget.sellerData['name'],
-                                                    maxLines: 1,
-                                                    softWrap: true,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: blackColor,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ),
+                                          SizedBox(
+                                            width: size.width * 0.5,
+                                            child: Text(
+                                              sellerName,
+                                              maxLines: 1,
+                                              softWrap: true,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
                                           Text(
                                             'Joined ${timeago.format(sellerJoinTime)}',
                                             style: const TextStyle(
@@ -1747,10 +1734,8 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 final data = snapshot.data!.docs[index];
                 final time =
                     DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                final sellerDetails = _services.getUserData(data['sellerUid']);
                 return CustomProductCard(
                   data: data,
-                  sellerDetails: sellerDetails,
                   time: time,
                 );
               },

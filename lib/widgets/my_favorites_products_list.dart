@@ -170,8 +170,6 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                     final data = snapshot.docs[index];
                     final time =
                         DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                    final sellerDetails =
-                        services.getUserData(data['sellerUid']);
                     final hasMoreReached = snapshot.hasMore &&
                         index + 1 == snapshot.docs.length &&
                         !snapshot.isFetchingMore;
@@ -180,7 +178,6 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                       children: [
                         CustomProductCard(
                           data: data,
-                          sellerDetails: sellerDetails,
                           time: time,
                         ),
                         if (hasMoreReached)

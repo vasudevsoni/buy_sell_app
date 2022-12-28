@@ -502,7 +502,6 @@ class _MyListingScreenProductCardState
                 onTap: () => Get.to(
                   () => ProductDetailsScreen(
                     productData: widget.data,
-                    sellerData: sellerDetails,
                   ),
                 ),
                 child: Ink(

@@ -732,7 +732,6 @@ class _SellerProductsListState extends State<SellerProductsList> {
           itemBuilder: (context, index) {
             final data = snapshot.docs[index];
             final time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-            final sellerDetails = _services.getUserData(data['sellerUid']);
             final hasMoreReached = snapshot.hasMore &&
                 index + 1 == snapshot.docs.length &&
                 !snapshot.isFetchingMore;
@@ -741,7 +740,6 @@ class _SellerProductsListState extends State<SellerProductsList> {
               children: [
                 CustomProductCard(
                   data: data,
-                  sellerDetails: sellerDetails,
                   time: time,
                 ),
                 if (hasMoreReached)

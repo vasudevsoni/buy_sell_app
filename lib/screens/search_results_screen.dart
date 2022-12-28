@@ -165,8 +165,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     final data = snapshot.docs[index];
                     final time =
                         DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                    final sellerDetails =
-                        _services.getUserData(data['sellerUid']);
                     final hasMoreReached = snapshot.hasMore &&
                         index + 1 == snapshot.docs.length &&
                         !snapshot.isFetchingMore;
@@ -176,7 +174,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       children: [
                         CustomProductCard(
                           data: data,
-                          sellerDetails: sellerDetails,
                           time: time,
                         ),
                         if (hasMoreReached)

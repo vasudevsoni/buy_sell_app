@@ -460,7 +460,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     onTap: () => Get.to(
                       () => ProductDetailsScreen(
                         productData: prod,
-                        sellerData: sellerData,
                       ),
                     ),
                     child: Container(

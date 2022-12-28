@@ -11,13 +11,11 @@ import '/utils/utils.dart';
 
 class CustomProductCard extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> data;
-  final Future<DocumentSnapshot<Object?>> sellerDetails;
   final DateTime time;
 
   const CustomProductCard({
     Key? key,
     required this.data,
-    required this.sellerDetails,
     required this.time,
   }) : super(key: key);
 
@@ -27,7 +25,6 @@ class CustomProductCard extends StatefulWidget {
 
 class _CustomProductCardState extends State<CustomProductCard> {
   final FirebaseServices services = FirebaseServices();
-  late DocumentSnapshot sellerDetails;
   List fav = [];
   bool isLiked = false;
   bool isLoading = false;
@@ -44,13 +41,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
         isLoading = true;
       });
     }
-    await services.getUserData(widget.data['sellerUid']).then((value) {
-      if (mounted) {
-        setState(() {
-          sellerDetails = value;
-        });
-      }
-    });
     await services.listings.doc(widget.data.id).get().then((value) {
       if (mounted) {
         setState(() {
@@ -103,7 +93,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   builder: (context) {
                     return ProductDetailsScreen(
                       productData: widget.data,
-                      sellerData: sellerDetails,
                     );
                   },
                 )),
@@ -212,27 +201,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                 ],
                               ),
-                              // Text.rich(
-                              //   TextSpan(
-                              //     text: '${timeago.format(widget.time)} •',
-                              //     children: [
-                              //       TextSpan(
-                              //         text:
-                              //             ' ${widget.data['location']['area']}, ${widget.data['location']['city']}, ${widget.data['location']['state']}',
-                              //         style: const TextStyle(
-                              //           color: lightBlackColor,
-                              //           fontSize: 12,
-                              //           fontWeight: FontWeight.w500,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //     style: const TextStyle(
-                              //       color: lightBlackColor,
-                              //       fontWeight: FontWeight.w500,
-                              //       fontSize: 12,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
