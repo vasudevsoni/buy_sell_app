@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/location_provider.dart';
@@ -36,6 +37,7 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
+  await MobileAds.instance.initialize();
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -94,6 +96,7 @@ class _MyAppState extends State<MyApp> {
               playSound: true,
               importance: Importance.max,
               priority: Priority.high,
+              color: greenColor,
               icon: '@mipmap/ic_launcher',
             ),
           ),

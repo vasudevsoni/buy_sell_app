@@ -3,15 +3,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../services/admob_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_list_tile_no_image.dart';
 import '/services/firebase_services.dart';
 import 'common/ad_post_screen.dart';
 import 'vehicles/vehicle_ad_post_screen.dart';
 
-class SellerSubCategoriesListScreen extends StatelessWidget {
+class SellerSubCategoriesListScreen extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> doc;
   const SellerSubCategoriesListScreen({
     super.key,
@@ -19,9 +21,53 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
   });
 
   @override
+  State<SellerSubCategoriesListScreen> createState() =>
+      _SellerSubCategoriesListScreenState();
+}
+
+class _SellerSubCategoriesListScreenState
+    extends State<SellerSubCategoriesListScreen> {
+  final FirebaseServices service = FirebaseServices();
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    _initBannerAd();
+    super.initState();
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.largeBanner,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd!.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final FirebaseServices service = FirebaseServices();
 
     return Scaffold(
       backgroundColor: whiteColor,
@@ -31,7 +77,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          'Select a sub category in ${doc['catName']}',
+          'Select a sub category in ${widget.doc['catName']}',
           style: const TextStyle(
             fontWeight: FontWeight.w500,
             color: blackColor,
@@ -41,8 +87,8 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
       ),
       body: SizedBox(
         height: size.height,
-        child: FutureBuilder<DocumentSnapshot>(
-          future: service.categories.doc(doc.id).get(),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: service.categories.doc(widget.doc.id).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -80,7 +126,7 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
                   trailingIcon: Ionicons.chevron_forward,
                   isEnabled: true,
                   onTap: () {
-                    if (doc['catName'] == 'Vehicles') {
+                    if (widget.doc['catName'] == 'Vehicles') {
                       Get.offAll(
                         () => VehicleAdPostScreen(subCatName: data[index]),
                         transition: Transition.downToUp,
@@ -89,7 +135,8 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
                     }
                     Get.offAll(
                       () => AdPostScreen(
-                          catName: doc['catName'], subCatName: data[index]),
+                          catName: widget.doc['catName'],
+                          subCatName: data[index]),
                       transition: Transition.downToUp,
                     );
                   },
@@ -99,6 +146,31 @@ class SellerSubCategoriesListScreen extends StatelessWidget {
           },
         ),
       ),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: AdWidget(ad: _bannerAd!),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: const Center(
+                child: Text('Advertisement'),
+              ),
+            ),
     );
   }
 }

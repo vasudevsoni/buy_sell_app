@@ -2,16 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../services/admob_services.dart';
 import '/utils/utils.dart';
 
-class AllImagesDisplayScreen extends StatelessWidget {
+class AllImagesDisplayScreen extends StatefulWidget {
   final List images;
   const AllImagesDisplayScreen({super.key, required this.images});
+
+  @override
+  State<AllImagesDisplayScreen> createState() => _AllImagesDisplayScreenState();
+}
+
+class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    _initBannerAd();
+    super.initState();
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.largeBanner,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd!.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +77,31 @@ class AllImagesDisplayScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: AdWidget(ad: _bannerAd!),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: const Center(
+                child: Text('Advertisement'),
+              ),
+            ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -44,7 +113,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
             },
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            itemCount: images.length,
+            itemCount: widget.images.length,
             padding: const EdgeInsets.all(15),
             itemBuilder: (context, index) {
               return Stack(
@@ -69,12 +138,12 @@ class AllImagesDisplayScreen extends StatelessWidget {
                               children: [
                                 PhotoViewGallery.builder(
                                   scrollPhysics: const ClampingScrollPhysics(),
-                                  itemCount: images.length,
+                                  itemCount: widget.images.length,
                                   pageController: pageController,
                                   builder: (BuildContext context, int index) {
                                     return PhotoViewGalleryPageOptions(
                                       imageProvider: NetworkImage(
-                                        images[index],
+                                        widget.images[index],
                                       ),
                                       initialScale:
                                           PhotoViewComputedScale.contained * 1,
@@ -138,7 +207,7 @@ class AllImagesDisplayScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: CachedNetworkImage(
-                          imageUrl: images[index],
+                          imageUrl: widget.images[index],
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) {
                             return const Icon(
@@ -161,8 +230,8 @@ class AllImagesDisplayScreen extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
-                    right: 15,
+                    top: 10,
+                    left: 15,
                     child: Text(
                       '${index + 1}',
                       textAlign: TextAlign.center,

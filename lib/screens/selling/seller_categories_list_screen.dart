@@ -34,13 +34,13 @@ class SellerCategoriesListScreen extends StatelessWidget {
       ),
       body: SizedBox(
         height: size.height,
-        child: FutureBuilder<QuerySnapshot>(
-          future: service.categories
+        child: StreamBuilder<QuerySnapshot>(
+          stream: service.categories
               .orderBy(
                 'sortId',
                 descending: false,
               )
-              .get(),
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {

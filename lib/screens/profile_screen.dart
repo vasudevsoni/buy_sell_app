@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/external_link_icon_widget.dart';
@@ -50,9 +52,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
   @override
   void initState() {
     getUserData();
+    _initBannerAd();
     super.initState();
   }
 
@@ -116,6 +122,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     });
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
   }
 
   showReportDialog() {
@@ -287,6 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     reportTextController.dispose();
+    _bannerAd!.dispose();
     super.dispose();
   }
 
@@ -324,6 +353,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 50,
+              width: 320,
+              child: AdWidget(ad: _bannerAd!),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 50,
+              width: 320,
+              child: const Center(
+                child: Text('Advertisement'),
+              ),
+            ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),

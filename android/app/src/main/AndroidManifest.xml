@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bechde.buy_sell_app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.bechde.buy_sell_app">
    <!-- Permissions options for the `internet` group -->
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -49,6 +48,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5910069150854222~6307543075" />
     </application>
     <queries>
         <intent>

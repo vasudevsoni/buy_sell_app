@@ -24,13 +24,13 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder<QuerySnapshot>(
-      future: service.categories
+    return StreamBuilder<QuerySnapshot>(
+      stream: service.categories
           .orderBy(
             'sortId',
             descending: false,
           )
-          .get(),
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Center(

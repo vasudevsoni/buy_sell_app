@@ -78,6 +78,7 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-ads:21.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform("com.google.firebase:firebase-bom:31.1.0")
     implementation 'com.google.firebase:firebase-analytics'

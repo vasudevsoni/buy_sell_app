@@ -364,7 +364,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
               children: [
                 const Expanded(
                   child: Text(
-                    'Browse Categories',
+                    'Categories',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
@@ -453,8 +453,10 @@ class CategoriesListView extends StatelessWidget {
     return SizedBox(
       width: size.width,
       height: size.height * 0.10,
-      child: FutureBuilder<QuerySnapshot>(
-        future: _services.categories.orderBy('sortId', descending: false).get(),
+      child: StreamBuilder<QuerySnapshot>(
+        stream: _services.categories
+            .orderBy('sortId', descending: false)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -608,7 +610,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
               children: [
                 const Expanded(
                   child: Text(
-                    'Browse Categories',
+                    'Categories',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
@@ -680,6 +682,85 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
     );
   }
 }
+
+// class CustomBannerAdHomeScreen extends StatefulWidget {
+//   const CustomBannerAdHomeScreen({super.key});
+
+//   @override
+//   State<CustomBannerAdHomeScreen> createState() =>
+//       _CustomBannerAdHomeScreenState();
+// }
+
+// class _CustomBannerAdHomeScreenState extends State<CustomBannerAdHomeScreen> {
+//   late BannerAd? _bannerAd;
+//   bool _isAdLoaded = false;
+
+//   @override
+//   void initState() {
+//     _initBannerAd();
+//     super.initState();
+//   }
+
+//   _initBannerAd() {
+//     _bannerAd = BannerAd(
+//       size: AdSize.largeBanner,
+//       adUnitId: AdmobServices.bannerAdUnitId,
+//       listener: BannerAdListener(
+//         onAdLoaded: (ad) {
+//           setState(() {
+//             _isAdLoaded = true;
+//           });
+//         },
+//         onAdFailedToLoad: (ad, error) {
+//           setState(() {
+//             _isAdLoaded = false;
+//           });
+//           ad.dispose();
+//         },
+//       ),
+//       request: const AdRequest(),
+//     );
+//     _bannerAd!.load();
+//   }
+
+//   @override
+//   void dispose() {
+//     _bannerAd!.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final size = MediaQuery.of(context).size;
+//     return _isAdLoaded
+//         ? Container(
+//             decoration: BoxDecoration(
+//               border: Border.all(
+//                 color: greyColor,
+//                 width: 1,
+//               ),
+//               borderRadius: BorderRadius.circular(10),
+//             ),
+//             height: size.width * 0.3,
+//             width: 300,
+//             child: AdWidget(ad: _bannerAd!),
+//           )
+//         : Container(
+//             decoration: BoxDecoration(
+//               border: Border.all(
+//                 color: greyColor,
+//                 width: 1,
+//               ),
+//               borderRadius: BorderRadius.circular(10),
+//             ),
+//             height: size.width * 0.3,
+//             width: 300,
+//             child: const Center(
+//               child: Text('Advertisement'),
+//             ),
+//           );
+//   }
+// }
 
 class ProductsList extends StatefulWidget {
   final String city;
@@ -866,6 +947,9 @@ class _ProductsListState extends State<ProductsList> {
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
+                  // if (index != 0 && index % 5 == 0) {
+                  //   return const CustomBannerAdHomeScreen();
+                  // }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

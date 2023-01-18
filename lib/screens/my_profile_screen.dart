@@ -50,6 +50,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     getUserData();
+
     super.initState();
   }
 
@@ -123,6 +124,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         );
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -457,7 +463,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       height: 5,
                     ),
                     const Text(
-                      'Sell your items fast - plenty of buyers are waiting',
+                      'Sell your items fast - hundreds of buyers are waiting',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: lightBlackColor,

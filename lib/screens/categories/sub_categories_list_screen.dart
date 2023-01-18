@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../services/admob_services.dart';
 import '/screens/category_products_screen.dart';
 import '/widgets/custom_list_tile_no_image.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 
-class SubCategoriesListScreen extends StatelessWidget {
+class SubCategoriesListScreen extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> doc;
   const SubCategoriesListScreen({
     super.key,
@@ -17,9 +19,51 @@ class SubCategoriesListScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final FirebaseServices service = FirebaseServices();
+  State<SubCategoriesListScreen> createState() =>
+      _SubCategoriesListScreenState();
+}
 
+class _SubCategoriesListScreenState extends State<SubCategoriesListScreen> {
+  final FirebaseServices service = FirebaseServices();
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    _initBannerAd();
+    super.initState();
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.largeBanner,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd!.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -28,7 +72,7 @@ class SubCategoriesListScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          doc['catName'],
+          widget.doc['catName'],
           style: const TextStyle(
             fontWeight: FontWeight.w500,
             color: blackColor,
@@ -38,8 +82,8 @@ class SubCategoriesListScreen extends StatelessWidget {
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: FutureBuilder<DocumentSnapshot>(
-          future: service.categories.doc(doc.id).get(),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: service.categories.doc(widget.doc.id).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -78,7 +122,7 @@ class SubCategoriesListScreen extends StatelessWidget {
                   isEnabled: true,
                   onTap: () => Get.to(
                     () => CategoryProductsScreen(
-                      catName: doc['catName'],
+                      catName: widget.doc['catName'],
                       subCatName: data[index],
                     ),
                   ),
@@ -88,6 +132,31 @@ class SubCategoriesListScreen extends StatelessWidget {
           },
         ),
       ),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: AdWidget(ad: _bannerAd!),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: greyColor,
+                  width: 1,
+                ),
+              ),
+              height: 100,
+              width: 320,
+              child: const Center(
+                child: Text('Advertisement'),
+              ),
+            ),
     );
   }
 }

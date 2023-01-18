@@ -709,7 +709,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               if (images.length > 1)
                                 Positioned(
-                                  bottom: 7,
+                                  bottom: 10,
                                   left: 0,
                                   right: 0,
                                   child: Row(
@@ -1610,6 +1610,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ],
                           ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'Product ID: ${widget.productData.id}',
+                            maxLines: 1,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: lightBlackColor,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 25,
                         ),

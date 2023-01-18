@@ -154,6 +154,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
@@ -278,6 +281,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
@@ -401,6 +407,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             fontSize: 20,
                           ),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 5,
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),

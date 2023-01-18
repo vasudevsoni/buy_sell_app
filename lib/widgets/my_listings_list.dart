@@ -636,6 +636,29 @@ class _MyListingScreenProductCardState
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Ionicons.finger_print_outline,
+                            size: 20,
+                            color: blackColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'ID: ${widget.data.id}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: blackColor,
+                            ),
+                          ),
+                        ],
+                      ),
                       if (widget.data['isActive'] == false &&
                           widget.data['isSold'] == false &&
                           widget.data['isRejected'] == false)
@@ -648,7 +671,7 @@ class _MyListingScreenProductCardState
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: redColor,
+                                border: Border.all(color: redColor),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -656,14 +679,14 @@ class _MyListingScreenProductCardState
                               ),
                               child: const Text(
                                 'Product is currently under review',
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: whiteColor,
+                                  color: redColor,
                                 ),
                               ),
                             ),
@@ -680,22 +703,22 @@ class _MyListingScreenProductCardState
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: redColor,
+                                border: Border.all(color: redColor),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
                                 vertical: 10,
                               ),
                               child: const Text(
-                                'Product has been rejected as it goes against our guidelines. Please edit it and make sure all guidelines are followed.',
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
+                                'Product has been rejected as it goes against our guidelines. Please edit it and submit again for review.',
+                                textAlign: TextAlign.start,
+                                maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: whiteColor,
+                                  color: redColor,
                                 ),
                               ),
                             ),
@@ -731,13 +754,13 @@ class _MyListingScreenProductCardState
                         Column(
                           children: [
                             const SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
                             Container(
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: blueColor,
+                                border: Border.all(color: blueColor),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -752,7 +775,7 @@ class _MyListingScreenProductCardState
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: whiteColor,
+                                  color: blueColor,
                                 ),
                               ),
                             ),
@@ -768,7 +791,7 @@ class _MyListingScreenProductCardState
                               width: size.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: redColor,
+                                border: Border.all(color: redColor),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
@@ -776,14 +799,14 @@ class _MyListingScreenProductCardState
                               ),
                               child: const Text(
                                 'Product has been sold',
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: whiteColor,
+                                  color: redColor,
                                 ),
                               ),
                             ),

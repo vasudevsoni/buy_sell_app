@@ -570,6 +570,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Text(
                               'Start by sending a Hi',
                               maxLines: 2,

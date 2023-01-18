@@ -1,6 +1,8 @@
+import 'package:buy_sell_app/services/admob_services.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -17,15 +19,41 @@ class CongratulationsScreen extends StatefulWidget {
 
 class _CongratulationsScreenState extends State<CongratulationsScreen> {
   final ConfettiController controller = ConfettiController();
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
+    _initBannerAd();
     controller.play();
     super.initState();
   }
 
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.mediumRectangle,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
+  }
+
   @override
   void dispose() {
+    _bannerAd!.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -36,22 +64,6 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
       children: [
         Scaffold(
           backgroundColor: whiteColor,
-          extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            backgroundColor: transparentColor,
-            elevation: 0.0,
-            actions: [
-              IconButton(
-                onPressed: () =>
-                    Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                icon: const Icon(
-                  Ionicons.close_circle_outline,
-                  color: blackColor,
-                  size: 30,
-                ),
-              ),
-            ],
-          ),
           body: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -112,6 +124,32 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                     color: blackColor,
                   ),
                 ),
+                const Spacer(),
+                _isAdLoaded
+                    ? Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: lightBlackColor,
+                            width: 2,
+                          ),
+                        ),
+                        height: 250,
+                        width: 300,
+                        child: AdWidget(ad: _bannerAd!),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: lightBlackColor,
+                            width: 2,
+                          ),
+                        ),
+                        height: 250,
+                        width: 300,
+                        child: const Center(
+                          child: Text('Advertisement'),
+                        ),
+                      ),
                 const Spacer(),
                 CustomButton(
                   text: 'Invite your Friends',

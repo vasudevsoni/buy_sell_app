@@ -91,13 +91,13 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
@@ -108,8 +108,9 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      color: lightBlackColor,
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                 ),
