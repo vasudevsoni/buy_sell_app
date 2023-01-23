@@ -590,8 +590,16 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               isLoading = true;
                             });
                             Get.back();
-                            List<String> urls =
+                            List<String?> urls =
                                 await provider.uploadFiles(provider.imagePaths);
+                            if (urls.contains('')) {
+                              showSnackBar(
+                                content:
+                                    'Something has gone wrong. Please try again',
+                                color: redColor,
+                              );
+                              return;
+                            }
                             var time = DateTime.now().millisecondsSinceEpoch;
                             setSearchParams({
                               required String s,

@@ -70,7 +70,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                   ),
                   child: const SVGPictureWidget(
                     url:
-                        'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Ffavorites.svg?alt=media&token=6d0db557-0c12-46ee-8019-77b3b3b1e446',
+                        'https://res.cloudinary.com/bechdeapp/image/upload/v1674460388/illustrations/favorites_asft5r.svg',
                     fit: BoxFit.contain,
                     semanticsLabel: 'Empty favorites image',
                   ),

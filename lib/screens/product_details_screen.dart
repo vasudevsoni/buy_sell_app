@@ -1376,16 +1376,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               horizontal: 15,
                               vertical: 10,
                             ),
-                            child: Text(
-                              widget.productData['description'],
-                              maxLines: 5,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: blackColor,
-                                fontSize: 14,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.productData['description'],
+                                  maxLines: 5,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 2,
+                                ),
+                                const Text(
+                                  'Read more',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: blueColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -1409,56 +1425,59 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: SizedBox(
-                            height: size.height * 0.3,
-                            width: size.width,
-                            child: FlutterMap(
-                              mapController: mapController,
-                              options: MapOptions(
-                                center: LatLng(
-                                  latitude,
-                                  longitude,
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                              height: size.height * 0.3,
+                              width: size.width,
+                              child: FlutterMap(
+                                mapController: mapController,
+                                options: MapOptions(
+                                  center: LatLng(
+                                    latitude,
+                                    longitude,
+                                  ),
+                                  zoom: 15.0,
+                                  maxZoom: 16.0,
+                                  maxBounds: LatLngBounds(
+                                    LatLng(-90, -180.0),
+                                    LatLng(90.0, 180.0),
+                                  ),
+                                  interactiveFlags: InteractiveFlag.all &
+                                      ~InteractiveFlag.rotate,
                                 ),
-                                zoom: 15.0,
-                                maxZoom: 16.0,
-                                maxBounds: LatLngBounds(
-                                  LatLng(-90, -180.0),
-                                  LatLng(90.0, 180.0),
-                                ),
-                                interactiveFlags: InteractiveFlag.all &
-                                    ~InteractiveFlag.rotate,
-                              ),
-                              nonRotatedChildren: [
-                                AttributionWidget.defaultWidget(
-                                  source: 'OpenStreetMap',
-                                ),
-                              ],
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName:
-                                      'com.bechde.buy_sell_app',
-                                  subdomains: const ['a', 'b', 'c'],
-                                  backgroundColor: greyColor,
-                                ),
-                                CircleLayer(
-                                  circles: [
-                                    CircleMarker(
-                                      point: LatLng(
-                                        latitude,
-                                        longitude,
+                                nonRotatedChildren: [
+                                  AttributionWidget.defaultWidget(
+                                    source: 'OpenStreetMap',
+                                  ),
+                                ],
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName:
+                                        'com.bechde.buy_sell_app',
+                                    subdomains: const ['a', 'b', 'c'],
+                                    backgroundColor: greyColor,
+                                  ),
+                                  CircleLayer(
+                                    circles: [
+                                      CircleMarker(
+                                        point: LatLng(
+                                          latitude,
+                                          longitude,
+                                        ),
+                                        radius: 40,
+                                        borderColor: blueColor,
+                                        borderStrokeWidth: 5,
+                                        color: fadedColor,
                                       ),
-                                      radius: 40,
-                                      borderColor: blueColor,
-                                      borderStrokeWidth: 5,
-                                      color: fadedColor,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

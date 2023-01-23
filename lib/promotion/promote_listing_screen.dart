@@ -239,7 +239,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       ),
                                       CachedNetworkImage(
                                         imageUrl:
-                                            'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fboost-to-top-gif.gif?alt=media&token=32974617-e3d5-4263-98a8-c40a7fb263c9',
+                                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460265/illustrations/boost-to-top-gif_yac6tr.gif',
                                         height: size.height * 0.7,
                                         width: size.width,
                                         fit: BoxFit.contain,

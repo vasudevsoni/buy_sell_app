@@ -32,7 +32,7 @@ class ErrorScreen extends StatelessWidget {
               ),
               child: const SVGPictureWidget(
                 url:
-                    'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FBeep%20Beep%20-%20UFO.svg?alt=media&token=a040e797-0090-4bf9-ad81-7fa8246dc152',
+                    'https://res.cloudinary.com/bechdeapp/image/upload/v1674460680/illustrations/Beep_Beep_-_UFO_oez7zx.svg',
                 fit: BoxFit.contain,
                 semanticsLabel: 'Error picture',
               ),

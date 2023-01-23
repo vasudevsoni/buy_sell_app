@@ -93,7 +93,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       ),
                       child: const SVGPictureWidget(
                         url:
-                            'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty.svg?alt=media&token=6a2d5433-d3df-4338-8646-e709a9247d97',
+                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460581/illustrations/empty_qjocex.svg',
                         fit: BoxFit.contain,
                         semanticsLabel: 'Empty search image',
                       ),

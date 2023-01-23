@@ -1,11 +1,14 @@
-import 'package:buy_sell_app/utils/utils.dart';
+import 'package:buy_sell_app/services/cloudinary_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:buy_sell_app/utils/utils.dart';
+import 'package:cloudinary_dart/cloudinary.dart';
+import 'package:cloudinary_flutter/cloudinary_context.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +39,10 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
+  );
+  CloudinaryContext.cloudinary = Cloudinary.fromCloudName(
+    cloudName: CloudinaryServices.cloudName,
+    apiKey: CloudinaryServices.apiKey,
   );
   await MobileAds.instance.initialize();
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

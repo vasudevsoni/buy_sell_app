@@ -170,11 +170,11 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     List images = [
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fexchange.svg?alt=media&token=4634b16e-2db4-4823-b4c0-627ff396b057',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fshow.svg?alt=media&token=bfebb25c-e57b-459c-ae9d-97027e2ca71d',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fchat.svg?alt=media&token=5b60cd1b-d170-4934-a84a-0421179a8013',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fphone.svg?alt=media&token=b10cbbcd-56ea-4f8c-8708-748a3abefad3',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fearth.svg?alt=media&token=3f0c3aac-ac37-4c65-8a42-174b2bd0b877',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459105/illustrations/exchange_km57ui.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/show_bzn7gm.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/chat_euv8er.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459124/illustrations/phone_wvkhvm.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/earth_v6cwzo.svg',
     ];
 
     List texts = [

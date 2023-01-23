@@ -96,7 +96,7 @@ class _MyListingsListState extends State<MyListingsList> {
                   ),
                   child: const SVGPictureWidget(
                     url:
-                        'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FHands%20-%20Box.svg?alt=media&token=dd69ad93-939f-48d8-80d3-e06f6b4eee1a',
+                        'https://res.cloudinary.com/bechdeapp/image/upload/v1674460308/illustrations/Hands_-_Box_c06yok.svg',
                     fit: BoxFit.contain,
                     semanticsLabel: 'Empty products image',
                   ),
@@ -664,9 +664,9 @@ class _MyListingScreenProductCardState
                           Text(
                             'ID: ${widget.data.id}',
                             style: const TextStyle(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w400,
                               fontSize: 14,
-                              color: blackColor,
+                              color: lightBlackColor,
                             ),
                           ),
                         ],

@@ -1,12 +1,13 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
+import 'package:buy_sell_app/services/cloudinary_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -53,19 +54,28 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
     setState(() {
       isLoading = true;
     });
-    try {
-      final Reference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
-      final UploadTask uploadTask = storageReference.putFile(image);
-      downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    // try {
+    final cloudinary = Cloudinary.signedConfig(
+      apiKey: CloudinaryServices.apiKey,
+      apiSecret: CloudinaryServices.apiSecret,
+      cloudName: CloudinaryServices.cloudName,
+    );
+    final response = await cloudinary.upload(
+      file: image.path,
+      fileBytes: image.readAsBytesSync(),
+      resourceType: CloudinaryResourceType.image,
+      folder: 'profileImages/${_services.user!.uid}',
+      fileName: uuid.v1(),
+    );
+    if (response.isSuccessful) {
+      downloadUrl = response.secureUrl!;
       await _services.users.doc(_services.user!.uid).update({
         'profileImage': downloadUrl,
       });
       setState(() {
         isLoading = false;
       });
-    } on FirebaseException {
+    } else if (!response.isSuccessful) {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -74,10 +84,31 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
         isLoading = false;
       });
     }
-    setState(() {
-      isLoading = false;
-    });
+    // final Reference storageReference = FirebaseStorage.instance
+    //     .ref()
+    //     .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
+    // final UploadTask uploadTask = storageReference.putFile(image);
+    // downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    // await _services.users.doc(_services.user!.uid).update({
+    //   'profileImage': downloadUrl,
+    // });
+    // setState(() {
+    //   isLoading = false;
+    // });
   }
+  // on FirebaseException {
+  //   showSnackBar(
+  //     content: 'Something has gone wrong. Please try again',
+  //     color: redColor,
+  //   );
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
+  // setState(() {
+  //   isLoading = false;
+  // });
+  // }
 
   choosePhoto() async {
     final ImagePicker picker = ImagePicker();
@@ -310,7 +341,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   },
                   placeholder: (context, url) {
                     return const Center(
-                      child:CustomLoadingIndicator(),
+                      child: CustomLoadingIndicator(),
                     );
                   },
                 ),

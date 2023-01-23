@@ -178,7 +178,7 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               child: const SVGPictureWidget(
                 url:
-                    'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FLocation.svg?alt=media&token=04fc1ba9-a0ba-4088-9f3e-d0311825b5bc',
+                    'https://res.cloudinary.com/bechdeapp/image/upload/v1674459472/illustrations/Location_meoabg.svg',
                 fit: BoxFit.contain,
                 semanticsLabel: 'Location image',
               ),

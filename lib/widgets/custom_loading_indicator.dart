@@ -14,6 +14,7 @@ class CustomLoadingIndicator extends StatelessWidget {
       loaderColorOne: blueColor,
       loaderColorTwo: blackColor,
       loaderColorThree: blueColor,
+      size: GFSize.MEDIUM,
     );
   }
 }

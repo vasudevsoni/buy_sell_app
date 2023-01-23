@@ -132,7 +132,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         ),
                         child: const SVGPictureWidget(
                           url:
-                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                              'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
                           fit: BoxFit.contain,
                           semanticsLabel: 'Empty messages image',
                         ),
@@ -255,7 +255,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         ),
                         child: const SVGPictureWidget(
                           url:
-                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                              'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
                           fit: BoxFit.contain,
                           semanticsLabel: 'Empty messages image',
                         ),
@@ -378,7 +378,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                         ),
                         child: const SVGPictureWidget(
                           url:
-                              'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fempty-message.svg?alt=media&token=affb948b-7d3f-4a69-aebe-df70e2e13d19',
+                              'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
                           fit: BoxFit.contain,
                           semanticsLabel: 'Empty messages image',
                         ),

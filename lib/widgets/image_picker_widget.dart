@@ -74,7 +74,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           showSnackBar(
               color: redColor, content: 'Maximum image size allowed is 2MB');
         } else {
-          provider.addImageToPaths(compressedImage);
+          await provider.addImageToPaths(compressedImage);
           provider.imagesCount += pickedFiles.length;
           setState(() {});
         }
