@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../widgets/custom_loading_indicator.dart';
 import '../../widgets/svg_picture.dart';
 import '/provider/main_provider.dart';
 import '/screens/chats/conversation_screen.dart';
@@ -195,11 +195,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     ),
                   );
                 }
@@ -322,11 +318,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     ),
                   );
                 }
@@ -452,11 +444,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   return const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     ),
                   );
                 }
@@ -599,25 +587,30 @@ class _ChatCardState extends State<ChatCard> {
                                   size: 20,
                                 ),
                               )
-                            : CachedNetworkImage(
-                                imageUrl: sellerProfileImage,
+                            : SizedBox(
                                 width: size.width * 0.12,
                                 height: size.width * 0.12,
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    Ionicons.alert_circle,
-                                    size: 20,
-                                    color: redColor,
-                                  );
-                                },
-                                placeholder: (context, url) {
-                                  return const Icon(
-                                    Ionicons.image,
-                                    size: 20,
-                                    color: lightBlackColor,
-                                  );
-                                },
+                                child: CachedNetworkImage(
+                                  imageUrl: sellerProfileImage,
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                  memCacheHeight: (size.width * 0.12).round(),
+                                  memCacheWidth: (size.width * 0.12).round(),
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      Ionicons.alert_circle,
+                                      size: 20,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(
+                                      Ionicons.image,
+                                      size: 20,
+                                      color: lightBlackColor,
+                                    );
+                                  },
+                                ),
                               )
                         : buyerProfileImage == ''
                             ? Container(
@@ -633,25 +626,30 @@ class _ChatCardState extends State<ChatCard> {
                                   size: 20,
                                 ),
                               )
-                            : CachedNetworkImage(
-                                imageUrl: buyerProfileImage,
+                            : SizedBox(
                                 width: size.width * 0.12,
                                 height: size.width * 0.12,
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    Ionicons.alert_circle,
-                                    size: 20,
-                                    color: redColor,
-                                  );
-                                },
-                                placeholder: (context, url) {
-                                  return const Icon(
-                                    Ionicons.image,
-                                    size: 20,
-                                    color: lightBlackColor,
-                                  );
-                                },
+                                child: CachedNetworkImage(
+                                  imageUrl: buyerProfileImage,
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                  memCacheHeight: (size.width * 0.12).round(),
+                                  memCacheWidth: (size.width * 0.12).round(),
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      Ionicons.alert_circle,
+                                      size: 20,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(
+                                      Ionicons.image,
+                                      size: 20,
+                                      color: lightBlackColor,
+                                    );
+                                  },
+                                ),
                               ),
                   ),
                   Expanded(
@@ -752,6 +750,9 @@ class _ChatCardState extends State<ChatCard> {
                                     child: CachedNetworkImage(
                                       imageUrl: productImage,
                                       fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                      memCacheHeight:
+                                          (size.height * 0.1).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
                                           Ionicons.alert_circle,

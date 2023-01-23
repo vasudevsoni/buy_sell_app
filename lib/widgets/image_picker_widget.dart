@@ -248,6 +248,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.file(
                                     provider.imagePaths[index],
+                                    cacheHeight:
+                                        (MediaQuery.of(context).size.height *
+                                                0.3)
+                                            .round(),
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
                                         Ionicons.alert_circle,
@@ -357,33 +361,38 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: CustomButton(
-            text: 'Take Photo',
-            onPressed: provider.imagesCount >= 20
-                ? showMaximumError
-                : requestCameraPermission,
-            icon: Ionicons.camera,
-            bgColor: whiteColor,
-            borderColor: blackColor,
-            textIconColor: blackColor,
-            isDisabled: widget.isButtonDisabled,
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: CustomButton(
-            text: 'Choose Photos',
-            onPressed: provider.imagesCount >= 20
-                ? showMaximumError
-                : requestGalleryPermission,
-            icon: Ionicons.images,
-            bgColor: whiteColor,
-            borderColor: blackColor,
-            textIconColor: blackColor,
-            isDisabled: widget.isButtonDisabled,
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomButton(
+                  text: 'Take Photo',
+                  onPressed: provider.imagesCount >= 20
+                      ? showMaximumError
+                      : requestCameraPermission,
+                  icon: Ionicons.camera,
+                  bgColor: whiteColor,
+                  borderColor: blackColor,
+                  textIconColor: blackColor,
+                  isDisabled: widget.isButtonDisabled,
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: CustomButton(
+                  text: 'Upload',
+                  onPressed: provider.imagesCount >= 20
+                      ? showMaximumError
+                      : requestGalleryPermission,
+                  icon: Ionicons.images,
+                  bgColor: whiteColor,
+                  borderColor: blackColor,
+                  textIconColor: blackColor,
+                  isDisabled: widget.isButtonDisabled,
+                ),
+              ),
+            ],
           ),
         ),
       ],

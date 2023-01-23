@@ -1,9 +1,9 @@
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
@@ -58,11 +58,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             return const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCircle(
-                  color: lightBlackColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
+                child: CustomLoadingIndicator(),
               ),
             );
           }

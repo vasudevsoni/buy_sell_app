@@ -4,13 +4,13 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
 
 import '../auth/screens/location_screen.dart';
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
@@ -476,11 +476,7 @@ class CategoriesListView extends StatelessWidget {
             return const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCircle(
-                  color: lightBlackColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
+                child: CustomLoadingIndicator(),
               ),
             );
           }
@@ -502,7 +498,6 @@ class CategoriesListView extends StatelessWidget {
                   () => SubCategoriesListScreen(doc: doc),
                 ),
                 child: Container(
-                  width: size.height * 0.15,
                   decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(10),
@@ -512,6 +507,7 @@ class CategoriesListView extends StatelessWidget {
                     ),
                   ),
                   padding: const EdgeInsets.all(5),
+                  width: size.height * 0.15,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -521,6 +517,7 @@ class CategoriesListView extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: doc['image'],
                             fit: BoxFit.fitHeight,
+                            filterQuality: FilterQuality.high,
                             errorWidget: (context, url, error) {
                               return const Icon(
                                 Ionicons.alert_circle,
@@ -530,11 +527,7 @@ class CategoriesListView extends StatelessWidget {
                             },
                             placeholder: (context, url) {
                               return const Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
+                                child: CustomLoadingIndicator(),
                               );
                             },
                           ),
@@ -861,11 +854,7 @@ class _ProductsListState extends State<ProductsList> {
                 return const Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Center(
-                    child: SpinKitFadingCircle(
-                      color: lightBlackColor,
-                      size: 30,
-                      duration: Duration(milliseconds: 1000),
-                    ),
+                    child: CustomLoadingIndicator(),
                   ),
                 );
               }

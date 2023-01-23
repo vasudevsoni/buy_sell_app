@@ -156,19 +156,21 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   onPressed: () => Share.share(
                     'Hey! I found some really amazing deals on the BechDe app.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
                   ),
+                  isFullWidth: true,
                   icon: Ionicons.share_social,
                   bgColor: blackColor,
                   borderColor: blackColor,
                   textIconColor: whiteColor,
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 CustomButton(
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
                   icon: Ionicons.home,
+                  isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

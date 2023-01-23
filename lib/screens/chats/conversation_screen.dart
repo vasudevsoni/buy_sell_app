@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
 import '/screens/product_details_screen.dart';
 import '/services/firebase_services.dart';
@@ -246,32 +246,40 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButton(
-                  icon: Ionicons.arrow_forward,
-                  text: 'Send Offer',
-                  onPressed: () {
-                    if (offerPriceController.text.isEmpty) {
-                      return;
-                    }
-                    final offerPrice = priceFormat
-                        .format(int.parse(offerPriceController.text));
-                    sendOfferMessage(
-                        'I would like to buy this for $offerPrice');
-                    Get.back();
-                  },
-                  bgColor: blueColor,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        icon: Ionicons.arrow_forward,
+                        text: 'Send Offer',
+                        onPressed: () {
+                          if (offerPriceController.text.isEmpty) {
+                            return;
+                          }
+                          final offerPrice = priceFormat
+                              .format(int.parse(offerPriceController.text));
+                          sendOfferMessage(
+                              'I would like to buy this for $offerPrice');
+                          Get.back();
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -349,28 +357,36 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Delete',
-                  onPressed: () {
-                    _services.deleteChat(
-                      chatRoomId: widget.chatRoomId,
-                    );
-                    Get.back();
-                    Get.back();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'No, Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Yes, Delete',
+                        onPressed: () {
+                          _services.deleteChat(
+                            chatRoomId: widget.chatRoomId,
+                          );
+                          Get.back();
+                          Get.back();
+                        },
+                        bgColor: whiteColor,
+                        borderColor: redColor,
+                        textIconColor: redColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -445,11 +461,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ? const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCircle(
-                  color: lightBlackColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
+                child: CustomLoadingIndicator(),
               ),
             )
           : Column(
@@ -476,6 +488,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 child: CachedNetworkImage(
                                   imageUrl: imageUrl,
                                   fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                  memCacheHeight: (size.height * 0.20).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
                                       Ionicons.alert_circle,
@@ -592,15 +606,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         return const Padding(
                           padding: EdgeInsets.all(15.0),
                           child: Center(
-                            child: SpinKitFadingCircle(
-                              color: lightBlackColor,
-                              size: 30,
-                              duration: Duration(milliseconds: 1000),
-                            ),
+                            child: CustomLoadingIndicator(),
                           ),
                         );
                       }
-                      return ListView.builder(
+                      return ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            height: 2,
+                          );
+                        },
                         controller: scrollController,
                         physics: const ClampingScrollPhysics(),
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -748,9 +763,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                       ],
                                     )),
-                              ),
-                              const SizedBox(
-                                height: 2,
                               ),
                             ],
                           );

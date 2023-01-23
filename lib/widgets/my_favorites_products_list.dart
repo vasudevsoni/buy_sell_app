@@ -1,13 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/main_provider.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
+import 'custom_loading_indicator.dart';
 import 'custom_product_card.dart';
 import 'svg_picture.dart';
 
@@ -38,11 +38,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
             return const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCircle(
-                  color: lightBlackColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
+                child: CustomLoadingIndicator(),
               ),
             );
           }

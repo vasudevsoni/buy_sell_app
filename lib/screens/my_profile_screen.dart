@@ -1,8 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
@@ -10,6 +9,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '/auth/screens/email_verification_screen.dart';
 import '/auth/screens/location_screen.dart';
@@ -207,7 +207,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     itemCount: 1,
                                     builder: (BuildContext context, int index) {
                                       return PhotoViewGalleryPageOptions(
-                                        imageProvider: NetworkImage(
+                                        imageProvider:
+                                            CachedNetworkImageProvider(
                                           profileImage,
                                         ),
                                         initialScale:
@@ -231,12 +232,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     },
                                     loadingBuilder: (context, event) {
                                       return const Center(
-                                        child: SpinKitFadingCircle(
-                                          color: greyColor,
-                                          size: 30,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
+                                        child: CustomLoadingIndicator(),
                                       );
                                     },
                                   ),
@@ -282,6 +278,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               child: CachedNetworkImage(
                                 imageUrl: profileImage,
                                 fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                memCacheHeight: (size.width * 0.25).round(),
+                                memCacheWidth: (size.width * 0.25).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
                                     Ionicons.alert_circle,
@@ -291,11 +290,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 },
                                 placeholder: (context, url) {
                                   return const Center(
-                                    child: SpinKitFadingCircle(
-                                      color: lightBlackColor,
-                                      size: 30,
-                                      duration: Duration(milliseconds: 1000),
-                                    ),
+                                    child: CustomLoadingIndicator(),
                                   );
                                 },
                               ),
@@ -476,6 +471,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     CustomButton(
                       text: 'List a Product',
+                      isFullWidth: true,
                       onPressed: !user!.emailVerified &&
                               user!.providerData[0].providerId == 'password'
                           ? () => Get.to(

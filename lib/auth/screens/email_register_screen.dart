@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../widgets/custom_button_without_icon.dart';
 import '../../widgets/loading_button.dart';
 import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
@@ -167,22 +167,6 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                 ],
               ),
               const Spacer(),
-              TextButton(
-                onPressed: () => Get.off(
-                  () => const EmailLoginScreen(),
-                ),
-                child: const AutoSizeText(
-                  'Already have an account? Login',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: blueColor,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 5,
               ),
@@ -198,6 +182,18 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomButtonWithoutIcon(
+                text: 'Already have an account? Login',
+                bgColor: whiteColor,
+                borderColor: blueColor,
+                textIconColor: blueColor,
+                onPressed: () => Get.off(
+                  () => const EmailLoginScreen(),
+                ),
+              ),
             ],
           ),
         ),

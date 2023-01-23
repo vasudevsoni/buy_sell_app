@@ -485,90 +485,99 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      var uid = widget.productData.id;
-                      setSearchParams({
-                        required String s,
-                        required int n,
-                        required String catName,
-                        required String subCatName,
-                      }) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < catName.length; i++) {
-                          String catNameTemp = '';
-                          for (int j = i; j < catName.length; j++) {
-                            catNameTemp += catName[j];
-                            if (catNameTemp.length >= 3) {
-                              searchQueries.add(catNameTemp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < subCatName.length; i++) {
-                          String subCatNameTemp = '';
-                          for (int j = i; j < subCatName.length; j++) {
-                            subCatNameTemp += subCatName[j];
-                            if (subCatNameTemp.length >= 3) {
-                              searchQueries.add(subCatNameTemp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.updatedDataToFirestore.addAll({
-                        'title':
-                            '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                        'brandName': brandNameController.text,
-                        'modelName': modelNameController.text,
-                        'fuelType': fuelTypeSelectedValue,
-                        'yearOfReg': int.parse(yorSelectedValue!),
-                        'color': colorSelectedValue,
-                        'kmsDriven': int.parse(kmDrivenController.text),
-                        'noOfOwners': noOfOwnersSelectedValue,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'searchQueries': setSearchParams(
-                          s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
-                          n: brandNameController.text.length +
-                              modelNameController.text.length +
-                              1,
-                          catName: 'vehicles',
-                          subCatName:
-                              widget.productData['subCat'].toLowerCase(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
                         ),
-                        'isActive': false,
-                        'isRejected': false,
-                      });
-                      await updateProductOnFirebase(provider, uid);
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Update',
+                          icon: Ionicons.checkmark,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            var uid = widget.productData.id;
+                            setSearchParams({
+                              required String s,
+                              required int n,
+                              required String catName,
+                              required String subCatName,
+                            }) {
+                              List<String> searchQueries = [];
+                              for (int i = 0; i < n; i++) {
+                                String temp = '';
+                                for (int j = i; j < n; j++) {
+                                  temp += s[j];
+                                  if (temp.length >= 3) {
+                                    searchQueries.add(temp);
+                                  }
+                                }
+                              }
+                              for (int i = 0; i < catName.length; i++) {
+                                String catNameTemp = '';
+                                for (int j = i; j < catName.length; j++) {
+                                  catNameTemp += catName[j];
+                                  if (catNameTemp.length >= 3) {
+                                    searchQueries.add(catNameTemp);
+                                  }
+                                }
+                              }
+                              for (int i = 0; i < subCatName.length; i++) {
+                                String subCatNameTemp = '';
+                                for (int j = i; j < subCatName.length; j++) {
+                                  subCatNameTemp += subCatName[j];
+                                  if (subCatNameTemp.length >= 3) {
+                                    searchQueries.add(subCatNameTemp);
+                                  }
+                                }
+                              }
+                              return searchQueries;
+                            }
+
+                            provider.updatedDataToFirestore.addAll({
+                              'title':
+                                  '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                              'brandName': brandNameController.text,
+                              'modelName': modelNameController.text,
+                              'fuelType': fuelTypeSelectedValue,
+                              'yearOfReg': int.parse(yorSelectedValue!),
+                              'color': colorSelectedValue,
+                              'kmsDriven': int.parse(kmDrivenController.text),
+                              'noOfOwners': noOfOwnersSelectedValue,
+                              'description': descriptionController.text,
+                              'price': int.parse(priceController.text),
+                              'searchQueries': setSearchParams(
+                                s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                                n: brandNameController.text.length +
+                                    modelNameController.text.length +
+                                    1,
+                                catName: 'vehicles',
+                                subCatName:
+                                    widget.productData['subCat'].toLowerCase(),
+                              ),
+                              'isActive': false,
+                              'isRejected': false,
+                            });
+                            await updateProductOnFirebase(provider, uid);
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -646,25 +655,33 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Leave',
-                    onPressed: () {
-                      Get.back();
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Stay Here',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Stay Here',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Leave',
+                          onPressed: () {
+                            Get.back();
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

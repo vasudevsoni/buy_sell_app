@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../services/admob_services.dart';
+import '../../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_list_tile_no_image.dart';
 import '/services/firebase_services.dart';
@@ -100,11 +100,7 @@ class _SellerSubCategoriesListScreenState
               return const Padding(
                 padding: EdgeInsets.all(15.0),
                 child: Center(
-                  child: SpinKitFadingCircle(
-                    color: lightBlackColor,
-                    size: 30,
-                    duration: Duration(milliseconds: 1000),
-                  ),
+                  child: CustomLoadingIndicator(),
                 ),
               );
             }

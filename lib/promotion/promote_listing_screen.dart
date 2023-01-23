@@ -3,13 +3,13 @@ import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../utils/utils.dart';
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 
 class PromoteListingScreen extends StatefulWidget {
   final String productId;
@@ -47,15 +47,17 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
     });
     await PromotionApi.init();
     final offerings = await PromotionApi.fetchOffers();
-    setState(() {
-      packages = offerings
-          .map((offer) => offer.availablePackages)
-          .expand((pair) => pair)
-          .toList();
-      package = packages.first;
-      product = package!.storeProduct;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        packages = offerings
+            .map((offer) => offer.availablePackages)
+            .expand((pair) => pair)
+            .toList();
+        package = packages.first;
+        product = package!.storeProduct;
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -81,11 +83,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
           ? const Padding(
               padding: EdgeInsets.all(15.0),
               child: Center(
-                child: SpinKitFadingCircle(
-                  color: lightBlackColor,
-                  size: 30,
-                  duration: Duration(milliseconds: 1000),
-                ),
+                child: CustomLoadingIndicator(),
               ),
             )
           : SingleChildScrollView(
@@ -107,6 +105,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                               child: CachedNetworkImage(
                                 imageUrl: widget.imageUrl,
                                 fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                memCacheHeight: (size.height * 0.20).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
                                     Ionicons.alert_circle,
@@ -163,7 +163,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Text(
-                      'Available Offers',
+                      'Available Packages',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -243,6 +243,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                         height: size.height * 0.7,
                                         width: size.width,
                                         fit: BoxFit.contain,
+                                        filterQuality: FilterQuality.high,
                                       ),
                                       const SizedBox(
                                         height: 10,
@@ -292,14 +293,34 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Text(
-                                      product!.priceString.toString(),
-                                      textAlign: TextAlign.end,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w800,
-                                        color: whiteColor,
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        const Text(
+                                          '₹100.00',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800,
+                                            color: whiteColor,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decorationThickness: 2,
+                                          ),
+                                        ),
+                                        Text(
+                                          product!.priceString.toString(),
+                                          textAlign: TextAlign.end,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800,
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -307,6 +328,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                               const Divider(
                                 color: whiteColor,
                                 height: 20,
+                                thickness: 2,
                               ),
                               Row(
                                 children: [
@@ -423,6 +445,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     return;
                                   }
                                 },
+                                isFullWidth: true,
                                 icon: Ionicons.bag_check,
                                 borderColor: whiteColor,
                                 bgColor: whiteColor,

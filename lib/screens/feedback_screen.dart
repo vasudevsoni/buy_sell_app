@@ -89,37 +89,48 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Submit',
-                  onPressed: () async {
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo =
-                        await deviceInfo.androidInfo;
-                    services.submitFeedback(
-                      text: feedbackTextController.text,
-                      model: androidInfo.model,
-                      androidVersion: androidInfo.version.release,
-                      securityPatch: androidInfo.version.securityPatch,
-                    );
-                    Get.back();
-                    setState(() {
-                      feedbackTextController.clear();
-                    });
-                    Get.back();
-                  },
-                  bgColor: blueColor,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'No, Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Yes, Submit',
+                        onPressed: () async {
+                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                          AndroidDeviceInfo androidInfo =
+                              await deviceInfo.androidInfo;
+                          services.submitFeedback(
+                            text: feedbackTextController.text,
+                            model: androidInfo.model,
+                            androidVersion: androidInfo.version.release,
+                            securityPatch: androidInfo.version.securityPatch,
+                          );
+                          Get.back();
+                          setState(() {
+                            feedbackTextController.clear();
+                          });
+                          Get.back();
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
                 ),
               ],
             ),
@@ -173,6 +184,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             CustomButton(
               icon: Ionicons.arrow_forward,
               text: 'Proceed',
+              isFullWidth: true,
               onPressed: () {
                 if (feedbackTextController.text.isEmpty) {
                   return;

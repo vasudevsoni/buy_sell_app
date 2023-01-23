@@ -116,29 +116,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Log Out',
-                  onPressed: () async {
-                    Get.back();
-                    await FirebaseAuth.instance.signOut().then(
-                          (value) => Get.offAll(
-                            () => const LandingScreen(),
-                          ),
-                        );
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Log Out',
+                        onPressed: () async {
+                          Get.back();
+                          await FirebaseAuth.instance.signOut().then(
+                                (value) => Get.offAll(
+                                  () => const LandingScreen(),
+                                ),
+                              );
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
@@ -9,6 +8,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../services/admob_services.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
 
 class AllImagesDisplayScreen extends StatefulWidget {
@@ -142,7 +142,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                   pageController: pageController,
                                   builder: (BuildContext context, int index) {
                                     return PhotoViewGalleryPageOptions(
-                                      imageProvider: NetworkImage(
+                                      imageProvider: CachedNetworkImageProvider(
                                         widget.images[index],
                                       ),
                                       initialScale:
@@ -163,11 +163,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                   },
                                   loadingBuilder: (context, event) {
                                     return const Center(
-                                      child: SpinKitFadingCircle(
-                                        color: greyColor,
-                                        size: 30,
-                                        duration: Duration(milliseconds: 1000),
-                                      ),
+                                      child: CustomLoadingIndicator(),
                                     );
                                   },
                                 ),
@@ -201,14 +197,17 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                         );
                       },
                     ),
-                    child: SizedBox(
-                      height: size.height * 0.3,
-                      width: double.infinity,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        color: blackColor,
+                        width: double.infinity,
+                        height: size.height * 0.25,
                         child: CachedNetworkImage(
                           imageUrl: widget.images[index],
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.high,
+                          memCacheHeight: (size.height * 0.25).round(),
                           errorWidget: (context, url, error) {
                             return const Icon(
                               Ionicons.alert_circle,
@@ -218,11 +217,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                           },
                           placeholder: (context, url) {
                             return const Center(
-                              child: SpinKitFadingCircle(
-                                color: lightBlackColor,
-                                size: 30,
-                                duration: Duration(milliseconds: 1000),
-                              ),
+                              child: CustomLoadingIndicator(),
                             );
                           },
                         ),

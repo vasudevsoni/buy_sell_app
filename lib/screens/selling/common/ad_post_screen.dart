@@ -435,97 +435,106 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Post',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      List<String> urls =
-                          await provider.uploadFiles(provider.imagePaths);
-                      var time = DateTime.now().millisecondsSinceEpoch;
-                      setSearchParams({
-                        required String s,
-                        required int n,
-                        required String catName,
-                        required String subCatName,
-                      }) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < catName.length; i++) {
-                          String catNameTemp = '';
-                          for (int j = i; j < catName.length; j++) {
-                            catNameTemp += catName[j];
-                            if (catNameTemp.length >= 3) {
-                              searchQueries.add(catNameTemp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < subCatName.length; i++) {
-                          String subCatNameTemp = '';
-                          for (int j = i; j < subCatName.length; j++) {
-                            subCatNameTemp += subCatName[j];
-                            if (subCatNameTemp.length >= 3) {
-                              searchQueries.add(subCatNameTemp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.dataToFirestore.addAll({
-                        'catName': widget.catName,
-                        'subCat': widget.subCatName,
-                        'title': titleController.text,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'sellerUid': _services.user!.uid,
-                        'images': urls,
-                        'postedAt': time,
-                        'favorites': [],
-                        'views': [],
-                        'searchQueries': setSearchParams(
-                          s: titleController.text.toLowerCase(),
-                          n: titleController.text.length,
-                          catName: widget.catName.toLowerCase(),
-                          subCatName: widget.subCatName.toLowerCase(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
                         ),
-                        'location': {
-                          'latitude': latitude,
-                          'longitude': longitude,
-                          'area': area,
-                          'city': city,
-                          'state': state,
-                          'country': country,
-                        },
-                        'isSold': false,
-                        'isActive': false,
-                        'isRejected': false,
-                      });
-                      publishProductToFirebase(provider);
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Post',
+                          icon: Ionicons.checkmark,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            List<String> urls =
+                                await provider.uploadFiles(provider.imagePaths);
+                            var time = DateTime.now().millisecondsSinceEpoch;
+                            setSearchParams({
+                              required String s,
+                              required int n,
+                              required String catName,
+                              required String subCatName,
+                            }) {
+                              List<String> searchQueries = [];
+                              for (int i = 0; i < n; i++) {
+                                String temp = '';
+                                for (int j = i; j < n; j++) {
+                                  temp += s[j];
+                                  if (temp.length >= 3) {
+                                    searchQueries.add(temp);
+                                  }
+                                }
+                              }
+                              for (int i = 0; i < catName.length; i++) {
+                                String catNameTemp = '';
+                                for (int j = i; j < catName.length; j++) {
+                                  catNameTemp += catName[j];
+                                  if (catNameTemp.length >= 3) {
+                                    searchQueries.add(catNameTemp);
+                                  }
+                                }
+                              }
+                              for (int i = 0; i < subCatName.length; i++) {
+                                String subCatNameTemp = '';
+                                for (int j = i; j < subCatName.length; j++) {
+                                  subCatNameTemp += subCatName[j];
+                                  if (subCatNameTemp.length >= 3) {
+                                    searchQueries.add(subCatNameTemp);
+                                  }
+                                }
+                              }
+                              return searchQueries;
+                            }
+
+                            provider.dataToFirestore.addAll({
+                              'catName': widget.catName,
+                              'subCat': widget.subCatName,
+                              'title': titleController.text,
+                              'description': descriptionController.text,
+                              'price': int.parse(priceController.text),
+                              'sellerUid': _services.user!.uid,
+                              'images': urls,
+                              'postedAt': time,
+                              'favorites': [],
+                              'views': [],
+                              'searchQueries': setSearchParams(
+                                s: titleController.text.toLowerCase(),
+                                n: titleController.text.length,
+                                catName: widget.catName.toLowerCase(),
+                                subCatName: widget.subCatName.toLowerCase(),
+                              ),
+                              'location': {
+                                'latitude': latitude,
+                                'longitude': longitude,
+                                'area': area,
+                                'city': city,
+                                'state': state,
+                                'country': country,
+                              },
+                              'isSold': false,
+                              'isActive': false,
+                              'isRejected': false,
+                            });
+                            publishProductToFirebase(provider);
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -603,31 +612,39 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Reset All',
-                    onPressed: () {
-                      setState(() {
-                        titleController.text = '';
-                        descriptionController.text = '';
-                        priceController.text = '';
-                        provider.imagePaths.clear();
-                        provider.clearImagesCount();
-                      });
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Reset All',
+                          onPressed: () {
+                            setState(() {
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              priceController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -705,31 +722,40 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Leave',
-                    onPressed: () {
-                      setState(() {
-                        titleController.text = '';
-                        descriptionController.text = '';
-                        priceController.text = '';
-                        provider.imagePaths.clear();
-                        provider.clearImagesCount();
-                      });
-                      Get.offAll(() => const MainScreen(selectedIndex: 0));
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Stay Here',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Stay Here',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Leave',
+                          onPressed: () {
+                            setState(() {
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              priceController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.offAll(
+                                () => const MainScreen(selectedIndex: 0));
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

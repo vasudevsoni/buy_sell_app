@@ -1,7 +1,6 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
@@ -12,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/loading_button.dart';
 import '/widgets/custom_button.dart';
 import '/utils/utils.dart';
@@ -224,28 +224,37 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Confirm & Update',
-                  onPressed: () async {
-                    Get.back();
-                    await uploadImage(File(pickedImage!.path));
-                    Get.offAll(() => const MainScreen(selectedIndex: 3));
-                  },
-                  bgColor: blueColor,
-                  isDisabled: isLoading,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Go Back & Change',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  isDisabled: isLoading,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        isDisabled: isLoading,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Update',
+                        icon: Ionicons.checkmark,
+                        onPressed: () async {
+                          Get.back();
+                          await uploadImage(File(pickedImage!.path));
+                          Get.offAll(() => const MainScreen(selectedIndex: 3));
+                        },
+                        bgColor: blueColor,
+                        isDisabled: isLoading,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -289,6 +298,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 child: CachedNetworkImage(
                   imageUrl: profileImage,
                   fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
+                  memCacheHeight: (size.width * 0.3).round(),
+                  memCacheWidth: (size.width * 0.3).round(),
                   errorWidget: (context, url, error) {
                     return const Icon(
                       Ionicons.alert_circle,
@@ -298,11 +310,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   },
                   placeholder: (context, url) {
                     return const Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child:CustomLoadingIndicator(),
                     );
                   },
                 ),
@@ -354,6 +362,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             child: CustomButton(
               text: 'Take Photo',
               onPressed: requestCameraPermission,
+              isFullWidth: true,
               icon: Ionicons.camera,
               bgColor: whiteColor,
               borderColor: blackColor,
@@ -367,9 +376,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(
-              text: 'Choose Photo',
+              text: 'Upload Photo',
               onPressed: requestGalleryPermission,
               icon: Ionicons.image,
+              isFullWidth: true,
               bgColor: whiteColor,
               borderColor: blackColor,
               textIconColor: blackColor,

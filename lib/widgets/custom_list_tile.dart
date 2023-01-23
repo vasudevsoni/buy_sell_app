@@ -40,6 +40,7 @@ class CustomListTile extends StatelessWidget {
                 padding: const EdgeInsets.all(15),
                 child: CachedNetworkImage(
                   imageUrl: url,
+                  filterQuality: FilterQuality.high,
                 ),
               ),
             ),

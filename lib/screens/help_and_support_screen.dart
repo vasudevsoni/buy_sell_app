@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'web_view/faqs.dart';
 import 'web_view/icons8.dart';
@@ -23,14 +24,24 @@ class HelpAndSupportScreen extends StatefulWidget {
 
 class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   final FirebaseServices _services = FirebaseServices();
+  late PackageInfo packageInfo;
   String uid = '';
+  String version = '';
 
   @override
   void initState() {
     setState(() {
       uid = _services.user!.uid;
     });
+    getDetails();
     super.initState();
+  }
+
+  getDetails() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
   }
 
   openMail(email) async {
@@ -176,7 +187,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Version',
-              subTitle: '1.0.7',
+              subTitle: version,
               icon: Ionicons.phone_portrait,
               isEnabled: false,
               onTap: () {},

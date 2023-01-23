@@ -1,11 +1,10 @@
 import 'package:buy_sell_app/promotion/promote_listing_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:latlong2/latlong.dart';
@@ -15,6 +14,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/text_field_label.dart';
 import 'all_images_display_screen.dart';
@@ -124,9 +124,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           'views': FieldValue.arrayUnion([services.user!.uid]),
         });
       }
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -283,33 +285,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
-                    icon: Ionicons.arrow_forward,
-                    text: 'Submit',
-                    onPressed: () {
-                      if (reportTextController.text.isEmpty) {
-                        return;
-                      }
-                      services.reportItem(
-                        listingId: widget.productData.id,
-                        message: reportTextController.text,
-                      );
-                      Get.back();
-                      reportTextController.clear();
-                    },
-                    bgColor: redColor,
-                    borderColor: redColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          icon: Ionicons.arrow_forward,
+                          text: 'Report',
+                          onPressed: () {
+                            if (reportTextController.text.isEmpty) {
+                              return;
+                            }
+                            services.reportItem(
+                              listingId: widget.productData.id,
+                              message: reportTextController.text,
+                            );
+                            Get.back();
+                            reportTextController.clear();
+                          },
+                          bgColor: redColor,
+                          borderColor: redColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -359,6 +369,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Center(
                     child: CustomButton(
                       icon: Ionicons.flag,
+                      isFullWidth: true,
                       text: 'Report Product',
                       onPressed: () {
                         Get.back();
@@ -368,16 +379,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       borderColor: redColor,
                       textIconColor: redColor,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
                   ),
                 ],
               ),
@@ -503,11 +504,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ? const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     ),
                   )
                 : SingleChildScrollView(
@@ -567,7 +564,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               builder: (BuildContext context,
                                                   int index) {
                                                 return PhotoViewGalleryPageOptions(
-                                                  imageProvider: NetworkImage(
+                                                  imageProvider:
+                                                      CachedNetworkImageProvider(
                                                     images[index],
                                                   ),
                                                   initialScale:
@@ -594,13 +592,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               },
                                               loadingBuilder: (context, event) {
                                                 return const Center(
-                                                  child: SpinKitFadingCircle(
-                                                    color: greyColor,
-                                                    size: 30,
-                                                    duration: Duration(
-                                                      milliseconds: 1000,
-                                                    ),
-                                                  ),
+                                                  child:
+                                                      CustomLoadingIndicator(),
                                                 );
                                               },
                                             ),
@@ -640,13 +633,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 color: blackColor,
                                 width: size.width,
-                                height: size.height * 0.35,
                                 child: CarouselSlider.builder(
                                   itemCount: images.length,
                                   itemBuilder: (context, index, realIndex) {
                                     return CachedNetworkImage(
                                       imageUrl: images[index],
-                                      fit: BoxFit.contain,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                      memCacheHeight:
+                                          (size.height * 0.35).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
                                           Ionicons.alert_circle,
@@ -656,19 +651,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       },
                                       placeholder: (context, url) {
                                         return const Center(
-                                          child: SpinKitFadingCircle(
-                                            color: greyColor,
-                                            size: 30,
-                                            duration:
-                                                Duration(milliseconds: 1000),
-                                          ),
+                                          child: CustomLoadingIndicator(),
                                         );
                                       },
                                     );
                                   },
                                   options: CarouselOptions(
                                     viewportFraction: 1,
-                                    height: size.height,
+                                    height: size.height * 0.35,
                                     enlargeCenterPage: false,
                                     enableInfiniteScroll:
                                         images.length == 1 ? false : true,
@@ -717,8 +707,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     children: images.map((url) {
                                       int index = images.indexOf(url);
                                       return Container(
-                                        width: 8.0,
-                                        height: 8.0,
+                                        width:
+                                            currentImage == index ? 12.0 : 8.0,
+                                        height:
+                                            currentImage == index ? 12.0 : 8.0,
                                         margin: const EdgeInsets.only(
                                           left: 2,
                                           right: 2,
@@ -946,39 +938,35 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         widget.productData['sellerUid'] == services.user!.uid &&
                                 isSold == false
-                            ? Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                    ),
-                                    child: CustomButton(
-                                      text: 'Reach More Buyers',
-                                      onPressed: () => Get.to(
-                                        () => PromoteListingScreen(
-                                          productId: widget.productData.id,
-                                          title: widget.productData['title'],
-                                          price: widget.productData['price']
-                                              .toDouble(),
-                                          imageUrl: widget.productData['images']
-                                              [0],
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomButton(
+                                        text: 'Reach More Buyers',
+                                        onPressed: () => Get.to(
+                                          () => PromoteListingScreen(
+                                            productId: widget.productData.id,
+                                            title: widget.productData['title'],
+                                            price: widget.productData['price']
+                                                .toDouble(),
+                                            imageUrl:
+                                                widget.productData['images'][0],
+                                          ),
                                         ),
+                                        icon: Ionicons.trending_up,
+                                        bgColor: blueColor,
+                                        borderColor: blueColor,
+                                        textIconColor: whiteColor,
                                       ),
-                                      icon: Ionicons.trending_up,
-                                      bgColor: blueColor,
-                                      borderColor: blueColor,
-                                      textIconColor: whiteColor,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
+                                    const SizedBox(
+                                      width: 5,
                                     ),
-                                    child: CustomButton(
-                                      text: 'Edit Product',
+                                    CustomButton(
+                                      text: 'Edit',
                                       onPressed: () => widget
                                                   .productData['catName'] ==
                                               'Vehicles'
@@ -997,8 +985,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               )
                             : isSold == false
                                 ? Padding(
@@ -1007,6 +995,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     child: CustomButton(
                                       text: 'Chat with Seller',
                                       onPressed: createChatRoom,
+                                      isFullWidth: true,
                                       icon: Ionicons.chatbox,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
@@ -1021,7 +1010,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 services.user!.uid &&
                             isSold == false)
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                         if (widget.productData['sellerUid'] !=
                             services.user!.uid)
@@ -1040,6 +1029,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   productId: widget.productData.id,
                                 );
                               },
+                              isFullWidth: true,
                               icon: isLiked
                                   ? Ionicons.heart
                                   : Ionicons.heart_outline,
@@ -1543,6 +1533,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 child: CachedNetworkImage(
                                                   imageUrl: profileImage,
                                                   fit: BoxFit.cover,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  memCacheHeight:
+                                                      (size.width * 0.1)
+                                                          .round(),
+                                                  memCacheWidth:
+                                                      (size.width * 0.1)
+                                                          .round(),
                                                   errorWidget:
                                                       (context, url, error) {
                                                     return const Icon(
@@ -1554,12 +1552,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   placeholder: (context, url) {
                                                     return const Center(
                                                       child:
-                                                          SpinKitFadingCircle(
-                                                        color: lightBlackColor,
-                                                        size: 20,
-                                                        duration: Duration(
-                                                            milliseconds: 1000),
-                                                      ),
+                                                          CustomLoadingIndicator(),
                                                     );
                                                   },
                                                 ),
@@ -1721,11 +1714,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }
@@ -1768,14 +1757,14 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 right: 15,
               ),
               child: CustomButton(
-                text: 'See more similar products',
+                text: 'See similar products',
                 onPressed: () => Get.to(
                   () => CategoryProductsScreen(
                     catName: widget.catName,
                     subCatName: widget.subCatName,
                   ),
                 ),
-                icon: Ionicons.chevron_forward,
+                icon: Ionicons.arrow_forward,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

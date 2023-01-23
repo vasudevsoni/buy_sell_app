@@ -1,7 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +11,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '../widgets/text_field_label.dart';
@@ -210,33 +210,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButton(
-                  icon: Ionicons.arrow_forward,
-                  text: 'Submit',
-                  onPressed: () {
-                    if (reportTextController.text.isEmpty) {
-                      return;
-                    }
-                    services.reportUser(
-                      message: reportTextController.text,
-                      userId: sellerUid,
-                    );
-                    Get.back();
-                    reportTextController.clear();
-                  },
-                  bgColor: redColor,
-                  borderColor: redColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        icon: Ionicons.arrow_forward,
+                        text: 'Report',
+                        onPressed: () {
+                          if (reportTextController.text.isEmpty) {
+                            return;
+                          }
+                          services.reportUser(
+                            message: reportTextController.text,
+                            userId: sellerUid,
+                          );
+                          Get.back();
+                          reportTextController.clear();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -290,19 +298,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Get.back();
                     showReportDialog();
                   },
+                  isFullWidth: true,
                   bgColor: whiteColor,
                   borderColor: redColor,
                   textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
                 ),
               ],
             ),
@@ -422,7 +421,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     itemCount: 1,
                                     builder: (BuildContext context, int index) {
                                       return PhotoViewGalleryPageOptions(
-                                        imageProvider: NetworkImage(
+                                        imageProvider:
+                                            CachedNetworkImageProvider(
                                           profileImage,
                                         ),
                                         initialScale:
@@ -446,12 +446,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     loadingBuilder: (context, event) {
                                       return const Center(
-                                        child: SpinKitFadingCircle(
-                                          color: greyColor,
-                                          size: 30,
-                                          duration:
-                                              Duration(milliseconds: 1000),
-                                        ),
+                                        child: CustomLoadingIndicator(),
                                       );
                                     },
                                   ),
@@ -495,6 +490,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CachedNetworkImage(
                             imageUrl: profileImage,
                             fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                            memCacheHeight: (size.width * 0.25).round(),
+                            memCacheWidth: (size.width * 0.25).round(),
                             errorWidget: (context, url, error) {
                               return const Icon(
                                 Ionicons.alert_circle,
@@ -504,11 +502,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             placeholder: (context, url) {
                               return const Center(
-                                child: SpinKitFadingCircle(
-                                  color: lightBlackColor,
-                                  size: 30,
-                                  duration: Duration(milliseconds: 1000),
-                                ),
+                                child: CustomLoadingIndicator(),
                               );
                             },
                           ),
@@ -728,11 +722,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }

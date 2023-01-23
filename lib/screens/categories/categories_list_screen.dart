@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
+import '../../widgets/custom_loading_indicator.dart';
 import '/services/firebase_services.dart';
 import '/screens/categories/sub_categories_list_screen.dart';
-import '/utils/utils.dart';
 import '/widgets/custom_list_tile.dart';
 
 class CategoriesListScreen extends StatefulWidget {
@@ -41,11 +40,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }

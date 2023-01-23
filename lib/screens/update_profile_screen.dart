@@ -180,46 +180,56 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      await _services.updateUserDetails(uid, {
-                        'name': nameController.text,
-                        'bio': bioController.text.isEmpty
-                            ? null
-                            : bioController.text,
-                        'instagramLink': instaController.text.isEmpty
-                            ? null
-                            : instaController.text,
-                        'facebookLink': fbController.text.isEmpty
-                            ? null
-                            : fbController.text,
-                        'websiteLink': linkController.text.isEmpty
-                            ? null
-                            : linkController.text,
-                      });
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Get.offAll(() => const MainScreen(selectedIndex: 3));
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Update',
+                          icon: Ionicons.checkmark,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            await _services.updateUserDetails(uid, {
+                              'name': nameController.text,
+                              'bio': bioController.text.isEmpty
+                                  ? null
+                                  : bioController.text,
+                              'instagramLink': instaController.text.isEmpty
+                                  ? null
+                                  : instaController.text,
+                              'facebookLink': fbController.text.isEmpty
+                                  ? null
+                                  : fbController.text,
+                              'websiteLink': linkController.text.isEmpty
+                                  ? null
+                                  : linkController.text,
+                            });
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Get.offAll(
+                                () => const MainScreen(selectedIndex: 3));
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

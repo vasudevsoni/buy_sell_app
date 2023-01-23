@@ -1,11 +1,10 @@
 import 'package:buy_sell_app/promotion/promote_listing_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
@@ -21,6 +20,7 @@ import '/screens/product_details_screen.dart';
 import '/services/firebase_services.dart';
 import 'custom_button_without_icon.dart';
 import 'custom_button.dart';
+import 'custom_loading_indicator.dart';
 import 'svg_picture.dart';
 
 class MyListingsList extends StatefulWidget {
@@ -63,11 +63,7 @@ class _MyListingsListState extends State<MyListingsList> {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(15.0),
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }
@@ -350,27 +346,35 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Mark as Sold',
-                  onPressed: () {
-                    services.markAsSold(
-                      productId: widget.data.id,
-                    );
-                    Get.back();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: blueColor,
-                  textIconColor: blueColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Mark as Sold',
+                        onPressed: () {
+                          services.markAsSold(
+                            productId: widget.data.id,
+                          );
+                          Get.back();
+                        },
+                        bgColor: blueColor,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -448,27 +452,35 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Delete',
-                  onPressed: () {
-                    services.deleteListing(
-                      listingId: widget.data.id,
-                    );
-                    Get.back();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Delete',
+                        onPressed: () {
+                          services.deleteListing(
+                            listingId: widget.data.id,
+                          );
+                          Get.back();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -486,11 +498,7 @@ class _MyListingScreenProductCardState
         ? const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           )
         : Stack(
@@ -511,27 +519,31 @@ class _MyListingScreenProductCardState
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: CachedNetworkImage(
-                              imageUrl: widget.data['images'][0],
-                              width: size.width * 0.3,
-                              height: size.width * 0.3,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) {
-                                return const Icon(
-                                  Ionicons.alert_circle,
-                                  size: 30,
-                                  color: redColor,
-                                );
-                              },
-                              placeholder: (context, url) {
-                                return const Icon(
-                                  Ionicons.image,
-                                  size: 30,
-                                  color: lightBlackColor,
-                                );
-                              },
+                          SizedBox(
+                            width: size.width * 0.3,
+                            height: size.width * 0.3,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: widget.data['images'][0],
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                memCacheHeight: (size.height * 0.3).round(),
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    Ionicons.alert_circle,
+                                    size: 30,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Icon(
+                                    Ionicons.image,
+                                    size: 30,
+                                    color: lightBlackColor,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           Expanded(
@@ -744,6 +756,7 @@ class _MyListingScreenProductCardState
                                   ),
                                 );
                               },
+                              isFullWidth: true,
                               bgColor: blueColor,
                               borderColor: blueColor,
                               textIconColor: whiteColor,
@@ -864,13 +877,18 @@ class _MyListingScreenProductCardState
                                   onPressed: () {
                                     Get.back();
                                     widget.data['catName'] == 'Vehicles'
-                                        ? Get.to(() => EditVehicleAdScreen(
+                                        ? Get.to(
+                                            () => EditVehicleAdScreen(
                                               productData: widget.data,
-                                            ))
-                                        : Get.to(() => EditAdScreen(
+                                            ),
+                                          )
+                                        : Get.to(
+                                            () => EditAdScreen(
                                               productData: widget.data,
-                                            ));
+                                            ),
+                                          );
                                   },
+                                  isFullWidth: true,
                                   bgColor: whiteColor,
                                   borderColor: blackColor,
                                   textIconColor: blackColor,
@@ -879,7 +897,7 @@ class _MyListingScreenProductCardState
                                   Column(
                                     children: [
                                       const SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       CustomButton(
                                         icon: Ionicons.checkmark_circle,
@@ -888,6 +906,7 @@ class _MyListingScreenProductCardState
                                           Get.back();
                                           showMarskasSoldModal();
                                         },
+                                        isFullWidth: true,
                                         bgColor: whiteColor,
                                         borderColor: blueColor,
                                         textIconColor: blueColor,
@@ -895,7 +914,7 @@ class _MyListingScreenProductCardState
                                     ],
                                   ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 CustomButton(
                                   icon: Ionicons.trash,
@@ -904,19 +923,10 @@ class _MyListingScreenProductCardState
                                     Get.back();
                                     showDeleteModal();
                                   },
+                                  isFullWidth: true,
                                   bgColor: whiteColor,
                                   borderColor: redColor,
                                   textIconColor: redColor,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                CustomButtonWithoutIcon(
-                                  text: 'Cancel',
-                                  onPressed: () => Get.back(),
-                                  bgColor: whiteColor,
-                                  borderColor: greyColor,
-                                  textIconColor: blackColor,
                                 ),
                               ],
                             ),

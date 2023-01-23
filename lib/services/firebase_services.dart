@@ -359,10 +359,10 @@ class FirebaseServices {
   Future<File> compressImage(File file) async {
     var result = await FlutterNativeImage.compressImage(file.path,
         quality: file.lengthSync() <= 1000000
-            ? 60
+            ? 75
             : file.lengthSync() > 1000000 && file.lengthSync() <= 3000000
-                ? 25
-                : 12);
+                ? 40
+                : 15);
     return result;
   }
 

@@ -289,9 +289,6 @@ class _LandingScreenState extends State<LandingScreen> {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              children: const [],
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
@@ -320,73 +317,88 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               ),
             ),
-            isLoading
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: LoadingButton(
-                      bgColor: greenColor,
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomButton(
-                      text: 'Google',
-                      icon: Ionicons.logo_google,
-                      bgColor: greenColor,
-                      borderColor: greenColor,
-                      textIconColor: whiteColor,
-                      onPressed: () async {
-                        if (mounted) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                        }
-                        User? user =
-                            await GoogleAuthentication.signinWithGoogle();
-                        //login successful, add user to db and proceed
-                        if (user != null) {
-                          final SocialAuthService auth = SocialAuthService();
-                          await auth.addUser(user);
-                          if (mounted) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                          return;
-                        } else {
-                          if (mounted) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                          return;
-                        }
-                      },
-                    ),
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                isLoading
+                    ? const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 15, right: 5),
+                          child: LoadingButton(
+                            bgColor: greenColor,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 5),
+                          child: CustomButton(
+                            text: 'Google',
+                            icon: Ionicons.logo_google,
+                            bgColor: greenColor,
+                            borderColor: greenColor,
+                            textIconColor: whiteColor,
+                            onPressed: () async {
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                              }
+                              User? user =
+                                  await GoogleAuthentication.signinWithGoogle();
+                              //login successful, add user to db and proceed
+                              if (user != null) {
+                                final SocialAuthService auth =
+                                    SocialAuthService();
+                                await auth.addUser(user);
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                                return;
+                              } else {
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                                return;
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                isLoading
+                    ? const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 15, left: 5),
+                          child: LoadingButton(
+                            bgColor: blackColor,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15, left: 5),
+                          child: CustomButton(
+                            text: 'Email',
+                            icon: Ionicons.mail,
+                            bgColor: blackColor,
+                            borderColor: blackColor,
+                            textIconColor: whiteColor,
+                            onPressed: () => Get.to(
+                              () => const EmailLoginScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
             const SizedBox(
               height: 10,
             ),
-            isLoading
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: LoadingButton(
-                      bgColor: blackColor,
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomButton(
-                      text: 'Email',
-                      icon: Ionicons.mail,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
-                      textIconColor: whiteColor,
-                      onPressed: () => Get.to(
-                        () => const EmailLoginScreen(),
-                      ),
-                    ),
-                  ),
             const SizedBox(
               height: 10,
             ),

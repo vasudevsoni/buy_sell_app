@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 
 const int aSec = 1;
 const String _secPostFix = 's';
@@ -73,20 +74,17 @@ class _TimerButtonState extends State<TimerButton> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return timeUpFlag
-        ? ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.color,
-              elevation: 0,
-              splashFactory: InkRipple.splashFactory,
-              enableFeedback: true,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              fixedSize: Size(size.width, 45),
-            ),
+        ? GFButton(
             onPressed: _onPressed,
+            borderShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            color: widget.color,
+            enableFeedback: true,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            size: GFSize.LARGE,
+            animationDuration: const Duration(milliseconds: 100),
             child: AutoSizeText(
               widget.label,
               maxLines: 2,
@@ -100,18 +98,16 @@ class _TimerButtonState extends State<TimerButton> {
               ),
             ),
           )
-        : ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.disabledColor,
-              elevation: 0,
-              splashFactory: InkRipple.splashFactory,
-              enableFeedback: true,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              fixedSize: Size(size.width, 45),
-            ),
+        : GFButton(
             onPressed: null,
+            borderShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            color: widget.disabledColor,
+            enableFeedback: true,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            size: GFSize.LARGE,
+            animationDuration: const Duration(milliseconds: 100),
             child: AutoSizeText(
               'Please wait for $_timerText',
               maxLines: 2,
@@ -119,7 +115,7 @@ class _TimerButtonState extends State<TimerButton> {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: whiteColor,
+                color: blackColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 14.5,
               ),

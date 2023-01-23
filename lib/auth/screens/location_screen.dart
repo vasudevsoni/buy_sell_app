@@ -138,7 +138,7 @@ class _LocationScreenState extends State<LocationScreen> {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(
               height: 15,
@@ -237,7 +237,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Container(
               margin: const EdgeInsets.only(

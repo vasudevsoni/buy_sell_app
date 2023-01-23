@@ -97,7 +97,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               padding: const EdgeInsets.only(left: 15, top: 15),

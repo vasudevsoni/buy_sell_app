@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '/screens/product_details_screen.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
+import 'custom_loading_indicator.dart';
 
 class CustomProductCard extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> data;
@@ -71,16 +71,11 @@ class _CustomProductCardState extends State<CustomProductCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return isLoading
         ? const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           )
         : Stack(
@@ -107,17 +102,19 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   ),
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: size.width * 0.3,
-                        height: size.width * 0.3,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                          ),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                        ),
+                        child: SizedBox(
+                          width: size.width * 0.3,
+                          height: size.width * 0.3,
                           child: CachedNetworkImage(
                             imageUrl: widget.data['images'][0],
                             fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                            memCacheHeight: (size.height * 0.3).round(),
                             errorWidget: (context, url, error) {
                               return const Icon(
                                 Ionicons.alert_circle,

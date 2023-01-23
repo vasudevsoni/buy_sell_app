@@ -134,39 +134,48 @@ class _ReportScreenState extends State<ReportScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Send Report',
-                  onPressed: () async {
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo =
-                        await deviceInfo.androidInfo;
-                    services.reportAProblem(
-                      text: reportTextController.text,
-                      screenshot: reportImage,
-                      androidVersion: androidInfo.version.release,
-                      model: androidInfo.model,
-                      securityPatch: androidInfo.version.securityPatch,
-                    );
-                    Get.back();
-                    setState(() {
-                      reportImage == null;
-                      reportTextController.clear();
-                    });
-                    Get.back();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'No, Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Report',
+                        icon: Ionicons.arrow_forward,
+                        onPressed: () async {
+                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                          AndroidDeviceInfo androidInfo =
+                              await deviceInfo.androidInfo;
+                          services.reportAProblem(
+                            text: reportTextController.text,
+                            screenshot: reportImage,
+                            androidVersion: androidInfo.version.release,
+                            model: androidInfo.model,
+                            securityPatch: androidInfo.version.securityPatch,
+                          );
+                          Get.back();
+                          setState(() {
+                            reportImage == null;
+                            reportTextController.clear();
+                          });
+                          Get.back();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -291,6 +300,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 }
                 showConfirmation();
               },
+              isFullWidth: true,
               bgColor: redColor,
               borderColor: redColor,
               textIconColor: whiteColor,
