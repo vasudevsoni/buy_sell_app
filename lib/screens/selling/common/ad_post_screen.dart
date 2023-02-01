@@ -326,26 +326,22 @@ class _AdPostScreenState extends State<AdPostScreen> {
                               children: [
                                 Stack(
                                   children: [
-                                    Opacity(
-                                      opacity: 0.7,
-                                      child: SizedBox(
-                                        width: size.width * 0.2,
-                                        height: size.width * 0.2,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: Image.file(
-                                            provider.imagePaths[0],
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Ionicons.alert_circle,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                          ),
+                                    SizedBox(
+                                      width: size.width * 0.2,
+                                      height: size.width * 0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Ionicons.alert_circle,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),

@@ -78,7 +78,7 @@ class _TimerButtonState extends State<TimerButton> {
         ? GFButton(
             onPressed: _onPressed,
             borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(8),
             ),
             color: widget.color,
             enableFeedback: true,
@@ -93,15 +93,14 @@ class _TimerButtonState extends State<TimerButton> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: whiteColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.5,
+                fontSize: 15.5,
               ),
             ),
           )
         : GFButton(
             onPressed: null,
             borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(8),
             ),
             color: widget.disabledColor,
             enableFeedback: true,
@@ -116,8 +115,7 @@ class _TimerButtonState extends State<TimerButton> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: blackColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.5,
+                fontSize: 15.5,
               ),
             ),
           );

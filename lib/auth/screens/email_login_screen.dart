@@ -173,9 +173,6 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),
-              const SizedBox(
-                height: 5,
-              ),
               CustomButtonWithoutIcon(
                 text: 'Don\'t have an account? Create one',
                 bgColor: whiteColor,

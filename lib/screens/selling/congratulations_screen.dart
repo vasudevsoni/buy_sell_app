@@ -1,6 +1,5 @@
 import 'package:buy_sell_app/services/admob_services.dart';
 import 'package:flutter/material.dart';
-import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
@@ -18,14 +17,12 @@ class CongratulationsScreen extends StatefulWidget {
 }
 
 class _CongratulationsScreenState extends State<CongratulationsScreen> {
-  final ConfettiController controller = ConfettiController();
   late BannerAd? _bannerAd;
   bool _isAdLoaded = false;
 
   @override
   void initState() {
     _initBannerAd();
-    controller.play();
     super.initState();
   }
 
@@ -54,7 +51,6 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
   @override
   void dispose() {
     _bannerAd!.dispose();
-    controller.dispose();
     super.dispose();
   }
 
@@ -69,33 +65,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomConfettiWidget(
-                      controller: controller,
-                      blastDirection: 225,
-                    ),
-                    CustomConfettiWidget(
-                      controller: controller,
-                      blastDirection: 180,
-                    ),
-                  ],
-                ),
                 const Text(
-                  '👍',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w800,
-                    color: blueColor,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Text(
-                  'Congratulations!',
+                  '🎉 Congratulations!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -107,7 +78,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   height: 15,
                 ),
                 const Text(
-                  'Your product will be live once it is reviewed.',
+                  'We will review your product and then publish it.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -115,13 +86,27 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                     color: blackColor,
                   ),
                 ),
-                const Text(
-                  'In the meantime, browse some products, or just sit back and relax.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: blackColor,
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: greyColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Note: The review process usually takes 2-3 working hours. In the meantime, browse some products, or just sit back and relax.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: blackColor,
+                    ),
                   ),
                 ),
                 const Spacer(),
@@ -162,9 +147,6 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   borderColor: blackColor,
                   textIconColor: whiteColor,
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
                 CustomButton(
                   text: 'Go to Home',
                   onPressed: () =>
@@ -180,40 +162,6 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class CustomConfettiWidget extends StatelessWidget {
-  const CustomConfettiWidget({
-    Key? key,
-    required this.controller,
-    required this.blastDirection,
-  }) : super(key: key);
-
-  final ConfettiController controller;
-  final double blastDirection;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConfettiWidget(
-      confettiController: controller,
-      shouldLoop: false,
-      colors: const [
-        blueColor,
-        redColor,
-        Colors.blue,
-        Colors.yellow,
-      ],
-      blastDirectionality: BlastDirectionality.directional,
-      emissionFrequency: 0.01,
-      maxBlastForce: 50,
-      minBlastForce: 10,
-      blastDirection: blastDirection,
-      minimumSize: const Size(10, 10),
-      maximumSize: const Size(50, 50),
-      numberOfParticles: 10,
-      gravity: 0.1,
     );
   }
 }

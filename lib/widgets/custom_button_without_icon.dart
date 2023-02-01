@@ -25,7 +25,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
     return GFButton(
       onPressed: onPressed,
       borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(8),
         side: BorderSide(
           color: borderColor,
           strokeAlign: StrokeAlign.inside,
@@ -45,7 +45,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: textIconColor,
-          fontSize: 14.5,
+          fontSize: 15.5,
         ),
       ),
     );

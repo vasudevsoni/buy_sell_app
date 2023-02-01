@@ -33,7 +33,7 @@ class CustomButton extends StatelessWidget {
         color: textIconColor,
       ),
       borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(8),
         side: BorderSide(
           color: borderColor,
           strokeAlign: StrokeAlign.inside,
@@ -54,7 +54,7 @@ class CustomButton extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: textIconColor,
-          fontSize: 14.5,
+          fontSize: 15.5,
         ),
       ),
     );

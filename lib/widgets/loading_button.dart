@@ -15,7 +15,7 @@ class LoadingButton extends StatelessWidget {
     return GFButton(
       onPressed: null,
       borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(8),
       ),
       color: bgColor,
       enableFeedback: true,

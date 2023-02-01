@@ -108,7 +108,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
           child: ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                height: 15,
+                height: 6,
               );
             },
             shrinkWrap: true,

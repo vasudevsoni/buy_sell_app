@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:photo_view/photo_view.dart';
@@ -14,6 +15,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/text_field_label.dart';
@@ -46,6 +48,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
   final TextEditingController reportTextController = TextEditingController();
   final MapController mapController = MapController();
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
   int currentImage = 0;
   List fav = [];
   bool isLiked = false;
@@ -64,7 +68,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   void initState() {
     getDetails();
+    _initBannerAd();
     super.initState();
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.mediumRectangle,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
   }
 
   getDetails() async {
@@ -172,6 +199,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void dispose() {
     mapController.dispose();
     reportTextController.dispose();
+    _bannerAd!.dispose();
     super.dispose();
   }
 
@@ -962,9 +990,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         textIconColor: whiteColor,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
                                     CustomButton(
                                       text: 'Edit',
                                       onPressed: () => widget
@@ -1007,12 +1032,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     width: 0,
                                   ),
                         if (widget.productData['sellerUid'] !=
-                                services.user!.uid &&
-                            isSold == false)
-                          const SizedBox(
-                            height: 5,
-                          ),
-                        if (widget.productData['sellerUid'] !=
                             services.user!.uid)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1039,7 +1058,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         const SizedBox(
-                          height: 25,
+                          height: 20,
                         ),
                         widget.productData['catName'] == 'Vehicles'
                             ? Padding(
@@ -1332,7 +1351,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 25,
+                                      height: 20,
                                     ),
                                   ],
                                 ),
@@ -1405,90 +1424,59 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'Product Location',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: blackColor,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SizedBox(
-                              height: size.height * 0.3,
-                              width: size.width,
-                              child: FlutterMap(
-                                mapController: mapController,
-                                options: MapOptions(
-                                  center: LatLng(
-                                    latitude,
-                                    longitude,
+                        _isAdLoaded
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
                                   ),
-                                  zoom: 15.0,
-                                  maxZoom: 16.0,
-                                  maxBounds: LatLngBounds(
-                                    LatLng(-90, -180.0),
-                                    LatLng(90.0, 180.0),
-                                  ),
-                                  interactiveFlags: InteractiveFlag.all &
-                                      ~InteractiveFlag.rotate,
-                                ),
-                                nonRotatedChildren: [
-                                  AttributionWidget.defaultWidget(
-                                    source: 'OpenStreetMap',
+                                  Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: lightBlackColor,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      height: 250,
+                                      width: 300,
+                                      child: AdWidget(ad: _bannerAd!),
+                                    ),
                                   ),
                                 ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  TileLayer(
-                                    urlTemplate:
-                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                    userAgentPackageName:
-                                        'com.bechde.buy_sell_app',
-                                    subdomains: const ['a', 'b', 'c'],
-                                    backgroundColor: greyColor,
+                                  const SizedBox(
+                                    height: 20,
                                   ),
-                                  CircleLayer(
-                                    circles: [
-                                      CircleMarker(
-                                        point: LatLng(
-                                          latitude,
-                                          longitude,
+                                  Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: lightBlackColor,
+                                          width: 2,
                                         ),
-                                        radius: 40,
-                                        borderColor: blueColor,
-                                        borderStrokeWidth: 5,
-                                        color: fadedColor,
                                       ),
-                                    ],
+                                      height: 250,
+                                      width: 300,
+                                      child: const Center(
+                                        child: Text('Advertisement'),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
+                        const SizedBox(
+                          height: 20,
                         ),
                         if (widget.productData['sellerUid'] !=
                             services.user!.uid)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(
-                                height: 25,
-                              ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
@@ -1623,7 +1611,111 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         const SizedBox(
-                          height: 25,
+                          height: 20,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'Product Location',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: blackColor,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                              height: size.height * 0.3,
+                              width: size.width,
+                              child: FlutterMap(
+                                mapController: mapController,
+                                options: MapOptions(
+                                  center: LatLng(
+                                    latitude,
+                                    longitude,
+                                  ),
+                                  zoom: 15.0,
+                                  maxZoom: 16.0,
+                                  maxBounds: LatLngBounds(
+                                    LatLng(-90, -180.0),
+                                    LatLng(90.0, 180.0),
+                                  ),
+                                  interactiveFlags: InteractiveFlag.all &
+                                      ~InteractiveFlag.rotate,
+                                ),
+                                nonRotatedChildren: const [
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ColoredBox(
+                                      color: greyColor,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(3),
+                                        child: Text(
+                                          'Location is approximate',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: ColoredBox(
+                                      color: greyColor,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(3),
+                                        child: Text(
+                                          '© OpenStreetMap',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName:
+                                        'com.bechde.buy_sell_app',
+                                    subdomains: const ['a', 'b', 'c'],
+                                    backgroundColor: greyColor,
+                                  ),
+                                  CircleLayer(
+                                    circles: [
+                                      CircleMarker(
+                                        point: LatLng(
+                                          latitude,
+                                          longitude,
+                                        ),
+                                        radius: 40,
+                                        borderColor: blueColor,
+                                        borderStrokeWidth: 5,
+                                        color: fadedColor,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1695,6 +1787,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           .where('subCat', isEqualTo: widget.subCatName)
           .where('postedAt', isNotEqualTo: widget.postedAt)
           .where('isActive', isEqualTo: true)
+          .limit(2)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -1743,7 +1836,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             ListView.separated(
               separatorBuilder: (context, index) {
                 return const SizedBox(
-                  height: 10,
+                  height: 6,
                 );
               },
               padding: const EdgeInsets.only(
@@ -1754,7 +1847,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               ),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
+              itemCount: snapshot.data!.size >= 2 ? 2 : snapshot.data!.size,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
                 final time =
@@ -1767,7 +1860,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               physics: const NeverScrollableScrollPhysics(),
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Padding(
               padding: const EdgeInsets.only(

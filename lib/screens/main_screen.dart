@@ -185,7 +185,7 @@ class _MainScreenState extends State<MainScreen> {
         selectedItemColor: blackColor,
         unselectedItemColor: lightBlackColor,
         showSelectedLabels: true,
-        showUnselectedLabels: false,
+        showUnselectedLabels: true,
         selectedLabelStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
@@ -203,7 +203,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Ionicons.chatbubbles_outline),
             activeIcon: Icon(Ionicons.chatbubbles),
-            label: 'Inbox',
+            label: 'Chats',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -217,7 +217,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Ionicons.person_circle_outline),
             activeIcon: Icon(Ionicons.person_circle),
-            label: 'Profile',
+            label: 'Account',
           ),
         ],
       ),

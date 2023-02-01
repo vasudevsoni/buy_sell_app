@@ -82,7 +82,7 @@ class _CategoryScreenProductsListState
           .where('catName', isEqualTo: widget.catName)
           .where('subCat', isEqualTo: widget.subCatName)
           .where('isActive', isEqualTo: true),
-      pageSize: 15,
+      pageSize: 9,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -183,7 +183,7 @@ class _CategoryScreenProductsListState
               ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 10,
+                    height: 6,
                   );
                 },
                 padding: const EdgeInsets.only(
@@ -215,7 +215,7 @@ class _CategoryScreenProductsListState
                         ),
                       if (hasMoreReached)
                         CustomButtonWithoutIcon(
-                          text: 'Load More',
+                          text: 'Show more',
                           onPressed: () => snapshot.fetchMore(),
                           borderColor: blackColor,
                           bgColor: whiteColor,

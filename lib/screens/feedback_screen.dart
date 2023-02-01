@@ -1,6 +1,5 @@
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
@@ -107,14 +106,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       child: CustomButtonWithoutIcon(
                         text: 'Yes, Submit',
                         onPressed: () async {
-                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                          AndroidDeviceInfo androidInfo =
-                              await deviceInfo.androidInfo;
                           services.submitFeedback(
                             text: feedbackTextController.text,
-                            model: androidInfo.model,
-                            androidVersion: androidInfo.version.release,
-                            securityPatch: androidInfo.version.securityPatch,
                           );
                           Get.back();
                           setState(() {

@@ -52,7 +52,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             .where('searchQueries', arrayContains: widget.query)
             .where('isActive', isEqualTo: true)
             .orderBy('postedAt', descending: true),
-        pageSize: 15,
+        pageSize: 9,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(
@@ -145,7 +145,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 ListView.separated(
                   separatorBuilder: (context, index) {
                     return const SizedBox(
-                      height: 10,
+                      height: 6,
                     );
                   },
                   padding: const EdgeInsets.only(
@@ -178,7 +178,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                           ),
                         if (hasMoreReached)
                           CustomButtonWithoutIcon(
-                            text: 'Load More',
+                            text: 'Show more',
                             onPressed: () => snapshot.fetchMore(),
                             borderColor: blackColor,
                             bgColor: whiteColor,

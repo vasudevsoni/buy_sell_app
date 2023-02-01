@@ -23,22 +23,17 @@ import 'custom_button.dart';
 import 'custom_loading_indicator.dart';
 import 'svg_picture.dart';
 
-class MyListingsList extends StatefulWidget {
+class MyListingsList extends StatelessWidget {
   const MyListingsList({super.key});
 
   @override
-  State<MyListingsList> createState() => _MyListingsListState();
-}
-
-class _MyListingsListState extends State<MyListingsList> {
-  final FirebaseServices _services = FirebaseServices();
-  final User? user = FirebaseAuth.instance.currentUser;
-
-  @override
   Widget build(BuildContext context) {
+    final FirebaseServices services = FirebaseServices();
+    final User? user = FirebaseAuth.instance.currentUser;
     final size = MediaQuery.of(context).size;
+
     onSellButtonClicked() {
-      _services.getCurrentUserData().then((value) {
+      services.getCurrentUserData().then((value) {
         if (value['location'] != null) {
           Get.to(
             () => const SellerCategoriesListScreen(),
@@ -54,10 +49,10 @@ class _MyListingsListState extends State<MyListingsList> {
     }
 
     return FirestoreQueryBuilder(
-      query: _services.listings
+      query: services.listings
           .orderBy('postedAt', descending: true)
-          .where('sellerUid', isEqualTo: _services.user!.uid),
-      pageSize: 15,
+          .where('sellerUid', isEqualTo: services.user!.uid),
+      pageSize: 9,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Center(
@@ -119,7 +114,7 @@ class _MyListingsListState extends State<MyListingsList> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
@@ -144,7 +139,7 @@ class _MyListingsListState extends State<MyListingsList> {
                   child: CustomButtonWithoutIcon(
                     text: 'Start Selling',
                     onPressed: !user!.emailVerified &&
-                            user!.providerData[0].providerId == 'password'
+                            user.providerData[0].providerId == 'password'
                         ? () => Get.to(
                               () => const EmailVerificationScreen(),
                             )
@@ -177,7 +172,7 @@ class _MyListingsListState extends State<MyListingsList> {
               ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 20,
+                    height: 15,
                   );
                 },
                 shrinkWrap: true,
@@ -188,8 +183,7 @@ class _MyListingsListState extends State<MyListingsList> {
                   final data = snapshot.docs[index];
                   final time = DateFormat.yMMMEd().format(
                       DateTime.fromMillisecondsSinceEpoch(data['postedAt']));
-                  final sellerDetails =
-                      _services.getUserData(data['sellerUid']);
+                  final sellerDetails = services.getUserData(data['sellerUid']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
@@ -207,7 +201,7 @@ class _MyListingsListState extends State<MyListingsList> {
                         ),
                       if (hasMoreReached)
                         CustomButtonWithoutIcon(
-                          text: 'Load More',
+                          text: 'Show more',
                           onPressed: () => snapshot.fetchMore(),
                           borderColor: blackColor,
                           bgColor: whiteColor,
@@ -581,10 +575,8 @@ class _MyListingScreenProductCardState
                                   ),
                                   const Spacer(),
                                   Text(
-                                    'Posted on - ${widget.time}',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
+                                    widget.time,
+                                    maxLines: 1,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 13,

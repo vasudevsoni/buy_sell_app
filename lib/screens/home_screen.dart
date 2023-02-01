@@ -483,7 +483,7 @@ class CategoriesListView extends StatelessWidget {
           return ListView.separated(
             separatorBuilder: (context, index) {
               return const SizedBox(
-                width: 10,
+                width: 6,
               );
             },
             itemCount: 6,
@@ -848,7 +848,7 @@ class _ProductsListState extends State<ProductsList> {
                     )
                     .where('isActive', isEqualTo: true)
                     .where('location.city', isEqualTo: widget.city),
-            pageSize: 15,
+            pageSize: 9,
             builder: (context, snapshot, child) {
               if (snapshot.isFetching) {
                 return const Padding(
@@ -917,7 +917,7 @@ class _ProductsListState extends State<ProductsList> {
               return ListView.separated(
                 separatorBuilder: (context, index) {
                   return const SizedBox(
-                    height: 10,
+                    height: 6,
                   );
                 },
                 scrollDirection: Axis.vertical,
@@ -952,7 +952,7 @@ class _ProductsListState extends State<ProductsList> {
                         ),
                       if (hasMoreReached)
                         CustomButtonWithoutIcon(
-                          text: 'Load More',
+                          text: 'Show more',
                           onPressed: () => snapshot.fetchMore(),
                           borderColor: blackColor,
                           bgColor: whiteColor,

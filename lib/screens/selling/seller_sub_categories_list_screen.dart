@@ -111,6 +111,7 @@ class _SellerSubCategoriesListScreenState
                   height: 0,
                   color: fadedColor,
                   indent: 15,
+                  endIndent: 15,
                 );
               },
               scrollDirection: Axis.vertical,

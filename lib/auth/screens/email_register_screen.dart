@@ -182,9 +182,6 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),
-              const SizedBox(
-                height: 5,
-              ),
               CustomButtonWithoutIcon(
                 text: 'Already have an account? Login',
                 bgColor: whiteColor,

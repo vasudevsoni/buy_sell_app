@@ -347,26 +347,22 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               children: [
                                 Stack(
                                   children: [
-                                    Opacity(
-                                      opacity: 0.7,
-                                      child: SizedBox(
-                                        width: size.width * 0.2,
-                                        height: size.width * 0.2,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: Image.file(
-                                            provider.imagePaths[0],
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Ionicons.alert_circle,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                            fit: BoxFit.cover,
-                                          ),
+                                    SizedBox(
+                                      width: size.width * 0.2,
+                                      height: size.width * 0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Ionicons.alert_circle,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),

@@ -47,8 +47,8 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: 6,
+            mainAxisSpacing: 6,
             childAspectRatio: 1.3 / 1,
           ),
           scrollDirection: Axis.vertical,

@@ -236,9 +236,6 @@ class _LocationScreenState extends State<LocationScreen> {
                       },
                     ),
                   ),
-            const SizedBox(
-              height: 5,
-            ),
             Container(
               margin: const EdgeInsets.only(
                 left: 15,

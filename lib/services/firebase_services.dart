@@ -252,9 +252,6 @@ class FirebaseServices {
 
   submitFeedback({
     text,
-    model,
-    androidVersion,
-    securityPatch,
   }) async {
     try {
       final id = uuid.v4();
@@ -263,9 +260,6 @@ class FirebaseServices {
         'userId': user!.uid,
         'text': text,
         'postedAt': DateTime.now().toLocal().toString(),
-        'model': model,
-        'androidVersion': androidVersion,
-        'securityPatch': securityPatch,
       });
       showSnackBar(
         content: 'Feedback submitted. Thank you so much for your effort',
@@ -281,9 +275,6 @@ class FirebaseServices {
 
   reportAProblem({
     text,
-    model,
-    androidVersion,
-    securityPatch,
     screenshot,
   }) async {
     final id = uuid.v4();
@@ -311,9 +302,6 @@ class FirebaseServices {
         'text': text,
         'screenshot': downloadUrl,
         'postedAt': DateTime.now().toLocal().toString(),
-        'model': model,
-        'androidVersion': androidVersion,
-        'securityPatch': securityPatch,
         'isResolved': false,
       });
       showSnackBar(

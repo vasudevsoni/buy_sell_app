@@ -145,13 +145,13 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w600,
                                   color: blackColor,
-                                  fontSize: 15,
+                                  fontSize: 16,
                                 ),
                               ),
                               const SizedBox(
-                                height: 3,
+                                height: 2,
                               ),
                               Text(
                                 widget.data['title'],
@@ -161,7 +161,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: blackColor,
-                                  fontSize: 14,
+                                  fontSize: 14.5,
                                 ),
                               ),
                               const Spacer(),
@@ -172,8 +172,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      timeago.format(widget.time),
-                                      maxLines: 1,
+                                      '${widget.data['location']['area']}, ${widget.data['location']['city']}',
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(
                                         color: lightBlackColor,
@@ -184,10 +186,8 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
+                                      timeago.format(widget.time),
+                                      maxLines: 1,
                                       textAlign: TextAlign.end,
                                       style: const TextStyle(
                                         color: lightBlackColor,

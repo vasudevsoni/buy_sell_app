@@ -5,11 +5,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'web_view/faqs.dart';
-import 'web_view/icons8.dart';
-import 'web_view/privacy_policy_screen.dart';
-import 'web_view/terms_of_service.dart';
 import '/widgets/custom_list_tile_no_image.dart';
 import '/utils/utils.dart';
 import 'report_screen.dart';
@@ -151,9 +148,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               icon: Ionicons.help_circle,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () => Get.to(
-                () => const FAQs(),
-                transition: Transition.downToUp,
+              onTap: () => launchUrl(
+                Uri.parse('https://www.bechdeapp.com/faqs'),
               ),
             ),
             CustomListTileNoImage(
@@ -161,9 +157,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               icon: Ionicons.book,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () => Get.to(
-                () => const TermsOfService(),
-                transition: Transition.downToUp,
+              onTap: () => launchUrl(
+                Uri.parse('https://www.bechdeapp.com/terms'),
               ),
             ),
             CustomListTileNoImage(
@@ -171,9 +166,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               icon: Ionicons.lock_closed,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () => Get.to(
-                () => const PrivacyPolicy(),
-                transition: Transition.downToUp,
+              onTap: () => launchUrl(
+                Uri.parse('https://www.bechdeapp.com/privacy-policy'),
               ),
             ),
             CustomListTileNoImage(
@@ -181,8 +175,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               icon: Ionicons.balloon,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () => Get.to(
-                () => const Icons8(),
+              onTap: () => launchUrl(
+                Uri.parse('https://icons8.com/'),
               ),
             ),
             CustomListTileWithSubtitle(

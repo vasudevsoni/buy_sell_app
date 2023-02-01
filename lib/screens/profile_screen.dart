@@ -716,7 +716,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 15,
+      pageSize: 9,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -761,7 +761,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
         return ListView.separated(
           separatorBuilder: (context, index) {
             return const SizedBox(
-              height: 10,
+              height: 6,
             );
           },
           padding: const EdgeInsets.only(
@@ -792,7 +792,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                   ),
                 if (hasMoreReached)
                   CustomButtonWithoutIcon(
-                    text: 'Load More',
+                    text: 'Show more',
                     onPressed: () => snapshot.fetchMore(),
                     borderColor: blackColor,
                     bgColor: whiteColor,

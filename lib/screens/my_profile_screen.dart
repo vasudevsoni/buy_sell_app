@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '/auth/screens/email_verification_screen.dart';
@@ -34,6 +36,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final FirebaseServices services = FirebaseServices();
   final InAppReview inAppReview = InAppReview.instance;
   final User? user = FirebaseAuth.instance.currentUser;
+  late BannerAd? _bannerAd;
+  bool _isAdLoaded = false;
   String name = '';
   String profileImage = '';
   String bio = '';
@@ -50,8 +54,30 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     getUserData();
-
+    _initBannerAd();
     super.initState();
+  }
+
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdmobServices.bannerAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    _bannerAd!.load();
   }
 
   getUserData() async {
@@ -128,6 +154,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   void dispose() {
+    _bannerAd!.dispose();
     super.dispose();
   }
 
@@ -542,6 +569,51 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ],
                 ),
               ),
+              _isAdLoaded
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: lightBlackColor,
+                                width: 2,
+                              ),
+                            ),
+                            height: 50,
+                            width: 320,
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: lightBlackColor,
+                                width: 2,
+                              ),
+                            ),
+                            height: 50,
+                            width: 320,
+                            child: const Center(
+                              child: Text('Advertisement'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
               const SizedBox(
                 height: 10,
               ),

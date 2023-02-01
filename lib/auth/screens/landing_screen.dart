@@ -1,7 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/auth/services/social_auth_service.dart';
-import 'package:buy_sell_app/screens/web_view/privacy_policy_screen.dart';
-import 'package:buy_sell_app/screens/web_view/terms_of_service.dart';
 import 'package:buy_sell_app/widgets/loading_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
@@ -13,6 +11,7 @@ import 'package:get/get.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/svg_picture.dart';
 import '/widgets/custom_button_without_icon.dart';
@@ -411,9 +410,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     TextSpan(
                       text: 'Terms of Service',
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.to(
-                              () => const TermsOfService(),
-                              transition: Transition.downToUp,
+                        ..onTap = () => launchUrl(
+                              Uri.parse('https://www.bechdeapp.com/terms'),
                             ),
                       style: const TextStyle(
                         fontSize: 9,
@@ -427,9 +425,9 @@ class _LandingScreenState extends State<LandingScreen> {
                     TextSpan(
                       text: 'Privacy Policy',
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.to(
-                              () => const PrivacyPolicy(),
-                              transition: Transition.downToUp,
+                        ..onTap = () => launchUrl(
+                              Uri.parse(
+                                  'https://www.bechdeapp.com/privacy-policy'),
                             ),
                       style: const TextStyle(
                         fontSize: 9,

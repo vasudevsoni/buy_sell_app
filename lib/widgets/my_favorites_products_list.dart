@@ -32,7 +32,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
         query: services.listings
             .orderBy('title', descending: false)
             .where('favorites', arrayContains: services.user!.uid),
-        pageSize: 15,
+        pageSize: 9,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(
@@ -151,7 +151,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 ListView.separated(
                   separatorBuilder: (context, index) {
                     return const SizedBox(
-                      height: 10,
+                      height: 6,
                     );
                   },
                   padding: const EdgeInsets.only(
@@ -183,7 +183,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                           ),
                         if (hasMoreReached)
                           CustomButtonWithoutIcon(
-                            text: 'Load More',
+                            text: 'Show more',
                             onPressed: () => snapshot.fetchMore(),
                             borderColor: blackColor,
                             bgColor: whiteColor,

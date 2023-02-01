@@ -18,10 +18,12 @@ class CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
+      splashFactory: InkRipple.splashFactory,
+      splashColor: fadedColor,
+      borderRadius: BorderRadius.circular(10),
+      child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: whiteColor,

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -153,15 +152,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         text: 'Report',
                         icon: Ionicons.arrow_forward,
                         onPressed: () async {
-                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                          AndroidDeviceInfo androidInfo =
-                              await deviceInfo.androidInfo;
                           services.reportAProblem(
                             text: reportTextController.text,
                             screenshot: reportImage,
-                            androidVersion: androidInfo.version.release,
-                            model: androidInfo.model,
-                            securityPatch: androidInfo.version.securityPatch,
                           );
                           Get.back();
                           setState(() {
