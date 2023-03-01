@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '/auth/screens/email_verification_screen.dart';
@@ -36,8 +35,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final FirebaseServices services = FirebaseServices();
   final InAppReview inAppReview = InAppReview.instance;
   final User? user = FirebaseAuth.instance.currentUser;
-  late BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
   String name = '';
   String profileImage = '';
   String bio = '';
@@ -54,30 +51,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void initState() {
     getUserData();
-    _initBannerAd();
     super.initState();
-  }
-
-  _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: AdmobServices.bannerAdUnitId,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (ad, error) {
-          setState(() {
-            _isAdLoaded = false;
-          });
-          ad.dispose();
-        },
-      ),
-      request: const AdRequest(),
-    );
-    _bannerAd!.load();
   }
 
   getUserData() async {
@@ -150,12 +124,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _bannerAd!.dispose();
-    super.dispose();
   }
 
   @override
@@ -358,7 +326,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   maxLines: 1,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     color: blackColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -380,7 +348,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     softWrap: true,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       color: blackColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -437,10 +405,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     color: lightBlackColor,
                     fontWeight: FontWeight.w400,
-                    fontSize: 12,
+                    fontSize: 13,
                   ),
                 ),
               ),
@@ -452,15 +420,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       color: lightBlackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 13,
                     ),
                   ),
                 ),
               const SizedBox(
-                height: 15,
+                height: 10,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -468,33 +436,112 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   color: greyColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.all(15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Make money selling on BechDe 💸',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         color: blackColor,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
-                    const Text(
-                      'Sell your items fast - hundreds of buyers are waiting',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: lightBlackColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Ionicons.checkmark_circle,
+                                color: greenColor,
+                                size: 15,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'List unlimited products for free',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Ionicons.checkmark_circle,
+                                color: greenColor,
+                                size: 15,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Reach thousands of buyers',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Ionicons.checkmark_circle,
+                                color: greenColor,
+                                size: 15,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Your listings won\'t expire',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     CustomButton(
                       text: 'List a Product',
@@ -514,7 +561,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -569,51 +616,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ],
                 ),
               ),
-              _isAdLoaded
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: lightBlackColor,
-                                width: 2,
-                              ),
-                            ),
-                            height: 50,
-                            width: 320,
-                            child: AdWidget(ad: _bannerAd!),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: lightBlackColor,
-                                width: 2,
-                              ),
-                            ),
-                            height: 50,
-                            width: 320,
-                            child: const Center(
-                              child: Text('Advertisement'),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
               const SizedBox(
                 height: 10,
               ),
@@ -638,9 +640,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Made with ',
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             color: lightBlackColor,
@@ -651,9 +653,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           color: redColor,
                           size: iconSize.toDouble(),
                         ),
-                        const Text(
+                        Text(
                           ' in India',
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             color: lightBlackColor,
@@ -663,9 +665,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
               ),
             ],
           ),
@@ -722,9 +721,9 @@ class MyProfileItemWidget extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 17,
                 ),
               ),
             ],

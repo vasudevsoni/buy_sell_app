@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'package:provider/provider.dart';
@@ -61,9 +62,9 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           elevation: 0.2,
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Inbox',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -74,15 +75,13 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             indicatorColor: blueColor,
             indicatorWeight: 3,
             splashBorderRadius: BorderRadius.circular(10),
-            labelStyle: const TextStyle(
+            labelStyle: GoogleFonts.interTight(
               fontWeight: FontWeight.w700,
-              fontSize: 13,
-              fontFamily: 'Rubik',
+              fontSize: 14,
             ),
-            unselectedLabelStyle: const TextStyle(
+            unselectedLabelStyle: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
-              fontSize: 13,
-              fontFamily: 'Rubik',
+              fontSize: 14,
             ),
             labelColor: blackColor,
             unselectedLabelColor: lightBlackColor,
@@ -105,12 +104,12 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
@@ -140,15 +139,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
                             fontSize: 20,
                           ),
@@ -157,15 +156,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When you chat with a seller, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             color: lightBlackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 13,
@@ -228,12 +227,12 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
@@ -263,15 +262,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
                             fontSize: 20,
                           ),
@@ -280,15 +279,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When you chat with a seller, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             color: lightBlackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 13,
@@ -351,12 +350,12 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                 AsyncSnapshot<QuerySnapshot> snapshot,
               ) {
                 if (snapshot.hasError) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Text(
                         'Something has gone wrong. Please try again',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                         ),
@@ -386,15 +385,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'You have got no messages!',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
                             fontSize: 20,
                           ),
@@ -403,15 +402,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'When someone sends you a message, it will show here',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             color: lightBlackColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 13,
@@ -666,18 +665,18 @@ class _ChatCardState extends State<ChatCard> {
                                     text: buyerName == ''
                                         ? 'BechDe User •'
                                         : '$buyerName •',
-                                    children: const [
+                                    children: [
                                       TextSpan(
                                         text: ' Buyer',
-                                        style: TextStyle(
+                                        style: GoogleFonts.interTight(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                           color: redColor,
                                         ),
                                       ),
                                     ],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w500,
                                       color: blackColor,
                                       fontSize: 14,
                                     ),
@@ -691,18 +690,18 @@ class _ChatCardState extends State<ChatCard> {
                                     text: sellerName == ''
                                         ? 'BechDe User •'
                                         : '$sellerName •',
-                                    children: const [
+                                    children: [
                                       TextSpan(
                                         text: ' Seller',
-                                        style: TextStyle(
+                                        style: GoogleFonts.interTight(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14,
                                           color: blueColor,
                                         ),
                                       ),
                                     ],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w500,
                                       color: blackColor,
                                       fontSize: 14,
                                     ),
@@ -718,12 +717,12 @@ class _ChatCardState extends State<ChatCard> {
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               style: widget.chatData['read'] == false
-                                  ? const TextStyle(
-                                      fontWeight: FontWeight.w600,
+                                  ? GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w700,
                                       color: blueColor,
                                       fontSize: 14,
                                     )
-                                  : const TextStyle(
+                                  : GoogleFonts.interTight(
                                       fontWeight: FontWeight.w500,
                                       color: blackColor,
                                       fontSize: 14,
@@ -779,10 +778,10 @@ class _ChatCardState extends State<ChatCard> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w500,
                                       color: lightBlackColor,
-                                      fontSize: 12,
+                                      fontSize: 13,
                                     ),
                                   ),
                                 ),
@@ -796,12 +795,12 @@ class _ChatCardState extends State<ChatCard> {
                 ],
               ),
               if (isActive == false)
-                const Text(
+                Text(
                   'Product is currently unavailable. Chat is disabled.',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     color: redColor,
                     fontSize: 14,

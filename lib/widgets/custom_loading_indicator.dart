@@ -9,12 +9,12 @@ class CustomLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const GFLoader(
-      type: GFLoaderType.circle,
+      type: GFLoaderType.ios,
       duration: Duration(milliseconds: 1000),
       loaderColorOne: blueColor,
       loaderColorTwo: blackColor,
       loaderColorThree: blueColor,
-      size: GFSize.MEDIUM,
+      size: GFSize.SMALL,
     );
   }
 }

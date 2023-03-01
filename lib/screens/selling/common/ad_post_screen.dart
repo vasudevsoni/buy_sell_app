@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
@@ -109,10 +110,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -139,13 +140,13 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -295,10 +296,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to post?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -355,12 +356,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                           child: Text(
                                             '+${(provider.imagesCount - 1).toString()}',
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
+                                            style: GoogleFonts.interTight(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 30,
                                               color: whiteColor,
                                               shadows: [
-                                                Shadow(
+                                                const Shadow(
                                                   offset: Offset(0, 2),
                                                   blurRadius: 10.0,
                                                   color: lightBlackColor,
@@ -383,7 +384,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                   children: [
                                     Text(
                                       titleController.text,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
                                       ),
@@ -398,7 +399,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                       maxLines: 1,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w700,
                                         color: blueColor,
                                         fontSize: 15,
@@ -416,7 +417,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -586,10 +587,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Are you sure?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -605,9 +606,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'All your product details will be removed and you\'ll have to start fresh.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -696,10 +697,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -715,9 +716,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -790,9 +791,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
           actions: [
             TextButton(
               onPressed: isLoading ? null : resetAll,
-              child: const Text(
+              child: Text(
                 'Reset all',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: redColor,
                   fontSize: 12,
@@ -800,9 +801,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
               ),
             ),
           ],
-          title: const Text(
+          title: Text(
             'Create your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -821,10 +822,59 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
-                    'Step 1 - Product Details',
+                  child: Text(
+                    'Step 1 - User Details',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: locationController,
+                    keyboardType: TextInputType.text,
+                    hint: 'Choose your location to list product',
+                    maxLines: 2,
+                    showCounterText: false,
+                    isEnabled: false,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Location can be changed from Settings > Change Location',
+                    style: GoogleFonts.interTight(
+                      color: lightBlackColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: Text(
+                    'Step 2 - Product Details',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -862,7 +912,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     controller: titleController,
                     keyboardType: TextInputType.text,
                     hint: 'Mention key features of your item',
-                    maxLength: 70,
+                    maxLength: 35,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -870,8 +920,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
-                      if (value.length < 10) {
-                        return 'Please enter 10 or more characters';
+                      if (value.length < 5) {
+                        return 'Please enter 5 or more characters';
                       }
                       setState(() {});
                       return null;
@@ -892,7 +942,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your product to increase your chances of getting a good deal.\nInclude details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 300,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -901,8 +951,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -921,7 +971,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -932,7 +982,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -970,7 +1020,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -992,12 +1042,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -1011,10 +1061,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
-                    'Step 2 - Product Images',
+                  child: Text(
+                    'Step 3 - Product Images',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -1026,55 +1076,6 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 ImagePickerWidget(
                   isButtonDisabled: isLoading ? true : false,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blackColor,
-                  child: const Text(
-                    'Step 3 - User Location',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Location'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: locationController,
-                    keyboardType: TextInputType.text,
-                    hint: 'Choose your location to list product',
-                    maxLines: 2,
-                    showCounterText: false,
-                    isEnabled: false,
-                    textInputAction: TextInputAction.go,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'To change your location go to settings.',
-                    style: TextStyle(
-                      color: lightBlackColor,
-                      fontSize: 13,
-                    ),
-                  ),
                 ),
                 const SizedBox(
                   height: 20,

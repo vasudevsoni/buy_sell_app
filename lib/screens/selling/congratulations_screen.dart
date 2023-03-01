@@ -1,6 +1,7 @@
 import 'package:buy_sell_app/services/admob_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
@@ -65,10 +66,10 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             child: Column(
               children: [
                 const Spacer(),
-                const Text(
+                Text(
                   '🎉 Congratulations!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontSize: 30,
                     fontWeight: FontWeight.w800,
                     color: blueColor,
@@ -77,10 +78,10 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                const Text(
+                Text(
                   'We will review your product and then publish it.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: blackColor,
@@ -99,10 +100,10 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                     color: greyColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Note: The review process usually takes 2-3 working hours. In the meantime, browse some products, or just sit back and relax.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: blackColor,

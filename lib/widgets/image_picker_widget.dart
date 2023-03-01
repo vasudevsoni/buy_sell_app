@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -37,7 +38,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     showMaximumError() {
       showSnackBar(
-        content: 'Maximum 20 images are allowed',
+        content: 'Maximum 12 images are allowed',
         color: redColor,
       );
     }
@@ -64,7 +65,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (pickedFiles.isEmpty) {
         return;
       }
-      if (pickedFiles.length > 20) {
+      if (pickedFiles.length > 12) {
         showMaximumError();
         return;
       }
@@ -280,7 +281,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   ),
                                   child: Text(
                                     index == 0 ? 'Cover' : '${index + 1}',
-                                    style: const TextStyle(
+                                    style: GoogleFonts.interTight(
                                       color: whiteColor,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
@@ -330,14 +331,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         color: greyColor,
                       ),
                       height: 100,
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           'Upload some pictures of the product',
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                           ),
@@ -346,8 +347,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ),
               if (provider.imagePaths.isNotEmpty)
                 Text(
-                  '${provider.imagePaths.length} / 20',
-                  style: const TextStyle(
+                  '${provider.imagePaths.length} / 12',
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     color: fadedColor,
                     fontSize: 12,
@@ -366,7 +367,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               Expanded(
                 child: CustomButton(
                   text: 'Take Photo',
-                  onPressed: provider.imagesCount >= 20
+                  onPressed: provider.imagesCount >= 12
                       ? showMaximumError
                       : requestCameraPermission,
                   icon: Ionicons.camera,
@@ -382,7 +383,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               Expanded(
                 child: CustomButton(
                   text: 'Upload',
-                  onPressed: provider.imagesCount >= 20
+                  onPressed: provider.imagesCount >= 12
                       ? showMaximumError
                       : requestGalleryPermission,
                   icon: Ionicons.images,

@@ -3,6 +3,7 @@ import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,9 +70,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Help and support',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -85,9 +86,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             Container(
               width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
+              child: Text(
                 'Actions',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -134,9 +135,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               width: size.width,
-              child: const Text(
+              child: Text(
                 'About',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -194,9 +195,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               width: size.width,
-              child: const Text(
+              child: Text(
                 'Data',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,

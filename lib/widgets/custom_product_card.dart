@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -31,38 +32,25 @@ class _CustomProductCardState extends State<CustomProductCard> {
 
   @override
   void initState() {
-    getDetails();
+    getFavDetails();
     super.initState();
   }
 
-  getDetails() async {
+  getFavDetails() async {
     if (mounted) {
       setState(() {
         isLoading = true;
+        fav = widget.data['favorites'];
       });
-    }
-    await services.listings.doc(widget.data.id).get().then((value) {
-      if (mounted) {
-        setState(() {
-          fav = value['favorites'];
-        });
-      }
       if (fav.contains(services.user!.uid)) {
-        if (mounted) {
-          setState(() {
-            isLiked = true;
-          });
-        }
+        setState(() {
+          isLiked = true;
+          isLoading = false;
+        });
         return;
       }
-      if (mounted) {
-        setState(() {
-          isLiked = false;
-        });
-      }
-    });
-    if (mounted) {
       setState(() {
+        isLiked = false;
         isLoading = false;
       });
     }
@@ -144,24 +132,24 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.w800,
                                   color: blackColor,
                                   fontSize: 16,
                                 ),
                               ),
                               const SizedBox(
-                                height: 2,
+                                height: 1,
                               ),
                               Text(
                                 widget.data['title'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.w600,
                                   color: blackColor,
-                                  fontSize: 14.5,
+                                  fontSize: 14,
                                 ),
                               ),
                               const Spacer(),
@@ -177,10 +165,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         color: lightBlackColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12.5,
                                       ),
                                     ),
                                   ),
@@ -189,10 +177,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                       timeago.format(widget.time),
                                       maxLines: 1,
                                       textAlign: TextAlign.end,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         color: lightBlackColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12.5,
                                       ),
                                     ),
                                   ),

@@ -1,6 +1,7 @@
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
@@ -39,7 +40,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
           onTap: () => Get.back(),
           child: Text(
             widget.query,
-            style: const TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -52,7 +53,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             .where('searchQueries', arrayContains: widget.query)
             .where('isActive', isEqualTo: true)
             .orderBy('postedAt', descending: true),
-        pageSize: 9,
+        pageSize: 6,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(
@@ -63,12 +64,12 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             );
           }
           if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Text(
                   'Something has gone wrong. Please try again',
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
@@ -101,15 +102,15 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
                         'No results found',
                         maxLines: 2,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w700,
                           fontSize: 17,
                         ),
@@ -125,8 +126,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(
+                Padding(
+                  padding: const EdgeInsets.only(
                     left: 15,
                     right: 15,
                     top: 15,
@@ -136,7 +137,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     maxLines: 1,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w800,
                       fontSize: 18,
                     ),

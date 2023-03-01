@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'package:location/location.dart';
@@ -127,9 +128,9 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Set your location',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -143,27 +144,27 @@ class _LocationScreenState extends State<LocationScreen> {
             const SizedBox(
               height: 15,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 'Set your location to get nearby product recommendations and to sell your own products',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                 ),
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
                 'To enjoy all that we have to offer, we need to know where to look for them',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: lightBlackColor,
-                  fontSize: 13,
+                  fontSize: 14,
                 ),
               ),
             ),

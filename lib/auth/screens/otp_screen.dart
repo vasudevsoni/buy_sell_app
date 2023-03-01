@@ -13,7 +13,7 @@
 // class OTPScreen extends StatefulWidget {
 //   final String verificationId;
 //   final String mobileNumber;
-//   const OTPScreen({
+//   OTPScreen({
 //     Key? key,
 //     required this.mobileNumber,
 //     required this.verificationId,
@@ -42,7 +42,7 @@
 //   Widget build(BuildContext context) {
 //     final defaultPinTheme = PinTheme(
 //       height: 60,
-//       textStyle: const TextStyle(
+//       GoogleFonts.interTight: GoogleFonts.interTight(
 //         fontSize: 22,
 //         color: blackColor,
 //         fontWeight: FontWeight.w800,
@@ -57,7 +57,7 @@
 //       decoration: BoxDecoration(
 //         color: whiteColor,
 //         borderRadius: BorderRadius.circular(5),
-//         boxShadow: const [
+//         boxShadow: [
 //           BoxShadow(
 //             color: fadedColor,
 //             offset: Offset(0, 2),
@@ -113,11 +113,11 @@
 //       appBar: AppBar(
 //         elevation: 0.2,
 //         backgroundColor: whiteColor,
-//         iconTheme: const IconThemeData(color: blackColor),
+//         iconTheme: IconThemeData(color: blackColor),
 //         centerTitle: true,
-//         title: const Text(
+//         title: Text(
 //           'Verification code',
-//           style: TextStyle(
+//           style: GoogleFonts.interTight(
 //             fontWeight: FontWeight.w500,
 //             color: blackColor,
 //             fontSize: 15,
@@ -125,26 +125,26 @@
 //         ),
 //       ),
 //       body: Padding(
-//         padding: const EdgeInsets.all(15.0),
+//         padding: EdgeInsets.all(15.0),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.stretch,
 //           children: [
-//             const SizedBox(
+//             SizedBox(
 //               height: 20,
 //             ),
 //             Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 15),
+//               padding: EdgeInsets.symmetric(horizontal: 15),
 //               child: Center(
 //                 child: Text(
 //                   'Enter the code sent to ${widget.mobileNumber}.',
-//                   style: const TextStyle(
+//                   style: GoogleFonts.interTight(
 //                     color: lightBlackColor,
 //                     fontSize: 15,
 //                   ),
 //                 ),
 //               ),
 //             ),
-//             const SizedBox(
+//             SizedBox(
 //               height: 20,
 //             ),
 //             Pinput(
@@ -172,33 +172,33 @@
 //                 );
 //               },
 //             ),
-//             const SizedBox(
+//             SizedBox(
 //               height: 5,
 //             ),
 //             TextButton(
 //               onPressed: () => Get.back(),
-//               child: const Text(
+//               child: Text(
 //                 'Change mobile number',
-//                 style: TextStyle(
+//                 style: GoogleFonts.interTight(
 //                   color: blueColor,
 //                   fontWeight: FontWeight.w600,
 //                   fontSize: 15,
 //                 ),
 //               ),
 //             ),
-//             const Spacer(),
-//             const Padding(
+//             Spacer(),
+//             Padding(
 //               padding: EdgeInsets.symmetric(horizontal: 15),
 //               child: Text(
 //                 'Didn\'t receive the code?',
 //                 textAlign: TextAlign.center,
-//                 style: TextStyle(
+//                 style: GoogleFonts.interTight(
 //                   fontWeight: FontWeight.w500,
 //                   fontSize: 16,
 //                 ),
 //               ),
 //             ),
-//             const SizedBox(
+//             SizedBox(
 //               height: 10,
 //             ),
 //             noOfResends < 5

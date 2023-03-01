@@ -6,6 +6,7 @@ class PromotionApi {
   static const _apiKey = 'goog_buwpVOVcvMsRCbXmUmMUTtROgtK';
 
   static Future init() async {
+    // ignore: deprecated_member_use
     await Purchases.setDebugLogsEnabled(true);
     final PurchasesConfiguration configuration =
         PurchasesConfiguration(_apiKey);

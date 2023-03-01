@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/utils/utils.dart';
 
@@ -23,7 +24,7 @@ class CustomListTileNoImage extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: const TextStyle(
+        style: GoogleFonts.interTight(
           fontWeight: FontWeight.w600,
           fontSize: 15,
         ),

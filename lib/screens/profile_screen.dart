@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
@@ -184,10 +185,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Report this user',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -345,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text(
           name,
-          style: const TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -519,7 +520,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   maxLines: 2,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     color: blackColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -539,7 +540,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 3,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         color: blackColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -596,10 +597,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     color: lightBlackColor,
                     fontWeight: FontWeight.w400,
-                    fontSize: 12,
+                    fontSize: 13,
                   ),
                 ),
               ),
@@ -611,18 +612,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       color: lightBlackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 13,
                     ),
                   ),
                 ),
-              // const SizedBox(
+              // SizedBox(
               //   height: 10,
               // ),
               // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   padding: EdgeInsets.symmetric(horizontal: 15),
               //   child: isFollowing
               //       ? CustomButton(
               //           text: 'Unfollow',
@@ -665,15 +666,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
+                  Padding(
+                    padding: const EdgeInsets.only(
                       left: 15,
                       right: 15,
                     ),
                     child: Text(
                       'Currently Selling',
                       maxLines: 1,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                       ),
@@ -716,7 +717,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 9,
+      pageSize: 5,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -727,12 +728,12 @@ class _SellerProductsListState extends State<SellerProductsList> {
           );
         }
         if (snapshot.hasError) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -741,8 +742,8 @@ class _SellerProductsListState extends State<SellerProductsList> {
           );
         }
         if (snapshot.hasData && snapshot.docs.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(15),
+          return Padding(
+            padding: const EdgeInsets.all(15),
             child: Center(
               child: Text(
                 'No products from this seller',
@@ -750,7 +751,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
@@ -52,7 +53,7 @@ class MyListingsList extends StatelessWidget {
       query: services.listings
           .orderBy('postedAt', descending: true)
           .where('sellerUid', isEqualTo: services.user!.uid),
-      pageSize: 9,
+      pageSize: 3,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Center(
@@ -63,12 +64,12 @@ class MyListingsList extends StatelessWidget {
           );
         }
         if (snapshot.hasError) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -99,15 +100,15 @@ class MyListingsList extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'You haven\'t listed any product yet!',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,
                     ),
@@ -116,15 +117,15 @@ class MyListingsList extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'When you list a product, it will show here.',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -163,7 +164,7 @@ class MyListingsList extends StatelessWidget {
                 child: Text(
                   '${snapshot.docs.length} products',
                   maxLines: 1,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
                   ),
@@ -310,10 +311,10 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -329,9 +330,9 @@ class _MyListingScreenProductCardState
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Your product will be marked as sold and deactivated. This action cannot be reversed.',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -416,10 +417,10 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure? 😱',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -435,9 +436,9 @@ class _MyListingScreenProductCardState
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Your product will be permanently deleted.\nAll your chats with buyers for this product will also be deleted.\n\nNote - This action cannot be reversed.',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -553,7 +554,7 @@ class _MyListingScreenProductCardState
                                     maxLines: 1,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.interTight(
                                       fontWeight: FontWeight.w800,
                                       color: blackColor,
                                       fontSize: 16,
@@ -567,7 +568,7 @@ class _MyListingScreenProductCardState
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.interTight(
                                       fontWeight: FontWeight.w500,
                                       color: blackColor,
                                       fontSize: 15,
@@ -577,7 +578,7 @@ class _MyListingScreenProductCardState
                                   Text(
                                     widget.time,
                                     maxLines: 1,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.interTight(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 13,
                                       color: lightBlackColor,
@@ -607,7 +608,7 @@ class _MyListingScreenProductCardState
                               ),
                               Text(
                                 'Views: ${numberFormat.format(widget.data['views'].length)}',
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: blackColor,
@@ -630,7 +631,7 @@ class _MyListingScreenProductCardState
                               ),
                               Text(
                                 'Likes: ${numberFormat.format(widget.data['favorites'].length)}',
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: blackColor,
@@ -655,7 +656,7 @@ class _MyListingScreenProductCardState
                           ),
                           Text(
                             'ID: ${widget.data.id}',
-                            style: const TextStyle(
+                            style: GoogleFonts.interTight(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
                               color: lightBlackColor,
@@ -681,13 +682,13 @@ class _MyListingScreenProductCardState
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Product is currently under review',
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: redColor,
@@ -713,13 +714,13 @@ class _MyListingScreenProductCardState
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Product has been rejected as it goes against our guidelines. Please edit it and submit again for review.',
                                 textAlign: TextAlign.start,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: redColor,
@@ -771,13 +772,13 @@ class _MyListingScreenProductCardState
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Product is live',
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: blueColor,
@@ -802,13 +803,13 @@ class _MyListingScreenProductCardState
                                 horizontal: 15,
                                 vertical: 10,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Product has been sold',
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
-                                style: TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: redColor,

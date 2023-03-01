@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -68,9 +69,9 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
         elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Product images',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -230,11 +231,11 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                     child: Text(
                       '${index + 1}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
+                      style: GoogleFonts.interTight(
+                        fontWeight: FontWeight.w900,
                         fontSize: 30,
                         shadows: [
-                          Shadow(
+                          const Shadow(
                             offset: Offset(0, 2),
                             blurRadius: 10.0,
                             color: lightBlackColor,

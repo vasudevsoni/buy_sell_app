@@ -18,7 +18,7 @@ import 'provider/seller_form_provider.dart';
 import 'screens/loading_screen.dart';
 import 'error.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'high_importance_channel',
   'High Importance Notifications',
   description: 'This channel is used for high importance notifications',

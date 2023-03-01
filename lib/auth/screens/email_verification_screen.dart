@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '/screens/main_screen.dart';
@@ -86,9 +87,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Verify your email',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -107,11 +108,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 size: 60,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(15.0),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Click on the link you received on your registered email address to verify your email.',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w400,
                   color: lightBlackColor,
                   fontSize: 14,
@@ -130,9 +131,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   horizontal: 15,
                   vertical: 10,
                 ),
-                child: const Text(
+                child: Text(
                   'Note - Check your spam folder if you cannot find the verification email.',
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     color: blackColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -141,10 +142,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
             ),
             const Spacer(),
-            const Center(
+            Center(
               child: Text(
                 'Did not receive the mail yet?',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 15,

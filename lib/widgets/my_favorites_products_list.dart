@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/main_provider.dart';
@@ -32,7 +33,7 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
         query: services.listings
             .orderBy('title', descending: false)
             .where('favorites', arrayContains: services.user!.uid),
-        pageSize: 9,
+        pageSize: 5,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(
@@ -43,12 +44,12 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
             );
           }
           if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Text(
                   'Something has gone wrong. Please try again',
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
@@ -78,15 +79,15 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'You have no favorites yet!',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w800,
                       fontSize: 20,
                     ),
@@ -95,15 +96,15 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 const SizedBox(
                   height: 5,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'When you favorite a product, it will show here.',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       color: lightBlackColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -135,14 +136,14 @@ class _MyFavoritesProductsListState extends State<MyFavoritesProductsList> {
                 const SizedBox(
                   height: 15,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: AutoSizeText(
                     'Favorites',
                     maxLines: 1,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w800,
                       fontSize: 20,
                     ),

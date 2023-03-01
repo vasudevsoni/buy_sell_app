@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonWithoutIcon extends StatelessWidget {
   final String text;
@@ -43,9 +44,10 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         softWrap: true,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: GoogleFonts.interTight(
           color: textIconColor,
-          fontSize: 15.5,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

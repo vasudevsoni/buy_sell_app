@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
@@ -85,10 +86,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -115,13 +116,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -270,10 +271,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to update?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -298,7 +299,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                           children: [
                             Text(
                               titleController.text,
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -313,7 +314,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -327,7 +328,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -464,10 +465,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -483,9 +484,9 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -548,9 +549,9 @@ class _EditAdScreenState extends State<EditAdScreen> {
             icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Edit your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -569,10 +570,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
+                  child: Text(
                     'Step 1 - Product Details',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -610,7 +611,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     controller: titleController,
                     keyboardType: TextInputType.text,
                     hint: 'Mention key features of your item',
-                    maxLength: 70,
+                    maxLength: 35,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -618,8 +619,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
-                      if (value.length < 10) {
-                        return 'Please enter 10 or more characters';
+                      if (value.length < 5) {
+                        return 'Please enter 5 or more characters';
                       }
                       setState(() {});
                       return null;
@@ -640,7 +641,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 300,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -649,8 +650,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -669,7 +670,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -680,7 +681,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -718,7 +719,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
@@ -740,12 +741,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../services/admob_services.dart';
@@ -62,9 +63,9 @@ class _FullBioScreenState extends State<FullBioScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Bio',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -81,7 +82,7 @@ class _FullBioScreenState extends State<FullBioScreen> {
               Text(
                 widget.bio,
                 textAlign: TextAlign.start,
-                style: const TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 16,

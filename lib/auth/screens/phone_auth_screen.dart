@@ -10,7 +10,7 @@
 // import '/auth/services/phone_auth_service.dart';
 
 // class PhoneAuthScreen extends StatefulWidget {
-//   const PhoneAuthScreen({Key? key}) : super(key: key);
+//   PhoneAuthScreen({Key? key}) : super(key: key);
 
 //   @override
 //   State<PhoneAuthScreen> createState() => _PhoneAuthScreenState();
@@ -56,11 +56,11 @@
 //       appBar: AppBar(
 //         elevation: 0.2,
 //         backgroundColor: whiteColor,
-//         iconTheme: const IconThemeData(color: blackColor),
+//         iconTheme: IconThemeData(color: blackColor),
 //         centerTitle: true,
-//         title: const Text(
+//         title: Text(
 //           'Login with your mobile',
-//           style: TextStyle(
+//           style: GoogleFonts.interTight(
 //             fontWeight: FontWeight.w500,
 //             color: blackColor,
 //             fontSize: 15,
@@ -70,11 +70,11 @@
 //       body: Form(
 //         key: _mobileLoginFormKey,
 //         child: Padding(
-//           padding: const EdgeInsets.all(15.0),
+//           padding: EdgeInsets.all(15.0),
 //           child: Column(
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
-//               const TextFieldLabel(labelText: 'Mobile Number'),
+//               TextFieldLabel(labelText: 'Mobile Number'),
 //               Row(
 //                 children: [
 //                   Expanded(
@@ -88,7 +88,7 @@
 //                       isEnabled: false,
 //                     ),
 //                   ),
-//                   const SizedBox(
+//                   SizedBox(
 //                     width: 10,
 //                   ),
 //                   Expanded(
@@ -111,14 +111,14 @@
 //                       inputFormatters: <TextInputFormatter>[
 //                         FilteringTextInputFormatter.digitsOnly
 //                       ],
-//                       style: const TextStyle(
+//                       style: GoogleFonts.interTight(
 //                         fontWeight: FontWeight.w600,
 //                         color: blackColor,
 //                         fontSize: 16,
 //                       ),
 //                       decoration: InputDecoration(
 //                         hintText: '9876543210',
-//                         contentPadding: const EdgeInsets.symmetric(
+//                         contentPadding: EdgeInsets.symmetric(
 //                           horizontal: 15,
 //                           vertical: 10,
 //                         ),
@@ -126,7 +126,7 @@
 //                         fillColor: greyColor,
 //                         filled: true,
 //                         border: OutlineInputBorder(
-//                           borderSide: const BorderSide(
+//                           borderSide: BorderSide(
 //                             color: transparentColor,
 //                             width: 0,
 //                             strokeAlign: StrokeAlign.inside,
@@ -134,7 +134,7 @@
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
 //                         enabledBorder: OutlineInputBorder(
-//                           borderSide: const BorderSide(
+//                           borderSide: BorderSide(
 //                             color: transparentColor,
 //                             width: 0,
 //                             strokeAlign: StrokeAlign.inside,
@@ -142,20 +142,20 @@
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
 //                         errorBorder: OutlineInputBorder(
-//                           borderSide: const BorderSide(
+//                           borderSide: BorderSide(
 //                             color: redColor,
 //                             width: 1.5,
 //                             strokeAlign: StrokeAlign.inside,
 //                           ),
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
-//                         errorStyle: const TextStyle(
+//                         errorStyle: GoogleFonts.interTight(
 //                           fontSize: 12,
 //                           fontWeight: FontWeight.w600,
 //                           color: redColor,
 //                         ),
 //                         focusedBorder: OutlineInputBorder(
-//                           borderSide: const BorderSide(
+//                           borderSide: BorderSide(
 //                             color: blueColor,
 //                             width: 1.5,
 //                             strokeAlign: StrokeAlign.inside,
@@ -163,7 +163,7 @@
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
 //                         focusedErrorBorder: OutlineInputBorder(
-//                           borderSide: const BorderSide(
+//                           borderSide: BorderSide(
 //                             color: blueColor,
 //                             width: 1.5,
 //                             strokeAlign: StrokeAlign.inside,
@@ -171,12 +171,12 @@
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
 //                         floatingLabelBehavior: FloatingLabelBehavior.never,
-//                         hintStyle: const TextStyle(
+//                         hintStyle: GoogleFonts.interTight(
 //                           fontSize: 16,
 //                           fontWeight: FontWeight.normal,
 //                           color: fadedColor,
 //                         ),
-//                         labelStyle: const TextStyle(
+//                         labelStyle: GoogleFonts.interTight(
 //                           fontWeight: FontWeight.normal,
 //                           fontSize: 16,
 //                         ),
@@ -185,19 +185,19 @@
 //                   ),
 //                 ],
 //               ),
-//               const SizedBox(
+//               SizedBox(
 //                 height: 10,
 //               ),
-//               const Text(
+//               Text(
 //                 'We\'ll send a verification code to this number.',
-//                 style: TextStyle(
+//                 style: GoogleFonts.interTight(
 //                   color: lightBlackColor,
 //                   fontSize: 15,
 //                 ),
 //               ),
-//               const Spacer(),
+//               Spacer(),
 //               isLoading
-//                   ? const LoadingButton()
+//                   ? LoadingButton()
 //                   : CustomButton(
 //                       text: 'Proceed',
 //                       icon: Ionicons.arrow_forward,

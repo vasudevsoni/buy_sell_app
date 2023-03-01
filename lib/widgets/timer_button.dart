@@ -3,8 +3,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const int aSec = 1;
+int aSec = 1;
 const String _secPostFix = 's';
 
 class TimerButton extends StatefulWidget {
@@ -45,7 +46,7 @@ class _TimerButtonState extends State<TimerButton> {
   }
 
   _timerUpdate() {
-    Timer(const Duration(seconds: aSec), () async {
+    Timer(Duration(seconds: aSec), () async {
       if (mounted) {
         setState(() {
           timeCounter--;
@@ -91,9 +92,10 @@ class _TimerButtonState extends State<TimerButton> {
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.interTight(
                 color: whiteColor,
-                fontSize: 15.5,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
             ),
           )
@@ -113,9 +115,10 @@ class _TimerButtonState extends State<TimerButton> {
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: GoogleFonts.interTight(
                 color: blackColor,
-                fontSize: 15.5,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
             ),
           );

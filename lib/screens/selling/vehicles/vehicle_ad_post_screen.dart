@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
@@ -116,10 +117,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -146,13 +147,13 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -316,10 +317,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to post?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -376,12 +377,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                           child: Text(
                                             '+${(provider.imagesCount - 1).toString()}',
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
+                                            style: GoogleFonts.interTight(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 30,
                                               color: whiteColor,
                                               shadows: [
-                                                Shadow(
+                                                const Shadow(
                                                   offset: Offset(0, 2),
                                                   blurRadius: 10.0,
                                                   color: lightBlackColor,
@@ -404,7 +405,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                   children: [
                                     Text(
                                       '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
                                       ),
@@ -419,7 +420,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                       maxLines: 1,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w700,
                                         color: blueColor,
                                         fontSize: 15,
@@ -452,7 +453,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 ),
                                 Text(
                                   noOfOwnersSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -475,7 +476,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 ),
                                 Text(
                                   fuelTypeSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -501,7 +502,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                 ),
                                 Text(
                                   yorSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -529,7 +530,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                   '${kmFormat.format(
                                     int.parse(kmDrivenController.text),
                                   )} Kms',
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -548,7 +549,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -728,10 +729,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Are you sure?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -747,9 +748,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'All your product details will be removed and you\'ll have to start fresh.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -844,10 +845,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -863,9 +864,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -944,9 +945,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           actions: [
             TextButton(
               onPressed: isLoading ? null : resetAll,
-              child: const Text(
+              child: Text(
                 'Reset all',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: redColor,
                   fontSize: 12,
@@ -954,9 +955,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               ),
             ),
           ],
-          title: const Text(
+          title: Text(
             'Create your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -975,10 +976,59 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
-                    'Step 1 - Vehicle Details',
+                  child: Text(
+                    'Step 1 - User Details',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: locationController,
+                    keyboardType: TextInputType.text,
+                    hint: 'Choose your location to list product',
+                    maxLines: 2,
+                    showCounterText: false,
+                    isEnabled: false,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Location can be changed from Settings > Change Location',
+                    style: GoogleFonts.interTight(
+                      color: lightBlackColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: Text(
+                    'Step 2 - Vehicle Details',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -1016,7 +1066,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     controller: brandNameController,
                     keyboardType: TextInputType.text,
                     hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
-                    maxLength: 30,
+                    maxLength: 20,
                     textInputAction: TextInputAction.next,
                     isEnabled: isLoading ? false : true,
                     validator: (value) {
@@ -1076,7 +1126,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -1114,7 +1164,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -1136,12 +1186,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -1160,14 +1210,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
-                      hint: const Text(
+                      hint: Text(
                         '--Select--',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
                       ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
@@ -1196,7 +1246,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               value: item,
                               child: Text(
                                 item,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   color: blackColor,
                                   fontSize: 16,
@@ -1232,7 +1282,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               vertical: 8,
                             ),
                             hintText: 'Search for fuel type',
-                            hintStyle: const TextStyle(
+                            hintStyle: GoogleFonts.interTight(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
                             ),
@@ -1268,14 +1318,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
-                      hint: const Text(
+                      hint: Text(
                         '--Select--',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
                       ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w600,
                         color: greyColor,
                       ),
@@ -1304,7 +1354,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               value: item,
                               child: Text(
                                 item,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   color: blackColor,
                                   fontSize: 16,
@@ -1340,7 +1390,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               vertical: 8,
                             ),
                             hintText: 'Search for an year',
-                            hintStyle: const TextStyle(
+                            hintStyle: GoogleFonts.interTight(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
                             ),
@@ -1376,14 +1426,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
-                      hint: const Text(
+                      hint: Text(
                         '--Select--',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
                       ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w600,
                         color: greyColor,
                       ),
@@ -1412,7 +1462,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               value: item,
                               child: Text(
                                 item,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   color: blackColor,
                                   fontSize: 16,
@@ -1448,7 +1498,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               vertical: 8,
                             ),
                             hintText: 'Search for a color',
-                            hintStyle: const TextStyle(
+                            hintStyle: GoogleFonts.interTight(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
                             ),
@@ -1484,14 +1534,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2(
                       isExpanded: true,
-                      hint: const Text(
+                      hint: Text(
                         '--Select--',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                         ),
                       ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w600,
                         color: greyColor,
                       ),
@@ -1520,7 +1570,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               value: item,
                               child: Text(
                                 item,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w600,
                                   color: blackColor,
                                   fontSize: 16,
@@ -1556,7 +1606,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               vertical: 8,
                             ),
                             hintText: 'Search for an item...',
-                            hintStyle: const TextStyle(
+                            hintStyle: GoogleFonts.interTight(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
                             ),
@@ -1587,10 +1637,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
-                    'Step 2 - Listing Details',
+                  child: Text(
+                    'Step 3 - Listing Details',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -1611,7 +1661,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 300,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -1620,8 +1670,8 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -1640,7 +1690,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -1651,7 +1701,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -1689,7 +1739,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -1711,12 +1761,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -1730,10 +1780,10 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   width: size.width,
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
-                  child: const Text(
-                    'Step 3 - Product Images',
+                  child: Text(
+                    'Step 4 - Product Images',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -1745,55 +1795,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 ),
                 ImagePickerWidget(
                   isButtonDisabled: isLoading ? true : false,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blackColor,
-                  child: const Text(
-                    'Step 4 - User Location',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Location'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: locationController,
-                    keyboardType: TextInputType.text,
-                    hint: 'Choose your location to list product',
-                    maxLines: 2,
-                    showCounterText: false,
-                    isEnabled: false,
-                    textInputAction: TextInputAction.go,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'To change your location go to settings.',
-                    style: TextStyle(
-                      color: lightBlackColor,
-                      fontSize: 13,
-                    ),
-                  ),
                 ),
                 const SizedBox(
                   height: 20,

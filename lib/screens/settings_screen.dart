@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
@@ -85,10 +86,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -105,9 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Are you sure you want to log out of your account? You will need to log in again to access your account.',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -167,9 +168,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Settings',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -183,9 +184,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
+              child: Text(
                 'Account',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -247,9 +248,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
+              child: Text(
                 'Actions',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,

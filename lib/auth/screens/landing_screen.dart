@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -71,10 +72,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -101,13 +102,13 @@ class _LandingScreenState extends State<LandingScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -222,13 +223,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
-                            fontSize: 20,
+                            fontSize: 23,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 3,
                         ),
                         Text(
                           subtitles[index],
@@ -236,8 +234,8 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w600,
                             color: lightBlackColor,
                             fontSize: 15,
                           ),
@@ -291,24 +289,24 @@ class _LandingScreenState extends State<LandingScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
-                children: const [
-                  Expanded(
+                children: [
+                  const Expanded(
                     child: Divider(
                       color: lightBlackColor,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "Continue with",
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
                         color: lightBlackColor,
-                        fontSize: 10,
+                        fontSize: 12,
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Divider(
                       color: lightBlackColor,
                     ),
@@ -413,8 +411,8 @@ class _LandingScreenState extends State<LandingScreen> {
                         ..onTap = () => launchUrl(
                               Uri.parse('https://www.bechdeapp.com/terms'),
                             ),
-                      style: const TextStyle(
-                        fontSize: 9,
+                      style: GoogleFonts.interTight(
+                        fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                         decoration: TextDecoration.underline,
@@ -429,8 +427,8 @@ class _LandingScreenState extends State<LandingScreen> {
                               Uri.parse(
                                   'https://www.bechdeapp.com/privacy-policy'),
                             ),
-                      style: const TextStyle(
-                        fontSize: 9,
+                      style: GoogleFonts.interTight(
+                        fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                         decoration: TextDecoration.underline,
@@ -438,8 +436,8 @@ class _LandingScreenState extends State<LandingScreen> {
                       ),
                     ),
                   ],
-                  style: const TextStyle(
-                    fontSize: 9,
+                  style: GoogleFonts.interTight(
+                    fontSize: 11,
                     fontWeight: FontWeight.w400,
                     color: blackColor,
                   ),

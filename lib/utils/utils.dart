@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 void showSnackBar({
@@ -15,7 +16,7 @@ void showSnackBar({
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         softWrap: true,
-        style: const TextStyle(
+        style: GoogleFonts.interTight(
           fontSize: 13,
           fontWeight: FontWeight.w600,
           color: whiteColor,

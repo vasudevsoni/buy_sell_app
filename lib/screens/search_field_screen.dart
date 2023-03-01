@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'search_results_screen.dart';
 import '/widgets/custom_text_field.dart';
@@ -30,9 +31,9 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
         elevation: 0.2,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Search',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

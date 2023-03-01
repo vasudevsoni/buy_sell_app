@@ -4,6 +4,7 @@ import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -70,9 +71,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Promote your product',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -134,7 +135,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: whiteColor,
@@ -145,7 +146,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: whiteColor,
@@ -160,14 +161,14 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Text(
                       'Available Packages',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w800,
                         fontSize: 20,
                       ),
@@ -224,10 +225,10 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      const Center(
+                                      Center(
                                         child: Text(
                                           'Boost to Top Example',
-                                          style: TextStyle(
+                                          style: GoogleFonts.interTight(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -285,7 +286,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                   Expanded(
                                     child: Text(
                                       product!.title.toString(),
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: whiteColor,
@@ -297,10 +298,10 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        const Text(
+                                        Text(
                                           '₹100.00',
                                           textAlign: TextAlign.end,
-                                          style: TextStyle(
+                                          style: GoogleFonts.interTight(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w800,
                                             color: whiteColor,
@@ -314,7 +315,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                         Text(
                                           product!.priceString.toString(),
                                           textAlign: TextAlign.end,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.interTight(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w800,
                                             color: whiteColor,
@@ -346,7 +347,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
@@ -359,13 +360,13 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 height: 5,
                               ),
                               Row(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Ionicons.checkmark,
                                     color: whiteColor,
                                     size: 16,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 15,
                                   ),
                                   Expanded(
@@ -374,7 +375,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
@@ -387,13 +388,13 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 height: 5,
                               ),
                               Row(
-                                children: const [
-                                  Icon(
+                                children: [
+                                  const Icon(
                                     Ionicons.checkmark,
                                     color: whiteColor,
                                     size: 16,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 15,
                                   ),
                                   Expanded(
@@ -402,7 +403,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: greyColor,
@@ -414,13 +415,13 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              const Center(
+                              Center(
                                 child: Text(
                                   'View Example',
                                   maxLines: 2,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
                                     color: greyColor,

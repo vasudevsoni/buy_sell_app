@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
 
@@ -88,14 +89,14 @@ class _HomeScreenState extends State<HomeScreen>
   //     builder: (context) {
   //       return SafeArea(
   //         child: Container(
-  //           decoration: const BoxDecoration(
+  //           decoration: BoxDecoration(
   //             borderRadius: BorderRadius.only(
   //               topLeft: Radius.circular(10),
   //               topRight: Radius.circular(10),
   //             ),
   //             color: whiteColor,
   //           ),
-  //           padding: const EdgeInsets.only(
+  //           padding: EdgeInsets.only(
   //             top: 5,
   //             left: 15,
   //             right: 15,
@@ -115,20 +116,20 @@ class _HomeScreenState extends State<HomeScreen>
   //                   ),
   //                 ),
   //               ),
-  //               const SizedBox(
+  //               SizedBox(
   //                 height: 10,
   //               ),
-  //               const Center(
+  //               Center(
   //                 child: Text(
   //                   'Filter your Results',
-  //                   style: TextStyle(
+  //                   style: GoogleFonts.interTight(
   //                     fontSize: 20,
   //                     fontWeight: FontWeight.w500,
   //                   ),
   //                   textAlign: TextAlign.start,
   //                 ),
   //               ),
-  //               const SizedBox(
+  //               SizedBox(
   //                 height: 10,
   //               ),
   //               CustomButtonWithoutIcon(
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen>
   //                 borderColor: blueColor,
   //                 textIconColor: whiteColor,
   //               ),
-  //               const SizedBox(
+  //               SizedBox(
   //                 height: 10,
   //               ),
   //               CustomButtonWithoutIcon(
@@ -176,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen>
       //   hoverElevation: 0,
       //   disabledElevation: 0,
       //   highlightElevation: 0,
-      //   child: const Icon(Ionicons.filter),
+      //   child: Icon(Ionicons.filter),
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
@@ -220,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: const TextStyle(
+                            style: GoogleFonts.interTight(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                               color: blackColor,
@@ -243,9 +244,9 @@ class _HomeScreenState extends State<HomeScreen>
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: const TextStyle(
+                        style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w500,
-                          fontSize: 11,
+                          fontSize: 12,
                           color: fadedColor,
                         ),
                       ),
@@ -272,15 +273,13 @@ class _HomeScreenState extends State<HomeScreen>
           indicatorColor: blueColor,
           indicatorWeight: 3,
           splashBorderRadius: BorderRadius.circular(10),
-          labelStyle: const TextStyle(
+          labelStyle: GoogleFonts.interTight(
             fontWeight: FontWeight.w700,
-            fontSize: 13,
-            fontFamily: 'Rubik',
+            fontSize: 14,
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 13,
-            fontFamily: 'Rubik',
+          unselectedLabelStyle: GoogleFonts.interTight(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
           ),
           labelColor: blackColor,
           unselectedLabelColor: lightBlackColor,
@@ -350,7 +349,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -362,13 +361,13 @@ class _AllProductsScreenState extends State<AllProductsScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Categories',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                     ),
@@ -378,18 +377,19 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                   label: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'See all',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           color: blueColor,
-                          fontSize: 12,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 3,
                       ),
-                      Icon(
+                      const Icon(
                         Ionicons.arrow_forward,
                         color: blueColor,
                         size: 12,
@@ -412,14 +412,14 @@ class _AllProductsScreenState extends State<AllProductsScreen>
           const SizedBox(
             height: 20,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               'Latest Products',
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: GoogleFonts.interTight(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -456,15 +456,16 @@ class CategoriesListView extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot>(
         stream: _services.categories
             .orderBy('sortId', descending: false)
+            .limit(5)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Text(
                   'Something has gone wrong. Please try again',
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
@@ -486,7 +487,7 @@ class CategoriesListView extends StatelessWidget {
                 width: 6,
               );
             },
-            itemCount: 6,
+            itemCount: 5,
             physics: const ClampingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 15),
             scrollDirection: Axis.horizontal,
@@ -538,9 +539,9 @@ class CategoriesListView extends StatelessWidget {
                         maxLines: 1,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                        style: GoogleFonts.interTight(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
                           color: lightBlackColor,
                         ),
                       ),
@@ -589,7 +590,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -601,13 +602,13 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Categories',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                     ),
@@ -617,18 +618,19 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                   label: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'See all',
-                        style: TextStyle(
+                        style: GoogleFonts.interTight(
                           color: blueColor,
-                          fontSize: 12,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 3,
                       ),
-                      Icon(
+                      const Icon(
                         Ionicons.arrow_forward,
                         color: blueColor,
                         size: 12,
@@ -651,14 +653,14 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
           const SizedBox(
             height: 20,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               'Nearby Products',
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: GoogleFonts.interTight(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -677,7 +679,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
 }
 
 // class CustomBannerAdHomeScreen extends StatefulWidget {
-//   const CustomBannerAdHomeScreen({super.key});
+//   CustomBannerAdHomeScreen({super.key});
 
 //   @override
 //   State<CustomBannerAdHomeScreen> createState() =>
@@ -711,7 +713,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
 //           ad.dispose();
 //         },
 //       ),
-//       request: const AdRequest(),
+//       request: AdRequest(),
 //     );
 //     _bannerAd!.load();
 //   }
@@ -748,7 +750,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
 //             ),
 //             height: size.width * 0.3,
 //             width: 300,
-//             child: const Center(
+//             child: Center(
 //               child: Text('Advertisement'),
 //             ),
 //           );
@@ -803,15 +805,15 @@ class _ProductsListState extends State<ProductsList> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'No products found in your region',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,
                     ),
@@ -859,12 +861,12 @@ class _ProductsListState extends State<ProductsList> {
                 );
               }
               if (snapshot.hasError) {
-                return const Center(
+                return Center(
                   child: Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'Something has gone wrong. Please try again',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       ),
@@ -896,15 +898,15 @@ class _ProductsListState extends State<ProductsList> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Text(
                           'No products are currently available',
                           maxLines: 2,
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
                           ),
@@ -937,7 +939,7 @@ class _ProductsListState extends State<ProductsList> {
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
                   // if (index != 0 && index % 5 == 0) {
-                  //   return const CustomBannerAdHomeScreen();
+                  //   return CustomBannerAdHomeScreen();
                   // }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

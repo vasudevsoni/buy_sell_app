@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/utils/utils.dart';
 
@@ -54,7 +55,7 @@ class CustomTextField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       maxLines: maxLines,
       obscureText: isObscured,
-      style: const TextStyle(
+      style: GoogleFonts.interTight(
         fontWeight: FontWeight.w600,
         color: blackColor,
         fontSize: 16,
@@ -69,7 +70,7 @@ class CustomTextField extends StatelessWidget {
         fillColor: greyColor,
         filled: true,
         counterText: showCounterText ? null : '',
-        counterStyle: const TextStyle(
+        counterStyle: GoogleFonts.interTight(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: fadedColor,
@@ -114,16 +115,16 @@ class CustomTextField extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(5),
         ),
-        hintStyle: const TextStyle(
+        hintStyle: GoogleFonts.interTight(
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: fadedColor,
         ),
-        labelStyle: const TextStyle(
+        labelStyle: GoogleFonts.interTight(
           fontWeight: FontWeight.normal,
           fontSize: 16,
         ),
-        errorStyle: const TextStyle(
+        errorStyle: GoogleFonts.interTight(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: redColor,

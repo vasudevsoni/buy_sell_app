@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../services/admob_services.dart';
@@ -62,9 +63,9 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Description',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -81,8 +82,8 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
               Text(
                 widget.desc,
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w600,
                   color: blackColor,
                   fontSize: 16,
                 ),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -151,10 +152,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Make an offer 💵',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -172,7 +173,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w600,
                     color: blackColor,
                     fontSize: 16,
@@ -210,7 +211,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    errorStyle: const TextStyle(
+                    errorStyle: GoogleFonts.interTight(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: redColor,
@@ -232,12 +233,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
-                    hintStyle: const TextStyle(
+                    hintStyle: GoogleFonts.interTight(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                       color: fadedColor,
                     ),
-                    labelStyle: const TextStyle(
+                    labelStyle: GoogleFonts.interTight(
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
                     ),
@@ -327,10 +328,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -346,9 +347,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Are you sure you want to delete this chat? This action cannot be reversed.',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -450,7 +451,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           softWrap: true,
-          style: const TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -517,9 +518,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
+                                  style: GoogleFonts.interTight(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800,
                                     color: whiteColor,
                                   ),
                                 ),
@@ -528,9 +529,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
+                                  style: GoogleFonts.interTight(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
                                     color: whiteColor,
                                   ),
                                 ),
@@ -553,12 +554,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       AsyncSnapshot<QuerySnapshot> snapshot,
                     ) {
                       if (snapshot.hasError) {
-                        return const Center(
+                        return Center(
                           child: Padding(
-                            padding: EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(15.0),
                             child: Text(
                               'Something has gone wrong. Please try again',
-                              style: TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -569,23 +570,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       if (snapshot.hasData && snapshot.data!.size == 0) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
                               child: Text(
                                 'No messages here yet!',
                                 maxLines: 2,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: GoogleFonts.interTight(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 20,
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5,
                             ),
                             Text(
                               'Start by sending a Hi',
@@ -593,7 +592,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                                 color: lightBlackColor,
@@ -673,10 +672,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                         child: Text(
                                           snapshot.data!.docs[index]['message'],
-                                          style: const TextStyle(
+                                          style: GoogleFonts.interTight(
                                             color: whiteColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ),
@@ -720,12 +719,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                         child: Text(
                                           snapshot.data!.docs[index]['message'],
-                                          style: TextStyle(
+                                          style: GoogleFonts.interTight(
                                             color: sentBy == me
                                                 ? whiteColor
                                                 : blackColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ),
@@ -744,10 +743,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                       children: [
                                         Text(
                                           time,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.interTight(
                                             color: blackColor,
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                         const SizedBox(
@@ -755,10 +754,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         ),
                                         Text(
                                           date,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.interTight(
                                             color: fadedColor,
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w400,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ],
@@ -785,7 +784,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             pressElevation: 5,
                             label: const Text('Make offer'),
                             backgroundColor: greenColor,
-                            labelStyle: const TextStyle(
+                            labelStyle: GoogleFonts.interTight(
                               color: whiteColor,
                               fontWeight: FontWeight.w600,
                             ),
@@ -803,7 +802,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           pressElevation: 5,
                           label: const Text('Is it available?'),
                           backgroundColor: greyColor,
-                          labelStyle: const TextStyle(
+                          labelStyle: GoogleFonts.interTight(
                             color: blackColor,
                             fontWeight: FontWeight.w600,
                           ),
@@ -820,7 +819,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           pressElevation: 5,
                           label: const Text('Hello'),
                           backgroundColor: greyColor,
-                          labelStyle: const TextStyle(
+                          labelStyle: GoogleFonts.interTight(
                             color: blackColor,
                             fontWeight: FontWeight.w600,
                           ),
@@ -837,7 +836,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           pressElevation: 5,
                           label: const Text('Please reply'),
                           backgroundColor: greyColor,
-                          labelStyle: const TextStyle(
+                          labelStyle: GoogleFonts.interTight(
                             color: blackColor,
                             fontWeight: FontWeight.w600,
                           ),
@@ -854,7 +853,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           pressElevation: 5,
                           label: const Text('Not interested'),
                           backgroundColor: greyColor,
-                          labelStyle: const TextStyle(
+                          labelStyle: GoogleFonts.interTight(
                             color: blackColor,
                             fontWeight: FontWeight.w600,
                           ),
@@ -876,13 +875,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         height: 80,
                         padding: const EdgeInsets.all(15),
                         width: size.width,
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             'This product is currently unavailable.',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: whiteColor,

@@ -3,6 +3,7 @@ import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:buy_sell_app/widgets/svg_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'utils/utils.dart';
@@ -40,12 +41,12 @@ class ErrorScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 'Uh-oh! Looks like you are lost in space!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: blackColor,
