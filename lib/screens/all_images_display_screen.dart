@@ -70,7 +70,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          'Product images',
+          'Images',
           style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,

@@ -14,7 +14,6 @@ import '/provider/main_provider.dart';
 import '/screens/chats/conversation_screen.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button_without_icon.dart';
-import '/auth/screens/email_verification_screen.dart';
 import '/auth/screens/location_screen.dart';
 import '/utils/utils.dart';
 import '../selling/seller_categories_list_screen.dart';
@@ -415,25 +414,6 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                             fontWeight: FontWeight.w500,
                             fontSize: 13,
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: CustomButtonWithoutIcon(
-                          text: 'Start Selling',
-                          onPressed: !user!.emailVerified &&
-                                  user!.providerData[0].providerId == 'password'
-                              ? () => Get.to(
-                                    () => const EmailVerificationScreen(),
-                                  )
-                              : onSellButtonClicked,
-                          bgColor: blueColor,
-                          borderColor: blueColor,
-                          textIconColor: whiteColor,
                         ),
                       ),
                     ],

@@ -14,6 +14,7 @@ import 'package:ionicons/ionicons.dart';
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
 import '../screens/selling/common/edit_ad_screen.dart';
+import '../screens/selling/jobs/edit_job_post_screen.dart';
 import '../screens/selling/seller_categories_list_screen.dart';
 import '../screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/utils/utils.dart';
@@ -437,7 +438,7 @@ class _MyListingScreenProductCardState
                     color: greyColor,
                   ),
                   child: Text(
-                    'Your product will be permanently deleted.\nAll your chats with buyers for this product will also be deleted.\n\nNote - This action cannot be reversed.',
+                    'Your product will be permanently deleted.\nAll your chats with buyers for this listing will also be deleted.\n\nNote - This action cannot be reversed.',
                     style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -549,31 +550,75 @@ class _MyListingScreenProductCardState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  AutoSizeText(
-                                    priceFormat.format(widget.data['price']),
-                                    maxLines: 1,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w800,
-                                      color: blackColor,
-                                      fontSize: 16,
-                                    ),
-                                  ),
+                                  widget.data['catName'] == 'Jobs'
+                                      ? AutoSizeText(
+                                          '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w800,
+                                            color: blackColor,
+                                            fontSize: 16,
+                                          ),
+                                        )
+                                      : AutoSizeText(
+                                          priceFormat
+                                              .format(widget.data['price']),
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w800,
+                                            color: blackColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
                                   const SizedBox(
                                     height: 3,
                                   ),
-                                  Text(
-                                    widget.data['title'],
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      color: blackColor,
-                                      fontSize: 15,
+                                  if (widget.data['catName'] == 'Jobs')
+                                    Column(
+                                      children: [
+                                        AutoSizeText(
+                                          'Salary Period - ${widget.data['salaryPeriod']}',
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                      ],
                                     ),
-                                  ),
+                                  widget.data['catName'] == 'Jobs'
+                                      ? Text(
+                                          widget.data['title'],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 15,
+                                          ),
+                                        )
+                                      : Text(
+                                          widget.data['title'],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 15,
+                                          ),
+                                        ),
                                   const Spacer(),
                                   Text(
                                     widget.time,
@@ -715,7 +760,7 @@ class _MyListingScreenProductCardState
                                 vertical: 10,
                               ),
                               child: Text(
-                                'Product has been rejected as it goes against our guidelines. Please edit it and submit again for review.',
+                                'Product has been rejected as it goes against our guidelines. Please edit it and submit again for review.\nNote: Rejected listings are deleted after a few days.',
                                 textAlign: TextAlign.start,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
@@ -744,7 +789,6 @@ class _MyListingScreenProductCardState
                                   () => PromoteListingScreen(
                                     productId: widget.data.id,
                                     title: widget.data['title'],
-                                    price: widget.data['price'].toDouble(),
                                     imageUrl: widget.data['images'][0],
                                   ),
                                 );
@@ -869,17 +913,27 @@ class _MyListingScreenProductCardState
                                   text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
-                                    widget.data['catName'] == 'Vehicles'
-                                        ? Get.to(
-                                            () => EditVehicleAdScreen(
-                                              productData: widget.data,
-                                            ),
-                                          )
-                                        : Get.to(
-                                            () => EditAdScreen(
-                                              productData: widget.data,
-                                            ),
-                                          );
+                                    if (widget.data['catName'] == 'Vehicles') {
+                                      Get.to(
+                                        () => EditVehicleAdScreen(
+                                          productData: widget.data,
+                                        ),
+                                      );
+                                      return;
+                                    } else if (widget.data['catName'] ==
+                                        'Jobs') {
+                                      Get.to(
+                                        () => EditJobAdScreen(
+                                          productData: widget.data,
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    Get.to(
+                                      () => EditAdScreen(
+                                        productData: widget.data,
+                                      ),
+                                    );
                                   },
                                   isFullWidth: true,
                                   bgColor: whiteColor,

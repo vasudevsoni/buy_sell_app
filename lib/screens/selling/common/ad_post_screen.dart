@@ -895,7 +895,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),

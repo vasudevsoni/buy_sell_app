@@ -39,7 +39,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String sellerUid = '';
   String imageUrl = '';
   String title = '';
-  int price = 0;
   String name = '';
   bool isActive = true;
   late DocumentSnapshot prod;
@@ -49,7 +48,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     getDetails();
-
     super.initState();
   }
 
@@ -73,7 +71,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
         setState(() {
           sellerUid = value['users'][0];
           title = value['product']['title'];
-          price = value['product']['price'];
           imageUrl = value['product']['productImage'];
         });
       }
@@ -510,32 +507,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             ),
                           ),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  priceFormat.format(price),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
-                                    color: whiteColor,
-                                  ),
-                                ),
-                                Text(
-                                  title,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: whiteColor,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              title,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.interTight(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: whiteColor,
+                              ),
                             ),
                           ),
                         ],
@@ -877,7 +858,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         width: size.width,
                         child: Center(
                           child: Text(
-                            'This product is currently unavailable.',
+                            'This listing is currently unavailable.',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,

@@ -25,7 +25,16 @@ void showSnackBar({
       animationDuration: const Duration(milliseconds: 300),
       backgroundColor: color,
       duration: const Duration(seconds: 4),
-      snackStyle: SnackStyle.GROUNDED,
+      snackStyle: SnackStyle.FLOATING,
+      boxShadows: const [
+        BoxShadow(
+          blurRadius: 20,
+          spreadRadius: 2,
+          color: lightBlackColor,
+        ),
+      ],
+      borderRadius: 10,
+      margin: const EdgeInsets.all(15),
       dismissDirection: DismissDirection.up,
       snackPosition: SnackPosition.TOP,
     ),

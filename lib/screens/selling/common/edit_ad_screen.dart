@@ -594,7 +594,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),

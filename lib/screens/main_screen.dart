@@ -1,3 +1,5 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -7,6 +9,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../auth/screens/email_verification_screen.dart';
+import '../auth/screens/location_screen.dart';
+import '../services/firebase_services.dart';
 import '/provider/main_provider.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '/provider/location_provider.dart';
@@ -15,6 +20,7 @@ import 'my_profile_screen.dart';
 import 'home_screen.dart';
 import 'chats/my_chats_screen.dart';
 import 'my_favorites_screen.dart';
+import 'selling/seller_categories_list_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final int selectedIndex;
@@ -25,6 +31,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final FirebaseServices _services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
@@ -149,6 +157,22 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  onSellButtonClicked() {
+    _services.getCurrentUserData().then((value) {
+      if (value['location'] != null) {
+        Get.to(
+          () => const SellerCategoriesListScreen(),
+        );
+        return;
+      }
+      Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+      showSnackBar(
+        content: 'Please set your location to sell products',
+        color: redColor,
+      );
+    });
+  }
+
   @override
   void dispose() {
     subscription.cancel();
@@ -179,52 +203,43 @@ class _MainScreenState extends State<MainScreen> {
         index: selectedIndex,
         children: pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: selectedIndex,
-        selectedItemColor: blackColor,
-        unselectedItemColor: lightBlackColor,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        selectedLabelStyle: GoogleFonts.interTight(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
-        unselectedLabelStyle: GoogleFonts.interTight(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-        enableFeedback: true,
-        iconSize: 27,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: blueColor,
         elevation: 0,
-        backgroundColor: greyColor,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.home_outline),
-            activeIcon: Icon(Ionicons.home),
-            label: 'Home',
+        tooltip: 'List a product',
+        enableFeedback: true,
+        onPressed: !user!.emailVerified &&
+                user!.providerData[0].providerId == 'password'
+            ? () => Get.to(
+                  () => const EmailVerificationScreen(),
+                )
+            : onSellButtonClicked,
+        child: const Center(
+          child: Icon(
+            Icons.add_rounded,
+            size: 40,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.chatbubbles_outline),
-            activeIcon: Icon(Ionicons.chatbubbles),
-            label: 'Chats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Ionicons.heart_outline,
-            ),
-            activeIcon: Icon(
-              Ionicons.heart,
-            ),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.person_circle_outline),
-            activeIcon: Icon(Ionicons.person_circle),
-            label: 'Account',
-          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        onTap: onItemTapped,
+        gapLocation: GapLocation.center,
+        activeIndex: selectedIndex,
+        icons: const [
+          Ionicons.home_outline,
+          Ionicons.chatbubbles_outline,
+          Ionicons.heart_outline,
+          Ionicons.person_circle_outline,
         ],
+        backgroundColor: greyColor,
+        elevation: 0,
+        height: 55,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        activeColor: blackColor,
+        inactiveColor: lightBlackColor,
+        iconSize: 27,
+        splashColor: blueColor,
       ),
     );
   }

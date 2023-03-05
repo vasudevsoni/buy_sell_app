@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -127,20 +128,48 @@ class _CustomProductCardState extends State<CustomProductCard> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                priceFormat.format(widget.data['price']),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w800,
-                                  color: blackColor,
-                                  fontSize: 16,
+                              widget.data['catName'] == 'Jobs'
+                                  ? Text(
+                                      '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w800,
+                                        color: blackColor,
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  : Text(
+                                      priceFormat.format(widget.data['price']),
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w800,
+                                        color: blackColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                              if (widget.data['catName'] == 'Jobs')
+                                Column(
+                                  children: [
+                                    AutoSizeText(
+                                      'Salary Period - ${widget.data['salaryPeriod']}',
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 1,
-                              ),
                               Text(
                                 widget.data['title'],
                                 maxLines: 1,
@@ -161,7 +190,9 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   Expanded(
                                     child: Text(
                                       '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                      maxLines: 2,
+                                      maxLines: widget.data['catName'] == 'Jobs'
+                                          ? 1
+                                          : 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,

@@ -16,13 +16,11 @@ class PromoteListingScreen extends StatefulWidget {
   final String productId;
   final String imageUrl;
   final String title;
-  final double price;
   const PromoteListingScreen({
     super.key,
     required this.productId,
     required this.imageUrl,
     required this.title,
-    required this.price,
   });
 
   @override
@@ -131,24 +129,13 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                priceFormat.format(widget.price),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.interTight(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: whiteColor,
-                                ),
-                              ),
-                              Text(
                                 widget.title,
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.interTight(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
                                   color: whiteColor,
                                 ),
                               ),
@@ -179,284 +166,280 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: InkWell(
-                      splashFactory: InkRipple.splashFactory,
-                      splashColor: fadedColor,
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () {
-                        showModalBottomSheet<dynamic>(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: transparentColor,
-                          builder: (context) {
-                            return SafeArea(
-                              child: SingleChildScrollView(
-                                physics: const ClampingScrollPhysics(),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: blueColor,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    product!.title.toString(),
+                                    style: GoogleFonts.interTight(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: whiteColor,
                                     ),
-                                    color: whiteColor,
                                   ),
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                    right: 15,
-                                    top: 5,
-                                    bottom: 15,
-                                  ),
+                                ),
+                                Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Center(
-                                        child: Container(
-                                          width: 80.0,
-                                          height: 5.0,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: fadedColor,
-                                          ),
+                                      Text(
+                                        product!.priceString.toString(),
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.interTight(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800,
+                                          color: whiteColor,
                                         ),
                                       ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          'Boost to Top Example',
-                                          style: GoogleFonts.interTight(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          textAlign: TextAlign.start,
+                                      Text(
+                                        '₹100.00',
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.interTight(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800,
+                                          color: whiteColor,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          decorationStyle:
+                                              TextDecorationStyle.solid,
+                                          decorationThickness: 2,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      CachedNetworkImage(
-                                        imageUrl:
-                                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460265/illustrations/boost-to-top-gif_yac6tr.gif',
-                                        height: size.height * 0.7,
-                                        width: size.width,
-                                        fit: BoxFit.contain,
-                                        filterQuality: FilterQuality.high,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      CustomButtonWithoutIcon(
-                                        text: 'Close',
-                                        onPressed: () => Get.back(),
-                                        bgColor: whiteColor,
-                                        borderColor: greyColor,
-                                        textIconColor: blackColor,
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Ink(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: blueColor,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      product!.title.toString(),
-                                      style: GoogleFonts.interTight(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: whiteColor,
-                                      ),
+                              ],
+                            ),
+                            const Divider(
+                              color: whiteColor,
+                              height: 20,
+                              thickness: 2,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Ionicons.checkmark,
+                                  color: whiteColor,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    product!.description,
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.interTight(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: greyColor,
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          '₹100.00',
-                                          textAlign: TextAlign.end,
-                                          style: GoogleFonts.interTight(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800,
-                                            color: whiteColor,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            decorationStyle:
-                                                TextDecorationStyle.solid,
-                                            decorationThickness: 2,
-                                          ),
-                                        ),
-                                        Text(
-                                          product!.priceString.toString(),
-                                          textAlign: TextAlign.end,
-                                          style: GoogleFonts.interTight(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800,
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                color: whiteColor,
-                                height: 20,
-                                thickness: 2,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Ionicons.checkmark,
-                                    color: whiteColor,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      product!.description,
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: greyColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Ionicons.checkmark,
-                                    color: whiteColor,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'Reach upto 2 times more buyers',
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: greyColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Ionicons.checkmark,
-                                    color: whiteColor,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'One-time purchase',
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: greyColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Center(
-                                child: Text(
-                                  'View Example',
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: greyColor,
-                                    decoration: TextDecoration.underline,
-                                    decorationStyle: TextDecorationStyle.dashed,
                                   ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Ionicons.checkmark,
+                                  color: whiteColor,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'Reach more buyers',
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.interTight(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: greyColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Ionicons.checkmark,
+                                  color: whiteColor,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'One-time purchase',
+                                    maxLines: 2,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.interTight(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: greyColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            CustomButton(
+                              text: 'Buy Now',
+                              onPressed: () async {
+                                final isSuccess =
+                                    await PromotionApi.purchasePackage(
+                                        package!);
+                                if (isSuccess) {
+                                  _services.promoteListingToTop(
+                                      listingId: widget.productId);
+                                  Get.back();
+                                  return;
+                                }
+                              },
+                              isFullWidth: true,
+                              icon: Ionicons.bag_check,
+                              borderColor: whiteColor,
+                              bgColor: whiteColor,
+                              textIconColor: blackColor,
+                            ),
+                            CustomButton(
+                              text: 'View Demo',
+                              onPressed: () {
+                                showModalBottomSheet<dynamic>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: transparentColor,
+                                  builder: (context) {
+                                    return SafeArea(
+                                      child: SingleChildScrollView(
+                                        physics: const ClampingScrollPhysics(),
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                            color: whiteColor,
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                            left: 15,
+                                            right: 15,
+                                            top: 5,
+                                            bottom: 15,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  width: 80.0,
+                                                  height: 5.0,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    color: fadedColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Center(
+                                                child: Text(
+                                                  'Boost to Top Example',
+                                                  style: GoogleFonts.interTight(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              CachedNetworkImage(
+                                                imageUrl:
+                                                    'https://res.cloudinary.com/bechdeapp/image/upload/v1674460265/illustrations/boost-to-top-gif_yac6tr.gif',
+                                                height: size.height * 0.7,
+                                                width: size.width,
+                                                fit: BoxFit.contain,
+                                                filterQuality:
+                                                    FilterQuality.high,
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              CustomButtonWithoutIcon(
+                                                text: 'Close',
+                                                onPressed: () => Get.back(),
+                                                bgColor: whiteColor,
+                                                borderColor: greyColor,
+                                                textIconColor: blackColor,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              isFullWidth: true,
+                              icon: Ionicons.phone_portrait,
+                              borderColor: whiteColor,
+                              bgColor: whiteColor,
+                              textIconColor: blackColor,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Note: Buying this pack does not guarantee views. It is up to the users if they want to click on your listing or not. To attract more views, include a good title and good description.',
+                              maxLines: 5,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.interTight(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: greyColor,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              CustomButton(
-                                text: 'Buy Now',
-                                onPressed: () async {
-                                  final isSuccess =
-                                      await PromotionApi.purchasePackage(
-                                          package!);
-                                  if (isSuccess) {
-                                    _services.promoteListingToTop(
-                                        listingId: widget.productId);
-                                    Get.back();
-                                    return;
-                                  }
-                                },
-                                isFullWidth: true,
-                                icon: Ionicons.bag_check,
-                                borderColor: whiteColor,
-                                bgColor: whiteColor,
-                                textIconColor: blackColor,
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

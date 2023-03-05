@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/community_guidelines_screen.dart';
 import 'package:buy_sell_app/screens/feedback_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
@@ -142,6 +143,15 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
                 ),
+              ),
+            ),
+            CustomListTileNoImage(
+              text: 'Community Guidelines',
+              icon: Ionicons.people,
+              trailingIcon: Ionicons.chevron_forward,
+              isEnabled: true,
+              onTap: () => Get.to(
+                () => const CommunityGuidelinesScreen(),
               ),
             ),
             CustomListTileNoImage(

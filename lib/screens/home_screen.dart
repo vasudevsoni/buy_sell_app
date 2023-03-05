@@ -452,7 +452,7 @@ class CategoriesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: size.width,
-      height: size.height * 0.10,
+      height: size.height * 0.1,
       child: StreamBuilder<QuerySnapshot>(
         stream: _services.categories
             .orderBy('sortId', descending: false)
@@ -493,12 +493,14 @@ class CategoriesListView extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final doc = snapshot.data!.docs[index];
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              return InkWell(
                 onTap: () => Get.to(
                   () => SubCategoriesListScreen(doc: doc),
                 ),
-                child: Container(
+                borderRadius: BorderRadius.circular(10),
+                splashFactory: InkRipple.splashFactory,
+                splashColor: fadedColor,
+                child: Ink(
                   decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(10),
@@ -507,14 +509,15 @@ class CategoriesListView extends StatelessWidget {
                       width: 1,
                     ),
                   ),
-                  padding: const EdgeInsets.all(5),
-                  width: size.height * 0.15,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+                  width: size.height * 0.12,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
+                          padding: const EdgeInsets.only(bottom: 2),
                           child: CachedNetworkImage(
                             imageUrl: doc['image'],
                             fit: BoxFit.fitHeight,

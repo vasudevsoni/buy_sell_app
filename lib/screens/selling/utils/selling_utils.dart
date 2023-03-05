@@ -157,3 +157,19 @@ final List<String> colors = [
   'Gold',
   'Others',
 ];
+
+final List<String> salaryPeriod = [
+  'Hourly',
+  'Daily',
+  'Weekly',
+  'Monthly',
+  'Yearly',
+];
+
+final List<String> positionType = [
+  'Contract',
+  'Full-Time',
+  'Part-Time',
+  'Temporary',
+  'Internship',
+];

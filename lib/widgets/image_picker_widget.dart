@@ -333,7 +333,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       height: 100,
                       child: Center(
                         child: Text(
-                          'Upload some pictures of the product',
+                          'Upload some pictures',
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

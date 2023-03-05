@@ -1,10 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/dropdown/gf_dropdown.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -13,59 +13,69 @@ import 'package:provider/provider.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
-import '/provider/seller_form_provider.dart';
-import '/services/firebase_services.dart';
-import '/utils/utils.dart';
-import '/widgets/custom_button.dart';
+import '/screens/main_screen.dart';
+import '/screens/selling/congratulations_screen.dart';
 import '/widgets/custom_button_without_icon.dart';
+import '/provider/seller_form_provider.dart';
+import '/utils/utils.dart';
 import '/widgets/custom_text_field.dart';
+import '/services/firebase_services.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/image_picker_widget.dart';
 
-class EditVehicleAdScreen extends StatefulWidget {
-  final DocumentSnapshot productData;
-  const EditVehicleAdScreen({
+class JobAdPostScreen extends StatefulWidget {
+  final String subCatName;
+  const JobAdPostScreen({
     super.key,
-    required this.productData,
+    required this.subCatName,
   });
 
   @override
-  State<EditVehicleAdScreen> createState() => _EditVehicleAdScreenState();
+  State<JobAdPostScreen> createState() => _JobAdPostScreenState();
 }
 
-class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final FirebaseServices _services = FirebaseServices();
-  bool isLoading = false;
-
+class _JobAdPostScreenState extends State<JobAdPostScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController subCatNameController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController brandNameController = TextEditingController();
-  final TextEditingController modelNameController = TextEditingController();
-  final TextEditingController kmDrivenController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-
-  dynamic fuelTypeSelectedValue;
-  dynamic yorSelectedValue;
-  dynamic noOfOwnersSelectedValue;
-  dynamic colorSelectedValue;
+  final TextEditingController salaryFromController = TextEditingController();
+  final TextEditingController salaryToController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final FirebaseServices _services = FirebaseServices();
+  double latitude = 0;
+  double longitude = 0;
+  String area = '';
+  String city = '';
+  String state = '';
+  String country = '';
 
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
+  getUserLocation() async {
+    await _services.getCurrentUserData().then((value) async {
+      if (mounted) {
+        setState(() {
+          locationController.text =
+              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
+          area = value['location']['area'];
+          city = value['location']['city'];
+          state = value['location']['state'];
+          country = value['location']['country'];
+          latitude = value['location']['latitude'];
+          longitude = value['location']['longitude'];
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     getConnectivity();
-    subCatNameController.text = 'Vehicles > ${widget.productData['subCat']}';
-    brandNameController.text = widget.productData['brandName'];
-    modelNameController.text = widget.productData['modelName'];
-    descriptionController.text = widget.productData['description'];
-    priceController.text = widget.productData['price'].toString();
-    kmDrivenController.text = widget.productData['kmsDriven'].toString();
-    fuelTypeSelectedValue = widget.productData['fuelType'];
-    yorSelectedValue = widget.productData['yearOfReg'].toString();
-    noOfOwnersSelectedValue = widget.productData['noOfOwners'];
-    colorSelectedValue = widget.productData['color'];
+    subCatNameController.text = 'Jobs > ${widget.subCatName}';
+    getUserLocation();
     super.initState();
   }
 
@@ -191,36 +201,37 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
   @override
   void dispose() {
     subscription.cancel();
-    titleController.dispose();
     subCatNameController.dispose();
-    brandNameController.dispose();
-    modelNameController.dispose();
+    salaryFromController.dispose();
+    salaryToController.dispose();
+    titleController.dispose();
     descriptionController.dispose();
-    priceController.dispose();
-    kmDrivenController.dispose();
+    locationController.dispose();
     super.dispose();
   }
+
+  dynamic salaryPeriodSelectedValue;
+  dynamic positionTypeSelectedValue;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<SellerFormProvider>(context);
 
-    updateProductOnFirebase(SellerFormProvider provider, String uid) async {
+    publishProductToFirebase(SellerFormProvider provider) async {
       try {
         await _services.listings
-            .doc(uid)
-            .update(provider.updatedDataToFirestore)
-            .then((_) {
-          Get.back();
-          provider.clearDataAfterUpdateListing();
+            .doc()
+            .set(provider.dataToFirestore)
+            .then((value) {
+          Get.off(
+            () => const CongratulationsScreen(),
+          );
+          provider.clearDataAfterSubmitListing();
           setState(() {
             isLoading = false;
           });
-          showSnackBar(
-            content: 'Details updated. Product will be live once reviewed',
-            color: blueColor,
-          );
         });
       } on FirebaseException {
         showSnackBar(
@@ -235,30 +246,26 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
 
     validateForm() async {
       if (!_formKey.currentState!.validate()) {
-        showSnackBar(
-          content: 'Please fill all the required fields',
-          color: redColor,
-        );
         return;
       }
-      if (brandNameController.text.isEmpty ||
-          modelNameController.text.isEmpty ||
-          fuelTypeSelectedValue == null ||
-          yorSelectedValue == null ||
-          noOfOwnersSelectedValue == null ||
+      if (salaryPeriodSelectedValue == null ||
+          positionTypeSelectedValue == null ||
           descriptionController.text.isEmpty ||
-          priceController.text.isEmpty ||
-          kmDrivenController.text.isEmpty ||
-          colorSelectedValue == null) {
+          salaryFromController.text.isEmpty ||
+          salaryToController.text.isEmpty ||
+          titleController.text.isEmpty) {
+        return;
+      }
+      if (provider.imagePaths.isEmpty) {
         showSnackBar(
-          content: 'Please fill all the required fields',
+          content: 'Please upload some images of the product',
           color: redColor,
         );
         return;
       }
       showModalBottomSheet<dynamic>(
-        isScrollControlled: true,
         context: context,
+        isScrollControlled: true,
         backgroundColor: transparentColor,
         builder: (context) {
           return SafeArea(
@@ -295,7 +302,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   ),
                   Center(
                     child: Text(
-                      'Ready to update?',
+                      'Ready to post this job?',
                       style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -316,30 +323,107 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                              style: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                              ),
-                              maxLines: 2,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: size.width * 0.2,
+                                      height: size.width * 0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Ionicons.alert_circle,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    if (provider.imagePaths.length >= 2)
+                                      Positioned(
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Center(
+                                          child: Text(
+                                            '+${(provider.imagesCount - 1).toString()}',
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 30,
+                                              color: whiteColor,
+                                              shadows: [
+                                                const Shadow(
+                                                  offset: Offset(0, 2),
+                                                  blurRadius: 10.0,
+                                                  color: lightBlackColor,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Text(
-                              priceFormat.format(
-                                int.parse(priceController.text),
-                              ),
-                              maxLines: 1,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w700,
-                                color: blueColor,
-                                fontSize: 15,
+                            Expanded(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      titleController.text,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                      ),
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      'From: ${priceFormat.format(
+                                        int.parse(salaryFromController.text),
+                                      )}',
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w700,
+                                        color: blueColor,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      'To: ${priceFormat.format(
+                                        int.parse(salaryToController.text),
+                                      )}',
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w700,
+                                        color: blueColor,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -356,7 +440,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.person,
+                                  Ionicons.time,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -364,30 +448,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                   width: 7,
                                 ),
                                 Text(
-                                  noOfOwnersSelectedValue.toString(),
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: lightBlackColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Ionicons.funnel,
-                                  size: 13,
-                                  color: blueColor,
-                                ),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  fuelTypeSelectedValue.toString(),
+                                  salaryPeriodSelectedValue.toString(),
                                   style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
@@ -413,35 +474,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                   width: 7,
                                 ),
                                 Text(
-                                  yorSelectedValue.toString(),
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: lightBlackColor,
-                                  ),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Ionicons.speedometer,
-                                  size: 13,
-                                  color: blueColor,
-                                ),
-                                const SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  '${kmFormat.format(
-                                    int.parse(kmDrivenController.text),
-                                  )} Kms',
+                                  positionTypeSelectedValue.toString(),
                                   style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
@@ -492,30 +525,40 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       ),
                       Expanded(
                         child: CustomButton(
-                          text: 'Update',
+                          text: 'Post',
                           icon: Ionicons.checkmark,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
                             });
                             Get.back();
-                            var uid = widget.productData.id;
+                            List<String?> urls =
+                                await provider.uploadFiles(provider.imagePaths);
+                            if (urls.contains('')) {
+                              showSnackBar(
+                                content:
+                                    'Something has gone wrong. Please try again',
+                                color: redColor,
+                              );
+                              return;
+                            }
+                            var time = DateTime.now().millisecondsSinceEpoch;
                             setSearchParams({
-                              required String s,
-                              required int n,
+                              // required String s,
+                              // required int n,
                               required String catName,
                               required String subCatName,
                             }) {
                               List<String> searchQueries = [];
-                              for (int i = 0; i < n; i++) {
-                                String temp = '';
-                                for (int j = i; j < n; j++) {
-                                  temp += s[j];
-                                  if (temp.length >= 3) {
-                                    searchQueries.add(temp);
-                                  }
-                                }
-                              }
+                              // for (int i = 0; i < n; i++) {
+                              //   String temp = '';
+                              //   for (int j = i; j < n; j++) {
+                              //     temp += s[j];
+                              //     if (temp.length >= 3) {
+                              //       searchQueries.add(temp);
+                              //     }
+                              //   }
+                              // }
                               for (int i = 0; i < catName.length; i++) {
                                 String catNameTemp = '';
                                 for (int j = i; j < catName.length; j++) {
@@ -537,35 +580,157 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               return searchQueries;
                             }
 
-                            provider.updatedDataToFirestore.addAll({
-                              'title':
-                                  '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                              'brandName': brandNameController.text,
-                              'modelName': modelNameController.text,
-                              'fuelType': fuelTypeSelectedValue,
-                              'yearOfReg': int.parse(yorSelectedValue!),
-                              'color': colorSelectedValue,
-                              'kmsDriven': int.parse(kmDrivenController.text),
-                              'noOfOwners': noOfOwnersSelectedValue,
+                            provider.dataToFirestore.addAll({
+                              'catName': 'Jobs',
+                              'subCat': widget.subCatName,
+                              'salaryPeriod': salaryPeriodSelectedValue,
+                              'positionType': positionTypeSelectedValue,
+                              'title': titleController.text,
                               'description': descriptionController.text,
-                              'price': int.parse(priceController.text),
+                              'salaryFrom':
+                                  int.parse(salaryFromController.text),
+                              'salaryTo': int.parse(salaryToController.text),
+                              'sellerUid': _services.user!.uid,
+                              'images': urls,
+                              'postedAt': time,
+                              'favorites': [],
+                              'views': [],
                               'searchQueries': setSearchParams(
-                                s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
-                                n: brandNameController.text.length +
-                                    modelNameController.text.length +
-                                    1,
-                                catName: 'vehicles',
-                                subCatName:
-                                    widget.productData['subCat'].toLowerCase(),
+                                // s: titleController.text.toLowerCase(),
+                                // n: titleController.text.length + 1,
+                                catName: 'Jobs',
+                                subCatName: widget.subCatName.toLowerCase(),
                               ),
+                              'location': {
+                                'latitude': latitude,
+                                'longitude': longitude,
+                                'area': area,
+                                'city': city,
+                                'state': state,
+                                'country': country,
+                              },
+                              'isSold': false,
                               'isActive': false,
                               'isRejected': false,
                             });
-                            await updateProductOnFirebase(provider, uid);
+                            publishProductToFirebase(provider);
                           },
                           bgColor: blueColor,
                           borderColor: blueColor,
                           textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    resetAll() {
+      showModalBottomSheet<dynamic>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: transparentColor,
+        builder: (context) {
+          return SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: whiteColor,
+              ),
+              padding: const EdgeInsets.only(
+                left: 15,
+                top: 5,
+                right: 15,
+                bottom: 15,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 80.0,
+                      height: 5.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: fadedColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: Text(
+                      'Are you sure?',
+                      style: GoogleFonts.interTight(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: greyColor,
+                    ),
+                    child: Text(
+                      'All your product details will be removed and you\'ll have to start fresh.',
+                      style: GoogleFonts.interTight(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Reset All',
+                          onPressed: () {
+                            setState(() {
+                              salaryPeriodSelectedValue = null;
+                              positionTypeSelectedValue = null;
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              salaryFromController.text = '';
+                              salaryToController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
                         ),
                       ),
                     ],
@@ -664,8 +829,18 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         child: CustomButtonWithoutIcon(
                           text: 'Yes, Leave',
                           onPressed: () {
-                            Get.back();
-                            Get.back();
+                            setState(() {
+                              salaryPeriodSelectedValue = null;
+                              positionTypeSelectedValue = null;
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              salaryFromController.text = '';
+                              salaryToController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.offAll(
+                                () => const MainScreen(selectedIndex: 0));
                           },
                           bgColor: whiteColor,
                           borderColor: redColor,
@@ -694,14 +869,27 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
           elevation: 0.2,
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
+          centerTitle: true,
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
             icon: const Icon(Ionicons.close_circle_outline),
           ),
-          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: isLoading ? null : resetAll,
+              child: Text(
+                'Reset all',
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: redColor,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
           title: Text(
-            'Edit your product listing',
+            'Create your job listing',
             style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
@@ -722,7 +910,56 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: Text(
-                    'Step 1 - Vehicle Details',
+                    'Step 1 - User Details',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.interTight(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: locationController,
+                    keyboardType: TextInputType.text,
+                    hint: 'Choose your location to list product',
+                    maxLines: 2,
+                    showCounterText: false,
+                    isEnabled: false,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Location can be changed from Settings > Change Location',
+                    style: GoogleFonts.interTight(
+                      color: lightBlackColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: Text(
+                    'Step 2 - Job Details',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
@@ -754,73 +991,28 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Brand'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: brandNameController,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
-                    maxLength: 20,
-                    isEnabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter brand name';
-                      }
-                      setState(() {});
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Model and Variant'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: modelNameController,
-                    keyboardType: TextInputType.text,
-                    hint: 'Ex: Swift ZDI+, Activa 6G',
-                    maxLength: 40,
-                    textInputAction: TextInputAction.next,
-                    isEnabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter model and variant name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Kms Driven'),
+                  child: TextFieldLabel(labelText: 'Salary from'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextFormField(
-                    controller: kmDrivenController,
+                    controller: salaryFromController,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    maxLength: 7,
+                    maxLength: 10,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter kilometres driven';
+                        return 'Please enter salary from';
+                      }
+                      if (int.parse(salaryFromController.text) >
+                          int.parse(salaryToController.text)) {
+                        return 'Salary from should be less than Salary to';
                       }
                       return null;
                     },
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.digitsOnly,
                     ],
                     style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
@@ -828,7 +1020,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                      hintText: '1,45,000',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -899,7 +1091,107 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Fuel type'),
+                  child: TextFieldLabel(labelText: 'Salary to'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFormField(
+                    controller: salaryToController,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    enabled: isLoading ? false : true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter salary to';
+                      }
+                      if (int.parse(salaryToController.text) <
+                          int.parse(salaryFromController.text)) {
+                        return 'Salary to should be more than Salary from';
+                      }
+                      return null;
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    style: GoogleFonts.interTight(
+                      fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '2,00,000',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      fillColor: greyColor,
+                      filled: true,
+                      counterText: '',
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: transparentColor,
+                          width: 0,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: redColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      errorStyle: GoogleFonts.interTight(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: redColor,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: blueColor,
+                          width: 1.5,
+                          strokeAlign: StrokeAlign.inside,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      hintStyle: GoogleFonts.interTight(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        color: fadedColor,
+                      ),
+                      labelStyle: GoogleFonts.interTight(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Salary Period'),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -925,7 +1217,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      items: fuelType
+                      items: salaryPeriod
                           .map(
                             (item) => DropdownMenuItem<String>(
                               value: item,
@@ -940,10 +1232,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             ),
                           )
                           .toList(),
-                      value: fuelTypeSelectedValue,
+                      value: salaryPeriodSelectedValue,
                       onChanged: (value) {
                         setState(() {
-                          fuelTypeSelectedValue = value as String;
+                          salaryPeriodSelectedValue = value as String;
                         });
                       },
                     ),
@@ -954,7 +1246,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Year of Registration'),
+                  child: TextFieldLabel(labelText: 'Position Type'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -980,7 +1272,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      items: yor
+                      items: positionType
                           .map(
                             (item) => DropdownMenuItem<String>(
                               value: item,
@@ -995,120 +1287,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             ),
                           )
                           .toList(),
-                      value: yorSelectedValue,
+                      value: positionTypeSelectedValue,
                       onChanged: (value) {
                         setState(() {
-                          yorSelectedValue = value as String;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Color'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      items: colors
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: colorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          colorSelectedValue = value as String;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Number of Owners'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      items: noOfOwners
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: noOfOwnersSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          noOfOwnersSelectedValue = value as String;
+                          positionTypeSelectedValue = value as String;
                         });
                       },
                     ),
@@ -1122,7 +1304,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: Text(
-                    'Step 2 - Listing Details',
+                    'Step 3 - Listing Details',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
@@ -1136,6 +1318,34 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Title'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: titleController,
+                    keyboardType: TextInputType.multiline,
+                    hint: 'Mention key features of this job',
+                    maxLength: 35,
+                    showCounterText: true,
+                    isEnabled: isLoading ? false : true,
+                    textInputAction: TextInputAction.newline,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a title';
+                      }
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: TextFieldLabel(labelText: 'Description'),
                 ),
                 Padding(
@@ -1144,9 +1354,9 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     controller: descriptionController,
                     keyboardType: TextInputType.multiline,
                     hint:
-                        'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
+                        'Briefly describe this job to increase your chances of finding candidates',
                     maxLength: 300,
-                    maxLines: 5,
+                    maxLines: 4,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
                     textInputAction: TextInputAction.newline,
@@ -1162,100 +1372,27 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Price'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFormField(
-                    controller: priceController,
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.number,
-                    maxLength: 9,
-                    enabled: isLoading ? false : true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the price for your product';
-                      }
-                      return null;
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  color: blackColor,
+                  child: Text(
+                    'Step 4 - Job Images',
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
-                      fontWeight: FontWeight.w600,
-                      color: blackColor,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Set a price for your product',
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      counterText: '',
-                      fillColor: greyColor,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: transparentColor,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: transparentColor,
-                          width: 0,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: redColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      errorStyle: GoogleFonts.interTight(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: redColor,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: blueColor,
-                          width: 1.5,
-                          strokeAlign: StrokeAlign.inside,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      hintStyle: GoogleFonts.interTight(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      labelStyle: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
-                      ),
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ImagePickerWidget(
+                  isButtonDisabled: isLoading ? true : false,
                 ),
                 const SizedBox(
                   height: 20,

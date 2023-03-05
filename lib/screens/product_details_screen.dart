@@ -32,6 +32,7 @@ import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
 import 'profile_screen.dart';
 import 'selling/common/edit_ad_screen.dart';
+import 'selling/jobs/edit_job_post_screen.dart';
 import 'selling/vehicles/edit_vehicle_ad_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -247,7 +248,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: Text(
-                      'Report this product',
+                      'Report this listing',
                       style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -267,7 +268,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     maxLength: 1000,
                     maxLines: 3,
                     hint:
-                        'Explain in detail why you are reporting this product',
+                        'Explain in detail why you are reporting this listing',
                   ),
                   const SizedBox(
                     height: 10,
@@ -433,7 +434,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'This product is currently unavailable.',
+                      'This listing is currently unavailable.',
                       style: GoogleFonts.interTight(
                         color: blackColor,
                         fontSize: 18,
@@ -513,7 +514,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: true,
               title: Text(
-                'Product',
+                widget.productData['catName'] == 'Jobs' ? 'Job' : 'Product',
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w600,
                   color: blackColor,
@@ -543,7 +544,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             color: redColor,
                             child: Center(
                               child: Text(
-                                'This product has been sold',
+                                'This listing has been sold',
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.interTight(
                                   color: whiteColor,
@@ -760,22 +761,37 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: Text(
-                                  priceFormat.format(
-                                    widget.productData['price'],
-                                  ),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 18,
-                                    color: blackColor,
-                                    decoration: isSold
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
-                                  ),
-                                ),
+                                child: widget.productData['catName'] == 'Jobs'
+                                    ? Text(
+                                        '${priceFormat.format(widget.productData['salaryFrom'])} - ${priceFormat.format(widget.productData['salaryTo'])}',
+                                        maxLines: 2,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                          color: blackColor,
+                                          decoration: isSold
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                        ),
+                                      )
+                                    : Text(
+                                        priceFormat.format(
+                                          widget.productData['price'],
+                                        ),
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                          color: blackColor,
+                                          decoration: isSold
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                        ),
+                                      ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -788,7 +804,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         const Icon(
                                           Ionicons.eye_outline,
@@ -814,7 +830,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     ),
                                     Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         const Icon(
                                           Ionicons.heart_outline,
@@ -875,8 +891,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           () => PromoteListingScreen(
                                             productId: widget.productData.id,
                                             title: widget.productData['title'],
-                                            price: widget.productData['price']
-                                                .toDouble(),
                                             imageUrl:
                                                 widget.productData['images'][0],
                                           ),
@@ -887,21 +901,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         textIconColor: whiteColor,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
                                     CustomButton(
                                       text: 'Edit',
-                                      onPressed: () => widget
-                                                  .productData['catName'] ==
-                                              'Vehicles'
-                                          ? Get.to(
-                                              () => EditVehicleAdScreen(
-                                                productData: widget.productData,
-                                              ),
-                                            )
-                                          : Get.to(
-                                              () => EditAdScreen(
-                                                productData: widget.productData,
-                                              ),
+                                      onPressed: () {
+                                        if (widget.productData['catName'] ==
+                                            'Vehicles') {
+                                          Get.to(
+                                            () => EditVehicleAdScreen(
+                                              productData: widget.productData,
                                             ),
+                                          );
+                                          return;
+                                        } else if (widget
+                                                .productData['catName'] ==
+                                            'Jobs') {
+                                          Get.to(
+                                            () => EditJobAdScreen(
+                                              productData: widget.productData,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        Get.to(
+                                          () => EditAdScreen(
+                                            productData: widget.productData,
+                                          ),
+                                        );
+                                      },
                                       icon: Ionicons.create_outline,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
@@ -915,10 +944,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
                                     child: CustomButton(
-                                      text: 'Chat with Seller',
+                                      text: 'Chat Now',
                                       onPressed: createChatRoom,
                                       isFullWidth: true,
-                                      icon: Ionicons.chatbox,
+                                      icon: Ionicons.chatbox_ellipses,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -960,7 +989,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
-                            'Product details',
+                            'Listing details',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
@@ -1105,306 +1134,408 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        widget.productData['catName'] == 'Vehicles'
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'About this vehicle',
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w700,
-                                        color: blackColor,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: size.width,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: greyColor,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Column(
+                        if (widget.productData['catName'] == 'Vehicles')
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this vehicle',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: greyColor,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Brand - ',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget
-                                                      .productData['brandName'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.interTight(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                          Text(
+                                            'Brand - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
                                           ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Model - ',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['brandName'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
                                               ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget
-                                                      .productData['modelName'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.interTight(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Color - ',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget.productData['color'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.interTight(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Divider(
-                                            height: 20,
-                                            color: fadedColor,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.person,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                'Owner',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget
-                                                    .productData['noOfOwners'],
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.funnel,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                'Fuel Type',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget.productData['fuelType'],
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.calendar,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                'Year of Reg.',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget.productData['yearOfReg']
-                                                    .toString(),
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.car_sport,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                'Kms Driven',
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                kmFormat.format(
-                                                  widget
-                                                      .productData['kmsDriven'],
-                                                ),
-                                                maxLines: 2,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Model - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['modelName'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Color - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['color'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Divider(
+                                        height: 20,
+                                        color: fadedColor,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.person,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Owner',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['noOfOwners'],
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.funnel,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Fuel Type',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['fuelType'],
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.calendar,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Year of Reg.',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['yearOfReg']
+                                                .toString(),
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.car_sport,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Kms Driven',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            kmFormat.format(
+                                              widget.productData['kmsDriven'],
+                                            ),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            : const SizedBox(
-                                height: 0,
-                                width: 0,
-                              ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                        if (widget.productData['catName'] == 'Jobs')
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this job',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: greyColor,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Salary Period - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget
+                                                  .productData['salaryPeriod'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Position Type - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: lightBlackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget
+                                                  .productData['positionType'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(

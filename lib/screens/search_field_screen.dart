@@ -53,7 +53,7 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.search,
               autofocus: true,
-              hint: 'Search for mobiles, cars, dresses and more...',
+              hint: 'Search for mobiles, cars, fashion and more...',
               maxLength: 50,
               onFieldSubmitted: (query) {
                 query.length > 2

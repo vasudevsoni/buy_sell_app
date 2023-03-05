@@ -552,7 +552,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 () => const EmailVerificationScreen(),
                               )
                           : onSellButtonClicked,
-                      icon: Ionicons.bag_add,
+                      icon: Icons.add_rounded,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
@@ -690,10 +690,12 @@ class MyProfileItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      child: InkWell(
         onTap: onTap,
-        child: Container(
+        borderRadius: BorderRadius.circular(10),
+        splashFactory: InkRipple.splashFactory,
+        splashColor: fadedColor,
+        child: Ink(
           height: 90,
           padding: const EdgeInsets.symmetric(
             horizontal: 15,

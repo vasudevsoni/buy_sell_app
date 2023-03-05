@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -42,12 +42,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
   final TextEditingController kmDrivenController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController fuelTypeSearchController =
-      TextEditingController();
-  final TextEditingController yorSearchController = TextEditingController();
-  final TextEditingController noOfOwnersSearchController =
-      TextEditingController();
-  final TextEditingController colorsSearchController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final FirebaseServices _services = FirebaseServices();
   double latitude = 0;
@@ -214,18 +208,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
     kmDrivenController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    fuelTypeSearchController.dispose();
-    yorSearchController.dispose();
-    noOfOwnersSearchController.dispose();
-    colorsSearchController.dispose();
     locationController.dispose();
     super.dispose();
   }
 
-  String? fuelTypeSelectedValue;
-  String? yorSelectedValue;
-  String? noOfOwnersSelectedValue;
-  String? colorSelectedValue;
+  dynamic fuelTypeSelectedValue;
+  dynamic yorSelectedValue;
+  dynamic noOfOwnersSelectedValue;
+  dynamic colorSelectedValue;
   bool isLoading = false;
 
   @override
@@ -604,7 +594,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               required String catName,
                               required String subCatName,
                             }) {
-                              List<String> searchQueries = [];
+                              List searchQueries = [];
                               for (int i = 0; i < n; i++) {
                                 String temp = '';
                                 for (int j = i; j < n; j++) {
@@ -1049,7 +1039,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -1208,8 +1198,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
+                    child: GFDropdown(
                       isExpanded: true,
+                      padding: const EdgeInsets.all(15),
+                      borderRadius: BorderRadius.circular(5),
+                      itemHeight: 50,
+                      dropdownButtonColor: greyColor,
                       hint: Text(
                         '--Select--',
                         style: GoogleFonts.interTight(
@@ -1221,28 +1215,14 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       icon: const Icon(
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                      value: fuelTypeSelectedValue,
                       items: fuelType
                           .map(
-                            (item) => DropdownMenuItem<String>(
+                            (item) => DropdownMenuItem(
                               value: item,
                               child: Text(
                                 item,
@@ -1255,54 +1235,9 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             ),
                           )
                           .toList(),
-                      value: fuelTypeSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          fuelTypeSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: fuelTypeSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: fuelTypeSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for fuel type',
-                            hintStyle: GoogleFonts.interTight(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          fuelTypeSearchController.clear();
-                        }
-                      },
+                      onChanged: (value) => setState(() {
+                        fuelTypeSelectedValue = value as String;
+                      }),
                     ),
                   ),
                 ),
@@ -1316,8 +1251,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
+                    child: GFDropdown(
                       isExpanded: true,
+                      padding: const EdgeInsets.all(15),
+                      borderRadius: BorderRadius.circular(5),
+                      itemHeight: 50,
+                      dropdownButtonColor: greyColor,
                       hint: Text(
                         '--Select--',
                         style: GoogleFonts.interTight(
@@ -1326,31 +1265,16 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                       ),
                       style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w600,
-                        color: greyColor,
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
-                        borderRadius: BorderRadius.circular(5),
+                        fontWeight: FontWeight.normal,
+                        color: fadedColor,
                       ),
                       icon: const Icon(
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       items: yor
                           .map(
-                            (item) => DropdownMenuItem<String>(
+                            (item) => DropdownMenuItem(
                               value: item,
                               child: Text(
                                 item,
@@ -1369,48 +1293,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           yorSelectedValue = value as String;
                         });
                       },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: yorSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: yorSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an year',
-                            hintStyle: GoogleFonts.interTight(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          yorSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1424,8 +1306,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
+                    child: GFDropdown(
                       isExpanded: true,
+                      padding: const EdgeInsets.all(15),
+                      borderRadius: BorderRadius.circular(5),
+                      itemHeight: 50,
+                      dropdownButtonColor: greyColor,
                       hint: Text(
                         '--Select--',
                         style: GoogleFonts.interTight(
@@ -1434,31 +1320,16 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                       ),
                       style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w600,
-                        color: greyColor,
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
-                        borderRadius: BorderRadius.circular(5),
+                        fontWeight: FontWeight.normal,
+                        color: fadedColor,
                       ),
                       icon: const Icon(
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       items: colors
                           .map(
-                            (item) => DropdownMenuItem<String>(
+                            (item) => DropdownMenuItem(
                               value: item,
                               child: Text(
                                 item,
@@ -1477,48 +1348,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           colorSelectedValue = value as String;
                         });
                       },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: colorsSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: colorsSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for a color',
-                            hintStyle: GoogleFonts.interTight(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          colorsSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1532,8 +1361,12 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
+                    child: GFDropdown(
                       isExpanded: true,
+                      padding: const EdgeInsets.all(15),
+                      borderRadius: BorderRadius.circular(5),
+                      itemHeight: 50,
+                      dropdownButtonColor: greyColor,
                       hint: Text(
                         '--Select--',
                         style: GoogleFonts.interTight(
@@ -1542,31 +1375,16 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         ),
                       ),
                       style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w600,
-                        color: greyColor,
-                      ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
-                        borderRadius: BorderRadius.circular(5),
+                        fontWeight: FontWeight.normal,
+                        color: fadedColor,
                       ),
                       icon: const Icon(
                         Ionicons.chevron_down,
                         size: 15,
                       ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                       items: noOfOwners
                           .map(
-                            (item) => DropdownMenuItem<String>(
+                            (item) => DropdownMenuItem(
                               value: item,
                               child: Text(
                                 item,
@@ -1584,48 +1402,6 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                         setState(() {
                           noOfOwnersSelectedValue = value as String;
                         });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: noOfOwnersSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: noOfOwnersSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an item...',
-                            hintStyle: GoogleFonts.interTight(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
-                      ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          noOfOwnersSearchController.clear();
-                        }
                       },
                     ),
                   ),
@@ -1781,7 +1557,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   color: blackColor,
                   child: Text(
-                    'Step 4 - Product Images',
+                    'Step 4 - Vehicle Images',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
                       color: whiteColor,

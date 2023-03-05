@@ -12,6 +12,7 @@ import '/utils/utils.dart';
 import '/widgets/custom_list_tile_no_image.dart';
 import '/services/firebase_services.dart';
 import 'common/ad_post_screen.dart';
+import 'jobs/job_ad_post_screen.dart';
 import 'vehicles/vehicle_ad_post_screen.dart';
 
 class SellerSubCategoriesListScreen extends StatefulWidget {
@@ -127,6 +128,12 @@ class _SellerSubCategoriesListScreenState
                     if (widget.doc['catName'] == 'Vehicles') {
                       Get.offAll(
                         () => VehicleAdPostScreen(subCatName: data[index]),
+                        transition: Transition.downToUp,
+                      );
+                      return;
+                    } else if (widget.doc['catName'] == 'Jobs') {
+                      Get.offAll(
+                        () => JobAdPostScreen(subCatName: data[index]),
                         transition: Transition.downToUp,
                       );
                       return;

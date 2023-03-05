@@ -402,9 +402,6 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               isDisabled: isLoading ? true : false,
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(

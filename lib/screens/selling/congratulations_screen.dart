@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -20,6 +20,7 @@ class CongratulationsScreen extends StatefulWidget {
 class _CongratulationsScreenState extends State<CongratulationsScreen> {
   late BannerAd? _bannerAd;
   bool _isAdLoaded = false;
+  final InAppReview inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -67,7 +68,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
               children: [
                 const Spacer(),
                 Text(
-                  '🎉 Congratulations!',
+                  '🎉 Well Done!',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.interTight(
                     fontSize: 30,
@@ -101,7 +102,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Note: The review process usually takes 2-3 working hours. In the meantime, browse some products, or just sit back and relax.',
+                    'Note: The review process usually takes 5-10 working hours. In the meantime, browse some products, or just sit back and relax.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
                       fontSize: 15,
@@ -138,14 +139,12 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                       ),
                 const Spacer(),
                 CustomButton(
-                  text: 'Invite your Friends',
-                  onPressed: () => Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
-                  ),
+                  text: 'Rate our App',
+                  onPressed: () => inAppReview.openStoreListing(),
                   isFullWidth: true,
-                  icon: Ionicons.share_social,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
+                  icon: Ionicons.star,
+                  bgColor: greenColor,
+                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
                 CustomButton(
