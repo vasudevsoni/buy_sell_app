@@ -277,7 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               isEnabled: true,
               onTap: () {
                 Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
+                    'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
               },
             ),
             CustomListTileWithSubtitle(

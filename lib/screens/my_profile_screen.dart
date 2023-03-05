@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/follow_us_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -136,50 +138,69 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 25,
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: AutoSizeText(
+                  'Profile',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.interTight(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 15,
               ),
               profileImage == ''
-                  ? Stack(
-                      children: [
-                        Container(
-                          height: size.width * 0.25,
-                          width: size.width * 0.25,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: blueColor,
-                          ),
-                          child: const Icon(
-                            Ionicons.person,
-                            color: whiteColor,
-                            size: 50,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              Get.to(
-                                () => const UpdateProfileImageScreen(),
-                              );
-                            },
+                  ? Center(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: size.width * 0.25,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: blueColor,
+                            ),
                             child: const Icon(
-                              Ionicons.create_outline,
-                              color: lightBlackColor,
-                              shadows: [
-                                Shadow(
-                                  color: lightBlackColor,
-                                  blurRadius: 2,
-                                ),
-                              ],
+                              Ionicons.person,
+                              color: whiteColor,
+                              size: 50,
                             ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                Get.to(
+                                  () => const UpdateProfileImageScreen(),
+                                );
+                              },
+                              child: const Icon(
+                                Ionicons.create_outline,
+                                color: lightBlackColor,
+                                shadows: [
+                                  Shadow(
+                                    color: lightBlackColor,
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   : GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -258,62 +279,63 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           );
                         },
                       ),
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: size.width * 0.25,
-                            width: size.width * 0.25,
-                            decoration: BoxDecoration(
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            padding: const EdgeInsets.all(3),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: CachedNetworkImage(
-                                imageUrl: profileImage,
-                                fit: BoxFit.cover,
-                                filterQuality: FilterQuality.high,
-                                memCacheHeight: (size.width * 0.25).round(),
-                                memCacheWidth: (size.width * 0.25).round(),
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    Ionicons.alert_circle,
-                                    size: 30,
-                                    color: redColor,
-                                  );
-                                },
-                                placeholder: (context, url) {
-                                  return const Center(
-                                    child: CustomLoadingIndicator(),
-                                  );
-                                },
+                      child: Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: size.width * 0.25,
+                              width: size.width * 0.25,
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: profileImage,
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                  memCacheHeight: (size.width * 0.25).round(),
+                                  memCacheWidth: (size.width * 0.25).round(),
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      Ionicons.alert_circle,
+                                      size: 30,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Center(
+                                      child: CustomLoadingIndicator(),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                Get.to(
-                                  () => const UpdateProfileImageScreen(),
-                                );
-                              },
-                              child: const Icon(
-                                Ionicons.create_outline,
-                                color: blackColor,
-                                shadows: [
-                                  Shadow(
-                                    color: lightBlackColor,
-                                    blurRadius: 2,
-                                  ),
-                                ],
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  Get.to(
+                                    () => const UpdateProfileImageScreen(),
+                                  );
+                                },
+                                child: const Icon(
+                                  Ionicons.create_outline,
+                                  color: blackColor,
+                                  shadows: [
+                                    Shadow(
+                                      color: lightBlackColor,
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
               const SizedBox(
@@ -321,15 +343,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  name,
-                  maxLines: 1,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.interTight(
-                    color: blackColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                child: Center(
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.interTight(
+                      color: blackColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -342,16 +366,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    bio == '' ? 'Your bio will show here' : bio,
-                    maxLines: 3,
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.interTight(
-                      color: blackColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
+                  child: Center(
+                    child: Text(
+                      bio == '' ? 'Your bio will show here' : bio,
+                      maxLines: 3,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.interTight(
+                        color: blackColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -400,23 +426,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  'Joined - ${timeago.format(dateJoined)}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: GoogleFonts.interTight(
-                    color: lightBlackColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-              if (address != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Center(
                   child: Text(
-                    address,
+                    'Joined - ${timeago.format(dateJoined)}',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
@@ -427,13 +439,31 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                   ),
                 ),
+              ),
+              if (address != '')
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Center(
+                    child: Text(
+                      address,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.interTight(
+                        color: lightBlackColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
               const SizedBox(
                 height: 10,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
-                  color: greyColor,
+                  color: blueColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding:
@@ -441,14 +471,26 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Make money selling on BechDe 💸',
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.interTight(
-                        color: blackColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Make money selling on BechDe',
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.interTight(
+                            color: whiteColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(
+                          Ionicons.cash_outline,
+                          color: whiteColor,
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 10,
@@ -553,9 +595,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               )
                           : onSellButtonClicked,
                       icon: Icons.add_rounded,
-                      bgColor: blueColor,
-                      borderColor: blueColor,
-                      textIconColor: whiteColor,
+                      bgColor: whiteColor,
+                      borderColor: whiteColor,
+                      textIconColor: blackColor,
                     ),
                   ],
                 ),
@@ -608,10 +650,36 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     MyProfileItemWidget(
                       icon: Ionicons.star_outline,
                       iconColor: blueColor,
-                      text: 'Leave a Review',
+                      text: 'Rate our App',
                       onTap: () {
                         inAppReview.openStoreListing();
                       },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  children: [
+                    MyProfileItemWidget(
+                      icon: Ionicons.share_social_outline,
+                      iconColor: blackColor,
+                      text: 'Invite Friends',
+                      onTap: () => Share.share(
+                          'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    MyProfileItemWidget(
+                      icon: Ionicons.people_outline,
+                      iconColor: blackColor,
+                      text: 'Follow Us',
+                      onTap: () => Get.to(
+                        () => const FollowUsScreen(),
+                      ),
                     ),
                   ],
                 ),
@@ -644,8 +712,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           'Made with ',
                           style: GoogleFonts.interTight(
                             fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: lightBlackColor,
+                            fontWeight: FontWeight.w500,
+                            color: blackColor,
                           ),
                         ),
                         Icon(
@@ -657,14 +725,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ' in India',
                           style: GoogleFonts.interTight(
                             fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: lightBlackColor,
+                            fontWeight: FontWeight.w500,
+                            color: blackColor,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 50,
               ),
             ],
           ),

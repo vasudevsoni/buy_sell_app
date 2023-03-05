@@ -109,6 +109,7 @@
 //     }
 
 //     return Scaffold(
+      // backgroundColor: whiteColor,
 //       backgroundColor: whiteColor,
 //       appBar: AppBar(
 //         elevation: 0.2,

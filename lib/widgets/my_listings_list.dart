@@ -783,7 +783,7 @@ class _MyListingScreenProductCardState
                             ),
                             CustomButton(
                               icon: Ionicons.trending_up,
-                              text: 'Reach More Buyers',
+                              text: 'Promote Listing',
                               onPressed: () {
                                 Get.to(
                                   () => PromoteListingScreen(
@@ -941,28 +941,18 @@ class _MyListingScreenProductCardState
                                   textIconColor: blackColor,
                                 ),
                                 if (widget.data['isRejected'] == false)
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      CustomButton(
-                                        icon: Ionicons.checkmark_circle,
-                                        text: 'Mark as Sold',
-                                        onPressed: () {
-                                          Get.back();
-                                          showMarskasSoldModal();
-                                        },
-                                        isFullWidth: true,
-                                        bgColor: whiteColor,
-                                        borderColor: blueColor,
-                                        textIconColor: blueColor,
-                                      ),
-                                    ],
+                                  CustomButton(
+                                    icon: Ionicons.checkmark_circle,
+                                    text: 'Mark as Sold',
+                                    onPressed: () {
+                                      Get.back();
+                                      showMarskasSoldModal();
+                                    },
+                                    isFullWidth: true,
+                                    bgColor: whiteColor,
+                                    borderColor: blueColor,
+                                    textIconColor: blueColor,
                                   ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
                                 CustomButton(
                                   icon: Ionicons.trash,
                                   text: 'Delete Product',

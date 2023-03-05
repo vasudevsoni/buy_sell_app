@@ -886,7 +886,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Expanded(
                                       child: CustomButton(
-                                        text: 'Reach More Buyers',
+                                        text: 'Promote Listing',
                                         onPressed: () => Get.to(
                                           () => PromoteListingScreen(
                                             productId: widget.productData.id,

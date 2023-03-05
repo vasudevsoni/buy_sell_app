@@ -16,10 +16,10 @@ import '/provider/main_provider.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '/provider/location_provider.dart';
 import '/utils/utils.dart';
+import 'my_favorites_screen.dart';
 import 'my_profile_screen.dart';
 import 'home_screen.dart';
 import 'chats/my_chats_screen.dart';
-import 'my_favorites_screen.dart';
 import 'selling/seller_categories_list_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -199,6 +199,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return Scaffold(
+      backgroundColor: whiteColor,
       body: IndexedStack(
         index: selectedIndex,
         children: pages,
@@ -230,7 +231,7 @@ class _MainScreenState extends State<MainScreen> {
           Ionicons.home_outline,
           Ionicons.chatbubbles_outline,
           Ionicons.heart_outline,
-          Ionicons.person_circle_outline,
+          Ionicons.person_outline,
         ],
         backgroundColor: greyColor,
         elevation: 0,

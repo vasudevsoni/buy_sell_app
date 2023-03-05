@@ -1,4 +1,5 @@
 import 'package:buy_sell_app/promotion/promotion_api.dart';
+import 'package:buy_sell_app/screens/boost_info_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,7 +10,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../utils/utils.dart';
-import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
 
 class PromoteListingScreen extends StatefulWidget {
@@ -335,109 +335,15 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                               textIconColor: blackColor,
                             ),
                             CustomButton(
-                              text: 'View Demo',
-                              onPressed: () {
-                                showModalBottomSheet<dynamic>(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: transparentColor,
-                                  builder: (context) {
-                                    return SafeArea(
-                                      child: SingleChildScrollView(
-                                        physics: const ClampingScrollPhysics(),
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
-                                            ),
-                                            color: whiteColor,
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                            left: 15,
-                                            right: 15,
-                                            top: 5,
-                                            bottom: 15,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Center(
-                                                child: Container(
-                                                  width: 80.0,
-                                                  height: 5.0,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                    color: fadedColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'Boost to Top Example',
-                                                  style: GoogleFonts.interTight(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              CachedNetworkImage(
-                                                imageUrl:
-                                                    'https://res.cloudinary.com/bechdeapp/image/upload/v1674460265/illustrations/boost-to-top-gif_yac6tr.gif',
-                                                height: size.height * 0.7,
-                                                width: size.width,
-                                                fit: BoxFit.contain,
-                                                filterQuality:
-                                                    FilterQuality.high,
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              CustomButtonWithoutIcon(
-                                                text: 'Close',
-                                                onPressed: () => Get.back(),
-                                                bgColor: whiteColor,
-                                                borderColor: greyColor,
-                                                textIconColor: blackColor,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                              text: 'Learn More',
+                              onPressed: () => Get.to(
+                                () => const BoostInfoScreen(),
+                              ),
                               isFullWidth: true,
-                              icon: Ionicons.phone_portrait,
+                              icon: Ionicons.information_circle,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'Note: Buying this pack does not guarantee views. It is up to the users if they want to click on your listing or not. To attract more views, include a good title and good description.',
-                              maxLines: 5,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: greyColor,
-                              ),
                             ),
                           ],
                         ),

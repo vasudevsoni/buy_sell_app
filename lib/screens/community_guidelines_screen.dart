@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/utils/utils.dart';
 
@@ -33,20 +34,40 @@ class CommunityGuidelinesScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Welcome to BechDe',
-                textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w800,
-                  color: blackColor,
-                  fontSize: 18,
+              Container(
+                decoration: BoxDecoration(
+                  color: blueColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Ionicons.happy,
+                      color: whiteColor,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'Welcome to BechDe',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.interTight(
+                        fontWeight: FontWeight.w800,
+                        color: whiteColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Text(
-                'A community-driven platform where you can buy and sell goods and services near your locality.\n\nOur community guidelines are designed to ensure that every member of our community is treated with respect and fairness, and to help make your experience on our platform enjoyable and safe.\n\nWe ask that you review these guidelines and follow them to maintain a healthy and thriving community.',
+                'Our community guidelines are designed to ensure that every member of our community is treated with respect and fairness, and to help make your experience on our platform enjoyable and safe.\n\nWe ask that you review these guidelines and follow them to maintain a healthy and thriving community.',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
@@ -202,7 +223,7 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                 height: 15,
               ),
               Text(
-                '7. Chat Responsibly -',
+                '7. Chat responsibly -',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w800,
@@ -243,6 +264,204 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: blueColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Ionicons.shield_checkmark,
+                      color: whiteColor,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Tips to Stay Safe',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.interTight(
+                        fontWeight: FontWeight.w800,
+                        color: whiteColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'The safety and security of our users is a top priority at BechDe. Here are some guidelines for staying safe when meeting with a buyer or seller in-person for a deal, and how to prevent fraud and scams:',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '1. Meet in a safe and public place -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'When meeting with a buyer or seller in-person, choose a safe and public location, such as a coffee shop, mall, or near a police station. Avoid meeting in secluded areas or places that are not well-lit.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '2. Bring a friend or family member -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Consider bringing a friend or family member with you to the meeting. This not only adds an extra layer of security, but it can also make the experience more enjoyable and less stressful.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '3. Inspect the item thoroughly -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Before completing the transaction, inspect the item thoroughly to ensure that it meets your expectations. If you\'re purchasing an electronic item, test it out to make sure it\'s in working order.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '4. Verify the seller\'s identity -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Make sure you\'re dealing with a legitimate seller by verifying their identity. This can be done by checking their profile on BechDe and by asking for a government-issued ID or other form of identification.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '5. Use secure payment methods -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Do not send advance payments. Only pay the seller after inspecting the product properly, and confirming the seller\'s identity.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                '6. Beware of scams -',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w800,
+                  color: blackColor,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Unfortunately, there are scammers who use online marketplaces to take advantage of unsuspecting buyers and sellers. Be wary of deals that seem too good to be true, and be cautious of unsolicited messages or offers.',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                'If you encounter any suspicious activity or fraudulent behavior, please report it to us immediately. We take all reports seriously and will take appropriate action to address any issues. With these guidelines in mind, we hope that you can enjoy a safe and successful buying and selling experience on BechDe!',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: redColor,
                   fontSize: 16,
                 ),
               ),

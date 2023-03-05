@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -80,7 +81,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   height: 15,
                 ),
                 Text(
-                  'We will review your product and then publish it.',
+                  'We will review your product and then publish it.\nIn the meantime, browse some products, or just sit back and relax.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.interTight(
                     fontSize: 15,
@@ -89,25 +90,21 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: greyColor,
+                    color: redColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Note: The review process usually takes 5-10 working hours. In the meantime, browse some products, or just sit back and relax.',
+                    'Note: The review usually takes 2-6 working hours, but it may take more time due to high demand.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.interTight(
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: blackColor,
+                      fontWeight: FontWeight.w700,
+                      color: whiteColor,
                     ),
                   ),
                 ),
@@ -139,6 +136,16 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                       ),
                 const Spacer(),
                 CustomButton(
+                  text: 'Go to Home',
+                  onPressed: () =>
+                      Get.offAll(() => const MainScreen(selectedIndex: 0)),
+                  icon: Ionicons.home,
+                  isFullWidth: true,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
+                  textIconColor: whiteColor,
+                ),
+                CustomButton(
                   text: 'Rate our App',
                   onPressed: () => inAppReview.openStoreListing(),
                   isFullWidth: true,
@@ -148,13 +155,13 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   textIconColor: whiteColor,
                 ),
                 CustomButton(
-                  text: 'Go to Home',
-                  onPressed: () =>
-                      Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: Ionicons.home,
+                  text: 'Share with Friends',
+                  onPressed: () => Share.share(
+                      'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
                   isFullWidth: true,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
+                  icon: Ionicons.share_social,
+                  bgColor: blackColor,
+                  borderColor: blackColor,
                   textIconColor: whiteColor,
                 ),
               ],

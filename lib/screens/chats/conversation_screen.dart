@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/screens/community_guidelines_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -477,17 +479,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       child: Row(
                         children: [
                           SizedBox(
-                            width: size.width * 0.20,
-                            height: size.width * 0.20,
+                            width: size.width * 0.15,
+                            height: size.width * 0.15,
                             child: Padding(
-                              padding: const EdgeInsets.all(15),
+                              padding: const EdgeInsets.all(10),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
                                   imageUrl: imageUrl,
                                   fit: BoxFit.cover,
                                   filterQuality: FilterQuality.high,
-                                  memCacheHeight: (size.height * 0.20).round(),
+                                  memCacheHeight: (size.height * 0.15).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
                                       Ionicons.alert_circle,
@@ -523,6 +525,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                     ),
                   ),
+                GestureDetector(
+                  onTap: () => Get.to(
+                    () => const CommunityGuidelinesScreen(),
+                  ),
+                  child: Container(
+                    width: size.width,
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      color: blueColor,
+                    ),
+                    child: const Center(
+                      child: AutoSizeText(
+                        'Stay Safe! Read our Community Guidelines',
+                        style: TextStyle(
+                          color: whiteColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream: _services.chats

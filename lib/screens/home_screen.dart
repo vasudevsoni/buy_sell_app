@@ -811,7 +811,7 @@ class _ProductsListState extends State<ProductsList> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    'No products found in your region',
+                    'Set your location to see nearby products',
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
@@ -952,16 +952,23 @@ class _ProductsListState extends State<ProductsList> {
                         time: time,
                       ),
                       if (hasMoreReached)
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      if (hasMoreReached)
-                        CustomButtonWithoutIcon(
-                          text: 'Show more',
-                          onPressed: () => snapshot.fetchMore(),
-                          borderColor: blackColor,
-                          bgColor: whiteColor,
-                          textIconColor: blackColor,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomButtonWithoutIcon(
+                              text: 'Show more',
+                              onPressed: () => snapshot.fetchMore(),
+                              borderColor: blackColor,
+                              bgColor: whiteColor,
+                              textIconColor: blackColor,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
                     ],
                   );
