@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
@@ -274,7 +274,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                     Expanded(
                       child: CustomButton(
                         text: 'Update',
-                        icon: Ionicons.checkmark,
+                        icon: MdiIcons.check,
                         onPressed: () async {
                           Get.back();
                           await uploadImage(File(pickedImage!.path));
@@ -335,7 +335,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   memCacheWidth: (size.width * 0.3).round(),
                   errorWidget: (context, url, error) {
                     return const Icon(
-                      Ionicons.alert_circle,
+                      MdiIcons.alertDecagram,
                       size: 30,
                       color: redColor,
                     );
@@ -357,7 +357,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 color: blueColor,
               ),
               child: const Icon(
-                Ionicons.person,
+                MdiIcons.account,
                 color: whiteColor,
                 size: 45,
               ),
@@ -395,7 +395,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               text: 'Take Photo',
               onPressed: requestCameraPermission,
               isFullWidth: true,
-              icon: Ionicons.camera,
+              icon: MdiIcons.camera,
               bgColor: whiteColor,
               borderColor: blackColor,
               textIconColor: blackColor,
@@ -407,7 +407,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             child: CustomButton(
               text: 'Upload Photo',
               onPressed: requestGalleryPermission,
-              icon: Ionicons.image,
+              icon: MdiIcons.imageFilterHdr,
               isFullWidth: true,
               bgColor: whiteColor,
               borderColor: blackColor,
@@ -432,7 +432,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             : CustomButton(
                 text: 'Proceed',
                 onPressed: pickedImage != null ? showConfirmationDialog : () {},
-                icon: Ionicons.arrow_forward,
+                icon: MdiIcons.arrowRight,
                 bgColor: blueColor,
                 borderColor: blueColor,
                 textIconColor: whiteColor,

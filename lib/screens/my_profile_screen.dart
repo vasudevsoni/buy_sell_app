@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
@@ -37,18 +38,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final FirebaseServices services = FirebaseServices();
   final InAppReview inAppReview = InAppReview.instance;
   final User? user = FirebaseAuth.instance.currentUser;
-  String name = '';
+  String name = 'BechDe User';
   String profileImage = '';
   String bio = '';
   String address = '';
-  // int followers = 0;
-  // int following = 0;
   String instagramLink = '';
   String facebookLink = '';
   String websiteLink = '';
   var iconSize = 16;
-
   DateTime dateJoined = DateTime.now();
+  // int followers = 0;
+  // int following = 0;
 
   @override
   void initState() {
@@ -57,75 +57,47 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   getUserData() async {
-    await services.getCurrentUserData().then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['name'] == 'BechDe User') {
-            name = 'BechDe User';
-          } else {
-            name = value['name'];
-          }
-          if (value['bio'] == null) {
-            bio = '';
-          } else {
-            bio = value['bio'];
-          }
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-          if (value['location'] == null) {
-            address == '';
-          } else {
-            address =
-                '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
-          }
-          if (value['instagramLink'] == null) {
-            instagramLink = '';
-          } else {
-            instagramLink = value['instagramLink'];
-          }
-          if (value['facebookLink'] == null) {
-            facebookLink = '';
-          } else {
-            facebookLink = value['facebookLink'];
-          }
-          if (value['websiteLink'] == null) {
-            websiteLink = '';
-          } else {
-            websiteLink = value['websiteLink'];
-          }
-          // if (value['followers'].isEmpty) {
-          //   followers = 0;
-          // } else {
-          //   followers = value['followers'].length;
-          // }
-          // if (value['following'].isEmpty) {
-          //   following = 0;
-          // } else {
-          //   following = value['following'].length;
-          // }
-          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-        });
-      }
-    });
+    final value = await services.getCurrentUserData();
+    if (mounted) {
+      setState(() {
+        name = value['name'] ?? name;
+        bio = value['bio'] ?? '';
+        profileImage = value['profileImage'] ?? '';
+        address = value['location'] != null
+            ? '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}'
+            : '';
+        instagramLink = value['instagramLink'] ?? '';
+        facebookLink = value['facebookLink'] ?? '';
+        websiteLink = value['websiteLink'] ?? '';
+        // if (value['followers'].isEmpty) {
+        //   followers = 0;
+        // } else {
+        //   followers = value['followers'].length;
+        // }
+        // if (value['following'].isEmpty) {
+        //   following = 0;
+        // } else {
+        //   following = value['following'].length;
+        // }
+        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      });
+    }
   }
 
   onSellButtonClicked() async {
-    await services.getCurrentUserData().then((value) {
-      if (value['location'] == null) {
-        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
-        showSnackBar(
-          content: 'Please set your location to sell products',
-          color: redColor,
-        );
-      } else {
-        Get.to(
-          () => const SellerCategoriesListScreen(),
-        );
-      }
-    });
+    final value = await services.getCurrentUserData();
+    final location = value['location'];
+    if (location == null) {
+      Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+      showSnackBar(
+        content: 'Please set your location to sell products',
+        color: redColor,
+      );
+    } else {
+      Get.to(
+        () => const SellerCategoriesListScreen(),
+      );
+    }
   }
 
   @override
@@ -172,7 +144,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               color: blueColor,
                             ),
                             child: const Icon(
-                              Ionicons.person,
+                              MdiIcons.account,
                               color: whiteColor,
                               size: 50,
                             ),
@@ -188,7 +160,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 );
                               },
                               child: const Icon(
-                                Ionicons.create_outline,
+                                MdiIcons.pencilBoxOutline,
                                 color: lightBlackColor,
                                 shadows: [
                                   Shadow(
@@ -239,7 +211,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return const Icon(
-                                            Ionicons.alert_circle,
+                                            MdiIcons.alertDecagram,
                                             size: 20,
                                             color: redColor,
                                           );
@@ -260,7 +232,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                       splashColor: blueColor,
                                       splashRadius: 30,
                                       icon: const Icon(
-                                        Ionicons.close_circle_outline,
+                                        MdiIcons.closeCircleOutline,
                                         size: 30,
                                         color: whiteColor,
                                         shadows: [
@@ -299,7 +271,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   memCacheWidth: (size.width * 0.25).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      Ionicons.alert_circle,
+                                      MdiIcons.alertDecagram,
                                       size: 30,
                                       color: redColor,
                                     );
@@ -323,7 +295,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   );
                                 },
                                 child: const Icon(
-                                  Ionicons.create_outline,
+                                  MdiIcons.pencilBoxOutline,
                                   color: blackColor,
                                   shadows: [
                                     Shadow(
@@ -359,17 +331,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: bio == ''
-                    ? () {}
-                    : () => Get.to(
-                          () => FullBioScreen(bio: bio),
-                        ),
+                onTap: bio.isEmpty
+                    ? null
+                    : () => Get.to(() => FullBioScreen(bio: bio)),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Center(
                     child: Text(
                       bio == '' ? 'Your bio will show here' : bio,
-                      maxLines: 3,
+                      maxLines: 2,
                       softWrap: true,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
@@ -413,7 +383,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                         if (websiteLink != '')
                           ExternalLinkIcon(
-                            icon: Ionicons.link,
+                            icon: MdiIcons.linkVariant,
                             iconColor: blueColor,
                             link: websiteLink,
                           ),
@@ -462,12 +432,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: blueColor,
+                  gradient: const LinearGradient(
+                    colors: [blueColor, greenColor],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -477,6 +450,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         Text(
                           'Make money selling on BechDe',
                           textAlign: TextAlign.start,
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.interTight(
                             color: whiteColor,
                             fontWeight: FontWeight.w700,
@@ -487,7 +463,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           width: 5,
                         ),
                         const Icon(
-                          Ionicons.cash_outline,
+                          MdiIcons.cashMultiple,
                           color: whiteColor,
                         ),
                       ],
@@ -497,7 +473,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                          horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         color: whiteColor,
                         borderRadius: BorderRadius.circular(10),
@@ -507,7 +483,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Ionicons.checkmark_circle,
+                                MdiIcons.checkCircle,
                                 color: greenColor,
                                 size: 15,
                               ),
@@ -532,7 +508,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Ionicons.checkmark_circle,
+                                MdiIcons.checkCircle,
                                 color: greenColor,
                                 size: 15,
                               ),
@@ -557,7 +533,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           Row(
                             children: [
                               const Icon(
-                                Ionicons.checkmark_circle,
+                                MdiIcons.checkCircle,
                                 color: greenColor,
                                 size: 15,
                               ),
@@ -594,7 +570,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 () => const EmailVerificationScreen(),
                               )
                           : onSellButtonClicked,
-                      icon: Icons.add_rounded,
+                      icon: MdiIcons.basketPlusOutline,
                       bgColor: whiteColor,
                       borderColor: whiteColor,
                       textIconColor: blackColor,
@@ -610,7 +586,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: Ionicons.albums_outline,
+                      icon: MdiIcons.shopping,
                       iconColor: blackColor,
                       text: 'My Listings',
                       onTap: () => Get.to(
@@ -621,7 +597,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: Ionicons.cog_outline,
+                      icon: MdiIcons.cog,
                       iconColor: blackColor,
                       text: 'Settings',
                       onTap: () => Get.to(
@@ -637,7 +613,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: Ionicons.help_circle_outline,
+                      icon: MdiIcons.helpCircle,
                       iconColor: redColor,
                       text: 'Help & Support',
                       onTap: () => Get.to(
@@ -648,7 +624,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: Ionicons.star_outline,
+                      icon: MdiIcons.star,
                       iconColor: blueColor,
                       text: 'Rate our App',
                       onTap: () {
@@ -664,7 +640,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: Ionicons.share_social_outline,
+                      icon: MdiIcons.shareVariant,
                       iconColor: blackColor,
                       text: 'Invite Friends',
                       onTap: () => Share.share(
@@ -674,7 +650,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: Ionicons.people_outline,
+                      icon: MdiIcons.accountMultiplePlus,
                       iconColor: blackColor,
                       text: 'Follow Us',
                       onTap: () => Get.to(
@@ -717,7 +693,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                         ),
                         Icon(
-                          Ionicons.heart,
+                          MdiIcons.heart,
                           color: redColor,
                           size: iconSize.toDouble(),
                         ),
@@ -770,7 +746,7 @@ class MyProfileItemWidget extends StatelessWidget {
           height: 90,
           padding: const EdgeInsets.symmetric(
             horizontal: 15,
-            vertical: 5,
+            vertical: 10,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -796,7 +772,7 @@ class MyProfileItemWidget extends StatelessWidget {
                 softWrap: true,
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w700,
-                  fontSize: 17,
+                  fontSize: 16,
                 ),
               ),
             ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '/utils/utils.dart';
 
@@ -45,7 +45,7 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
-                      Ionicons.happy,
+                      MdiIcons.emoticon,
                       color: whiteColor,
                     ),
                     const SizedBox(
@@ -281,7 +281,7 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
-                      Ionicons.shield_checkmark,
+                      MdiIcons.shieldCheck,
                       color: whiteColor,
                     ),
                     const SizedBox(width: 5),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../widgets/loading_button.dart';
 import '../widgets/text_field_label.dart';
@@ -33,25 +33,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   void initState() {
-    _services.getCurrentUserData().then((value) {
-      uid = value['uid'];
-      value['name'] == null
-          ? nameController.text = ''
-          : nameController.text = value['name'];
-      value['bio'] == null
-          ? bioController.text = ''
-          : bioController.text = value['bio'];
-      value['instagramLink'] == null
-          ? instaController.text = ''
-          : instaController.text = value['instagramLink'];
-      value['facebookLink'] == null
-          ? fbController.text = ''
-          : fbController.text = value['facebookLink'];
-      value['websiteLink'] == null
-          ? linkController.text = ''
-          : linkController.text = value['websiteLink'];
-    });
+    _loadUserData();
     super.initState();
+  }
+
+  Future<void> _loadUserData() async {
+    final userData = await _services.getCurrentUserData();
+    setState(() {
+      uid = userData['uid'];
+      nameController.text = userData['name'] ?? '';
+      bioController.text = userData['bio'] ?? '';
+      instaController.text = userData['instagramLink'] ?? '';
+      fbController.text = userData['facebookLink'] ?? '';
+      linkController.text = userData['websiteLink'] ?? '';
+    });
   }
 
   @override
@@ -198,7 +193,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: Ionicons.checkmark,
+                          icon: MdiIcons.check,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -390,7 +385,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             : CustomButton(
                 text: 'Proceed',
                 onPressed: validateForm,
-                icon: Ionicons.arrow_forward,
+                icon: MdiIcons.arrowRight,
                 bgColor: blueColor,
                 borderColor: blueColor,
                 textIconColor: whiteColor,

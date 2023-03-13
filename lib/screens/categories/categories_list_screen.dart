@@ -8,7 +8,7 @@ import '/screens/categories/sub_categories_list_screen.dart';
 import '/widgets/custom_list_tile.dart';
 
 class CategoriesListScreen extends StatefulWidget {
-  const CategoriesListScreen({super.key});
+  const CategoriesListScreen({Key? key}) : super(key: key);
 
   @override
   State<CategoriesListScreen> createState() => _CategoriesListScreenState();
@@ -44,6 +44,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
             ),
           );
         }
+        final docs = snapshot.data!.docs;
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -56,7 +57,7 @@ class _CategoriesListScreenState extends State<CategoriesListScreen>
           itemCount: snapshot.data!.docs.length,
           padding: const EdgeInsets.all(15),
           itemBuilder: (context, index) {
-            var doc = snapshot.data!.docs[index];
+            var doc = docs[index];
             return CustomListTile(
               text: doc['catName'],
               url: doc['image'],

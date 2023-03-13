@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 void showSnackBar({
-  required String content,
+  required final String content,
   required Color color,
 }) {
   Get.closeCurrentSnackbar();
@@ -22,7 +22,7 @@ void showSnackBar({
           color: whiteColor,
         ),
       ),
-      animationDuration: const Duration(milliseconds: 300),
+      animationDuration: kThemeAnimationDuration,
       backgroundColor: color,
       duration: const Duration(seconds: 4),
       snackStyle: SnackStyle.FLOATING,

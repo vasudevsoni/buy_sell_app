@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
@@ -34,20 +34,17 @@ class MyListingsList extends StatelessWidget {
     final User? user = FirebaseAuth.instance.currentUser;
     final size = MediaQuery.of(context).size;
 
-    onSellButtonClicked() {
-      services.getCurrentUserData().then((value) {
-        if (value['location'] != null) {
-          Get.to(
-            () => const SellerCategoriesListScreen(),
-          );
-          return;
-        }
+    void onSellButtonClicked() async {
+      final value = await services.getCurrentUserData();
+      if (value['location'] != null) {
+        Get.to(() => const SellerCategoriesListScreen());
+      } else {
         Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
         showSnackBar(
           content: 'Please set your location to sell products',
           color: redColor,
         );
-      });
+      }
     }
 
     return FirestoreQueryBuilder(
@@ -245,33 +242,24 @@ class _MyListingScreenProductCardState
   late DocumentSnapshot sellerDetails;
   bool isLoading = false;
   int selectedValue = 0;
-
   final NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
-    getSellerDetails();
     super.initState();
+    getSellerDetails();
   }
 
-  getSellerDetails() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
-    await services.getUserData(widget.data['sellerUid']).then((value) {
-      if (mounted) {
-        setState(() {
-          sellerDetails = value;
-        });
-      }
+  Future<void> getSellerDetails() async {
+    if (!mounted) return;
+    setState(() {
+      isLoading = true;
     });
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    final value = await services.getUserData(widget.data['sellerUid']);
+    setState(() {
+      sellerDetails = value;
+      isLoading = false;
+    });
   }
 
   showMarskasSoldModal() {
@@ -527,14 +515,14 @@ class _MyListingScreenProductCardState
                                 memCacheHeight: (size.height * 0.3).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    Ionicons.alert_circle,
+                                    MdiIcons.alertDecagram,
                                     size: 30,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    Ionicons.image,
+                                    MdiIcons.imageFilterHdr,
                                     size: 30,
                                     color: lightBlackColor,
                                   );
@@ -644,7 +632,7 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                Ionicons.eye_outline,
+                                MdiIcons.eye,
                                 size: 20,
                                 color: blueColor,
                               ),
@@ -667,7 +655,7 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                Ionicons.heart_outline,
+                                MdiIcons.heart,
                                 size: 20,
                                 color: redColor,
                               ),
@@ -692,7 +680,7 @@ class _MyListingScreenProductCardState
                       Row(
                         children: [
                           const Icon(
-                            Ionicons.finger_print_outline,
+                            MdiIcons.fingerprint,
                             size: 20,
                             color: blackColor,
                           ),
@@ -782,7 +770,7 @@ class _MyListingScreenProductCardState
                               height: 10,
                             ),
                             CustomButton(
-                              icon: Ionicons.trending_up,
+                              icon: MdiIcons.trendingUp,
                               text: 'Promote Listing',
                               onPressed: () {
                                 Get.to(
@@ -909,7 +897,7 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: Ionicons.create_outline,
+                                  icon: MdiIcons.pencilBox,
                                   text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
@@ -942,7 +930,7 @@ class _MyListingScreenProductCardState
                                 ),
                                 if (widget.data['isRejected'] == false)
                                   CustomButton(
-                                    icon: Ionicons.checkmark_circle,
+                                    icon: MdiIcons.checkDecagram,
                                     text: 'Mark as Sold',
                                     onPressed: () {
                                       Get.back();
@@ -954,7 +942,7 @@ class _MyListingScreenProductCardState
                                     textIconColor: blueColor,
                                   ),
                                 CustomButton(
-                                  icon: Ionicons.trash,
+                                  icon: MdiIcons.delete,
                                   text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();
@@ -972,7 +960,7 @@ class _MyListingScreenProductCardState
                       },
                     ),
                     child: const Icon(
-                      Ionicons.ellipsis_vertical,
+                      MdiIcons.dotsVertical,
                       size: 22,
                     ),
                   ),

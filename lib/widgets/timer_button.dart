@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-int aSec = 1;
-const String _secPostFix = 's';
+const int secondsPerUpdate = 1;
+const String defaultSecondPostfix = 's';
 
 class TimerButton extends StatefulWidget {
   final String label;
@@ -22,7 +22,7 @@ class TimerButton extends StatefulWidget {
     required this.label,
     required this.onPressed,
     required this.timeOutInSeconds,
-    this.secPostFix = _secPostFix,
+    this.secPostFix = defaultSecondPostfix,
     required this.color,
     this.resetTimerOnPressed = true,
     required this.disabledColor,
@@ -42,34 +42,35 @@ class _TimerButtonState extends State<TimerButton> {
   void initState() {
     super.initState();
     timeCounter = widget.timeOutInSeconds;
-    _timerUpdate();
+    _startTimer();
   }
 
-  _timerUpdate() {
-    Timer(Duration(seconds: aSec), () async {
-      if (mounted) {
-        setState(() {
-          timeCounter--;
-        });
-      }
+  _startTimer() {
+    Timer(const Duration(seconds: secondsPerUpdate), () async {
+      if (!mounted) return;
+
+      setState(() {
+        timeCounter--;
+      });
+
       if (timeCounter != 0) {
-        _timerUpdate();
+        _startTimer();
         return;
       }
       timeUpFlag = true;
     });
   }
 
-  _onPressed() {
-    if (timeUpFlag) {
-      setState(() {
-        timeUpFlag = false;
-      });
-      timeCounter = widget.timeOutInSeconds;
-      widget.onPressed();
-      if (widget.resetTimerOnPressed) {
-        _timerUpdate();
-      }
+  void _onPressed() {
+    if (!timeUpFlag) return;
+
+    setState(() {
+      timeUpFlag = false;
+    });
+    timeCounter = widget.timeOutInSeconds;
+    widget.onPressed();
+    if (widget.resetTimerOnPressed) {
+      _startTimer();
     }
   }
 

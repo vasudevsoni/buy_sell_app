@@ -40,17 +40,22 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
   @override
   void dispose() {
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 

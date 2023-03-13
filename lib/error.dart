@@ -4,7 +4,7 @@ import 'package:buy_sell_app/widgets/svg_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'utils/utils.dart';
 
@@ -61,7 +61,7 @@ class ErrorScreen extends StatelessWidget {
                 onPressed: () => Get.offAll(
                   () => const MainScreen(selectedIndex: 0),
                 ),
-                icon: Ionicons.home_outline,
+                icon: MdiIcons.home,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

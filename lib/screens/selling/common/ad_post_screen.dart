@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widgets/loading_button.dart';
@@ -54,21 +54,21 @@ class _AdPostScreenState extends State<AdPostScreen> {
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
-  getUserLocation() async {
-    await _services.getCurrentUserData().then((value) async {
-      if (mounted) {
-        setState(() {
-          locationController.text =
-              '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-          area = value['location']['area'];
-          city = value['location']['city'];
-          state = value['location']['state'];
-          country = value['location']['country'];
-          latitude = value['location']['latitude'];
-          longitude = value['location']['longitude'];
-        });
-      }
-    });
+  Future<void> getUserLocation() async {
+    final userData = await _services.getCurrentUserData();
+    final locationData = userData['location'];
+    if (mounted) {
+      setState(() {
+        locationController.text =
+            '${locationData['area']}, ${locationData['city']}, ${locationData['state']}, ${locationData['country']}';
+        area = locationData['area'];
+        city = locationData['city'];
+        state = locationData['state'];
+        country = locationData['country'];
+        latitude = locationData['latitude'];
+        longitude = locationData['longitude'];
+      });
+    }
   }
 
   @override
@@ -216,20 +216,16 @@ class _AdPostScreenState extends State<AdPostScreen> {
 
     publishProductToFirebase(SellerFormProvider provider) async {
       try {
-        await _services.listings
-            .doc()
-            .set(provider.dataToFirestore)
-            .then((value) {
-          Get.off(
-            () => const CongratulationsScreen(),
-          );
-          provider.clearDataAfterSubmitListing();
-          if (mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
-        });
+        await _services.listings.doc().set(provider.dataToFirestore);
+        Get.off(
+          () => const CongratulationsScreen(),
+        );
+        provider.clearDataAfterSubmitListing();
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
@@ -338,7 +334,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(
-                                              Ionicons.alert_circle,
+                                              MdiIcons.alertDecagram,
                                               size: 20,
                                               color: redColor,
                                             );
@@ -449,7 +445,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Post',
-                          icon: Ionicons.checkmark,
+                          icon: MdiIcons.check,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -466,7 +462,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                               return;
                             }
                             var time = DateTime.now().millisecondsSinceEpoch;
-                            setSearchParams({
+                            List<String> setSearchParams({
                               required String s,
                               required int n,
                               required String catName,
@@ -474,30 +470,22 @@ class _AdPostScreenState extends State<AdPostScreen> {
                             }) {
                               List<String> searchQueries = [];
                               for (int i = 0; i < n; i++) {
-                                String temp = '';
-                                for (int j = i; j < n; j++) {
-                                  temp += s[j];
-                                  if (temp.length >= 3) {
-                                    searchQueries.add(temp);
-                                  }
+                                for (int j = i + 2; j < n; j++) {
+                                  searchQueries.add(s.substring(i, j + 1));
                                 }
                               }
                               for (int i = 0; i < catName.length; i++) {
-                                String catNameTemp = '';
-                                for (int j = i; j < catName.length; j++) {
-                                  catNameTemp += catName[j];
-                                  if (catNameTemp.length >= 3) {
-                                    searchQueries.add(catNameTemp);
-                                  }
+                                for (int j = i + 2; j < catName.length; j++) {
+                                  searchQueries
+                                      .add(catName.substring(i, j + 1));
                                 }
                               }
                               for (int i = 0; i < subCatName.length; i++) {
-                                String subCatNameTemp = '';
-                                for (int j = i; j < subCatName.length; j++) {
-                                  subCatNameTemp += subCatName[j];
-                                  if (subCatNameTemp.length >= 3) {
-                                    searchQueries.add(subCatNameTemp);
-                                  }
+                                for (int j = i + 2;
+                                    j < subCatName.length;
+                                    j++) {
+                                  searchQueries
+                                      .add(subCatName.substring(i, j + 1));
                                 }
                               }
                               return searchQueries;
@@ -786,7 +774,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(Ionicons.close_circle_outline),
+            icon: const Icon(MdiIcons.closeCircleOutline),
           ),
           actions: [
             TextButton(
@@ -1099,7 +1087,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: Ionicons.arrow_forward,
+                  icon: MdiIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

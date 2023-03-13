@@ -8,8 +8,9 @@ import '/services/firebase_services.dart';
 
 class SellerFormProvider with ChangeNotifier {
   final FirebaseServices services = FirebaseServices();
-  int imagesCount = 0;
+
   final List<File> imagePaths = [];
+  int imagesCount = 0;
   Map<String, dynamic> dataToFirestore = {};
   Map<String, dynamic> updatedDataToFirestore = {};
   final uuid = const Uuid();
@@ -53,14 +54,20 @@ class SellerFormProvider with ChangeNotifier {
 
   addImageToPaths(File image) {
     imagePaths.add(image);
+    imagesCount++;
+    notifyListeners();
+  }
+
+  removeImageFromPaths(int index) {
+    imagePaths.removeAt(index);
+    imagesCount--;
     notifyListeners();
   }
 
   getUserDetails() async {
-    await services.getCurrentUserData().then((value) {
-      notifyListeners();
-      return value;
-    });
+    final value = await services.getCurrentUserData();
+    notifyListeners();
+    return value;
   }
 
   clearDataAfterSubmitListing() {

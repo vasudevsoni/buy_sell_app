@@ -1,12 +1,12 @@
 import 'package:buy_sell_app/promotion/promotion_api.dart';
-import 'package:buy_sell_app/screens/boost_info_screen.dart';
+import 'package:buy_sell_app/promotion/boost_info_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../utils/utils.dart';
@@ -40,7 +40,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
     super.initState();
   }
 
-  Future fetchOffers() async {
+  Future<void> fetchOffers() async {
     setState(() {
       isLoading = true;
     });
@@ -108,14 +108,14 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 memCacheHeight: (size.height * 0.20).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    Ionicons.alert_circle,
+                                    MdiIcons.alertDecagram,
                                     size: 15,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    Ionicons.image,
+                                    MdiIcons.imageFilterHdr,
                                     size: 15,
                                     color: lightBlackColor,
                                   );
@@ -150,15 +150,27 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'Available Packages',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: true,
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Available Packages',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(
+                          MdiIcons.packageVariantClosedCheck,
+                          color: blueColor,
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(
@@ -188,8 +200,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                   child: Text(
                                     product!.title.toString(),
                                     style: GoogleFonts.interTight(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
                                       color: whiteColor,
                                     ),
                                   ),
@@ -202,7 +214,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                         product!.priceString.toString(),
                                         textAlign: TextAlign.end,
                                         style: GoogleFonts.interTight(
-                                          fontSize: 20,
+                                          fontSize: 24,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
                                         ),
@@ -211,13 +223,14 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                         '₹100.00',
                                         textAlign: TextAlign.end,
                                         style: GoogleFonts.interTight(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
                                           decoration:
                                               TextDecoration.lineThrough,
                                           decorationStyle:
-                                              TextDecorationStyle.solid,
+                                              TextDecorationStyle.wavy,
+                                          decorationColor: blackColor,
                                           decorationThickness: 2,
                                         ),
                                       ),
@@ -229,14 +242,14 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             const Divider(
                               color: whiteColor,
                               height: 20,
-                              thickness: 2,
+                              thickness: 1,
                             ),
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.checkmark,
+                                  MdiIcons.arrowUpCircle,
                                   color: whiteColor,
-                                  size: 16,
+                                  size: 20,
                                 ),
                                 const SizedBox(
                                   width: 15,
@@ -248,8 +261,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.interTight(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
                                       color: greyColor,
                                     ),
                                   ),
@@ -262,9 +275,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.checkmark,
+                                  MdiIcons.trendingUp,
                                   color: whiteColor,
-                                  size: 16,
+                                  size: 20,
                                 ),
                                 const SizedBox(
                                   width: 15,
@@ -276,8 +289,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.interTight(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
                                       color: greyColor,
                                     ),
                                   ),
@@ -290,9 +303,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.checkmark,
+                                  MdiIcons.creditCardCheck,
                                   color: whiteColor,
-                                  size: 16,
+                                  size: 20,
                                 ),
                                 const SizedBox(
                                   width: 15,
@@ -304,16 +317,18 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.interTight(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
                                       color: greyColor,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 15,
+                            const Divider(
+                              color: whiteColor,
+                              height: 20,
+                              thickness: 1,
                             ),
                             CustomButton(
                               text: 'Buy Now',
@@ -329,7 +344,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 }
                               },
                               isFullWidth: true,
-                              icon: Ionicons.bag_check,
+                              icon: MdiIcons.basketCheck,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,
@@ -340,7 +355,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 () => const BoostInfoScreen(),
                               ),
                               isFullWidth: true,
-                              icon: Ionicons.information_circle,
+                              icon: MdiIcons.information,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,

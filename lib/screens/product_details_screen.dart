@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -88,73 +88,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
-  getDetails() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-        location =
-            '${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
-        latitude = widget.productData['location']['latitude'];
-        longitude = widget.productData['location']['longitude'];
-        fav = widget.productData['favorites'];
-      });
-      await services.getUserData(widget.productData['sellerUid']).then((value) {
-        setState(() {
-          value['profileImage'] == null
-              ? profileImage = ''
-              : profileImage = value['profileImage'];
-          dateJoined = value['dateJoined'];
-          sellerName = value['name'];
-        });
-      });
-      if (!fav.contains(services.user!.uid)) {
-        setState(() {
-          isLiked = false;
-        });
-      } else {
-        setState(() {
-          isLiked = true;
-        });
-      }
-      if (widget.productData['isActive'] == false) {
-        setState(() {
-          isActive = false;
-        });
-      } else {
-        setState(() {
-          isActive = true;
-        });
-      }
-      if (widget.productData['isSold'] == false) {
-        setState(() {
-          isSold = false;
-        });
-      } else {
-        setState(() {
-          isSold = true;
-        });
-      }
-      if (services.user!.uid != widget.productData['sellerUid']) {
-        await services.listings.doc(widget.productData.id).update({
-          'views': FieldValue.arrayUnion([services.user!.uid]),
-        });
-      }
-      setState(() {
-        isLoading = false;
+  Future<void> getDetails() async {
+    setState(() {
+      isLoading = true;
+      final locationData = widget.productData['location'];
+      location =
+          '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
+      latitude = locationData['latitude'];
+      longitude = locationData['longitude'];
+      fav = widget.productData['favorites'];
+    });
+
+    final userData =
+        await services.getUserData(widget.productData['sellerUid']);
+    setState(() {
+      profileImage = userData['profileImage'] ?? '';
+      dateJoined = userData['dateJoined'];
+      sellerName = userData['name'];
+    });
+
+    setState(() {
+      isLiked = fav.contains(services.user?.uid);
+      isActive = widget.productData['isActive'] ?? false;
+      isSold = widget.productData['isSold'] ?? false;
+    });
+
+    if (services.user?.uid != widget.productData['sellerUid']) {
+      await services.listings.doc(widget.productData.id).update({
+        'views': FieldValue.arrayUnion([services.user!.uid]),
       });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
-  createChatRoom() {
-    final Map<String, dynamic> product = {
+  void createChatRoom() {
+    final product = {
       'productId': widget.productData.id,
       'productImage': widget.productData['images'][0],
       'price': widget.productData['price'],
@@ -162,15 +143,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       'seller': widget.productData['sellerUid'],
     };
 
-    final List<String> users = [
+    final users = [
       widget.productData['sellerUid'],
       services.user!.uid,
     ];
 
-    final String chatRoomId =
+    final chatRoomId =
         '${widget.productData['sellerUid']}.${services.user!.uid}.${widget.productData.id}';
 
-    final Map<String, dynamic> chatData = {
+    final chatData = {
       'users': users,
       'chatRoomId': chatRoomId,
       'read': false,
@@ -193,7 +174,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void dispose() {
     mapController.dispose();
     reportTextController.dispose();
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 
@@ -323,7 +306,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       Expanded(
                         child: CustomButton(
-                          icon: Ionicons.arrow_forward,
+                          icon: MdiIcons.arrowRight,
                           text: 'Report',
                           onPressed: () {
                             if (reportTextController.text.isEmpty) {
@@ -390,7 +373,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: CustomButton(
-                      icon: Ionicons.flag,
+                      icon: MdiIcons.flag,
                       isFullWidth: true,
                       text: 'Report Product',
                       onPressed: () {
@@ -500,7 +483,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         onTap: showOptionsDialog,
                         behavior: HitTestBehavior.opaque,
                         child: const Icon(
-                          Ionicons.ellipsis_horizontal,
+                          MdiIcons.dotsHorizontal,
                           color: blackColor,
                           size: 25,
                         ),
@@ -605,7 +588,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      Ionicons.alert_circle,
+                                                      MdiIcons.alertDecagram,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -630,7 +613,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 splashColor: blueColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
-                                                  Ionicons.close_circle_outline,
+                                                  MdiIcons.closeCircleOutline,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -666,7 +649,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           (size.height * 0.35).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          Ionicons.alert_circle,
+                                          MdiIcons.alertDecagram,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -807,7 +790,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         const Icon(
-                                          Ionicons.eye_outline,
+                                          MdiIcons.eyeOutline,
                                           size: 16,
                                           color: blueColor,
                                         ),
@@ -833,7 +816,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         const Icon(
-                                          Ionicons.heart_outline,
+                                          MdiIcons.heartOutline,
                                           size: 16,
                                           color: redColor,
                                         ),
@@ -895,7 +878,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 widget.productData['images'][0],
                                           ),
                                         ),
-                                        icon: Ionicons.trending_up,
+                                        icon: MdiIcons.trendingUp,
                                         bgColor: blueColor,
                                         borderColor: blueColor,
                                         textIconColor: whiteColor,
@@ -931,7 +914,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                         );
                                       },
-                                      icon: Ionicons.create_outline,
+                                      icon: MdiIcons.pencilBox,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
@@ -947,7 +930,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       text: 'Chat Now',
                                       onPressed: createChatRoom,
                                       isFullWidth: true,
-                                      icon: Ionicons.chatbox_ellipses,
+                                      icon: MdiIcons.chatProcessing,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -976,8 +959,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               },
                               isFullWidth: true,
                               icon: isLiked
-                                  ? Ionicons.heart
-                                  : Ionicons.heart_outline,
+                                  ? MdiIcons.heart
+                                  : MdiIcons.heartOutline,
                               bgColor: whiteColor,
                               borderColor: redColor,
                               textIconColor: redColor,
@@ -1023,7 +1006,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      Ionicons.list_outline,
+                                      MdiIcons.listBoxOutline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1076,7 +1059,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      Ionicons.location_outline,
+                                      MdiIcons.mapMarkerOutline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1105,7 +1088,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      Ionicons.time_outline,
+                                      MdiIcons.clockOutline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1270,7 +1253,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Ionicons.person,
+                                            MdiIcons.account,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1306,7 +1289,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Ionicons.funnel,
+                                            MdiIcons.fuel,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1342,7 +1325,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Ionicons.calendar,
+                                            MdiIcons.calendar,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1379,7 +1362,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            Ionicons.car_sport,
+                                            MdiIcons.mapMarkerDistance,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1586,14 +1569,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 2,
+                                  height: 4,
                                 ),
                                 Text(
-                                  'Read more',
+                                  'Show full description',
                                   style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w700,
                                     color: blueColor,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                   ),
                                 ),
                               ],
@@ -1703,7 +1686,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 color: blueColor,
                                               ),
                                               child: const Icon(
-                                                Ionicons.person,
+                                                MdiIcons.account,
                                                 color: whiteColor,
                                                 size: 20,
                                               ),
@@ -1728,7 +1711,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorWidget:
                                                       (context, url, error) {
                                                     return const Icon(
-                                                      Ionicons.alert_circle,
+                                                      MdiIcons.alertDecagram,
                                                       size: 10,
                                                       color: redColor,
                                                     );
@@ -1777,7 +1760,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       ),
                                       const Spacer(),
                                       const Icon(
-                                        Ionicons.chevron_forward,
+                                        MdiIcons.chevronRight,
                                         color: blackColor,
                                         size: 13,
                                       ),
@@ -1913,16 +1896,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'More like this',
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w700,
-                              color: blackColor,
-                              fontSize: 18,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'More like this',
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.w700,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              const Icon(
+                                MdiIcons.heart,
+                                size: 18,
+                                color: Colors.pink,
+                              ),
+                            ],
                           ),
                         ),
                         MoreLikeThisProductsList(
@@ -1964,7 +1961,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           .where('subCat', isEqualTo: widget.subCatName)
           .where('postedAt', isNotEqualTo: widget.postedAt)
           .where('isActive', isEqualTo: true)
-          .limit(2)
+          .limit(4)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -2053,7 +2050,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                     subCatName: widget.subCatName,
                   ),
                 ),
-                icon: Ionicons.arrow_forward,
+                icon: MdiIcons.arrowRight,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,9 +100,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               text: 'Make a suggestion',
               subTitle:
                   'If you have some feedback, suggestions or improvements for our app, we would love to hear them',
-              icon: Ionicons.cafe,
+              icon: MdiIcons.lightningBolt,
               textColor: blackColor,
-              trailingIcon: Ionicons.chevron_forward,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const FeedbackScreen(),
@@ -111,18 +111,18 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Contact Us',
               subTitle: 'Contact us for any issues you are facing',
-              icon: Ionicons.mail,
+              icon: MdiIcons.emailCheck,
               textColor: blackColor,
-              trailingIcon: Ionicons.chevron_forward,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => openMail(contactUsEmail),
             ),
             CustomListTileWithSubtitle(
               text: 'Report a problem',
               subTitle: 'If something is not right, please report it here',
-              icon: Ionicons.bug,
+              icon: MdiIcons.bug,
               textColor: redColor,
-              trailingIcon: Ionicons.chevron_forward,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const ReportScreen(),
@@ -147,8 +147,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Community Guidelines',
-              icon: Ionicons.people,
-              trailingIcon: Ionicons.chevron_forward,
+              icon: MdiIcons.accountGroup,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const CommunityGuidelinesScreen(),
@@ -156,8 +156,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'FAQs',
-              icon: Ionicons.help_circle,
-              trailingIcon: Ionicons.chevron_forward,
+              icon: MdiIcons.frequentlyAskedQuestions,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/faqs'),
@@ -165,8 +165,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Terms of Service',
-              icon: Ionicons.book,
-              trailingIcon: Ionicons.chevron_forward,
+              icon: MdiIcons.bookOpenPageVariant,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/terms'),
@@ -174,8 +174,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Privacy Policy',
-              icon: Ionicons.lock_closed,
-              trailingIcon: Ionicons.chevron_forward,
+              icon: MdiIcons.lock,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/privacy-policy'),
@@ -183,8 +183,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Icons by Icons8',
-              icon: Ionicons.balloon,
-              trailingIcon: Ionicons.chevron_forward,
+              icon: MdiIcons.emoticon,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://icons8.com/'),
@@ -193,7 +193,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Version',
               subTitle: version,
-              icon: Ionicons.phone_portrait,
+              icon: MdiIcons.cellphoneLock,
               isEnabled: false,
               onTap: () {},
             ),
@@ -218,9 +218,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               text: 'Request Account Deletion',
               subTitle:
                   'If you would like to delete your account and data, leave us a request here',
-              icon: Ionicons.trash,
+              icon: MdiIcons.delete,
               textColor: redColor,
-              trailingIcon: Ionicons.chevron_forward,
+              trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => openMail(dataDeleteEmail),
             ),

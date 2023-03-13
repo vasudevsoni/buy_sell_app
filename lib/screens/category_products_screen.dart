@@ -3,7 +3,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
@@ -152,7 +152,7 @@ class _CategoryScreenProductsListState
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: Ionicons.home,
+                  icon: MdiIcons.home,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,

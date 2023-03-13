@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
 
 import 'package:location/location.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/loading_button.dart';
@@ -38,8 +38,7 @@ class _LocationScreenState extends State<LocationScreen> {
   Future<bool> getAddress() async {
     final locationProv = Provider.of<LocationProvider>(context, listen: false);
     try {
-      List<geocode.Placemark> placemarks =
-          await geocode.placemarkFromCoordinates(
+      List placemarks = await geocode.placemarkFromCoordinates(
         locationProv.locationData!.latitude as double,
         locationProv.locationData!.longitude as double,
         localeIdentifier: 'en_IN',
@@ -78,43 +77,53 @@ class _LocationScreenState extends State<LocationScreen> {
 
   Future<bool> getUserLocation() async {
     final locationProv = Provider.of<LocationProvider>(context, listen: false);
+    final Location location = Location();
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+    try {
+      serviceEnabled = await location.serviceEnabled();
       if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          showSnackBar(
+            content:
+                'Location services are disabled. Please enable services to continue',
+            color: redColor,
+          );
+          return false;
+        }
+      }
+      permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          showSnackBar(
+            content:
+                'Location access was denied. Please allow access for a better experience',
+            color: redColor,
+          );
+          return false;
+        }
+      }
+      if (permissionGranted == PermissionStatus.deniedForever) {
         showSnackBar(
           content:
-              'Location services are disabled. Please enable services to continue',
+              'Location services are permanently disabled, unable to fetch location',
           color: redColor,
         );
         return false;
       }
-    }
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        showSnackBar(
-          content:
-              'Location access was denied. Please allow access for a better experience',
-          color: redColor,
-        );
-        return false;
-      }
-    }
-    if (permissionGranted == PermissionStatus.deniedForever) {
+      final value = await location.getLocation();
+      locationProv.updateLocation(value);
+      return await getAddress();
+    } catch (e) {
       showSnackBar(
-        content:
-            'Location services are permanently disabled, unable to fetch location',
+        content: 'Unable to get your current location. Please try again',
         color: redColor,
       );
+      return false;
     }
-    await location.getLocation().then((value) {
-      locationProv.updateLocation(value);
-    });
-    bool addressGot = await getAddress();
-    return addressGot;
   }
 
   @override
@@ -202,7 +211,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                     child: CustomButton(
                       text: 'Use Current Location',
-                      icon: Ionicons.locate,
+                      icon: MdiIcons.crosshairsGps,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

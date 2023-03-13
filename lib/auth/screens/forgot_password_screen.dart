@@ -3,7 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../widgets/loading_button.dart';
 import '../../widgets/text_field_label.dart';
@@ -23,21 +23,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
   bool isLoading = false;
 
-  _validateEmail() async {
+  Future<void> _validateEmail() async {
     if (_forgotformKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
       try {
         await FirebaseAuth.instance
-            .sendPasswordResetEmail(email: emailController.text)
-            .then((value) {
-          showSnackBar(
-            content: 'Link to reset password sent on your email',
-            color: redColor,
-          );
-          Get.back();
-        });
+            .sendPasswordResetEmail(email: emailController.text);
+        showSnackBar(
+          content: 'Link to reset password sent on your email',
+          color: redColor,
+        );
+        Get.back();
       } on FirebaseAuthException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
@@ -119,7 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     )
                   : CustomButton(
                       text: 'Send',
-                      icon: Ionicons.arrow_forward,
+                      icon: MdiIcons.arrowRight,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

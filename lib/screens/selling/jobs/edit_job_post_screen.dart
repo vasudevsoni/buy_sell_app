@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widgets/loading_button.dart';
@@ -357,7 +357,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.time,
+                                  MdiIcons.clock,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -383,7 +383,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.calendar,
+                                  MdiIcons.calendar,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -443,7 +443,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: Ionicons.checkmark,
+                          icon: MdiIcons.check,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -467,21 +467,17 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                               //   }
                               // }
                               for (int i = 0; i < catName.length; i++) {
-                                String catNameTemp = '';
-                                for (int j = i; j < catName.length; j++) {
-                                  catNameTemp += catName[j];
-                                  if (catNameTemp.length >= 3) {
-                                    searchQueries.add(catNameTemp);
-                                  }
+                                for (int j = i + 2; j < catName.length; j++) {
+                                  searchQueries
+                                      .add(catName.substring(i, j + 1));
                                 }
                               }
                               for (int i = 0; i < subCatName.length; i++) {
-                                String subCatNameTemp = '';
-                                for (int j = i; j < subCatName.length; j++) {
-                                  subCatNameTemp += subCatName[j];
-                                  if (subCatNameTemp.length >= 3) {
-                                    searchQueries.add(subCatNameTemp);
-                                  }
+                                for (int j = i + 2;
+                                    j < subCatName.length;
+                                    j++) {
+                                  searchQueries
+                                      .add(subCatName.substring(i, j + 1));
                                 }
                               }
                               return searchQueries;
@@ -641,7 +637,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(Ionicons.close_circle_outline),
+            icon: const Icon(MdiIcons.closeCircleOutline),
           ),
           centerTitle: true,
           title: Text(
@@ -921,7 +917,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         color: fadedColor,
                       ),
                       icon: const Icon(
-                        Ionicons.chevron_down,
+                        MdiIcons.chevronDown,
                         size: 15,
                       ),
                       items: salaryPeriod
@@ -976,7 +972,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         color: fadedColor,
                       ),
                       icon: const Icon(
-                        Ionicons.chevron_down,
+                        MdiIcons.chevronDown,
                         size: 15,
                       ),
                       items: positionType
@@ -1100,7 +1096,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: Ionicons.arrow_forward,
+                  icon: MdiIcons.arrowRight,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

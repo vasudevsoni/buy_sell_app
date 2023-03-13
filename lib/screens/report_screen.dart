@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../widgets/custom_button.dart';
@@ -151,7 +151,7 @@ class _ReportScreenState extends State<ReportScreen> {
                     Expanded(
                       child: CustomButton(
                         text: 'Report',
-                        icon: Ionicons.arrow_forward,
+                        icon: MdiIcons.arrowRight,
                         onPressed: () async {
                           services.reportAProblem(
                             text: reportTextController.text,
@@ -236,7 +236,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 width: 100,
                 child: reportImage == null
                     ? const Icon(
-                        Ionicons.cloud_upload,
+                        MdiIcons.upload,
                         color: lightBlackColor,
                       )
                     : ClipRRect(
@@ -248,7 +248,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               reportImage!,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(
-                                  Ionicons.alert_circle,
+                                  MdiIcons.alertDecagram,
                                   size: 20,
                                   color: redColor,
                                 );
@@ -266,7 +266,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   });
                                 },
                                 icon: const Icon(
-                                  Ionicons.close_circle_outline,
+                                  MdiIcons.closeCircleOutline,
                                   size: 15,
                                   color: whiteColor,
                                   shadows: [
@@ -286,7 +286,7 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             const Spacer(),
             CustomButton(
-              icon: Ionicons.arrow_forward,
+              icon: MdiIcons.arrowRight,
               text: 'Proceed',
               onPressed: () {
                 if (reportTextController.text.isEmpty || reportImage == null) {

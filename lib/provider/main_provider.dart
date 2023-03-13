@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-class MainProvider with ChangeNotifier {
-  int currentPageIndex = 0;
+class AppNavigationProvider with ChangeNotifier {
+  int _currentPageIndex = 0;
 
-  switchToPage(int index) {
-    currentPageIndex = index;
+  int get currentPageIndex => _currentPageIndex;
+
+  void switchToPage(int index) {
+    _currentPageIndex = index;
     notifyListeners();
   }
 }

@@ -8,7 +8,7 @@ import '../utils/utils.dart';
 import '../widgets/custom_loading_indicator.dart';
 
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+  const LoadingScreen({Key? key}) : super(key: key);
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();

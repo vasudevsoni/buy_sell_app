@@ -59,7 +59,7 @@ class CustomListTile extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   fontSize: 18,
                   color: blackColor,
                 ),

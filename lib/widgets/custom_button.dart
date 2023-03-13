@@ -50,7 +50,6 @@ class CustomButton extends StatelessWidget {
       child: AutoSizeText(
         text,
         maxLines: 2,
-        softWrap: true,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
         style: GoogleFonts.interTight(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
@@ -15,7 +15,7 @@ import '/auth/screens/email_register_screen.dart';
 import '/auth/screens/forgot_password_screen.dart';
 
 class EmailLoginScreen extends StatefulWidget {
-  const EmailLoginScreen({super.key});
+  const EmailLoginScreen({Key? key}) : super(key: key);
 
   @override
   State<EmailLoginScreen> createState() => _EmailLoginScreenState();
@@ -29,7 +29,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   bool isObscured = true;
   bool isLoading = false;
 
-  _validateEmail() async {
+  Future<void> _validateEmail() async {
     if (_loginformKey.currentState!.validate() && mounted) {
       setState(() {
         isLoading = true;
@@ -112,7 +112,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       hint: 'doejohn\$2325',
                       maxLength: 15,
                       textInputAction: TextInputAction.go,
-                      isObscured: isObscured ? true : false,
+                      isObscured: isObscured,
                       isEnabled: isLoading ? false : true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -133,11 +133,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              Ionicons.eye_off_outline,
+                              MdiIcons.eyeOff,
                               size: 30,
                             )
                           : const Icon(
-                              Ionicons.eye_outline,
+                              MdiIcons.eye,
                               size: 30,
                             ),
                     ),
@@ -168,7 +168,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                     )
                   : CustomButton(
                       text: 'Login',
-                      icon: Ionicons.log_in,
+                      icon: MdiIcons.login,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

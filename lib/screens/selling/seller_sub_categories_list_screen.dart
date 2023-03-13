@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../services/admob_services.dart';
 import '../../widgets/custom_loading_indicator.dart';
@@ -53,17 +53,22 @@ class _SellerSubCategoriesListScreenState
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
   @override
   void dispose() {
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 
@@ -122,7 +127,7 @@ class _SellerSubCategoriesListScreenState
               itemBuilder: (context, index) {
                 return CustomListTileNoImage(
                   text: data[index],
-                  trailingIcon: Ionicons.chevron_forward,
+                  trailingIcon: MdiIcons.chevronRight,
                   isEnabled: true,
                   onTap: () {
                     if (widget.doc['catName'] == 'Vehicles') {

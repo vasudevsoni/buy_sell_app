@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '/screens/product_details_screen.dart';
@@ -37,19 +37,18 @@ class _CustomProductCardState extends State<CustomProductCard> {
     super.initState();
   }
 
-  getFavDetails() async {
-    if (mounted) {
+  Future<void> getFavDetails() async {
+    if (!mounted) return;
+    setState(() {
+      isLoading = true;
+      fav = widget.data['favorites'];
+    });
+    if (fav.contains(services.user!.uid)) {
       setState(() {
-        isLoading = true;
-        fav = widget.data['favorites'];
+        isLiked = true;
+        isLoading = false;
       });
-      if (fav.contains(services.user!.uid)) {
-        setState(() {
-          isLiked = true;
-          isLoading = false;
-        });
-        return;
-      }
+    } else {
       setState(() {
         isLiked = false;
         isLoading = false;
@@ -73,13 +72,15 @@ class _CustomProductCardState extends State<CustomProductCard> {
                 splashFactory: InkRipple.splashFactory,
                 splashColor: fadedColor,
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return ProductDetailsScreen(
-                      productData: widget.data,
-                    );
-                  },
-                )),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ProductDetailsScreen(
+                        productData: widget.data,
+                      );
+                    },
+                  ),
+                ),
                 child: Ink(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -106,14 +107,14 @@ class _CustomProductCardState extends State<CustomProductCard> {
                             memCacheHeight: (size.height * 0.3).round(),
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                Ionicons.alert_circle,
+                                MdiIcons.alertDecagram,
                                 size: 30,
                                 color: redColor,
                               );
                             },
                             placeholder: (context, url) {
                               return const Icon(
-                                Ionicons.image,
+                                MdiIcons.imageFilterHdr,
                                 size: 30,
                                 color: lightBlackColor,
                               );
@@ -239,7 +240,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       );
                     },
                     child: Icon(
-                      isLiked ? Ionicons.heart : Ionicons.heart_outline,
+                      isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
                       size: 22,
                       color: isLiked ? redColor : lightBlackColor,
                     ),

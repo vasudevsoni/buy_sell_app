@@ -6,7 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/screens/email_verification_screen.dart';
@@ -16,10 +16,10 @@ import '/provider/main_provider.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '/provider/location_provider.dart';
 import '/utils/utils.dart';
+import 'chats/my_chats_screen.dart';
+import 'home_screen.dart';
 import 'my_favorites_screen.dart';
 import 'my_profile_screen.dart';
-import 'home_screen.dart';
-import 'chats/my_chats_screen.dart';
 import 'selling/seller_categories_list_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -181,67 +181,72 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final locationProv = Provider.of<LocationProvider>(context);
-    final mainProv = Provider.of<MainProvider>(context);
-    final int selectedIndex = mainProv.currentPageIndex;
+    return Consumer2<LocationProvider, AppNavigationProvider>(
+      builder: (context, locationProv, mainProv, child) {
+        final int selectedIndex = mainProv.currentPageIndex;
 
-    final pages = [
-      HomeScreen(
-        locationData: locationProv.locationData,
-      ),
-      const MyChatsScreen(),
-      const MyFavoritesScreen(),
-      const MyProfileScreen(),
-    ];
-
-    onItemTapped(int index) {
-      mainProv.switchToPage(index);
-    }
-
-    return Scaffold(
-      backgroundColor: whiteColor,
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: blueColor,
-        elevation: 0,
-        tooltip: 'List a product',
-        enableFeedback: true,
-        onPressed: !user!.emailVerified &&
-                user!.providerData[0].providerId == 'password'
-            ? () => Get.to(
-                  () => const EmailVerificationScreen(),
-                )
-            : onSellButtonClicked,
-        child: const Center(
-          child: Icon(
-            Icons.add_rounded,
-            size: 40,
+        final pages = [
+          HomeScreen(
+            locationData: locationProv.locationData,
           ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        onTap: onItemTapped,
-        gapLocation: GapLocation.center,
-        activeIndex: selectedIndex,
-        icons: const [
-          Ionicons.home_outline,
-          Ionicons.chatbubbles_outline,
-          Ionicons.heart_outline,
-          Ionicons.person_outline,
-        ],
-        backgroundColor: greyColor,
-        elevation: 0,
-        height: 55,
-        notchSmoothness: NotchSmoothness.defaultEdge,
-        activeColor: blackColor,
-        inactiveColor: lightBlackColor,
-        iconSize: 27,
-        splashColor: blueColor,
-      ),
+          const MyChatsScreen(),
+          const MyFavoritesScreen(),
+          const MyProfileScreen(),
+        ];
+
+        onItemTapped(int index) {
+          mainProv.switchToPage(index);
+        }
+
+        return Scaffold(
+          backgroundColor: whiteColor,
+          body: IndexedStack(
+            index: selectedIndex,
+            children: pages,
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: blueColor,
+            elevation: 0,
+            tooltip: 'List a product',
+            enableFeedback: true,
+            onPressed: () {
+              if (!user!.emailVerified &&
+                  user!.providerData[0].providerId == 'password') {
+                Get.to(() => const EmailVerificationScreen());
+              } else {
+                onSellButtonClicked();
+              }
+            },
+            child: const Center(
+              child: Icon(
+                MdiIcons.plus,
+                size: 35,
+              ),
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: AnimatedBottomNavigationBar(
+            onTap: onItemTapped,
+            gapLocation: GapLocation.center,
+            activeIndex: selectedIndex,
+            icons: const [
+              MdiIcons.homeOutline,
+              MdiIcons.chatOutline,
+              MdiIcons.heartOutline,
+              MdiIcons.accountCircleOutline,
+            ],
+            backgroundColor: greyColor,
+            elevation: 5,
+            height: 55,
+            notchSmoothness: NotchSmoothness.defaultEdge,
+            activeColor: blackColor,
+            inactiveColor: lightBlackColor,
+            iconSize: 27,
+            splashColor: blueColor,
+          ),
+        );
+      },
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/svg_picture.dart';
@@ -225,7 +226,8 @@ class _LandingScreenState extends State<LandingScreen> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
-                            fontSize: 23,
+                            fontSize: 24,
+                            color: blueColor,
                           ),
                         ),
                         Text(
@@ -236,7 +238,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
-                            color: lightBlackColor,
+                            color: blackColor,
                             fontSize: 15,
                           ),
                         ),
@@ -278,7 +280,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: currentImage == index ? blueColor : greyColor,
+                    color: currentImage == index ? blackColor : greyColor,
                   ),
                 );
               }).toList(),
@@ -323,7 +325,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 15, right: 5),
                           child: LoadingButton(
-                            bgColor: greenColor,
+                            bgColor: blueColor,
                           ),
                         ),
                       )
@@ -333,8 +335,8 @@ class _LandingScreenState extends State<LandingScreen> {
                           child: CustomButton(
                             text: 'Google',
                             icon: Ionicons.logo_google,
-                            bgColor: greenColor,
-                            borderColor: greenColor,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
                             textIconColor: whiteColor,
                             onPressed: () async {
                               if (mounted) {
@@ -343,7 +345,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 });
                               }
                               User? user =
-                                  await GoogleAuthentication.signinWithGoogle();
+                                  await GoogleAuthentication.signInWithGoogle();
                               //login successful, add user to db and proceed
                               if (user != null) {
                                 final SocialAuthService auth =
@@ -372,7 +374,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 15, left: 5),
                           child: LoadingButton(
-                            bgColor: blackColor,
+                            bgColor: whiteColor,
                           ),
                         ),
                       )
@@ -381,10 +383,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           padding: const EdgeInsets.only(right: 15, left: 5),
                           child: CustomButton(
                             text: 'Email',
-                            icon: Ionicons.mail,
-                            bgColor: blackColor,
+                            icon: MdiIcons.email,
+                            bgColor: whiteColor,
                             borderColor: blackColor,
-                            textIconColor: whiteColor,
+                            textIconColor: blackColor,
                             onPressed: () => Get.to(
                               () => const EmailLoginScreen(),
                             ),
@@ -394,17 +396,15 @@ class _LandingScreenState extends State<LandingScreen> {
               ],
             ),
             const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              height: 10,
+              height: 40,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: Text.rich(
                 TextSpan(
                   children: [
-                    const TextSpan(text: 'By signing up, you agree to our '),
+                    const TextSpan(
+                        text: 'By signing up, you agree to BechDe\'s '),
                     TextSpan(
                       text: 'Terms of Service',
                       recognizer: TapGestureRecognizer()
@@ -435,6 +435,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
+                    const TextSpan(text: '.'),
                   ],
                   style: GoogleFonts.interTight(
                     fontSize: 11,

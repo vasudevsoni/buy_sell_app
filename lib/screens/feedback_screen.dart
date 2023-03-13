@@ -3,7 +3,7 @@ import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../widgets/custom_button.dart';
 import '../widgets/custom_button_without_icon.dart';
@@ -176,7 +176,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
             const Spacer(),
             CustomButton(
-              icon: Ionicons.arrow_forward,
+              icon: MdiIcons.arrowRight,
               text: 'Proceed',
               isFullWidth: true,
               onPressed: () {

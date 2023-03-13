@@ -1,9 +1,9 @@
 import 'package:buy_sell_app/services/cloudinary_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:cloudinary_dart/cloudinary.dart';
-import 'package:cloudinary_flutter/cloudinary_context.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,36 +30,51 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 // @pragma('vm:entry-point')
-// Future<void> _firebaseMessagingBackgroundHandler(_) async {
-//   await Firebase.initializeApp();
-// }
+// Future<void> _firebaseMessagingBackgroundHandler(_) async {}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-  CloudinaryContext.cloudinary = Cloudinary.fromCloudName(
+
+  // Initialize Cloudinary
+  Cloudinary.fromCloudName(
     cloudName: CloudinaryServices.cloudName,
     apiKey: CloudinaryServices.apiKey,
   );
+
+  // Initialize Google Mobile Ads
   await MobileAds.instance.initialize();
+
+  // Set preferred device orientation
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Initialize Flutter Local Notifications Plugin
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+
+  // Set foreground notification presentation options
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MainProvider(),
+          create: (_) => AppNavigationProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => SellerFormProvider(),
@@ -71,10 +86,6 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
 }
 
 class MyApp extends StatefulWidget {
@@ -87,6 +98,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    super.initState();
+    registerMessaging();
+  }
+
+  void registerMessaging() async {
+    await compute(_registerMessaging, null);
+  }
+
+  static Future<void> _registerMessaging(void _) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -110,7 +130,6 @@ class _MyAppState extends State<MyApp> {
         );
       }
     });
-    super.initState();
   }
 
   @override

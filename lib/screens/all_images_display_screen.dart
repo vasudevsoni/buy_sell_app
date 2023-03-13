@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -44,17 +44,22 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
   @override
   void dispose() {
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 
@@ -106,12 +111,13 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
-          child: ListView.separated(
-            separatorBuilder: (context, index) {
-              return const SizedBox(
-                height: 6,
-              );
-            },
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              childAspectRatio: 1,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemCount: widget.images.length,
@@ -124,7 +130,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                     onTap: () => showDialog(
                       context: context,
                       builder: (_) {
-                        PageController pageController =
+                        final pageController =
                             PageController(initialPage: index);
                         return Dismissible(
                           key: UniqueKey(),
@@ -155,7 +161,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(
-                                          Ionicons.alert_circle,
+                                          MdiIcons.alertDecagram,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -179,7 +185,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                     splashColor: blueColor,
                                     splashRadius: 30,
                                     icon: const Icon(
-                                      Ionicons.close_circle_outline,
+                                      MdiIcons.closeCircleOutline,
                                       size: 30,
                                       color: whiteColor,
                                       shadows: [
@@ -211,7 +217,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                           memCacheHeight: (size.height * 0.25).round(),
                           errorWidget: (context, url, error) {
                             return const Icon(
-                              Ionicons.alert_circle,
+                              MdiIcons.alertDecagram,
                               size: 30,
                               color: redColor,
                             );
@@ -227,13 +233,13 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                   ),
                   Positioned(
                     top: 10,
-                    left: 15,
+                    left: 10,
                     child: Text(
-                      '${index + 1}',
+                      index == 0 ? 'Cover' : '${index + 1}',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w900,
-                        fontSize: 30,
+                        fontSize: 27,
                         shadows: [
                           const Shadow(
                             offset: Offset(0, 2),

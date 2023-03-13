@@ -43,7 +43,7 @@ class FirebaseServices {
     return doc;
   }
 
-  updateUserDetails(
+  Future<void> updateUserDetails(
     id,
     Map<String, dynamic> data,
   ) async {
@@ -57,7 +57,7 @@ class FirebaseServices {
     }
   }
 
-  createChatRoomInFirebase({chatData}) async {
+  Future<void> createChatRoomInFirebase({chatData}) async {
     try {
       await chats.doc(chatData['chatRoomId']).set(chatData);
     } on FirebaseException {
@@ -68,7 +68,9 @@ class FirebaseServices {
     }
   }
 
-  sendChat({chatRoomId, message}) async {
+  Future<void> sendChat(
+      {required String chatRoomId,
+      required Map<String, dynamic> message}) async {
     try {
       await chats.doc(chatRoomId).collection('messages').add(message);
       await chats.doc(chatRoomId).update({
@@ -84,27 +86,39 @@ class FirebaseServices {
     }
   }
 
-  updateFavorite({isLiked, productId}) async {
+  Future<void> updateFavorite(
+      {required bool isLiked, required String productId}) async {
     try {
-      if (!isLiked) {
-        await listings.doc(productId).update({
-          'favorites': FieldValue.arrayRemove([user!.uid])
-        }).then((value) {
-          showSnackBar(
-            content: 'Removed from favorites',
-            color: redColor,
-          );
-        });
-        return;
-      }
-      await listings.doc(productId).update({
-        'favorites': FieldValue.arrayUnion([user!.uid])
-      }).then((value) {
-        showSnackBar(
-          content: 'Added to favorites',
-          color: blueColor,
-        );
-      });
+      final updateData = isLiked
+          ? {
+              'favorites': FieldValue.arrayUnion([user!.uid])
+            }
+          : {
+              'favorites': FieldValue.arrayRemove([user!.uid])
+            };
+      await listings.doc(productId).update(updateData);
+      final message = isLiked ? 'Added to favorites' : 'Removed from favorites';
+      final color = isLiked ? blueColor : redColor;
+      showSnackBar(content: message, color: color);
+      // if (!isLiked) {
+      //   await listings.doc(productId).update({
+      //     'favorites': FieldValue.arrayRemove([user!.uid])
+      //   }).then((value) {
+      //     showSnackBar(
+      //       content: 'Removed from favorites',
+      //       color: redColor,
+      //     );
+      //   });
+      //   return;
+      // }
+      // await listings.doc(productId).update({
+      //   'favorites': FieldValue.arrayUnion([user!.uid])
+      // }).then((value) {
+      //   showSnackBar(
+      //     content: 'Added to favorites',
+      //     color: blueColor,
+      //   );
+      // });
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -138,17 +152,16 @@ class FirebaseServices {
   //   }
   // }
 
-  markAsSold({productId}) async {
+  Future<void> markAsSold({productId}) async {
     try {
       await listings.doc(productId).update({
         'isActive': false,
         'isSold': true,
-      }).then((value) {
-        showSnackBar(
-          content: 'The product has been marked as sold',
-          color: blueColor,
-        );
       });
+      showSnackBar(
+        content: 'The product has been marked as sold',
+        color: blueColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -157,16 +170,15 @@ class FirebaseServices {
     }
   }
 
-  promoteListingToTop({listingId}) async {
+  Future<void> promoteListingToTop({listingId}) async {
     try {
       await listings.doc(listingId).update({
         'postedAt': DateTime.now().millisecondsSinceEpoch,
-      }).then((value) {
-        showSnackBar(
-          content: 'Listing succesfully boosted to top',
-          color: blueColor,
-        );
       });
+      showSnackBar(
+        content: 'Listing succesfully boosted to top',
+        color: blueColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -175,14 +187,13 @@ class FirebaseServices {
     }
   }
 
-  deleteChat({chatRoomId}) async {
+  Future<void> deleteChat({chatRoomId}) async {
     try {
-      await chats.doc(chatRoomId).delete().then((value) {
-        showSnackBar(
-          content: 'Chat deleted successfully',
-          color: redColor,
-        );
-      });
+      await chats.doc(chatRoomId).delete();
+      showSnackBar(
+        content: 'Chat deleted successfully',
+        color: redColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -210,7 +221,7 @@ class FirebaseServices {
   //   }
   // }
 
-  deleteListing({listingId}) async {
+  Future<void> deleteListing({listingId}) async {
     List<String> images = [];
     List<dynamic> chatsToDelete = [];
     try {
@@ -236,13 +247,12 @@ class FirebaseServices {
       for (var chatRoomId in chatsToDelete) {
         await deleteChat(chatRoomId: chatRoomId.toString());
       }
-      await listings.doc(listingId.toString()).delete().then((value) {
-        showSnackBar(
-          content: 'Product has been deleted',
-          color: redColor,
-        );
-      });
-    } on FirebaseAuthException {
+      await listings.doc(listingId.toString()).delete();
+      showSnackBar(
+        content: 'Product has been deleted',
+        color: redColor,
+      );
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -250,8 +260,8 @@ class FirebaseServices {
     }
   }
 
-  submitFeedback({
-    text,
+  Future<void> submitFeedback({
+    required String text,
   }) async {
     try {
       final id = uuid.v4();
@@ -273,8 +283,8 @@ class FirebaseServices {
     }
   }
 
-  reportAProblem({
-    text,
+  Future<void> reportAProblem({
+    required String text,
     screenshot,
   }) async {
     final id = uuid.v4();
@@ -316,7 +326,8 @@ class FirebaseServices {
     }
   }
 
-  reportItem({listingId, message}) async {
+  Future<void> reportItem(
+      {required String listingId, required String message}) async {
     final id = uuid.v4();
     try {
       await reports.doc(id).set({
@@ -339,7 +350,8 @@ class FirebaseServices {
     }
   }
 
-  reportUser({userId, message}) async {
+  Future<void> reportUser(
+      {required String userId, required String message}) async {
     final id = uuid.v4();
     try {
       await reports.doc(id).set({
@@ -363,12 +375,24 @@ class FirebaseServices {
   }
 
   Future<File> compressImage(File file) async {
-    var result = await FlutterNativeImage.compressImage(file.path,
-        quality: file.lengthSync() <= 1000000
-            ? 75
-            : file.lengthSync() > 1000000 && file.lengthSync() <= 3000000
-                ? 40
-                : 15);
+    // Define quality constants
+    const int lowQuality = 15;
+    const int mediumQuality = 40;
+    const int highQuality = 75;
+
+    // Determine the quality based on the file size
+    int fileSize = file.lengthSync();
+    int quality = fileSize <= 1000000
+        ? highQuality
+        : fileSize > 1000000 && fileSize <= 3000000
+            ? mediumQuality
+            : lowQuality;
+
+    // Compress the image using FlutterNativeImage
+    var result =
+        await FlutterNativeImage.compressImage(file.path, quality: quality);
+
+    // Return the compressed file
     return result;
   }
 

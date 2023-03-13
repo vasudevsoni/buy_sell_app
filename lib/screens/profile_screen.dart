@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -63,65 +64,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  getUserData() async {
-    await services.getUserData(widget.userId).then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['name'] == null) {
-            name = 'BechDe User';
-          } else {
-            name = value['name'];
-          }
-          if (value['bio'] == null) {
-            bio = '';
-          } else {
-            bio = value['bio'];
-          }
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-          if (value['location'] == null) {
-            address == '';
-          } else {
-            address =
-                '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
-          }
-          if (value['instagramLink'] == null) {
-            instagramLink = '';
-          } else {
-            instagramLink = value['instagramLink'];
-          }
-          if (value['facebookLink'] == null) {
-            facebookLink = '';
-          } else {
-            facebookLink = value['facebookLink'];
-          }
-          if (value['websiteLink'] == null) {
-            websiteLink = '';
-          } else {
-            websiteLink = value['websiteLink'];
-          }
-          // if (value['followers'].contains(user!.uid)) {
-          //   isFollowing = true;
-          // } else {
-          //   isFollowing = false;
-          // }
-          // if (value['followers'].isEmpty) {
-          //   followers = 0;
-          // } else {
-          //   followers = value['followers'].length;
-          // }
-          // if (value['following'].isEmpty) {
-          //   following = 0;
-          // } else {
-          //   following = value['following'].length;
-          // }
-          sellerUid = value['uid'];
-          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-        });
-      }
+  Future<void> getUserData() async {
+    final value = await services.getUserData(widget.userId);
+    if (!mounted) return;
+
+    setState(() {
+      name = value['name'] ?? 'BechDe User';
+      bio = value['bio'] ?? '';
+      profileImage = value['profileImage'] ?? '';
+      address = value['location'] != null
+          ? '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}'
+          : '';
+      instagramLink = value['instagramLink'] ?? '';
+      facebookLink = value['facebookLink'] ?? '';
+      websiteLink = value['websiteLink'] ?? '';
+      sellerUid = value['uid'];
+      dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      // isFollowing = value['followers'].contains(user!.uid);
+      // followers = value['followers'].isEmpty ? 0 : value['followers'].length;
+      // following = value['following'].isEmpty ? 0 : value['following'].length;
     });
   }
 
@@ -139,11 +100,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
@@ -227,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Expanded(
                       child: CustomButton(
-                        icon: Ionicons.arrow_forward,
+                        icon: MdiIcons.arrowRight,
                         text: 'Report',
                         onPressed: () {
                           if (reportTextController.text.isEmpty) {
@@ -293,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: Ionicons.shield_half,
+                  icon: MdiIcons.shieldAccount,
                   text: 'Report User',
                   onPressed: () {
                     Get.back();
@@ -315,7 +279,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     reportTextController.dispose();
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 
@@ -335,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              Ionicons.ellipsis_horizontal,
+              MdiIcons.dotsVertical,
               color: blackColor,
               size: 25,
             ),
@@ -396,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: blueColor,
                       ),
                       child: const Icon(
-                        Ionicons.person,
+                        MdiIcons.account,
                         color: whiteColor,
                         size: 40,
                       ),
@@ -438,7 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return const Icon(
-                                            Ionicons.alert_circle,
+                                            MdiIcons.alertDecagram,
                                             size: 20,
                                             color: redColor,
                                           );
@@ -459,7 +425,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       splashColor: blueColor,
                                       splashRadius: 30,
                                       icon: const Icon(
-                                        Ionicons.close_circle_outline,
+                                        MdiIcons.closeCircleOutline,
                                         size: 30,
                                         color: whiteColor,
                                         shadows: [
@@ -496,7 +462,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             memCacheWidth: (size.width * 0.25).round(),
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                Ionicons.alert_circle,
+                                MdiIcons.alertDecagram,
                                 size: 30,
                                 color: redColor,
                               );
@@ -579,7 +545,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         if (websiteLink != '')
                           ExternalLinkIcon(
-                            icon: Ionicons.link,
+                            icon: MdiIcons.linkVariant,
                             iconColor: blueColor,
                             link: websiteLink,
                           ),

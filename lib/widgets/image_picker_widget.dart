@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -54,8 +54,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               color: redColor, content: 'Maximum image size allowed is 2MB');
         } else {
           provider.addImageToPaths(compressedImage);
-          provider.imagesCount += 1;
-          setState(() {});
         }
       }
     }
@@ -76,8 +74,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               color: redColor, content: 'Maximum image size allowed is 2MB');
         } else {
           await provider.addImageToPaths(compressedImage);
-          provider.imagesCount += pickedFiles.length;
-          setState(() {});
         }
       }
     }
@@ -85,10 +81,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     void requestCameraPermission() async {
       final status = await Permission.camera.status;
       if (status.isGranted) {
-        getImageFromCamera();
+        await getImageFromCamera();
       } else if (status.isDenied) {
-        if (await Permission.camera.request().isGranted) {
-          getImageFromCamera();
+        final result = await Permission.camera.request();
+        if (result.isGranted) {
+          await getImageFromCamera();
         } else {
           showSnackBar(
             content: 'Camera permission is required to take pictures',
@@ -107,10 +104,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     void requestGalleryPermission() async {
       final status = await Permission.storage.status;
       if (status.isGranted) {
-        getImageFromGallery();
-      } else if (status.isDenied) {
-        if (await Permission.storage.request().isGranted) {
-          getImageFromGallery();
+        await getImageFromGallery();
+      } else if (status.isDenied || status.isLimited) {
+        final result = await Permission.storage.request();
+        if (result.isGranted) {
+          await getImageFromGallery();
         } else {
           showSnackBar(
             content: 'Storage permission is required to upload pictures',
@@ -202,7 +200,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      Ionicons.alert_circle,
+                                                      MdiIcons.alertDecagram,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -211,7 +209,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                               },
                                               loadingBuilder: (context, event) {
                                                 return const Icon(
-                                                  Ionicons.image,
+                                                  MdiIcons.imageFilterHdr,
                                                   size: 20,
                                                   color: lightBlackColor,
                                                 );
@@ -226,7 +224,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   Get.back();
                                                 },
                                                 icon: const Icon(
-                                                  Ionicons.close_circle_outline,
+                                                  MdiIcons.closeCircle,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -255,7 +253,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                             .round(),
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        Ionicons.alert_circle,
+                                        MdiIcons.alertDecagram,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -296,12 +294,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   message: 'Delete image',
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
-                                    onTap: () => widget.isButtonDisabled
-                                        ? null
-                                        : setState(() {
-                                            provider.imagePaths.removeAt(index);
-                                            provider.imagesCount -= 1;
-                                          }),
+                                    onTap: () => setState(() {
+                                      provider.removeImageFromPaths(index);
+                                    }),
                                     child: Container(
                                       padding: const EdgeInsets.all(2),
                                       decoration: const BoxDecoration(
@@ -312,7 +307,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                         ),
                                       ),
                                       child: const Icon(
-                                        Ionicons.close,
+                                        MdiIcons.close,
                                         size: 18,
                                         color: whiteColor,
                                       ),
@@ -370,7 +365,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   onPressed: provider.imagesCount >= 12
                       ? showMaximumError
                       : requestCameraPermission,
-                  icon: Ionicons.camera,
+                  icon: MdiIcons.camera,
                   bgColor: whiteColor,
                   borderColor: blackColor,
                   textIconColor: blackColor,
@@ -386,7 +381,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   onPressed: provider.imagesCount >= 12
                       ? showMaximumError
                       : requestGalleryPermission,
-                  icon: Ionicons.images,
+                  icon: MdiIcons.imagePlus,
                   bgColor: whiteColor,
                   borderColor: blackColor,
                   textIconColor: blackColor,

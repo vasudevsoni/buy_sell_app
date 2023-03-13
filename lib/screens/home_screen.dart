@@ -6,8 +6,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../auth/screens/location_screen.dart';
 import '../widgets/custom_button_without_icon.dart';
@@ -35,7 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabBarController;
-  final FirebaseServices _services = FirebaseServices();
+  late FirebaseServices _services;
   final User? user = FirebaseAuth.instance.currentUser;
   String area = '';
   String city = '';
@@ -50,33 +50,35 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       vsync: this,
     );
-    _services.getCurrentUserData().then((value) {
-      if (value['location'] == null) {
-        getEmptyLocationUI();
-        return;
-      }
-      getAddressToUI();
-    });
+    _services = FirebaseServices();
+    _getCurrentUserData();
     super.initState();
   }
 
-  getAddressToUI() async {
-    await _services.getCurrentUserData().then((value) {
-      if (mounted) {
-        setState(() {
-          area = value['location']['area'];
-          city = value['location']['city'];
-          state = value['location']['state'];
-        });
-      }
-    });
+  void _getCurrentUserData() async {
+    final value = await _services.getCurrentUserData();
+    if (value['location'] == null) {
+      _getEmptyLocationUI();
+      return;
+    }
+    _getAddressToUI(value);
   }
 
-  getEmptyLocationUI() async {
+  void _getAddressToUI(DocumentSnapshot<Object?> value) {
+    if (mounted) {
+      setState(() {
+        area = value['location']['area'];
+        city = value['location']['city'];
+        state = value['location']['state'];
+      });
+    }
+  }
+
+  _getEmptyLocationUI() async {
     if (mounted) {
       setState(() {
         isLocationEmpty = true;
-        tabBarController.animateTo(1);
+        tabBarController.index = 1;
       });
     }
   }
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen>
       //   hoverElevation: 0,
       //   disabledElevation: 0,
       //   highlightElevation: 0,
-      //   child: Icon(Ionicons.filter),
+      //   child: Icon(Mdicons.filterVariant),
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
@@ -189,9 +191,9 @@ class _HomeScreenState extends State<HomeScreen>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(
-              Ionicons.location,
+              MdiIcons.mapMarkerRadius,
               size: 25,
-              color: blueColor,
+              color: blackColor,
             ),
             const SizedBox(
               width: 5,
@@ -228,12 +230,9 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 2,
-                        ),
                         const Icon(
-                          Ionicons.caret_down,
-                          size: 14,
+                          MdiIcons.menuDown,
+                          size: 20,
                           color: blackColor,
                         ),
                       ],
@@ -259,10 +258,24 @@ class _HomeScreenState extends State<HomeScreen>
               onTap: () => Get.to(
                 () => const SearchFieldScreen(),
               ),
-              child: const Icon(
-                Ionicons.search,
-                color: blackColor,
-                size: 25,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    MdiIcons.magnify,
+                    color: blueColor,
+                    size: 25,
+                  ),
+                  Text(
+                    'Search',
+                    style: TextStyle(
+                      color: lightBlackColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
             )
           ],
@@ -390,7 +403,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                         width: 3,
                       ),
                       const Icon(
-                        Ionicons.arrow_forward,
+                        MdiIcons.arrowRight,
                         color: blueColor,
                         size: 12,
                       ),
@@ -401,6 +414,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                   ),
                   side: const BorderSide(
                     color: blueColor,
+                    width: 0.5,
                   ),
                   backgroundColor: whiteColor,
                   onPressed: () => widget.tabBarController.animateTo(2),
@@ -487,7 +501,7 @@ class CategoriesListView extends StatelessWidget {
                 width: 6,
               );
             },
-            itemCount: 5,
+            itemCount: snapshot.data!.docs.length,
             physics: const ClampingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 15),
             scrollDirection: Axis.horizontal,
@@ -524,7 +538,7 @@ class CategoriesListView extends StatelessWidget {
                             filterQuality: FilterQuality.high,
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                Ionicons.alert_circle,
+                                MdiIcons.alertDecagram,
                                 size: 30,
                                 color: redColor,
                               );
@@ -634,7 +648,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                         width: 3,
                       ),
                       const Icon(
-                        Ionicons.arrow_forward,
+                        MdiIcons.arrowRight,
                         color: blueColor,
                         size: 12,
                       ),
@@ -645,6 +659,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                   ),
                   side: const BorderSide(
                     color: blueColor,
+                    width: 0.5,
                   ),
                   backgroundColor: whiteColor,
                   onPressed: () => widget.tabBarController.animateTo(2),
@@ -830,7 +845,7 @@ class _ProductsListState extends State<ProductsList> {
                   onPressed: () {
                     widget.tabController.animateTo(1);
                   },
-                  icon: Ionicons.earth,
+                  icon: MdiIcons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,

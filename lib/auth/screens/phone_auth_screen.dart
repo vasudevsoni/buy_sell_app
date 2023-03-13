@@ -1,7 +1,6 @@
 // import 'package:buy_sell_app/widgets/text_field_label.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
-// import 'package:ionicons/ionicons.dart';
 
 // import '../../widgets/loading_button.dart';
 // import '/utils/utils.dart';
@@ -201,7 +200,7 @@
 //                   ? LoadingButton()
 //                   : CustomButton(
 //                       text: 'Proceed',
-//                       icon: Ionicons.arrow_forward,
+//                       icon: MdiIcons.arrowRight,
 //                       bgColor: blueColor,
 //                       borderColor: blueColor,
 //                       textIconColor: whiteColor,

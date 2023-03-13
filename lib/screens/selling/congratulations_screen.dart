@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
@@ -43,17 +43,22 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
           setState(() {
             _isAdLoaded = false;
           });
-          ad.dispose();
+          if (mounted) {
+            ad.dispose();
+          }
         },
       ),
       request: const AdRequest(),
     );
+    // Preload the ad
     _bannerAd!.load();
   }
 
   @override
   void dispose() {
-    _bannerAd!.dispose();
+    if (_bannerAd != null && mounted) {
+      _bannerAd!.dispose();
+    }
     super.dispose();
   }
 
@@ -139,7 +144,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: Ionicons.home,
+                  icon: MdiIcons.home,
                   isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
@@ -149,7 +154,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   text: 'Rate our App',
                   onPressed: () => inAppReview.openStoreListing(),
                   isFullWidth: true,
-                  icon: Ionicons.star,
+                  icon: MdiIcons.star,
                   bgColor: greenColor,
                   borderColor: greenColor,
                   textIconColor: whiteColor,
@@ -159,7 +164,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   onPressed: () => Share.share(
                       'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
                   isFullWidth: true,
-                  icon: Ionicons.share_social,
+                  icon: MdiIcons.shareVariant,
                   bgColor: blackColor,
                   borderColor: blackColor,
                   textIconColor: whiteColor,

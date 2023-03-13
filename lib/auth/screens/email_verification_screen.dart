@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '/screens/main_screen.dart';
 import '/utils/utils.dart';
@@ -24,22 +24,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   void initState() {
-    isEmailVerified = user!.emailVerified;
-    if (!isEmailVerified) {
-      sendVerificationEmail();
-      timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-        checkEmailVerified();
-      });
-      return;
-    }
-    showSnackBar(
-      content: 'Email has been verified',
-      color: redColor,
-    );
     super.initState();
+    isEmailVerified = user!.emailVerified;
   }
 
-  Future checkEmailVerified() async {
+  Future<void> checkEmailVerified() async {
     await user!.reload();
     user = FirebaseAuth.instance.currentUser;
     if (mounted) {
@@ -65,9 +54,17 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         content: 'Verification email sent successfully',
         color: blueColor,
       );
+      timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        checkEmailVerified();
+      });
     } on FirebaseAuthException catch (_) {
       showSnackBar(
         content: 'Unable to send verification email. Please try again',
+        color: redColor,
+      );
+    } catch (_) {
+      showSnackBar(
+        content: 'Something went wrong. Please try again',
         color: redColor,
       );
     }
@@ -75,7 +72,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   void dispose() {
-    timer!.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -105,7 +102,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Container(
               padding: const EdgeInsets.only(left: 15, top: 15),
               child: const Icon(
-                Ionicons.shield_checkmark,
+                MdiIcons.shieldCheck,
                 color: blueColor,
                 size: 60,
               ),

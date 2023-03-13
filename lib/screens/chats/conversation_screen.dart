@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
@@ -262,7 +262,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     Expanded(
                       child: CustomButton(
-                        icon: Ionicons.arrow_forward,
+                        icon: MdiIcons.arrowRight,
                         text: 'Send Offer',
                         onPressed: () {
                           if (offerPriceController.text.isEmpty) {
@@ -433,7 +433,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             onTap: showDeleteDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              Ionicons.trash_outline,
+              MdiIcons.delete,
               color: redColor,
               size: 25,
             ),
@@ -492,14 +492,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   memCacheHeight: (size.height * 0.15).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      Ionicons.alert_circle,
+                                      MdiIcons.alertDecagram,
                                       size: 15,
                                       color: redColor,
                                     );
                                   },
                                   placeholder: (context, url) {
                                     return const Icon(
-                                      Ionicons.image,
+                                      MdiIcons.imageFilterHdr,
                                       size: 15,
                                       color: lightBlackColor,
                                     );
@@ -869,6 +869,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ),
                         ),
                         const SizedBox(
+                          width: 5,
+                        ),
+                        ActionChip(
+                          pressElevation: 5,
+                          label: const Text('Let\'s meet'),
+                          backgroundColor: greyColor,
+                          labelStyle: GoogleFonts.interTight(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => sendMessage('Let\'s meet'),
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        const SizedBox(
                           width: 15,
                         ),
                       ],
@@ -908,7 +925,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 controller: chatMessageController,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.send,
-                                hint: 'Write something',
+                                hint: 'Chat here...',
                                 maxLength: 500,
                               ),
                             ),
@@ -924,7 +941,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   }
                                 },
                                 child: const Icon(
-                                  Ionicons.send,
+                                  MdiIcons.send,
                                   size: 25,
                                   color: blueColor,
                                 ),

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'package:provider/provider.dart';
 
@@ -29,26 +29,25 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
   final FirebaseServices _services = FirebaseServices();
   final User? user = FirebaseAuth.instance.currentUser;
 
-  onSellButtonClicked() {
-    _services.getCurrentUserData().then((value) {
-      if (value['location'] != null) {
-        Get.to(
-          () => const SellerCategoriesListScreen(),
-        );
-        return;
-      }
+  void onSellButtonClicked() async {
+    final userData = await _services.getCurrentUserData();
+    if (userData['location'] != null) {
+      Get.to(
+        () => const SellerCategoriesListScreen(),
+      );
+    } else {
       Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
       showSnackBar(
         content: 'Please set your location to sell products',
         color: redColor,
       );
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final mainProv = Provider.of<MainProvider>(context, listen: false);
+    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
 
     return DefaultTabController(
       initialIndex: 0,
@@ -478,52 +477,29 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   void initState() {
-    getProductDetails();
-    getSellerDetails();
-    getBuyerDetails();
+    fetchData();
     super.initState();
   }
 
-  getProductDetails() async {
-    await _services
-        .getProductDetails(widget.chatData['product']['productId'])
-        .then((value) {
-      if (mounted) {
-        setState(() {
-          prodId = value.id;
-          prodTitle = value['title'];
-          isActive = value['isActive'];
-          productImage = value['images'][0];
-        });
-      }
-    });
-  }
+  fetchData() async {
+    final product = await _services
+        .getProductDetails(widget.chatData['product']['productId']);
+    final seller = await _services.getUserData(widget.chatData['users'][0]);
+    final buyer = await _services.getUserData(widget.chatData['users'][1]);
 
-  getSellerDetails() async {
-    await _services.getUserData(widget.chatData['users'][0]).then((value) {
-      if (mounted) {
-        setState(() {
-          value['profileImage'] == null
-              ? sellerProfileImage = ''
-              : sellerProfileImage = value['profileImage'];
-          sellerUid = value['uid'];
-          value['name'] == null ? sellerName = '' : sellerName = value['name'];
-        });
-      }
-    });
-  }
-
-  getBuyerDetails() async {
-    await _services.getUserData(widget.chatData['users'][1]).then((value) {
-      if (mounted) {
-        setState(() {
-          value['name'] == null ? buyerName = '' : buyerName = value['name'];
-          value['profileImage'] == null
-              ? buyerProfileImage = ''
-              : buyerProfileImage = value['profileImage'];
-        });
-      }
-    });
+    if (mounted) {
+      setState(() {
+        prodId = product.id;
+        prodTitle = product['title'];
+        isActive = product['isActive'];
+        productImage = product['images'][0];
+        sellerProfileImage = seller['profileImage'] ?? '';
+        sellerUid = seller['uid'];
+        sellerName = seller['name'] ?? '';
+        buyerName = buyer['name'] ?? '';
+        buyerProfileImage = buyer['profileImage'] ?? '';
+      });
+    }
   }
 
   @override
@@ -561,7 +537,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  Ionicons.person,
+                                  MdiIcons.account,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -577,14 +553,14 @@ class _ChatCardState extends State<ChatCard> {
                                   memCacheWidth: (size.width * 0.12).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      Ionicons.alert_circle,
+                                      MdiIcons.alertDecagram,
                                       size: 20,
                                       color: redColor,
                                     );
                                   },
                                   placeholder: (context, url) {
                                     return const Icon(
-                                      Ionicons.image,
+                                      MdiIcons.imageFilterHdr,
                                       size: 20,
                                       color: lightBlackColor,
                                     );
@@ -600,7 +576,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  Ionicons.person,
+                                  MdiIcons.account,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -616,14 +592,14 @@ class _ChatCardState extends State<ChatCard> {
                                   memCacheWidth: (size.width * 0.12).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      Ionicons.alert_circle,
+                                      MdiIcons.alertDecagram,
                                       size: 20,
                                       color: redColor,
                                     );
                                   },
                                   placeholder: (context, url) {
                                     return const Icon(
-                                      Ionicons.image,
+                                      MdiIcons.imageFilterHdr,
                                       size: 20,
                                       color: lightBlackColor,
                                     );
@@ -632,13 +608,84 @@ class _ChatCardState extends State<ChatCard> {
                               ),
                   ),
                   Expanded(
-                    child: Container(
+                    child: Padding(
                       padding: const EdgeInsets.only(
                         left: 15,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: greyColor,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.12,
+                                  height: size.width * 0.12,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(0),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(0),
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: productImage,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                      memCacheHeight:
+                                          (size.width * 0.12).round(),
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(
+                                          MdiIcons.alertDecagram,
+                                          size: 20,
+                                          color: redColor,
+                                        );
+                                      },
+                                      placeholder: (context, url) {
+                                        return const Icon(
+                                          MdiIcons.imageFilterHdr,
+                                          size: 20,
+                                          color: lightBlackColor,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Text(
+                                      prodTitle,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           widget.chatData['users'][0] == _services.user!.uid
                               ? RichText(
                                   text: TextSpan(
@@ -708,66 +755,6 @@ class _ChatCardState extends State<ChatCard> {
                                       fontSize: 14,
                                     ),
                             ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: greyColor,
-                            ),
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: size.width * 0.1,
-                                  height: size.width * 0.1,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(6),
-                                    child: CachedNetworkImage(
-                                      imageUrl: productImage,
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.high,
-                                      memCacheHeight:
-                                          (size.height * 0.1).round(),
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(
-                                          Ionicons.alert_circle,
-                                          size: 20,
-                                          color: redColor,
-                                        );
-                                      },
-                                      placeholder: (context, url) {
-                                        return const Icon(
-                                          Ionicons.image,
-                                          size: 20,
-                                          color: lightBlackColor,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    prodTitle,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      color: lightBlackColor,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
