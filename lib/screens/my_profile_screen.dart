@@ -1,4 +1,5 @@
 import 'package:buy_sell_app/screens/follow_us_screen.dart';
+import 'package:buy_sell_app/screens/update_profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -46,6 +47,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   String facebookLink = '';
   String websiteLink = '';
   var iconSize = 16;
+  int profileCompletePercent = 0;
   DateTime dateJoined = DateTime.now();
   // int followers = 0;
   // int following = 0;
@@ -62,13 +64,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       setState(() {
         name = value['name'] ?? name;
         bio = value['bio'] ?? '';
+        bio.isNotEmpty ? profileCompletePercent += 1 : null;
         profileImage = value['profileImage'] ?? '';
         address = value['location'] != null
             ? '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}'
             : '';
         instagramLink = value['instagramLink'] ?? '';
+        instagramLink.isNotEmpty ? profileCompletePercent += 1 : null;
         facebookLink = value['facebookLink'] ?? '';
+        facebookLink.isNotEmpty ? profileCompletePercent += 1 : null;
         websiteLink = value['websiteLink'] ?? '';
+        websiteLink.isNotEmpty ? profileCompletePercent += 1 : null;
+        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
         // if (value['followers'].isEmpty) {
         //   followers = 0;
         // } else {
@@ -79,7 +86,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         // } else {
         //   following = value['following'].length;
         // }
-        dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
       });
     }
   }
@@ -112,23 +118,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: AutoSizeText(
-                  'Profile',
-                  maxLines: 1,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.interTight(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 15,
               ),
@@ -313,6 +302,79 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(
                 height: 15,
               ),
+              if (profileCompletePercent >= 0 && profileCompletePercent < 4)
+                GestureDetector(
+                  onTap: () => Get.to(() => const UpdateProfileScreen()),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: blueColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Your profile is incomplete 😕',
+                              style: TextStyle(
+                                color: whiteColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                '${((profileCompletePercent / 4) * 100).toStringAsFixed(0)}%',
+                                style: const TextStyle(
+                                  color: blackColor,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        LinearProgressIndicator(
+                          value: profileCompletePercent / 4,
+                          color: whiteColor,
+                          minHeight: 5,
+                          backgroundColor: lightBlackColor,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text(
+                          'Maximize your reach, gain trust and sell faster with a complete profile',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: greyColor,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Center(
@@ -432,7 +494,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding: const EdgeInsets.all(15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [blueColor, greenColor],
