@@ -378,13 +378,13 @@ class FirebaseServices {
     // Define quality constants
     const int lowQuality = 15;
     const int mediumQuality = 40;
-    const int highQuality = 75;
+    const int highQuality = 65;
 
     // Determine the quality based on the file size
     int fileSize = file.lengthSync();
-    int quality = fileSize <= 1000000
+    int quality = fileSize <= 500000
         ? highQuality
-        : fileSize > 1000000 && fileSize <= 3000000
+        : fileSize > 500000 && fileSize <= 1500000
             ? mediumQuality
             : lowQuality;
 

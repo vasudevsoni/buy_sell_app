@@ -189,18 +189,18 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Expanded(
-                                    child: Text(
+                                    child: AutoSizeText(
                                       '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                      maxLines: widget.data['catName'] == 'Jobs'
-                                          ? 1
-                                          : 2,
+                                      maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
+                                      minFontSize: 8,
+                                      maxFontSize: 11,
                                       style: GoogleFonts.interTight(
                                         color: lightBlackColor,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12.5,
+                                        fontSize: 11,
                                       ),
                                     ),
                                   ),
@@ -212,7 +212,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                       style: GoogleFonts.interTight(
                                         color: lightBlackColor,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12.5,
+                                        fontSize: 11,
                                       ),
                                     ),
                                   ),

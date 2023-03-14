@@ -507,29 +507,32 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Make money selling on BechDe',
-                          textAlign: TextAlign.start,
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.interTight(
-                            color: whiteColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Make money selling on BechDe',
+                            textAlign: TextAlign.start,
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.interTight(
+                              color: whiteColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          MdiIcons.cashMultiple,
-                          color: whiteColor,
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(
+                            MdiIcons.cashMultiple,
+                            color: whiteColor,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 10,

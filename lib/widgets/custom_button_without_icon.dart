@@ -46,7 +46,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         textAlign: TextAlign.center,
         style: GoogleFonts.interTight(
           color: textIconColor,
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),

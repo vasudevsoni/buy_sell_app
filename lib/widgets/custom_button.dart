@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,14 +46,14 @@ class CustomButton extends StatelessWidget {
       size: GFSize.LARGE,
       fullWidthButton: isFullWidth,
       animationDuration: const Duration(milliseconds: 100),
-      child: AutoSizeText(
+      child: Text(
         text,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
         style: GoogleFonts.interTight(
           color: textIconColor,
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),

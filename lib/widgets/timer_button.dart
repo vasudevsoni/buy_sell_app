@@ -95,7 +95,7 @@ class _TimerButtonState extends State<TimerButton> {
               textAlign: TextAlign.center,
               style: GoogleFonts.interTight(
                 color: whiteColor,
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -118,7 +118,7 @@ class _TimerButtonState extends State<TimerButton> {
               textAlign: TextAlign.center,
               style: GoogleFonts.interTight(
                 color: blackColor,
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),

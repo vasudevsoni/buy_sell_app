@@ -216,33 +216,32 @@ class _LocationScreenState extends State<LocationScreen> {
                       borderColor: blueColor,
                       textIconColor: whiteColor,
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await getUserLocation().then((value) {
-                          if (!value) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            return;
-                          }
+                        try {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          bool value = await getUserLocation();
+                          if (!value) return;
                           if (!widget.isOpenedFromSellButton) {
                             Get.offAll(
-                              () => const MainScreen(selectedIndex: 0),
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                            return;
+                                () => const MainScreen(selectedIndex: 0));
+                          } else {
+                            Get.back();
+                            Get.to(() => const SellerCategoriesListScreen());
                           }
-                          Get.back();
-                          Get.to(
-                            () => const SellerCategoriesListScreen(),
+                          setState(() {
+                            isLoading = false;
+                          });
+                        } catch (e) {
+                          showSnackBar(
+                            content: 'Something went wrong. Please try again',
+                            color: redColor,
                           );
-                        });
-                        setState(() {
-                          isLoading = false;
-                        });
+                        } finally {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
                       },
                     ),
                   ),
