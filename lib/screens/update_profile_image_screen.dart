@@ -37,18 +37,21 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
 
   @override
   void initState() {
-    _services.getCurrentUserData().then((value) {
-      if (value['profileImage'] != null) {
-        setState(() {
-          profileImage = value['profileImage'];
-          return;
-        });
-        setState(() {
-          profileImage = '';
-        });
-      }
-    });
     super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    final value = await _services.getCurrentUserData();
+    if (value['profileImage'] != null) {
+      setState(() {
+        profileImage = value['profileImage'];
+      });
+    } else {
+      setState(() {
+        profileImage = '';
+      });
+    }
   }
 
   uploadImage(File image) async {
@@ -274,7 +277,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                     Expanded(
                       child: CustomButton(
                         text: 'Update',
-                        icon: MdiIcons.check,
+                        icon: MdiIcons.checkOutline,
                         onPressed: () async {
                           Get.back();
                           await uploadImage(File(pickedImage!.path));
@@ -335,7 +338,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   memCacheWidth: (size.width * 0.3).round(),
                   errorWidget: (context, url, error) {
                     return const Icon(
-                      MdiIcons.alertDecagram,
+                      MdiIcons.alertDecagramOutline,
                       size: 30,
                       color: redColor,
                     );
@@ -357,7 +360,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 color: blueColor,
               ),
               child: const Icon(
-                MdiIcons.account,
+                MdiIcons.accountOutline,
                 color: whiteColor,
                 size: 45,
               ),

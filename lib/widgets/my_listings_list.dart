@@ -317,7 +317,9 @@ class _MyListingScreenProductCardState
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: greyColor,
+                    color: whiteColor,
+                    border: greyBorder,
+                    boxShadow: const [customShadow],
                   ),
                   child: Text(
                     'Your product will be marked as sold and deactivated. This action cannot be reversed.',
@@ -423,7 +425,9 @@ class _MyListingScreenProductCardState
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: greyColor,
+                    color: whiteColor,
+                    border: greyBorder,
+                    boxShadow: const [customShadow],
                   ),
                   child: Text(
                     'Your product will be permanently deleted.\nAll your chats with buyers for this listing will also be deleted.\n\nNote - This action cannot be reversed.',
@@ -489,7 +493,7 @@ class _MyListingScreenProductCardState
             children: [
               InkWell(
                 splashFactory: InkRipple.splashFactory,
-                splashColor: fadedColor,
+                splashColor: transparentColor,
                 borderRadius: BorderRadius.circular(10),
                 onTap: () => Get.to(
                   () => ProductDetailsScreen(
@@ -515,7 +519,7 @@ class _MyListingScreenProductCardState
                                 memCacheHeight: (size.height * 0.3).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    MdiIcons.alertDecagram,
+                                    MdiIcons.alertDecagramOutline,
                                     size: 30,
                                     color: redColor,
                                   );
@@ -632,7 +636,7 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                MdiIcons.eye,
+                                MdiIcons.eyeOutline,
                                 size: 20,
                                 color: blueColor,
                               ),
@@ -655,7 +659,7 @@ class _MyListingScreenProductCardState
                           Row(
                             children: [
                               const Icon(
-                                MdiIcons.heart,
+                                MdiIcons.heartOutline,
                                 size: 20,
                                 color: redColor,
                               ),
@@ -897,7 +901,7 @@ class _MyListingScreenProductCardState
                                   height: 10,
                                 ),
                                 CustomButton(
-                                  icon: MdiIcons.pencilBox,
+                                  icon: MdiIcons.pencilBoxOutline,
                                   text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
@@ -930,7 +934,7 @@ class _MyListingScreenProductCardState
                                 ),
                                 if (widget.data['isRejected'] == false)
                                   CustomButton(
-                                    icon: MdiIcons.checkDecagram,
+                                    icon: MdiIcons.checkDecagramOutline,
                                     text: 'Mark as Sold',
                                     onPressed: () {
                                       Get.back();
@@ -942,7 +946,7 @@ class _MyListingScreenProductCardState
                                     textIconColor: blueColor,
                                   ),
                                 CustomButton(
-                                  icon: MdiIcons.delete,
+                                  icon: MdiIcons.deleteOutline,
                                   text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();

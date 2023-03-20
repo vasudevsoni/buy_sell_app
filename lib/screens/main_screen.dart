@@ -11,10 +11,9 @@ import 'package:provider/provider.dart';
 
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
+import '../provider/providers.dart';
 import '../services/firebase_services.dart';
-import '/provider/main_provider.dart';
 import '/widgets/custom_button_without_icon.dart';
-import '/provider/location_provider.dart';
 import '/utils/utils.dart';
 import 'chats/my_chats_screen.dart';
 import 'home_screen.dart';
@@ -39,8 +38,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    getConnectivity();
     super.initState();
+    getConnectivity();
   }
 
   showNetworkError() {
@@ -157,20 +156,19 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  onSellButtonClicked() {
-    _services.getCurrentUserData().then((value) {
-      if (value['location'] != null) {
-        Get.to(
-          () => const SellerCategoriesListScreen(),
-        );
-        return;
-      }
+  Future<void> onSellButtonClicked() async {
+    final userData = await _services.getCurrentUserData();
+    if (userData['location'] != null) {
+      Get.to(
+        () => const SellerCategoriesListScreen(),
+      );
+    } else {
       Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
       showSnackBar(
         content: 'Please set your location to sell products',
         color: redColor,
       );
-    });
+    }
   }
 
   @override
@@ -243,7 +241,7 @@ class _MainScreenState extends State<MainScreen> {
             activeColor: blackColor,
             inactiveColor: lightBlackColor,
             iconSize: 27,
-            splashColor: blueColor,
+            splashColor: transparentColor,
           ),
         );
       },

@@ -10,10 +10,10 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
-import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -51,6 +51,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     subCatNameController.text = 'Jobs > ${widget.productData['subCat']}';
     titleController.text = widget.productData['title'];
@@ -59,7 +60,6 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
     salaryToController.text = widget.productData['salaryTo'].toString();
     salaryPeriodSelectedValue = widget.productData['salaryPeriod'];
     positionTypeSelectedValue = widget.productData['positionType'];
-    super.initState();
   }
 
   showNetworkError() {
@@ -357,7 +357,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.clock,
+                                  MdiIcons.clockOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -383,7 +383,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.calendar,
+                                  MdiIcons.calendarOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -443,7 +443,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.check,
+                          icon: MdiIcons.checkOutline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;

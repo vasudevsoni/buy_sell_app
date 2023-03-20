@@ -10,10 +10,10 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
-import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -55,6 +55,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     subCatNameController.text = 'Vehicles > ${widget.productData['subCat']}';
     brandNameController.text = widget.productData['brandName'];
@@ -66,7 +67,6 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     yorSelectedValue = widget.productData['yearOfReg'].toString();
     noOfOwnersSelectedValue = widget.productData['noOfOwners'];
     colorSelectedValue = widget.productData['color'];
-    super.initState();
   }
 
   showNetworkError() {
@@ -356,7 +356,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.account,
+                                  MdiIcons.accountOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -405,7 +405,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.calendar,
+                                  MdiIcons.calendarOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -493,7 +493,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.check,
+                          icon: MdiIcons.checkOutline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;

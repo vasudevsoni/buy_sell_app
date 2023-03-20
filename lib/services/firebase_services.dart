@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary/cloudinary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '/utils/utils.dart';
@@ -373,6 +374,46 @@ class FirebaseServices {
       );
     }
   }
+
+  Future<void> rateUser({required int stars, required String userId}) async {
+    try {
+      await users.doc(userId).update({
+        'rating': FieldValue.increment(stars),
+        'ratedBy': FieldValue.arrayUnion([user!.uid]),
+      });
+      Get.back();
+      showSnackBar(
+        content: 'You have rated this user with $stars stars',
+        color: blueColor,
+      );
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  // Future<void> addFields() async {
+  //   try {
+  //     var querySnapshots = await users.get();
+  //     for (var doc in querySnapshots.docs) {
+  //       await doc.reference.update({
+  //         'rating': 0,
+  //         'ratedBy': {''},
+  //       });
+  //     }
+  //     showSnackBar(
+  //       content: 'updated',
+  //       color: blueColor,
+  //     );
+  //   } on FirebaseException {
+  //     showSnackBar(
+  //       content: 'Something has gone wrong. Please try again',
+  //       color: redColor,
+  //     );
+  //   }
+  // }
 
   Future<File> compressImage(File file) async {
     // Define quality constants

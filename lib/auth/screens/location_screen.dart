@@ -9,9 +9,9 @@ import 'package:location/location.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/providers.dart';
 import '../../widgets/loading_button.dart';
 import '../../widgets/svg_picture.dart';
-import '/provider/location_provider.dart';
 import '/screens/selling/seller_categories_list_screen.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
@@ -184,7 +184,9 @@ class _LocationScreenState extends State<LocationScreen> {
               width: size.height * 0.2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: greyColor,
+                color: whiteColor,
+                border: greyBorder,
+                boxShadow: const [customShadow],
               ),
               child: const SVGPictureWidget(
                 url:

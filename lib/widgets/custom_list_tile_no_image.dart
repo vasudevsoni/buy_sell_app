@@ -8,16 +8,16 @@ class CustomListTileNoImage extends StatelessWidget {
   final IconData? icon;
   final IconData? trailingIcon;
   final bool isEnabled;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
 
   const CustomListTileNoImage({
-    super.key,
+    Key? key,
     required this.text,
     this.icon,
     this.trailingIcon,
     required this.onTap,
     required this.isEnabled,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

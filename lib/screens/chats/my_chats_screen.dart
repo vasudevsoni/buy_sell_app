@@ -8,9 +8,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import 'package:provider/provider.dart';
 
+import '../../provider/providers.dart';
 import '../../widgets/custom_loading_indicator.dart';
 import '../../widgets/svg_picture.dart';
-import '/provider/main_provider.dart';
 import '/screens/chats/conversation_screen.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button_without_icon.dart';
@@ -477,8 +477,8 @@ class _ChatCardState extends State<ChatCard> {
 
   @override
   void initState() {
-    fetchData();
     super.initState();
+    fetchData();
   }
 
   fetchData() async {
@@ -537,7 +537,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  MdiIcons.account,
+                                  MdiIcons.accountOutline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -553,7 +553,7 @@ class _ChatCardState extends State<ChatCard> {
                                   memCacheWidth: (size.width * 0.12).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      MdiIcons.alertDecagram,
+                                      MdiIcons.alertDecagramOutline,
                                       size: 20,
                                       color: redColor,
                                     );
@@ -576,7 +576,7 @@ class _ChatCardState extends State<ChatCard> {
                                   color: blueColor,
                                 ),
                                 child: const Icon(
-                                  MdiIcons.account,
+                                  MdiIcons.accountOutline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -592,7 +592,7 @@ class _ChatCardState extends State<ChatCard> {
                                   memCacheWidth: (size.width * 0.12).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      MdiIcons.alertDecagram,
+                                      MdiIcons.alertDecagramOutline,
                                       size: 20,
                                       color: redColor,
                                     );
@@ -645,7 +645,7 @@ class _ChatCardState extends State<ChatCard> {
                                           (size.width * 0.12).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          MdiIcons.alertDecagram,
+                                          MdiIcons.alertDecagramOutline,
                                           size: 20,
                                           color: redColor,
                                         );

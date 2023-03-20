@@ -17,6 +17,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
+    super.initState();
     //check whether user is logged in or not. Then navigate her accordingly.
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
@@ -29,7 +30,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         );
       }
     });
-    super.initState();
   }
 
   @override

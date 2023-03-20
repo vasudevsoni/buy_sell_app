@@ -152,7 +152,7 @@ class _CategoryScreenProductsListState
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: MdiIcons.home,
+                  icon: MdiIcons.homeOutline,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,

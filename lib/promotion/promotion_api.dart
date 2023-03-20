@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -6,9 +7,11 @@ class PromotionApi {
   static const _apiKey = 'goog_buwpVOVcvMsRCbXmUmMUTtROgtK';
 
   static Future<void> init() async {
-    await Purchases.setLogLevel(LogLevel.info);
-    final configuration = PurchasesConfiguration(_apiKey);
-    await Purchases.configure(configuration);
+    final services = FirebaseServices();
+    // ignore: deprecated_member_use
+    await Purchases.setDebugLogsEnabled(true);
+    await Purchases.configure(
+        PurchasesConfiguration(_apiKey)..appUserID = services.user!.uid);
   }
 
   static Future<List<Offering>> fetchOffers() async {

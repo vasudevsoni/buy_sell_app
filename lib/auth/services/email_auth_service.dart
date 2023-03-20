@@ -72,6 +72,8 @@ class EmailAuthService {
         'name': name,
         'bio': null,
         'location': null,
+        'rating': 0,
+        'ratedBy': {''},
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
         'profileImage': null,
         'instagramLink': null,

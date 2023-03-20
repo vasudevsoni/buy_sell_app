@@ -23,6 +23,8 @@ class SocialAuthService {
           'name': user.displayName,
           'bio': null,
           'location': null,
+          'rating': 0,
+          'ratedBy': {''},
           'dateJoined': DateTime.now().millisecondsSinceEpoch,
           'profileImage': user.photoURL,
           'instagramLink': null,

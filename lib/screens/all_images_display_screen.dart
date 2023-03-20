@@ -26,8 +26,8 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
 
   @override
   void initState() {
-    _initBannerAd();
     super.initState();
+    _initBannerAd();
   }
 
   _initBannerAd() {
@@ -86,10 +86,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
       bottomNavigationBar: _isAdLoaded
           ? Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 100,
               width: 320,
@@ -97,15 +94,12 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
             )
           : Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 100,
               width: 320,
               child: const Center(
-                child: Text('Advertisement'),
+                child: Text('Ad'),
               ),
             ),
       body: SafeArea(
@@ -161,7 +155,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Icon(
-                                          MdiIcons.alertDecagram,
+                                          MdiIcons.alertDecagramOutline,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -182,7 +176,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                       pageController.dispose();
                                       Get.back();
                                     },
-                                    splashColor: blueColor,
+                                    splashColor: transparentColor,
                                     splashRadius: 30,
                                     icon: const Icon(
                                       MdiIcons.closeCircleOutline,
@@ -207,7 +201,10 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Container(
-                        color: blackColor,
+                        decoration: const BoxDecoration(
+                          color: blackColor,
+                          boxShadow: [customShadow],
+                        ),
                         width: double.infinity,
                         height: size.height * 0.25,
                         child: CachedNetworkImage(
@@ -217,7 +214,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                           memCacheHeight: (size.height * 0.25).round(),
                           errorWidget: (context, url, error) {
                             return const Icon(
-                              MdiIcons.alertDecagram,
+                              MdiIcons.alertDecagramOutline,
                               size: 30,
                               color: redColor,
                             );

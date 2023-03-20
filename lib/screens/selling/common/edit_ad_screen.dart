@@ -9,9 +9,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
-import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -46,13 +46,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     categoryController.text =
         '${widget.productData['catName']} > ${widget.productData['subCat']}';
     titleController.text = widget.productData['title'];
     descriptionController.text = widget.productData['description'];
     priceController.text = widget.productData['price'].toString();
-    super.initState();
   }
 
   showNetworkError() {
@@ -360,7 +360,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.check,
+                          icon: MdiIcons.checkOutline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;

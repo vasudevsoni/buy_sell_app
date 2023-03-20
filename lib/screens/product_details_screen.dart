@@ -64,14 +64,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String location = '';
   double latitude = 0;
   double longitude = 0;
+  double rating = 0;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
   @override
   void initState() {
+    super.initState();
     getDetails();
     _initBannerAd();
-    super.initState();
   }
 
   _initBannerAd() {
@@ -116,6 +117,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       profileImage = userData['profileImage'] ?? '';
       dateJoined = userData['dateJoined'];
       sellerName = userData['name'];
+      rating = userData['rating'] == 0
+          ? 0
+          : (userData['rating'] / (userData['ratedBy'].length - 1));
     });
 
     setState(() {
@@ -373,7 +377,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: CustomButton(
-                      icon: MdiIcons.flag,
+                      icon: MdiIcons.flagOutline,
                       isFullWidth: true,
                       text: 'Report Product',
                       onPressed: () {
@@ -588,7 +592,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      MdiIcons.alertDecagram,
+                                                      MdiIcons
+                                                          .alertDecagramOutline,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -610,7 +615,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   pageController.dispose();
                                                   Get.back();
                                                 },
-                                                splashColor: blueColor,
+                                                splashColor: transparentColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
                                                   MdiIcons.closeCircleOutline,
@@ -649,7 +654,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           (size.height * 0.35).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          MdiIcons.alertDecagram,
+                                          MdiIcons.alertDecagramOutline,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -914,7 +919,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                         );
                                       },
-                                      icon: MdiIcons.pencilBox,
+                                      icon: MdiIcons.pencilBoxOutline,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
@@ -990,7 +995,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           width: size.width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: greyColor,
+                            color: whiteColor,
+                            border: greyBorder,
+                            boxShadow: const [customShadow],
                           ),
                           padding: const EdgeInsets.symmetric(
                             vertical: 10,
@@ -1141,7 +1148,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   width: size.width,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: greyColor,
+                                    color: whiteColor,
+                                    border: greyBorder,
+                                    boxShadow: const [customShadow],
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 15,
@@ -1158,8 +1167,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Brand - ',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1190,8 +1199,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Model - ',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1222,8 +1231,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Color - ',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1253,7 +1262,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.account,
+                                            MdiIcons.accountOutline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1263,8 +1272,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Owner',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1299,8 +1308,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Fuel Type',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1325,7 +1334,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.calendar,
+                                            MdiIcons.calendarOutline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1335,8 +1344,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Year of Reg.',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1372,8 +1381,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Kms Driven',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1434,7 +1443,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   width: size.width,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: greyColor,
+                                    color: whiteColor,
+                                    border: greyBorder,
+                                    boxShadow: const [customShadow],
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 15,
@@ -1451,8 +1462,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Salary Period - ',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1484,8 +1495,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Text(
                                             'Position Type - ',
                                             style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: lightBlackColor,
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
                                               fontSize: 14,
                                             ),
                                           ),
@@ -1548,7 +1559,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             width: size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: greyColor,
+                              color: whiteColor,
+                              border: greyBorder,
+                              boxShadow: const [customShadow],
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
@@ -1593,10 +1606,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Center(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: lightBlackColor,
-                                          width: 2,
-                                        ),
+                                        border: greyBorder,
                                       ),
                                       height: 250,
                                       width: 300,
@@ -1614,15 +1624,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Center(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: lightBlackColor,
-                                          width: 2,
-                                        ),
+                                        border: greyBorder,
                                       ),
                                       height: 250,
                                       width: 300,
                                       child: const Center(
-                                        child: Text('Advertisement'),
+                                        child: Text('Ad'),
                                       ),
                                     ),
                                   ),
@@ -1654,117 +1661,168 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               const SizedBox(
                                 height: 5,
                               ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () => Get.to(
-                                  () => ProfileScreen(
-                                    userId: widget.productData['sellerUid'],
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: InkWell(
+                                  onTap: () => Get.to(
+                                    () => ProfileScreen(
+                                      userId: widget.productData['sellerUid'],
+                                    ),
                                   ),
-                                ),
-                                child: Container(
-                                  width: size.width,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: greyColor,
-                                  ),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                    vertical: 10,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      profileImage == ''
-                                          ? Container(
-                                              height: size.width * 0.1,
-                                              width: size.width * 0.1,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: blueColor,
+                                  splashFactory: InkRipple.splashFactory,
+                                  splashColor: transparentColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Ink(
+                                    width: size.width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: whiteColor,
+                                      border: greyBorder,
+                                      boxShadow: const [customShadow],
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        profileImage == ''
+                                            ? Container(
+                                                height: size.width * 0.1,
+                                                width: size.width * 0.1,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  color: blueColor,
+                                                ),
+                                                child: const Icon(
+                                                  MdiIcons.accountOutline,
+                                                  color: whiteColor,
+                                                  size: 20,
+                                                ),
+                                              )
+                                            : SizedBox(
+                                                height: size.width * 0.1,
+                                                width: size.width * 0.1,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: profileImage,
+                                                    fit: BoxFit.cover,
+                                                    filterQuality:
+                                                        FilterQuality.high,
+                                                    memCacheHeight:
+                                                        (size.width * 0.1)
+                                                            .round(),
+                                                    memCacheWidth:
+                                                        (size.width * 0.1)
+                                                            .round(),
+                                                    errorWidget:
+                                                        (context, url, error) {
+                                                      return const Icon(
+                                                        MdiIcons
+                                                            .alertDecagramOutline,
+                                                        size: 10,
+                                                        color: redColor,
+                                                      );
+                                                    },
+                                                    placeholder:
+                                                        (context, url) {
+                                                      return const Center(
+                                                        child:
+                                                            CustomLoadingIndicator(),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
                                               ),
-                                              child: const Icon(
-                                                MdiIcons.account,
-                                                color: whiteColor,
-                                                size: 20,
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              height: size.width * 0.1,
-                                              width: size.width * 0.1,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: profileImage,
-                                                  fit: BoxFit.cover,
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  memCacheHeight:
-                                                      (size.width * 0.1)
-                                                          .round(),
-                                                  memCacheWidth:
-                                                      (size.width * 0.1)
-                                                          .round(),
-                                                  errorWidget:
-                                                      (context, url, error) {
-                                                    return const Icon(
-                                                      MdiIcons.alertDecagram,
-                                                      size: 10,
-                                                      color: redColor,
-                                                    );
-                                                  },
-                                                  placeholder: (context, url) {
-                                                    return const Center(
-                                                      child:
-                                                          CustomLoadingIndicator(),
-                                                    );
-                                                  },
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: size.width * 0.5,
+                                              child: Text(
+                                                sellerName,
+                                                maxLines: 1,
+                                                softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.interTight(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: blackColor,
+                                                  fontSize: 15,
                                                 ),
                                               ),
                                             ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: size.width * 0.5,
-                                            child: Text(
-                                              sellerName,
-                                              maxLines: 1,
-                                              softWrap: true,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
-                                                fontWeight: FontWeight.w600,
-                                                color: blackColor,
-                                                fontSize: 15,
+                                            const SizedBox(
+                                              height: 2,
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: rating > 0 && rating < 3
+                                                    ? redColor
+                                                    : rating == 3
+                                                        ? Colors.orange
+                                                        : rating == 0
+                                                            ? blackColor
+                                                            : greenColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    rating == 0
+                                                        ? 'Unrated'
+                                                        : rating
+                                                            .toStringAsFixed(1),
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: whiteColor,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 2,
+                                                  ),
+                                                  const Icon(
+                                                    MdiIcons.star,
+                                                    size: 10,
+                                                    color: whiteColor,
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            'Joined ${timeago.format(sellerJoinTime)}',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w500,
-                                              color: fadedColor,
-                                              fontSize: 13,
+                                            Text(
+                                              'Joined ${timeago.format(sellerJoinTime)}',
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w400,
+                                                color: blackColor,
+                                                fontSize: 13,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      const Icon(
-                                        MdiIcons.chevronRight,
-                                        color: blackColor,
-                                        size: 13,
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        const Icon(
+                                          MdiIcons.chevronRight,
+                                          color: blackColor,
+                                          size: 13,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -2021,7 +2079,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               ),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.size >= 2 ? 2 : snapshot.data!.size,
+              itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
                 final time =

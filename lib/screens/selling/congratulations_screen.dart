@@ -25,8 +25,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
 
   @override
   void initState() {
-    _initBannerAd();
     super.initState();
+    _initBannerAd();
   }
 
   _initBannerAd() {
@@ -98,9 +98,11 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   height: 15,
                 ),
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: redColor,
+                    border: greyBorder,
+                    boxShadow: const [customShadow],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -117,10 +119,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 _isAdLoaded
                     ? Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: lightBlackColor,
-                            width: 2,
-                          ),
+                          border: greyBorder,
                         ),
                         height: 250,
                         width: 300,
@@ -128,15 +127,12 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                       )
                     : Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: lightBlackColor,
-                            width: 2,
-                          ),
+                          border: greyBorder,
                         ),
                         height: 250,
                         width: 300,
                         child: const Center(
-                          child: Text('Advertisement'),
+                          child: Text('Ad'),
                         ),
                       ),
                 const Spacer(),
@@ -144,7 +140,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   text: 'Go to Home',
                   onPressed: () =>
                       Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: MdiIcons.home,
+                  icon: MdiIcons.homeOutline,
                   isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
@@ -154,7 +150,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   text: 'Rate our App',
                   onPressed: () => inAppReview.openStoreListing(),
                   isFullWidth: true,
-                  icon: MdiIcons.star,
+                  icon: MdiIcons.starOutline,
                   bgColor: greenColor,
                   borderColor: greenColor,
                   textIconColor: whiteColor,
@@ -164,7 +160,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   onPressed: () => Share.share(
                       'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
                   isFullWidth: true,
-                  icon: MdiIcons.shareVariant,
+                  icon: MdiIcons.shareVariantOutline,
                   bgColor: blackColor,
                   borderColor: blackColor,
                   textIconColor: whiteColor,

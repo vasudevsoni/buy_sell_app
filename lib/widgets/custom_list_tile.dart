@@ -22,16 +22,14 @@ class CustomListTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       splashFactory: InkRipple.splashFactory,
-      splashColor: fadedColor,
+      splashColor: transparentColor,
       borderRadius: BorderRadius.circular(10),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: whiteColor,
-          border: Border.all(
-            color: greyColor,
-            width: 1,
-          ),
+          border: greyBorder,
+          boxShadow: const [customShadow],
         ),
         width: double.infinity,
         height: double.infinity,

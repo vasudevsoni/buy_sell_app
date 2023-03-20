@@ -133,11 +133,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              MdiIcons.eyeOff,
+                              MdiIcons.eyeOffOutline,
                               size: 30,
                             )
                           : const Icon(
-                              MdiIcons.eye,
+                              MdiIcons.eyeOutline,
                               size: 30,
                             ),
                     ),

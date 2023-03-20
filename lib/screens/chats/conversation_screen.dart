@@ -49,8 +49,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   void initState() {
-    getDetails();
     super.initState();
+    getDetails();
   }
 
   scrollDown() {
@@ -68,31 +68,31 @@ class _ConversationScreenState extends State<ConversationScreen> {
     setState(() {
       isLoading = true;
     });
-    await _services.chats.doc(widget.chatRoomId).get().then((value) {
-      if (mounted) {
-        setState(() {
-          sellerUid = value['users'][0];
-          title = value['product']['title'];
-          imageUrl = value['product']['productImage'];
-        });
-      }
-    });
-    await _services.getUserData(widget.sellerId).then((value) {
-      if (mounted) {
-        setState(() {
-          sellerData = value;
-          name = value['name'];
-        });
-      }
-    });
-    await _services.getProductDetails(widget.prodId).then((value) {
-      if (mounted) {
-        setState(() {
-          prod = value;
-          isActive = value['isActive'];
-        });
-      }
-    });
+    final chatRoom = await _services.chats.doc(widget.chatRoomId).get();
+    if (mounted) {
+      setState(() {
+        sellerUid = chatRoom['users'][0];
+        title = chatRoom['product']['title'];
+        imageUrl = chatRoom['product']['productImage'];
+      });
+    }
+
+    final seller = await _services.getUserData(widget.sellerId);
+    if (mounted) {
+      setState(() {
+        sellerData = seller;
+        name = seller['name'];
+      });
+    }
+
+    final product = await _services.getProductDetails(widget.prodId);
+    if (mounted) {
+      setState(() {
+        prod = product;
+        isActive = product['isActive'];
+      });
+    }
+
     setState(() {
       isLoading = false;
     });
@@ -433,7 +433,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             onTap: showDeleteDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              MdiIcons.delete,
+              MdiIcons.deleteOutline,
               color: redColor,
               size: 25,
             ),
@@ -492,7 +492,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   memCacheHeight: (size.height * 0.15).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      MdiIcons.alertDecagram,
+                                      MdiIcons.alertDecagramOutline,
                                       size: 15,
                                       color: redColor,
                                     );

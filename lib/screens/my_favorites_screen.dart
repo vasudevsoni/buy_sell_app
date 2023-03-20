@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/main_provider.dart';
+import '../provider/providers.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
 import '../widgets/custom_button_without_icon.dart';

@@ -22,8 +22,8 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
 
   @override
   void initState() {
-    _initBannerAd();
     super.initState();
+    _initBannerAd();
   }
 
   _initBannerAd() {
@@ -101,10 +101,7 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: lightBlackColor,
-                              width: 2,
-                            ),
+                            border: greyBorder,
                           ),
                           height: 250,
                           width: 300,
@@ -119,15 +116,12 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: lightBlackColor,
-                              width: 2,
-                            ),
+                            border: greyBorder,
                           ),
                           height: 250,
                           width: 300,
                           child: const Center(
-                            child: Text('Advertisement'),
+                            child: Text('Ad'),
                           ),
                         ),
                       ],

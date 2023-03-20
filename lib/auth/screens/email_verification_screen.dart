@@ -48,26 +48,38 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   Future sendVerificationEmail() async {
     try {
-      user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       await user!.sendEmailVerification();
       showSnackBar(
         content: 'Verification email sent successfully',
         color: blueColor,
       );
-      timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-        checkEmailVerified();
-      });
-    } on FirebaseAuthException catch (_) {
-      showSnackBar(
-        content: 'Unable to send verification email. Please try again',
-        color: redColor,
-      );
-    } catch (_) {
+      startEmailVerificationTimer();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showSnackBar(
+          content: 'User not found. Please try again',
+          color: redColor,
+        );
+      } else {
+        showSnackBar(
+          content: 'Unable to send verification email. Please try again',
+          color: redColor,
+        );
+      }
+    } on Exception catch (_) {
       showSnackBar(
         content: 'Something went wrong. Please try again',
         color: redColor,
       );
     }
+  }
+
+  // Start a timer to periodically check if the user's email has been verified
+  void startEmailVerificationTimer() {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      checkEmailVerified();
+    });
   }
 
   @override
@@ -102,7 +114,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Container(
               padding: const EdgeInsets.only(left: 15, top: 15),
               child: const Icon(
-                MdiIcons.shieldCheck,
+                MdiIcons.shieldCheckOutline,
                 color: blueColor,
                 size: 60,
               ),

@@ -36,8 +36,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
 
   @override
   void initState() {
-    fetchOffers();
     super.initState();
+    fetchOffers();
   }
 
   Future<void> fetchOffers() async {
@@ -108,7 +108,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 memCacheHeight: (size.height * 0.20).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    MdiIcons.alertDecagram,
+                                    MdiIcons.alertDecagramOutline,
                                     size: 15,
                                     color: redColor,
                                   );
@@ -135,7 +135,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.interTight(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   color: whiteColor,
                                 ),
                               ),
@@ -183,6 +183,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: blueColor,
+                        border: greyBorder,
+                        boxShadow: const [customShadow],
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -247,7 +249,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.arrowUpCircle,
+                                  MdiIcons.arrowUpCircleOutline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -303,7 +305,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.creditCardCheck,
+                                  MdiIcons.creditCardCheckOutline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -344,7 +346,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 }
                               },
                               isFullWidth: true,
-                              icon: MdiIcons.basketCheck,
+                              icon: MdiIcons.basketCheckOutline,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,
@@ -355,7 +357,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 () => const BoostInfoScreen(),
                               ),
                               isFullWidth: true,
-                              icon: MdiIcons.information,
+                              icon: MdiIcons.informationOutline,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,

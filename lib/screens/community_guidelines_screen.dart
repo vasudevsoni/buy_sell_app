@@ -45,7 +45,7 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
-                      MdiIcons.emoticon,
+                      MdiIcons.emoticonOutline,
                       color: whiteColor,
                     ),
                     const SizedBox(
@@ -281,7 +281,7 @@ class CommunityGuidelinesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
-                      MdiIcons.shieldCheck,
+                      MdiIcons.shieldCheckOutline,
                       color: whiteColor,
                     ),
                     const SizedBox(width: 5),

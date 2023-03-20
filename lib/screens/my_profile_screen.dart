@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -49,13 +50,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   var iconSize = 16;
   int profileCompletePercent = 0;
   DateTime dateJoined = DateTime.now();
+  double rating = 0;
   // int followers = 0;
   // int following = 0;
 
   @override
   void initState() {
-    getUserData();
     super.initState();
+    getUserData();
   }
 
   getUserData() async {
@@ -76,6 +78,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         websiteLink = value['websiteLink'] ?? '';
         websiteLink.isNotEmpty ? profileCompletePercent += 1 : null;
         dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+        rating = value['rating'] == 0
+            ? 0
+            : (value['rating'] / (value['ratedBy'].length - 1));
         // if (value['followers'].isEmpty) {
         //   followers = 0;
         // } else {
@@ -106,6 +111,55 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     }
   }
 
+  void showInAppReviewDialog() async {
+    final inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    } else {
+      inAppReview.openStoreListing();
+    }
+  }
+
+  void _showRatingDialog() {
+    final dialog = RatingDialog(
+      initialRating: 5.0,
+      submitButtonTextStyle: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: blueColor,
+      ),
+      title: const Text(
+        'Rate our app',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      message: const Text(
+        'Tap a star to set your rating. Add some comments if you want',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 15),
+      ),
+      submitButtonText: 'Submit',
+      commentHint: 'Enter comments here',
+      onCancelled: () {},
+      onSubmitted: (response) {
+        if (response.rating < 3.0) {
+          services.submitFeedback(text: response.comment);
+        } else {
+          showInAppReviewDialog();
+        }
+      },
+    );
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => dialog,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -121,184 +175,240 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(
                 height: 15,
               ),
-              profileImage == ''
-                  ? Center(
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: size.width * 0.25,
-                            width: size.width * 0.25,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: blueColor,
-                            ),
-                            child: const Icon(
-                              MdiIcons.account,
-                              color: whiteColor,
-                              size: 50,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  profileImage == ''
+                      ? Center(
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: size.width * 0.25,
+                                width: size.width * 0.25,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: blueColor,
+                                ),
+                                child: const Icon(
+                                  MdiIcons.accountOutline,
+                                  color: whiteColor,
+                                  size: 50,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Get.to(
+                                      () => const UpdateProfileImageScreen(),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    MdiIcons.pencilBoxOutline,
+                                    color: lightBlackColor,
+                                    shadows: [
+                                      Shadow(
+                                        color: lightBlackColor,
+                                        blurRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (_) {
+                              return Dismissible(
+                                key: UniqueKey(),
+                                direction: DismissDirection.down,
+                                onDismissed: (direction) {
+                                  Get.back();
+                                },
+                                child: Material(
+                                  color: blackColor,
+                                  child: Stack(
+                                    children: [
+                                      PhotoViewGallery.builder(
+                                        scrollPhysics:
+                                            const ClampingScrollPhysics(),
+                                        itemCount: 1,
+                                        builder:
+                                            (BuildContext context, int index) {
+                                          return PhotoViewGalleryPageOptions(
+                                            imageProvider:
+                                                CachedNetworkImageProvider(
+                                              profileImage,
+                                            ),
+                                            initialScale: PhotoViewComputedScale
+                                                    .contained *
+                                                1,
+                                            minScale: PhotoViewComputedScale
+                                                    .contained *
+                                                1,
+                                            maxScale: PhotoViewComputedScale
+                                                    .contained *
+                                                2,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Icon(
+                                                MdiIcons.alertDecagramOutline,
+                                                size: 20,
+                                                color: redColor,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        loadingBuilder: (context, event) {
+                                          return const Center(
+                                            child: CustomLoadingIndicator(),
+                                          );
+                                        },
+                                      ),
+                                      Positioned(
+                                        top: 15,
+                                        right: 15,
+                                        child: IconButton(
+                                          onPressed: () => Get.back(),
+                                          splashColor: transparentColor,
+                                          splashRadius: 30,
+                                          icon: const Icon(
+                                            MdiIcons.closeCircleOutline,
+                                            size: 30,
+                                            color: whiteColor,
+                                            shadows: [
+                                              BoxShadow(
+                                                offset: Offset(0, 0),
+                                                blurRadius: 15,
+                                                spreadRadius: 15,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          child: Center(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: size.width * 0.25,
+                                  width: size.width * 0.25,
+                                  decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CachedNetworkImage(
+                                      imageUrl: profileImage,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                      memCacheHeight:
+                                          (size.width * 0.25).round(),
+                                      memCacheWidth:
+                                          (size.width * 0.25).round(),
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(
+                                          MdiIcons.alertDecagramOutline,
+                                          size: 30,
+                                          color: redColor,
+                                        );
+                                      },
+                                      placeholder: (context, url) {
+                                        return const Center(
+                                          child: CustomLoadingIndicator(),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      Get.to(
+                                        () => const UpdateProfileImageScreen(),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      MdiIcons.pencilBoxOutline,
+                                      color: blackColor,
+                                      shadows: [
+                                        Shadow(
+                                          color: lightBlackColor,
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                Get.to(
-                                  () => const UpdateProfileImageScreen(),
-                                );
-                              },
-                              child: const Icon(
-                                MdiIcons.pencilBoxOutline,
-                                color: lightBlackColor,
-                                shadows: [
-                                  Shadow(
-                                    color: lightBlackColor,
-                                    blurRadius: 2,
-                                  ),
-                                ],
-                              ),
+                        ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showSnackBar(
+                        content:
+                            'This is your star rating given by other users',
+                        color: blueColor,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: rating > 0 && rating < 3
+                            ? redColor
+                            : rating == 3
+                                ? Colors.orange
+                                : rating == 0
+                                    ? blackColor
+                                    : greenColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            rating == 0.0
+                                ? 'Unrated'
+                                : rating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: whiteColor,
+                              fontWeight: FontWeight.w700,
                             ),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          const Icon(
+                            MdiIcons.star,
+                            size: 15,
+                            color: whiteColor,
                           ),
                         ],
                       ),
-                    )
-                  : GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (_) {
-                          return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.down,
-                            onDismissed: (direction) {
-                              Get.back();
-                            },
-                            child: Material(
-                              color: blackColor,
-                              child: Stack(
-                                children: [
-                                  PhotoViewGallery.builder(
-                                    scrollPhysics:
-                                        const ClampingScrollPhysics(),
-                                    itemCount: 1,
-                                    builder: (BuildContext context, int index) {
-                                      return PhotoViewGalleryPageOptions(
-                                        imageProvider:
-                                            CachedNetworkImageProvider(
-                                          profileImage,
-                                        ),
-                                        initialScale:
-                                            PhotoViewComputedScale.contained *
-                                                1,
-                                        minScale:
-                                            PhotoViewComputedScale.contained *
-                                                1,
-                                        maxScale:
-                                            PhotoViewComputedScale.contained *
-                                                2,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            MdiIcons.alertDecagram,
-                                            size: 20,
-                                            color: redColor,
-                                          );
-                                        },
-                                      );
-                                    },
-                                    loadingBuilder: (context, event) {
-                                      return const Center(
-                                        child: CustomLoadingIndicator(),
-                                      );
-                                    },
-                                  ),
-                                  Positioned(
-                                    top: 15,
-                                    right: 15,
-                                    child: IconButton(
-                                      onPressed: () => Get.back(),
-                                      splashColor: blueColor,
-                                      splashRadius: 30,
-                                      icon: const Icon(
-                                        MdiIcons.closeCircleOutline,
-                                        size: 30,
-                                        color: whiteColor,
-                                        shadows: [
-                                          BoxShadow(
-                                            offset: Offset(0, 0),
-                                            blurRadius: 15,
-                                            spreadRadius: 15,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      child: Center(
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: size.width * 0.25,
-                              width: size.width * 0.25,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl: profileImage,
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.high,
-                                  memCacheHeight: (size.width * 0.25).round(),
-                                  memCacheWidth: (size.width * 0.25).round(),
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      MdiIcons.alertDecagram,
-                                      size: 30,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Center(
-                                      child: CustomLoadingIndicator(),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  Get.to(
-                                    () => const UpdateProfileImageScreen(),
-                                  );
-                                },
-                                child: const Icon(
-                                  MdiIcons.pencilBoxOutline,
-                                  color: blackColor,
-                                  shadows: [
-                                    Shadow(
-                                      color: lightBlackColor,
-                                      blurRadius: 2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 15,
               ),
@@ -312,6 +422,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
                       color: blueColor,
+                      border: greyBorder,
+                      boxShadow: const [customShadow],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -497,6 +609,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
+                  boxShadow: const [customShadow],
                   gradient: const LinearGradient(
                     colors: [blueColor, greenColor],
                     begin: Alignment.topLeft,
@@ -652,7 +765,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: MdiIcons.shopping,
+                      icon: MdiIcons.shoppingOutline,
                       iconColor: blackColor,
                       text: 'My Listings',
                       onTap: () => Get.to(
@@ -663,7 +776,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: MdiIcons.cog,
+                      icon: MdiIcons.cogOutline,
                       iconColor: blackColor,
                       text: 'Settings',
                       onTap: () => Get.to(
@@ -679,7 +792,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: MdiIcons.helpCircle,
+                      icon: MdiIcons.helpCircleOutline,
                       iconColor: redColor,
                       text: 'Help & Support',
                       onTap: () => Get.to(
@@ -690,11 +803,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: MdiIcons.star,
+                      icon: MdiIcons.starOutline,
                       iconColor: blueColor,
                       text: 'Rate our App',
                       onTap: () {
-                        inAppReview.openStoreListing();
+                        _showRatingDialog();
                       },
                     ),
                   ],
@@ -706,7 +819,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 child: Row(
                   children: [
                     MyProfileItemWidget(
-                      icon: MdiIcons.shareVariant,
+                      icon: MdiIcons.shareVariantOutline,
                       iconColor: blackColor,
                       text: 'Invite Friends',
                       onTap: () => Share.share(
@@ -716,7 +829,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       width: 10,
                     ),
                     MyProfileItemWidget(
-                      icon: MdiIcons.accountMultiplePlus,
+                      icon: MdiIcons.accountMultiplePlusOutline,
                       iconColor: blackColor,
                       text: 'Follow Us',
                       onTap: () => Get.to(
@@ -740,10 +853,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: whiteColor,
-                    border: Border.all(
-                      color: greyColor,
-                      width: 1,
-                    ),
+                    boxShadow: const [customShadow],
+                    border: greyBorder,
                   ),
                   child: Center(
                     child: Row(
@@ -759,7 +870,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                         ),
                         Icon(
-                          MdiIcons.heart,
+                          MdiIcons.heartOutline,
                           color: redColor,
                           size: iconSize.toDouble(),
                         ),
@@ -807,7 +918,7 @@ class MyProfileItemWidget extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(10),
         splashFactory: InkRipple.splashFactory,
-        splashColor: fadedColor,
+        splashColor: transparentColor,
         child: Ink(
           height: 90,
           padding: const EdgeInsets.symmetric(
@@ -817,10 +928,8 @@ class MyProfileItemWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: whiteColor,
-            border: Border.all(
-              color: greyColor,
-              width: 1,
-            ),
+            boxShadow: const [customShadow],
+            border: greyBorder,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

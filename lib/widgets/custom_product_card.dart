@@ -33,8 +33,8 @@ class _CustomProductCardState extends State<CustomProductCard> {
 
   @override
   void initState() {
-    getFavDetails();
     super.initState();
+    getFavDetails();
   }
 
   Future<void> getFavDetails() async {
@@ -70,7 +70,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
             children: [
               InkWell(
                 splashFactory: InkRipple.splashFactory,
-                splashColor: fadedColor,
+                splashColor: transparentColor,
                 borderRadius: BorderRadius.circular(10),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -85,10 +85,8 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: whiteColor,
-                    border: Border.all(
-                      color: greyColor,
-                      width: 1,
-                    ),
+                    boxShadow: const [customShadow],
+                    border: greyBorder,
                   ),
                   child: Row(
                     children: [
@@ -107,7 +105,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                             memCacheHeight: (size.height * 0.3).round(),
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                MdiIcons.alertDecagram,
+                                MdiIcons.alertDecagramOutline,
                                 size: 30,
                                 color: redColor,
                               );

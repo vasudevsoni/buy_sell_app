@@ -236,7 +236,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 width: 100,
                 child: reportImage == null
                     ? const Icon(
-                        MdiIcons.upload,
+                        MdiIcons.uploadOutline,
                         color: lightBlackColor,
                       )
                     : ClipRRect(
@@ -248,7 +248,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               reportImage!,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(
-                                  MdiIcons.alertDecagram,
+                                  MdiIcons.alertDecagramOutline,
                                   size: 20,
                                   color: redColor,
                                 );

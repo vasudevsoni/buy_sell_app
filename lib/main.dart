@@ -12,9 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import 'provider/location_provider.dart';
-import 'provider/main_provider.dart';
-import 'provider/seller_form_provider.dart';
+import 'provider/providers.dart';
 import 'error.dart';
 import 'screens/loading_screen.dart';
 

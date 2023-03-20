@@ -46,13 +46,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    super.initState();
     tabBarController = TabController(
       length: 3,
       vsync: this,
     );
     _services = FirebaseServices();
     _getCurrentUserData();
-    super.initState();
   }
 
   void _getCurrentUserData() async {
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(
-              MdiIcons.mapMarkerRadius,
+              MdiIcons.mapMarkerRadiusOutline,
               size: 25,
               color: blackColor,
             ),
@@ -231,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                         const Icon(
-                          MdiIcons.menuDown,
+                          MdiIcons.menuDownOutline,
                           size: 20,
                           color: blackColor,
                         ),
@@ -513,15 +513,13 @@ class CategoriesListView extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(10),
                 splashFactory: InkRipple.splashFactory,
-                splashColor: fadedColor,
+                splashColor: transparentColor,
                 child: Ink(
                   decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: greyColor,
-                      width: 1,
-                    ),
+                    boxShadow: const [customShadow],
+                    border: greyBorder,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
@@ -538,7 +536,7 @@ class CategoriesListView extends StatelessWidget {
                             filterQuality: FilterQuality.high,
                             errorWidget: (context, url, error) {
                               return const Icon(
-                                MdiIcons.alertDecagram,
+                                MdiIcons.alertDecagramOutline,
                                 size: 30,
                                 color: redColor,
                               );
@@ -710,8 +708,8 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
 
 //   @override
 //   void initState() {
-//     _initBannerAd();
 //     super.initState();
+//     _initBannerAd();
 //   }
 
 //   _initBannerAd() {
@@ -769,7 +767,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
 //             height: size.width * 0.3,
 //             width: 300,
 //             child: Center(
-//               child: Text('Advertisement'),
+//               child: Text('Ad'),
 //             ),
 //           );
 //   }

@@ -10,13 +10,13 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
 import '/screens/main_screen.dart';
 import '/screens/selling/congratulations_screen.dart';
 import '/widgets/custom_button_without_icon.dart';
-import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_text_field.dart';
 import '/services/firebase_services.dart';
@@ -73,10 +73,10 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     subCatNameController.text = 'Jobs > ${widget.subCatName}';
     getUserLocation();
-    super.initState();
   }
 
   showNetworkError() {
@@ -341,7 +341,7 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(
-                                              MdiIcons.alertDecagram,
+                                              MdiIcons.alertDecagramOutline,
                                               size: 20,
                                               color: redColor,
                                             );
@@ -440,7 +440,7 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.clock,
+                                  MdiIcons.clockOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -466,7 +466,7 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.calendar,
+                                  MdiIcons.calendarOutline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -526,7 +526,7 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Post',
-                          icon: MdiIcons.check,
+                          icon: MdiIcons.checkOutline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;

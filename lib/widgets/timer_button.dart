@@ -48,11 +48,9 @@ class _TimerButtonState extends State<TimerButton> {
   _startTimer() {
     Timer(const Duration(seconds: secondsPerUpdate), () async {
       if (!mounted) return;
-
       setState(() {
         timeCounter--;
       });
-
       if (timeCounter != 0) {
         _startTimer();
         return;
@@ -63,7 +61,6 @@ class _TimerButtonState extends State<TimerButton> {
 
   void _onPressed() {
     if (!timeUpFlag) return;
-
     setState(() {
       timeUpFlag = false;
     });

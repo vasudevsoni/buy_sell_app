@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/user_rating_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String instagramLink = '';
   String facebookLink = '';
   String websiteLink = '';
+  double rating = 0;
 
   DateTime dateJoined = DateTime.now();
   // int followers = 0;
@@ -59,9 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    super.initState();
     getUserData();
     _initBannerAd();
-    super.initState();
   }
 
   Future<void> getUserData() async {
@@ -80,6 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       websiteLink = value['websiteLink'] ?? '';
       sellerUid = value['uid'];
       dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      rating = value['rating'] == 0
+          ? 0
+          : (value['rating'] / (value['ratedBy'].length - 1));
       // isFollowing = value['followers'].contains(user!.uid);
       // followers = value['followers'].isEmpty ? 0 : value['followers'].length;
       // following = value['following'].isEmpty ? 0 : value['following'].length;
@@ -257,7 +262,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: MdiIcons.shieldAccount,
+                  icon: MdiIcons.shieldAccountOutline,
                   text: 'Report User',
                   onPressed: () {
                     Get.back();
@@ -322,10 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: _isAdLoaded
           ? Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 50,
               width: 320,
@@ -333,15 +335,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )
           : Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 50,
               width: 320,
               child: const Center(
-                child: Text('Advertisement'),
+                child: Text('Ad'),
               ),
             ),
       body: SafeArea(
@@ -353,129 +352,172 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 25,
               ),
-              profileImage == ''
-                  ? Container(
-                      height: size.width * 0.25,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: blueColor,
-                      ),
-                      child: const Icon(
-                        MdiIcons.account,
-                        color: whiteColor,
-                        size: 40,
-                      ),
-                    )
-                  : GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.down,
-                            onDismissed: (direction) {
-                              Get.back();
-                            },
-                            child: Material(
-                              color: blackColor,
-                              child: Stack(
-                                children: [
-                                  PhotoViewGallery.builder(
-                                    scrollPhysics:
-                                        const ClampingScrollPhysics(),
-                                    itemCount: 1,
-                                    builder: (BuildContext context, int index) {
-                                      return PhotoViewGalleryPageOptions(
-                                        imageProvider:
-                                            CachedNetworkImageProvider(
-                                          profileImage,
-                                        ),
-                                        initialScale:
-                                            PhotoViewComputedScale.contained *
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  profileImage == ''
+                      ? Container(
+                          height: size.width * 0.25,
+                          width: size.width * 0.25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: blueColor,
+                          ),
+                          child: const Icon(
+                            MdiIcons.accountOutline,
+                            color: whiteColor,
+                            size: 40,
+                          ),
+                        )
+                      : GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dismissible(
+                                key: UniqueKey(),
+                                direction: DismissDirection.down,
+                                onDismissed: (direction) {
+                                  Get.back();
+                                },
+                                child: Material(
+                                  color: blackColor,
+                                  child: Stack(
+                                    children: [
+                                      PhotoViewGallery.builder(
+                                        scrollPhysics:
+                                            const ClampingScrollPhysics(),
+                                        itemCount: 1,
+                                        builder:
+                                            (BuildContext context, int index) {
+                                          return PhotoViewGalleryPageOptions(
+                                            imageProvider:
+                                                CachedNetworkImageProvider(
+                                              profileImage,
+                                            ),
+                                            initialScale: PhotoViewComputedScale
+                                                    .contained *
                                                 1,
-                                        minScale:
-                                            PhotoViewComputedScale.contained *
+                                            minScale: PhotoViewComputedScale
+                                                    .contained *
                                                 1,
-                                        maxScale:
-                                            PhotoViewComputedScale.contained *
+                                            maxScale: PhotoViewComputedScale
+                                                    .contained *
                                                 2,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            MdiIcons.alertDecagram,
-                                            size: 20,
-                                            color: redColor,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Icon(
+                                                MdiIcons.alertDecagramOutline,
+                                                size: 20,
+                                                color: redColor,
+                                              );
+                                            },
                                           );
                                         },
-                                      );
-                                    },
-                                    loadingBuilder: (context, event) {
-                                      return const Center(
-                                        child: CustomLoadingIndicator(),
-                                      );
-                                    },
-                                  ),
-                                  Positioned(
-                                    top: 15,
-                                    right: 15,
-                                    child: IconButton(
-                                      onPressed: () => Get.back(),
-                                      splashColor: blueColor,
-                                      splashRadius: 30,
-                                      icon: const Icon(
-                                        MdiIcons.closeCircleOutline,
-                                        size: 30,
-                                        color: whiteColor,
-                                        shadows: [
-                                          BoxShadow(
-                                            offset: Offset(0, 0),
-                                            blurRadius: 15,
-                                            spreadRadius: 15,
-                                          ),
-                                        ],
+                                        loadingBuilder: (context, event) {
+                                          return const Center(
+                                            child: CustomLoadingIndicator(),
+                                          );
+                                        },
                                       ),
-                                    ),
+                                      Positioned(
+                                        top: 15,
+                                        right: 15,
+                                        child: IconButton(
+                                          onPressed: () => Get.back(),
+                                          splashColor: transparentColor,
+                                          splashRadius: 30,
+                                          icon: const Icon(
+                                            MdiIcons.closeCircleOutline,
+                                            size: 30,
+                                            color: whiteColor,
+                                            shadows: [
+                                              BoxShadow(
+                                                offset: Offset(0, 0),
+                                                blurRadius: 15,
+                                                spreadRadius: 15,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      child: Container(
-                        height: size.width * 0.25,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        padding: const EdgeInsets.all(3),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: CachedNetworkImage(
-                            imageUrl: profileImage,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
-                            memCacheHeight: (size.width * 0.25).round(),
-                            memCacheWidth: (size.width * 0.25).round(),
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                MdiIcons.alertDecagram,
-                                size: 30,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Center(
-                                child: CustomLoadingIndicator(),
+                                ),
                               );
                             },
                           ),
+                          child: Container(
+                            height: size.width * 0.25,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            padding: const EdgeInsets.all(3),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImage(
+                                imageUrl: profileImage,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                memCacheHeight: (size.width * 0.25).round(),
+                                memCacheWidth: (size.width * 0.25).round(),
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    MdiIcons.alertDecagramOutline,
+                                    size: 30,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Center(
+                                    child: CustomLoadingIndicator(),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: rating > 0 && rating < 3
+                          ? redColor
+                          : rating == 3
+                              ? Colors.orange
+                              : rating == 0
+                                  ? blackColor
+                                  : greenColor,
+                      borderRadius: BorderRadius.circular(5),
                     ),
+                    child: Row(
+                      children: [
+                        Text(
+                          rating == 0 ? 'Unrated' : rating.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: whiteColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        const Icon(
+                          MdiIcons.star,
+                          size: 15,
+                          color: whiteColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 15,
               ),
@@ -585,6 +627,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomButton(
+                text: 'Rate User',
+                onPressed: () async {
+                  final value = await services.getUserData(sellerUid);
+                  if (value['ratedBy'].contains(services.user!.uid)) {
+                    showSnackBar(
+                      content: 'You have already rated this user',
+                      color: redColor,
+                    );
+                  } else {
+                    Get.to(
+                      () => UserRatingScreen(
+                        userId: sellerUid,
+                        name: name,
+                      ),
+                    );
+                  }
+                },
+                icon: MdiIcons.starOutline,
+                borderColor: blueColor,
+                bgColor: blueColor,
+                textIconColor: whiteColor,
+              ),
               // SizedBox(
               //   height: 10,
               // ),
@@ -627,7 +695,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //         ),
               // ),
               const SizedBox(
-                height: 20,
+                height: 5,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

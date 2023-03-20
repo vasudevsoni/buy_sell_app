@@ -31,7 +31,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    _services.getCurrentUserData().then((value) {
+    super.initState();
+    _fetchUserData();
+  }
+
+  void _fetchUserData() async {
+    try {
+      final value = await _services.getCurrentUserData();
       if (value['location'] != null && mounted) {
         setState(() {
           address =
@@ -39,13 +45,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           country = value['location']['country'];
         });
       }
-    });
-    if (mounted) {
-      setState(() {
-        signInMethod = user!.providerData[0].providerId.toString();
-      });
+      if (mounted) {
+        setState(() {
+          signInMethod = user!.providerData[0].providerId.toString();
+        });
+      }
+    } catch (e) {
+      showSnackBar(
+        content: 'Error fetching user details. Please try again',
+        color: redColor,
+      );
     }
-    super.initState();
   }
 
   showLogoutConfirmation() {
@@ -195,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Edit Profile',
-              icon: MdiIcons.pencilBox,
+              icon: MdiIcons.pencilBoxOutline,
               subTitle: 'Edit your name, bio or add social links',
               trailingIcon: MdiIcons.chevronRight,
               onTap: () => Get.to(
@@ -208,7 +218,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subTitle: address == ''
                   ? 'No location selected'
                   : 'Current location - $address',
-              icon: MdiIcons.mapMarker,
+              icon: MdiIcons.mapMarkerOutline,
               trailingIcon: MdiIcons.chevronRight,
               onTap: () => Get.to(
                 () => const LocationScreen(
@@ -258,21 +268,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Leave us a review',
-              subTitle:
-                  'If you love our app, please take a moment to leave a review. It makes a huge difference.',
-              icon: MdiIcons.star,
-              textColor: blueColor,
-              trailingIcon: MdiIcons.chevronRight,
-              isEnabled: true,
-              onTap: () {
-                inAppReview.openStoreListing();
-              },
-            ),
-            CustomListTileWithSubtitle(
               text: 'Invite friends to BechDe',
               subTitle: 'Invite your friends to buy and sell on BechDe',
-              icon: MdiIcons.accountGroup,
+              icon: MdiIcons.accountGroupOutline,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () {

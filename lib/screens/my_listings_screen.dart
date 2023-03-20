@@ -18,8 +18,8 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
   bool _isAdLoaded = false;
   @override
   void initState() {
-    _initBannerAd();
     super.initState();
+    _initBannerAd();
   }
 
   _initBannerAd() {
@@ -78,10 +78,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
       bottomNavigationBar: _isAdLoaded
           ? Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 100,
               width: 320,
@@ -89,15 +86,12 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
             )
           : Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: greyColor,
-                  width: 1,
-                ),
+                border: greyBorder,
               ),
               height: 100,
               width: 320,
               child: const Center(
-                child: Text('Advertisement'),
+                child: Text('Ad'),
               ),
             ),
     );

@@ -12,8 +12,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/providers.dart';
 import 'custom_button.dart';
-import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
 
 class ImagePickerWidget extends StatefulWidget {
@@ -38,7 +38,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     showMaximumError() {
       showSnackBar(
-        content: 'Maximum 12 images are allowed',
+        content: 'Maximum 8 images are allowed',
         color: redColor,
       );
     }
@@ -63,7 +63,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (pickedFiles.isEmpty) {
         return;
       }
-      if (pickedFiles.length > 12) {
+      if (pickedFiles.length > 8) {
         showMaximumError();
         return;
       }
@@ -200,7 +200,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      MdiIcons.alertDecagram,
+                                                      MdiIcons
+                                                          .alertDecagramOutline,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -224,7 +225,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   Get.back();
                                                 },
                                                 icon: const Icon(
-                                                  MdiIcons.closeCircle,
+                                                  MdiIcons.closeCircleOutline,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -253,7 +254,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                             .round(),
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        MdiIcons.alertDecagram,
+                                        MdiIcons.alertDecagramOutline,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -307,7 +308,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                         ),
                                       ),
                                       child: const Icon(
-                                        MdiIcons.close,
+                                        MdiIcons.closeOutline,
                                         size: 18,
                                         color: whiteColor,
                                       ),
@@ -342,7 +343,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ),
               if (provider.imagePaths.isNotEmpty)
                 Text(
-                  '${provider.imagePaths.length} / 12',
+                  '${provider.imagePaths.length} / 8',
                   style: GoogleFonts.interTight(
                     fontWeight: FontWeight.w500,
                     color: fadedColor,
@@ -362,7 +363,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               Expanded(
                 child: CustomButton(
                   text: 'Take Photo',
-                  onPressed: provider.imagesCount >= 12
+                  onPressed: provider.imagesCount >= 8
                       ? showMaximumError
                       : requestCameraPermission,
                   icon: MdiIcons.camera,
@@ -378,7 +379,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               Expanded(
                 child: CustomButton(
                   text: 'Upload',
-                  onPressed: provider.imagesCount >= 12
+                  onPressed: provider.imagesCount >= 8
                       ? showMaximumError
                       : requestGalleryPermission,
                   icon: MdiIcons.imagePlus,

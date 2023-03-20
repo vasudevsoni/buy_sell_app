@@ -23,35 +23,40 @@ class HelpAndSupportScreen extends StatefulWidget {
 
 class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   final FirebaseServices _services = FirebaseServices();
-  late PackageInfo packageInfo;
+  late final PackageInfo packageInfo;
   String uid = '';
   String version = '';
 
   @override
   void initState() {
-    setState(() {
-      uid = _services.user!.uid;
-    });
-    getDetails();
     super.initState();
+    uid = _services.user!.uid;
+    getDetails();
   }
 
-  getDetails() async {
+  Future<void> getDetails() async {
     packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       version = packageInfo.version;
     });
   }
 
-  openMail(email) async {
-    await FlutterEmailSender.send(email);
+  Future<void> openMail(email) async {
+    try {
+      await FlutterEmailSender.send(email);
+    } catch (e) {
+      showSnackBar(
+        content: 'Something went wrong. Please try again',
+        color: redColor,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final Email dataDeleteEmail = Email(
       body:
-          '**Do not delete this.\nHi, I would like to delete my data and account for BechDe.\nUserId - $uid **',
+          '{Do not delete this.\nHi, I would like to delete my data and account for BechDe.\nUserId - $uid}',
       subject: 'Delete BechDe Data',
       recipients: ['support@bechdeapp.com'],
       isHTML: false,
@@ -100,7 +105,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               text: 'Make a suggestion',
               subTitle:
                   'If you have some feedback, suggestions or improvements for our app, we would love to hear them',
-              icon: MdiIcons.lightningBolt,
+              icon: MdiIcons.lightningBoltOutline,
               textColor: blackColor,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
@@ -111,7 +116,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Contact Us',
               subTitle: 'Contact us for any issues you are facing',
-              icon: MdiIcons.emailCheck,
+              icon: MdiIcons.emailCheckOutline,
               textColor: blackColor,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
@@ -120,7 +125,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Report a problem',
               subTitle: 'If something is not right, please report it here',
-              icon: MdiIcons.bug,
+              icon: MdiIcons.bugOutline,
               textColor: redColor,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
@@ -147,7 +152,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Community Guidelines',
-              icon: MdiIcons.accountGroup,
+              icon: MdiIcons.accountGroupOutline,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => Get.to(
@@ -165,7 +170,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Terms of Service',
-              icon: MdiIcons.bookOpenPageVariant,
+              icon: MdiIcons.bookOpenPageVariantOutline,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
@@ -174,7 +179,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Privacy Policy',
-              icon: MdiIcons.lock,
+              icon: MdiIcons.lockOutline,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
@@ -183,7 +188,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Icons by Icons8',
-              icon: MdiIcons.emoticon,
+              icon: MdiIcons.emoticonOutline,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
               onTap: () => launchUrl(
@@ -218,7 +223,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               text: 'Request Account Deletion',
               subTitle:
                   'If you would like to delete your account and data, leave us a request here',
-              icon: MdiIcons.delete,
+              icon: MdiIcons.deleteOutline,
               textColor: redColor,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,

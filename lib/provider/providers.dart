@@ -1,10 +1,34 @@
 import 'dart:io';
-import 'package:cloudinary/cloudinary.dart';
+
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:cloudinary/cloudinary.dart';
 import 'package:uuid/uuid.dart';
 
 import '../services/cloudinary_services.dart';
 import '/services/firebase_services.dart';
+
+class AppNavigationProvider with ChangeNotifier {
+  int _currentPageIndex = 0;
+
+  int get currentPageIndex => _currentPageIndex;
+
+  void switchToPage(int index) {
+    _currentPageIndex = index;
+    notifyListeners();
+  }
+}
+
+class LocationProvider with ChangeNotifier {
+  LocationData? _locationData;
+
+  LocationData? get locationData => _locationData;
+
+  void updateLocation(LocationData location) async {
+    _locationData = location;
+    notifyListeners();
+  }
+}
 
 class SellerFormProvider with ChangeNotifier {
   final FirebaseServices services = FirebaseServices();

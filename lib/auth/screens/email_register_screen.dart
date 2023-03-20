@@ -27,6 +27,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
   final EmailAuthService _service = EmailAuthService();
   bool isLoading = false;
+  bool isObscured = true;
 
   _validateEmail() async {
     if (_registerformKey.currentState!.validate() && mounted) {
@@ -44,8 +45,6 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
       });
     }
   }
-
-  bool isObscured = true;
 
   @override
   void dispose() {
@@ -156,11 +155,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              MdiIcons.eyeOff,
+                              MdiIcons.eyeOffOutline,
                               size: 30,
                             )
                           : const Icon(
-                              MdiIcons.eye,
+                              MdiIcons.eyeOutline,
                               size: 30,
                             ),
                     ),
@@ -177,7 +176,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                     )
                   : CustomButton(
                       text: 'Create Account',
-                      icon: MdiIcons.accountPlus,
+                      icon: MdiIcons.accountPlusOutline,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

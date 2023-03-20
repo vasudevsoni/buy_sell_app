@@ -33,8 +33,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   void initState() {
-    _loadUserData();
     super.initState();
+    _loadUserData();
   }
 
   Future<void> _loadUserData() async {
@@ -193,7 +193,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.check,
+                          icon: MdiIcons.checkOutline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;

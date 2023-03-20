@@ -38,8 +38,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   void initState() {
-    getConnectivity();
     super.initState();
+    getConnectivity();
   }
 
   showNetworkError() {
@@ -383,7 +383,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           padding: const EdgeInsets.only(right: 15, left: 5),
                           child: CustomButton(
                             text: 'Email',
-                            icon: MdiIcons.email,
+                            icon: MdiIcons.emailOutline,
                             bgColor: whiteColor,
                             borderColor: blackColor,
                             textIconColor: blackColor,
