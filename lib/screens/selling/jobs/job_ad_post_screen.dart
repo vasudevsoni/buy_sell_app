@@ -608,6 +608,7 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                               'isSold': false,
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             publishProductToFirebase(provider);
                           },

@@ -521,26 +521,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (isSold == true)
-                          Container(
-                            width: size.width,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
-                            color: redColor,
-                            child: Center(
-                              child: Text(
-                                'This listing has been sold',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.interTight(
-                                  color: whiteColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
                         GestureDetector(
                           onTap: () => images.length >= 2
                               ? Get.to(
@@ -739,6 +719,38 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
+                        if (isSold == true)
+                          Container(
+                            width: size.width,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            color: redColor,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'This listing has been sold',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.interTight(
+                                      color: whiteColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Icon(
+                                    MdiIcons.basketOffOutline,
+                                    color: whiteColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         Padding(
                           padding: const EdgeInsets.only(
                             left: 15,
@@ -785,7 +797,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
-                                  color: greyColor,
+                                  color: whiteColor,
+                                  border: greyBorder,
+                                  boxShadow: const [customShadow],
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Row(

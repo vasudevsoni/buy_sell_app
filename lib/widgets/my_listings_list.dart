@@ -767,7 +767,8 @@ class _MyListingScreenProductCardState
                           ],
                         ),
                       if (widget.data['isActive'] == true &&
-                          widget.data['isRejected'] == false)
+                          widget.data['isRejected'] == false &&
+                          widget.data['isSold'] == false)
                         Column(
                           children: [
                             const SizedBox(
@@ -790,11 +791,6 @@ class _MyListingScreenProductCardState
                               borderColor: blueColor,
                               textIconColor: whiteColor,
                             ),
-                          ],
-                        ),
-                      if (widget.data['isActive'] == true)
-                        Column(
-                          children: [
                             const SizedBox(
                               height: 5,
                             ),
@@ -858,7 +854,8 @@ class _MyListingScreenProductCardState
                   ),
                 ),
               ),
-              if (widget.data['isActive'] == true ||
+              if ((widget.data['isActive'] == true &&
+                      widget.data['isSold'] == false) ||
                   widget.data['isRejected'] == true)
                 Positioned(
                   top: 10,

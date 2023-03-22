@@ -655,6 +655,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                               'isSold': false,
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             publishProductToFirebase(provider);
                           },

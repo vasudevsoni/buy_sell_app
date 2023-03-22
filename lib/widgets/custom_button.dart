@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,6 +41,7 @@ class CustomButton extends StatelessWidget {
           width: 1.2,
         ),
       ),
+      splashColor: transparentColor,
       color: bgColor,
       enableFeedback: true,
       padding: const EdgeInsets.symmetric(horizontal: 15),

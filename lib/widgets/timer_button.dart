@@ -79,6 +79,7 @@ class _TimerButtonState extends State<TimerButton> {
             borderShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
+            splashColor: transparentColor,
             color: widget.color,
             enableFeedback: true,
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -102,6 +103,7 @@ class _TimerButtonState extends State<TimerButton> {
             borderShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
+            splashColor: transparentColor,
             color: widget.disabledColor,
             enableFeedback: true,
             padding: const EdgeInsets.symmetric(horizontal: 15),

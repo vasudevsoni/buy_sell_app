@@ -362,7 +362,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -386,38 +386,17 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     ),
                   ),
                 ),
-                ActionChip(
-                  label: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'See all',
-                        style: GoogleFonts.interTight(
-                          color: blueColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      const Icon(
-                        MdiIcons.arrowRight,
-                        color: blueColor,
-                        size: 12,
-                      ),
-                    ],
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => widget.tabBarController.animateTo(2),
+                  child: Text(
+                    'See all',
+                    style: GoogleFonts.interTight(
+                      color: blueColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  side: const BorderSide(
-                    color: blueColor,
-                    width: 0.5,
-                  ),
-                  backgroundColor: whiteColor,
-                  onPressed: () => widget.tabBarController.animateTo(2),
                 ),
               ],
             ),
@@ -529,7 +508,7 @@ class CategoriesListView extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
+                          padding: const EdgeInsets.only(bottom: 3),
                           child: CachedNetworkImage(
                             imageUrl: doc['image'],
                             fit: BoxFit.fitHeight,
@@ -605,7 +584,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(
@@ -629,38 +608,17 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     ),
                   ),
                 ),
-                ActionChip(
-                  label: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'See all',
-                        style: GoogleFonts.interTight(
-                          color: blueColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      const Icon(
-                        MdiIcons.arrowRight,
-                        color: blueColor,
-                        size: 12,
-                      ),
-                    ],
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => widget.tabBarController.animateTo(2),
+                  child: Text(
+                    'See all',
+                    style: GoogleFonts.interTight(
+                      color: blueColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  side: const BorderSide(
-                    color: blueColor,
-                    width: 0.5,
-                  ),
-                  backgroundColor: whiteColor,
-                  onPressed: () => widget.tabBarController.animateTo(2),
                 ),
               ],
             ),

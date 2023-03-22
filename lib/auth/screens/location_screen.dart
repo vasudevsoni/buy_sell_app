@@ -156,7 +156,7 @@ class _LocationScreenState extends State<LocationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'Set your location to get nearby product recommendations and to sell your own products',
+                'By setting your location, you can receive tailored product suggestions in your area and market your own products for sale',
                 style: GoogleFonts.interTight(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
@@ -169,7 +169,7 @@ class _LocationScreenState extends State<LocationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
-                'To enjoy all that we have to offer, we need to know where to look for them',
+                'In order to access all of our offerings, we must know where to look for them',
                 style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: lightBlackColor,

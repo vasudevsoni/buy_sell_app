@@ -519,6 +519,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                               'isSold': false,
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             publishProductToFirebase(provider);
                           },

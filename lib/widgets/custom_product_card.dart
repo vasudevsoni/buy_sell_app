@@ -30,18 +30,20 @@ class _CustomProductCardState extends State<CustomProductCard> {
   List fav = [];
   bool isLiked = false;
   bool isLoading = false;
+  bool isSold = false;
 
   @override
   void initState() {
     super.initState();
-    getFavDetails();
+    getDetails();
   }
 
-  Future<void> getFavDetails() async {
+  Future<void> getDetails() async {
     if (!mounted) return;
     setState(() {
       isLoading = true;
       fav = widget.data['favorites'];
+      isSold = widget.data['isSold'];
     });
     if (fav.contains(services.user!.uid)) {
       setState(() {
@@ -60,191 +62,192 @@ class _CustomProductCardState extends State<CustomProductCard> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return isLoading
-        ? const Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Center(
-              child: CustomLoadingIndicator(),
-            ),
+        ? const Center(
+            child: CustomLoadingIndicator(),
           )
-        : Stack(
-            children: [
-              InkWell(
-                splashFactory: InkRipple.splashFactory,
-                splashColor: transparentColor,
-                borderRadius: BorderRadius.circular(10),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ProductDetailsScreen(
-                        productData: widget.data,
-                      );
-                    },
+        : Opacity(
+            opacity: isSold ? 0.5 : 1,
+            child: Stack(
+              children: [
+                InkWell(
+                  splashFactory: InkRipple.splashFactory,
+                  splashColor: transparentColor,
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ProductDetailsScreen(
+                          productData: widget.data,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: whiteColor,
-                    boxShadow: const [customShadow],
-                    border: greyBorder,
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                        ),
-                        child: SizedBox(
-                          width: size.width * 0.3,
-                          height: size.width * 0.3,
-                          child: CachedNetworkImage(
-                            imageUrl: widget.data['images'][0],
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
-                            memCacheHeight: (size.height * 0.3).round(),
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                MdiIcons.alertDecagramOutline,
-                                size: 30,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Icon(
-                                MdiIcons.imageFilterHdr,
-                                size: 30,
-                                color: lightBlackColor,
-                              );
-                            },
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: whiteColor,
+                      boxShadow: const [customShadow],
+                      border: greyBorder,
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          ),
+                          child: SizedBox(
+                            width: size.width * 0.3,
+                            height: size.width * 0.3,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.data['images'][0],
+                              fit: BoxFit.cover,
+                              filterQuality: FilterQuality.high,
+                              memCacheHeight: (size.height * 0.3).round(),
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  MdiIcons.alertDecagramOutline,
+                                  size: 30,
+                                  color: redColor,
+                                );
+                              },
+                              placeholder: (context, url) {
+                                return const Icon(
+                                  MdiIcons.imageFilterHdr,
+                                  size: 30,
+                                  color: lightBlackColor,
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: size.width * 0.3,
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              widget.data['catName'] == 'Jobs'
-                                  ? Text(
-                                      '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w800,
-                                        color: blackColor,
-                                        fontSize: 16,
+                        Expanded(
+                          child: Container(
+                            height: size.width * 0.3,
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                widget.data['catName'] == 'Jobs'
+                                    ? Text(
+                                        '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w800,
+                                          color: blackColor,
+                                          fontSize: 16,
+                                        ),
+                                      )
+                                    : Text(
+                                        priceFormat
+                                            .format(widget.data['price']),
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w800,
+                                          color: blackColor,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    )
-                                  : Text(
-                                      priceFormat.format(widget.data['price']),
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w800,
-                                        color: blackColor,
-                                        fontSize: 16,
+                                if (widget.data['catName'] == 'Jobs')
+                                  Column(
+                                    children: [
+                                      AutoSizeText(
+                                        'Salary Period - ${widget.data['salaryPeriod']}',
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w500,
+                                          color: blackColor,
+                                          fontSize: 13,
+                                        ),
                                       ),
-                                    ),
-                              if (widget.data['catName'] == 'Jobs')
-                                Column(
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                    ],
+                                  ),
+                                Text(
+                                  widget.data['title'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    AutoSizeText(
-                                      'Salary Period - ${widget.data['salaryPeriod']}',
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w500,
-                                        color: blackColor,
-                                        fontSize: 13,
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        '${widget.data['location']['area']}, ${widget.data['location']['city']}',
+                                        maxLines: 2,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        minFontSize: 8,
+                                        maxFontSize: 11,
+                                        style: GoogleFonts.interTight(
+                                          color: lightBlackColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 3,
+                                    Expanded(
+                                      child: Text(
+                                        timeago.format(widget.time),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                        style: GoogleFonts.interTight(
+                                          color: lightBlackColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              Text(
-                                widget.data['title'],
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
-                                      minFontSize: 8,
-                                      maxFontSize: 11,
-                                      style: GoogleFonts.interTight(
-                                        color: lightBlackColor,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      timeago.format(widget.time),
-                                      maxLines: 1,
-                                      textAlign: TextAlign.end,
-                                      style: GoogleFonts.interTight(
-                                        color: lightBlackColor,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (widget.data['sellerUid'] != services.user!.uid)
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      isLiked = !isLiked;
-                      services.updateFavorite(
-                        isLiked: isLiked,
-                        productId: widget.data.id,
-                      );
-                    },
-                    child: Icon(
-                      isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
-                      size: 22,
-                      color: isLiked ? redColor : lightBlackColor,
+                      ],
                     ),
                   ),
                 ),
-            ],
+                if (widget.data['sellerUid'] != services.user!.uid)
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        isLiked = !isLiked;
+                        services.updateFavorite(
+                          isLiked: isLiked,
+                          productId: widget.data.id,
+                        );
+                      },
+                      child: Icon(
+                        isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                        size: 22,
+                        color: isLiked ? redColor : lightBlackColor,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           );
   }
 }

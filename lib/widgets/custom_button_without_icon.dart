@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../utils/utils.dart';
+
 class CustomButtonWithoutIcon extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -33,6 +35,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
           width: 1.2,
         ),
       ),
+      splashColor: transparentColor,
       color: bgColor,
       enableFeedback: true,
       padding: const EdgeInsets.symmetric(horizontal: 15),

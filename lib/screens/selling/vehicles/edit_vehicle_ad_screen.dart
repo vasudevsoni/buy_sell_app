@@ -552,6 +552,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               ),
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             await updateProductOnFirebase(provider, uid);
                           },

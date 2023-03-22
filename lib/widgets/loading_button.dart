@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
+import '../utils/utils.dart';
 import 'custom_loading_indicator.dart';
 
 class LoadingButton extends StatelessWidget {
@@ -17,6 +18,7 @@ class LoadingButton extends StatelessWidget {
       borderShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
+      splashColor: transparentColor,
       color: bgColor,
       enableFeedback: true,
       padding: const EdgeInsets.symmetric(horizontal: 15),

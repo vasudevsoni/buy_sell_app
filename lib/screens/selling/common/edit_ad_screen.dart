@@ -410,6 +410,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               ),
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             await updateProductOnFirebase(provider, uid);
                           },

@@ -500,6 +500,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                               ),
                               'isActive': false,
                               'isRejected': false,
+                              'isShowedInConsole': true,
                             });
                             await updateProductOnFirebase(provider, uid);
                           },
