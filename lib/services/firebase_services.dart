@@ -153,11 +153,12 @@ class FirebaseServices {
   //   }
   // }
 
-  Future<void> markAsSold({productId}) async {
+  Future<void> markAsSold({productId, required bool isSoldOnBechDe}) async {
     try {
       await listings.doc(productId).update({
         'isSold': true,
         'isShowedInConsole': false,
+        'soldOn': isSoldOnBechDe == true ? 'BechDe' : 'Outside of BechDe',
       });
       showSnackBar(
         content: 'The product has been marked as sold',

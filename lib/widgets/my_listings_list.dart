@@ -302,7 +302,10 @@ class _MyListingScreenProductCardState
                 ),
                 Center(
                   child: Text(
-                    'Are you sure?',
+                    'Where did you sell this item?',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                     style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -313,55 +316,75 @@ class _MyListingScreenProductCardState
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: whiteColor,
-                    border: greyBorder,
-                    boxShadow: const [customShadow],
-                  ),
-                  child: Text(
-                    'Your product will be marked as sold and deactivated. This action cannot be reversed.',
-                    style: GoogleFonts.interTight(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                CustomButton(
+                  text: 'On BechDe',
+                  onPressed: () {
+                    services.markAsSold(
+                      productId: widget.data.id,
+                      isSoldOnBechDe: true,
+                    );
+                    Get.back();
+                  },
+                  icon: MdiIcons.checkCircleOutline,
+                  isFullWidth: true,
+                  bgColor: blueColor,
+                  borderColor: blueColor,
+                  textIconColor: whiteColor,
                 ),
-                const SizedBox(
-                  height: 10,
+                CustomButton(
+                  text: 'Outside of BechDe',
+                  onPressed: () {
+                    services.markAsSold(
+                      productId: widget.data.id,
+                      isSoldOnBechDe: false,
+                    );
+                    Get.back();
+                  },
+                  icon: MdiIcons.cancel,
+                  isFullWidth: true,
+                  bgColor: greyColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButtonWithoutIcon(
-                        text: 'Cancel',
-                        onPressed: () => Get.back(),
-                        bgColor: whiteColor,
-                        borderColor: greyColor,
-                        textIconColor: blackColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: CustomButtonWithoutIcon(
-                        text: 'Mark as Sold',
-                        onPressed: () {
-                          services.markAsSold(
-                            productId: widget.data.id,
-                          );
-                          Get.back();
-                        },
-                        bgColor: blueColor,
-                        borderColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-                    ),
-                  ],
+                CustomButton(
+                  text: 'Cancel',
+                  onPressed: () => Get.back(),
+                  icon: MdiIcons.close,
+                  isFullWidth: true,
+                  bgColor: whiteColor,
+                  borderColor: greyColor,
+                  textIconColor: blackColor,
                 ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: CustomButtonWithoutIcon(
+                //         text: 'Cancel',
+                //         onPressed: () => Get.back(),
+                //         bgColor: whiteColor,
+                //         borderColor: greyColor,
+                //         textIconColor: blackColor,
+                //       ),
+                //     ),
+                //     const SizedBox(
+                //       width: 5,
+                //     ),
+                //     Expanded(
+                //       child: CustomButtonWithoutIcon(
+                //         text: 'Mark as Sold',
+                //         onPressed: () {
+                //           services.markAsSold(
+                //             productId: widget.data.id,
+                //           );
+                //           Get.back();
+                //         },
+                //         bgColor: blueColor,
+                //         borderColor: blueColor,
+                //         textIconColor: whiteColor,
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

@@ -26,13 +26,7 @@ void showSnackBar({
       backgroundColor: color,
       duration: const Duration(seconds: 4),
       snackStyle: SnackStyle.FLOATING,
-      boxShadows: const [
-        BoxShadow(
-          blurRadius: 20,
-          spreadRadius: 2,
-          color: lightBlackColor,
-        ),
-      ],
+      boxShadows: const [customShadow],
       borderRadius: 10,
       margin: const EdgeInsets.all(15),
       dismissDirection: DismissDirection.up,

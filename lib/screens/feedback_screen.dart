@@ -151,7 +151,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          'Make a suggestion',
+          'Help us improve',
           style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,

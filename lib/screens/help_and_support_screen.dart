@@ -102,7 +102,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Make a suggestion',
+              text: 'Help us improve',
               subTitle:
                   'If you have some feedback, suggestions or improvements for our app, we would love to hear them',
               icon: MdiIcons.lightningBoltOutline,
