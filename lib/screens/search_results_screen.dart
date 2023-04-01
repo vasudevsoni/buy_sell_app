@@ -53,7 +53,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             .where('searchQueries', arrayContains: widget.query)
             .where('isActive', isEqualTo: true)
             .orderBy('postedAt', descending: true),
-        pageSize: 6,
+        pageSize: 11,
         builder: (context, snapshot, child) {
           if (snapshot.isFetching) {
             return const Padding(

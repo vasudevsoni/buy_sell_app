@@ -21,11 +21,13 @@ class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
   final String prodId;
   final String sellerId;
+  final bool makeOffer;
   const ConversationScreen({
     super.key,
     required this.chatRoomId,
     required this.prodId,
     required this.sellerId,
+    required this.makeOffer,
   });
 
   @override
@@ -50,7 +52,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     super.initState();
-    getDetails();
+    getDetails(makeOffer: widget.makeOffer);
   }
 
   scrollDown() {
@@ -64,7 +66,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     }
   }
 
-  getDetails() async {
+  getDetails({makeOffer}) async {
     setState(() {
       isLoading = true;
     });
@@ -96,6 +98,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
     setState(() {
       isLoading = false;
     });
+
+    if (widget.makeOffer == true) {
+      showMakeOfferDialog();
+    }
   }
 
   sendOfferMessage(String offer) async {

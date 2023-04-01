@@ -33,7 +33,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
           query: services.listings
               .orderBy('title', descending: false)
               .where('favorites', arrayContains: services.user!.uid),
-          pageSize: 5,
+          pageSize: 11,
           builder: (context, snapshot, child) {
             if (snapshot.isFetching) {
               return const Padding(

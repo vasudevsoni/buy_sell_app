@@ -138,7 +138,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     });
   }
 
-  void createChatRoom() {
+  createChatRoom({required bool makeOffer}) async {
     final product = {
       'productId': widget.productData.id,
       'productImage': widget.productData['images'][0],
@@ -163,15 +163,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       'lastChat': null,
       'lastChatTime': DateTime.now().microsecondsSinceEpoch,
     };
-
-    services.createChatRoomInFirebase(chatData: chatData);
-    Get.to(
-      () => ConversationScreen(
-        chatRoomId: chatRoomId,
-        prodId: widget.productData.id,
-        sellerId: widget.productData['sellerUid'],
-      ),
-    );
+    await services.createChatRoomInFirebase(chatData: chatData);
+    makeOffer
+        ? Get.to(
+            () => ConversationScreen(
+              chatRoomId: chatRoomId,
+              prodId: widget.productData.id,
+              sellerId: widget.productData['sellerUid'],
+              makeOffer: true,
+            ),
+          )
+        : Get.to(
+            () => ConversationScreen(
+              chatRoomId: chatRoomId,
+              prodId: widget.productData.id,
+              sellerId: widget.productData['sellerUid'],
+              makeOffer: false,
+            ),
+          );
   }
 
   @override
@@ -483,10 +492,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               actions: isSold
                   ? []
                   : [
-                      GestureDetector(
-                        onTap: showOptionsDialog,
-                        behavior: HitTestBehavior.opaque,
-                        child: const Icon(
+                      if (widget.productData['sellerUid'] != services.user!.uid)
+                        IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              isLiked = !isLiked;
+                            });
+                            await services.updateFavorite(
+                              isLiked: isLiked,
+                              productId: widget.productData.id,
+                            );
+                          },
+                          icon: Icon(
+                            isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                            color: isLiked ? redColor : blackColor,
+                            size: 25,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                          splashRadius: 20,
+                        ),
+                      IconButton(
+                        onPressed: showOptionsDialog,
+                        visualDensity: VisualDensity.compact,
+                        splashRadius: 20,
+                        icon: const Icon(
                           MdiIcons.dotsHorizontal,
                           color: blackColor,
                           size: 25,
@@ -947,7 +976,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         horizontal: 15),
                                     child: CustomButton(
                                       text: 'Chat Now',
-                                      onPressed: createChatRoom,
+                                      onPressed: () {
+                                        createChatRoom(makeOffer: false);
+                                      },
                                       isFullWidth: true,
                                       icon: MdiIcons.chatProcessing,
                                       bgColor: blueColor,
@@ -964,25 +995,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomButton(
-                              text: isLiked
-                                  ? 'Added to Favorites'
-                                  : 'Add to Favorites',
-                              onPressed: () async {
-                                setState(() {
-                                  isLiked = !isLiked;
-                                });
-                                await services.updateFavorite(
-                                  isLiked: isLiked,
-                                  productId: widget.productData.id,
-                                );
+                              text: 'Make Offer',
+                              onPressed: () {
+                                createChatRoom(makeOffer: true);
                               },
                               isFullWidth: true,
-                              icon: isLiked
-                                  ? MdiIcons.heart
-                                  : MdiIcons.heartOutline,
-                              bgColor: whiteColor,
-                              borderColor: redColor,
-                              textIconColor: redColor,
+                              icon: MdiIcons.cashFast,
+                              bgColor: greenColor,
+                              borderColor: greenColor,
+                              textIconColor: whiteColor,
                             ),
                           ),
                         const SizedBox(

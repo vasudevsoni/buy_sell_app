@@ -35,7 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabBarController;
-  late FirebaseServices _services;
+  final _services = FirebaseServices();
   final User? user = FirebaseAuth.instance.currentUser;
   String area = '';
   String city = '';
@@ -51,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       vsync: this,
     );
-    _services = FirebaseServices();
     _getCurrentUserData();
   }
 
@@ -59,9 +58,9 @@ class _HomeScreenState extends State<HomeScreen>
     final value = await _services.getCurrentUserData();
     if (value['location'] == null) {
       _getEmptyLocationUI();
-      return;
+    } else {
+      _getAddressToUI(value);
     }
-    _getAddressToUI(value);
   }
 
   void _getAddressToUI(DocumentSnapshot<Object?> value) {
@@ -74,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-  _getEmptyLocationUI() async {
+  _getEmptyLocationUI() {
     if (mounted) {
       setState(() {
         isLocationEmpty = true;
@@ -294,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen>
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
-          labelColor: blackColor,
+          labelColor: blueColor,
           unselectedLabelColor: lightBlackColor,
           tabs: const [
             Tab(
@@ -824,7 +823,7 @@ class _ProductsListState extends State<ProductsList> {
                     )
                     .where('isActive', isEqualTo: true)
                     .where('location.city', isEqualTo: widget.city),
-            pageSize: 9,
+            pageSize: 11,
             builder: (context, snapshot, child) {
               if (snapshot.isFetching) {
                 return const Padding(

@@ -32,7 +32,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final FirebaseServices _services = FirebaseServices();
   final User? user = FirebaseAuth.instance.currentUser;
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
@@ -142,18 +142,14 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  getConnectivity() {
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
+  Future<void> getConnectivity() async {
+    await for (final _ in Connectivity().onConnectivityChanged) {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
-    });
+    }
   }
 
   Future<void> onSellButtonClicked() async {

@@ -51,7 +51,7 @@ class MyListingsList extends StatelessWidget {
       query: services.listings
           .orderBy('postedAt', descending: true)
           .where('sellerUid', isEqualTo: services.user!.uid),
-      pageSize: 3,
+      pageSize: 5,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Center(
@@ -715,7 +715,7 @@ class _MyListingScreenProductCardState
                             width: 5,
                           ),
                           Text(
-                            'ID: ${widget.data.id}',
+                            'Product ID: ${widget.data.id}',
                             style: GoogleFonts.interTight(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,

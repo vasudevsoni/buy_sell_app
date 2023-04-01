@@ -45,7 +45,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
   dynamic salaryPeriodSelectedValue;
   dynamic positionTypeSelectedValue;
 
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
@@ -167,18 +167,14 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
     );
   }
 
-  getConnectivity() {
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
+  Future<void> getConnectivity() async {
+    await for (final _ in Connectivity().onConnectivityChanged) {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
-    });
+    }
   }
 
   @override

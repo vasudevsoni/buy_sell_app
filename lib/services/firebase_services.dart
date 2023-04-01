@@ -98,9 +98,6 @@ class FirebaseServices {
               'favorites': FieldValue.arrayRemove([user!.uid])
             };
       await listings.doc(productId).update(updateData);
-      final message = isLiked ? 'Added to favorites' : 'Removed from favorites';
-      final color = isLiked ? blueColor : redColor;
-      showSnackBar(content: message, color: color);
       // if (!isLiked) {
       //   await listings.doc(productId).update({
       //     'favorites': FieldValue.arrayRemove([user!.uid])

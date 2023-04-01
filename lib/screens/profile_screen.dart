@@ -751,7 +751,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 5,
+      pageSize: 11,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(

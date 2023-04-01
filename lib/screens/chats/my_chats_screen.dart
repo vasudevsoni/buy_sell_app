@@ -510,12 +510,13 @@ class _ChatCardState extends State<ChatCard> {
       opacity: isActive == false ? 0.5 : 1,
       child: InkWell(
         splashFactory: InkRipple.splashFactory,
-        splashColor: fadedColor,
+        splashColor: transparentColor,
         onTap: () => Get.to(
           () => ConversationScreen(
             chatRoomId: widget.chatData['chatRoomId'],
             prodId: prodId,
             sellerId: sellerUid,
+            makeOffer: false,
           ),
         ),
         child: Padding(
@@ -696,7 +697,7 @@ class _ChatCardState extends State<ChatCard> {
                                       TextSpan(
                                         text: ' Buyer',
                                         style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                           color: redColor,
                                         ),
@@ -721,7 +722,7 @@ class _ChatCardState extends State<ChatCard> {
                                       TextSpan(
                                         text: ' Seller',
                                         style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                           color: blueColor,
                                         ),

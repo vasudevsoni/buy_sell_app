@@ -49,7 +49,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
   dynamic noOfOwnersSelectedValue;
   dynamic colorSelectedValue;
 
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
@@ -174,18 +174,14 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     );
   }
 
-  getConnectivity() {
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
+  Future<void> getConnectivity() async {
+    await for (final _ in Connectivity().onConnectivityChanged) {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
-    });
+    }
   }
 
   @override

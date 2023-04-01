@@ -83,7 +83,7 @@ class _CategoryScreenProductsListState
           .where('catName', isEqualTo: widget.catName)
           .where('subCat', isEqualTo: widget.subCatName)
           .where('isActive', isEqualTo: true),
-      pageSize: 6,
+      pageSize: 11,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
