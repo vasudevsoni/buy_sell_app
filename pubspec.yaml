@@ -3,7 +3,7 @@ description: Buy Sell Used Products Nearby
 
 publish_to: 'none'
 
-version: 1.6.2+43
+version: 1.6.3+44
 
 environment:
   sdk: '>=2.18.1 <3.0.0'

@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen>
                         softWrap: true,
                         style: GoogleFonts.interTight(
                           fontWeight: FontWeight.w500,
-                          fontSize: 12,
+                          fontSize: 11,
                           color: fadedColor,
                         ),
                       ),
@@ -284,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen>
           indicatorSize: TabBarIndicatorSize.label,
           indicatorColor: blueColor,
           indicatorWeight: 3,
+          splashFactory: InkRipple.splashFactory,
           splashBorderRadius: BorderRadius.circular(10),
           labelStyle: GoogleFonts.interTight(
             fontWeight: FontWeight.w700,
@@ -310,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: tabBarController,
-        physics: const ClampingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
           //near me screen
           NearbyProductsScreen(

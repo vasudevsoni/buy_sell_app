@@ -456,13 +456,21 @@ class CommunityGuidelinesScreen extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              Text(
-                'If you encounter any suspicious activity or fraudulent behavior, please report it to us immediately. We take all reports seriously and will take appropriate action to address any issues. With these guidelines in mind, we hope that you can enjoy a safe and successful buying and selling experience on BechDe!',
-                textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w500,
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                   color: redColor,
-                  fontSize: 16,
+                ),
+                child: Text(
+                  'If you encounter any suspicious activity or fraudulent behavior, please report it to us immediately. We take all reports seriously and will take appropriate action to address any issues. With these guidelines in mind, we hope that you can enjoy a safe and successful buying and selling experience on BechDe!',
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.interTight(
+                    fontWeight: FontWeight.w500,
+                    color: whiteColor,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(

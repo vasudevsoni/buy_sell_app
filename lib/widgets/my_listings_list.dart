@@ -1,4 +1,3 @@
-import 'package:buy_sell_app/promotion/promote_listing_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
@@ -13,6 +12,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
+import '../promotion/promote_listing_screen.dart';
 import '../screens/selling/common/edit_ad_screen.dart';
 import '../screens/selling/jobs/edit_job_post_screen.dart';
 import '../screens/selling/seller_categories_list_screen.dart';
@@ -524,356 +524,308 @@ class _MyListingScreenProductCardState
                   ),
                 ),
                 child: Ink(
-                  color: whiteColor,
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.3,
-                            height: size.width * 0.3,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: widget.data['images'][0],
-                                fit: BoxFit.cover,
-                                filterQuality: FilterQuality.high,
-                                memCacheHeight: (size.height * 0.3).round(),
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    MdiIcons.alertDecagramOutline,
-                                    size: 30,
-                                    color: redColor,
-                                  );
-                                },
-                                placeholder: (context, url) {
-                                  return const Icon(
-                                    MdiIcons.imageFilterHdr,
-                                    size: 30,
-                                    color: lightBlackColor,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: whiteColor,
+                    boxShadow: const [customShadow],
+                    border: greyBorder,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.3,
                               height: size.width * 0.3,
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  widget.data['catName'] == 'Jobs'
-                                      ? AutoSizeText(
-                                          '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
-                                          maxLines: 1,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w800,
-                                            color: blackColor,
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      : AutoSizeText(
-                                          priceFormat
-                                              .format(widget.data['price']),
-                                          maxLines: 1,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w800,
-                                            color: blackColor,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  if (widget.data['catName'] == 'Jobs')
-                                    Column(
-                                      children: [
-                                        AutoSizeText(
-                                          'Salary Period - ${widget.data['salaryPeriod']}',
-                                          maxLines: 1,
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w500,
-                                            color: blackColor,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 3,
-                                        ),
-                                      ],
-                                    ),
-                                  widget.data['catName'] == 'Jobs'
-                                      ? Text(
-                                          widget.data['title'],
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w500,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        )
-                                      : Text(
-                                          widget.data['title'],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w500,
-                                            color: blackColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                  const Spacer(),
-                                  Text(
-                                    widget.time,
-                                    maxLines: 1,
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.data['images'][0],
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.high,
+                                  memCacheHeight: (size.height * 0.3).round(),
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      MdiIcons.alertDecagramOutline,
+                                      size: 30,
+                                      color: redColor,
+                                    );
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(
+                                      MdiIcons.imageFilterHdr,
+                                      size: 30,
                                       color: lightBlackColor,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: size.width * 0.3,
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    widget.data['catName'] == 'Jobs'
+                                        ? AutoSizeText(
+                                            '${priceFormat.format(widget.data['salaryFrom'])} - ${priceFormat.format(widget.data['salaryTo'])}',
+                                            maxLines: 1,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w800,
+                                              color: blackColor,
+                                              fontSize: 16,
+                                            ),
+                                          )
+                                        : AutoSizeText(
+                                            priceFormat
+                                                .format(widget.data['price']),
+                                            maxLines: 1,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w800,
+                                              color: blackColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                    const SizedBox(
+                                      height: 3,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                MdiIcons.eyeOutline,
-                                size: 20,
-                                color: blueColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Views: ${numberFormat.format(widget.data['views'].length)}',
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: blackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                MdiIcons.heartOutline,
-                                size: 20,
-                                color: redColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Likes: ${numberFormat.format(widget.data['favorites'].length)}',
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: blackColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            MdiIcons.fingerprint,
-                            size: 20,
-                            color: blackColor,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'Product ID: ${widget.data.id}',
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: lightBlackColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (widget.data['isActive'] == false &&
-                          widget.data['isSold'] == false &&
-                          widget.data['isRejected'] == false)
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: redColor),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              child: Text(
-                                'Product is currently under review',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: redColor,
+                                    if (widget.data['catName'] == 'Jobs')
+                                      Column(
+                                        children: [
+                                          AutoSizeText(
+                                            'Salary Period - ${widget.data['salaryPeriod']}',
+                                            maxLines: 1,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: blackColor,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 3,
+                                          ),
+                                        ],
+                                      ),
+                                    widget.data['catName'] == 'Jobs'
+                                        ? Text(
+                                            widget.data['title'],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          )
+                                        : Text(
+                                            widget.data['title'],
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: true,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w500,
+                                              color: blackColor,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                    const Spacer(),
+                                    Text(
+                                      widget.time,
+                                      maxLines: 1,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13,
+                                        color: lightBlackColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      if (widget.data['isActive'] == false &&
-                          widget.data['isRejected'] == true)
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: redColor),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              child: Text(
-                                'Product has been rejected as it goes against our guidelines. Please edit it and submit again for review.\nNote: Rejected listings are deleted after a few days.',
-                                textAlign: TextAlign.start,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: redColor,
-                                ),
-                              ),
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 10,
                         ),
-                      if (widget.data['isActive'] == true &&
-                          widget.data['isRejected'] == false &&
-                          widget.data['isSold'] == false)
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            CustomButton(
-                              icon: MdiIcons.trendingUp,
-                              text: 'Promote Listing',
-                              onPressed: () {
-                                Get.to(
-                                  () => PromoteListingScreen(
-                                    productId: widget.data.id,
-                                    title: widget.data['title'],
-                                    imageUrl: widget.data['images'][0],
-                                  ),
-                                );
-                              },
-                              isFullWidth: true,
-                              bgColor: blueColor,
-                              borderColor: blueColor,
-                              textIconColor: whiteColor,
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: blueColor),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              child: Text(
-                                'Product is live',
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                            Row(
+                              children: [
+                                const Icon(
+                                  MdiIcons.eyeOutline,
+                                  size: 20,
                                   color: blueColor,
                                 ),
-                              ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Views: ${numberFormat.format(widget.data['views'].length)}',
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      if (widget.data['isSold'] == true)
-                        Column(
-                          children: [
                             const SizedBox(
-                              height: 10,
+                              width: 10,
                             ),
-                            Container(
-                              width: size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: redColor),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              child: Text(
-                                'Product has been sold',
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                            Row(
+                              children: [
+                                const Icon(
+                                  MdiIcons.heartOutline,
+                                  size: 20,
                                   color: redColor,
                                 ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Likes: ${numberFormat.format(widget.data['favorites'].length)}',
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              MdiIcons.fingerprint,
+                              size: 20,
+                              color: blackColor,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              'Product ID: ${widget.data.id}',
+                              style: GoogleFonts.interTight(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: lightBlackColor,
                               ),
                             ),
                           ],
                         ),
-                    ],
+                        if (widget.data['isActive'] == false &&
+                            widget.data['isSold'] == false &&
+                            widget.data['isRejected'] == false)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Chip(
+                                  backgroundColor: blackColor,
+                                  label: Text(
+                                    'UNDER REVIEW. Usually takes 2-8 hrs',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (widget.data['isActive'] == false &&
+                            widget.data['isRejected'] == true)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Chip(
+                                  backgroundColor: redColor,
+                                  label: Text(
+                                    'REJECTED. Please edit and submit again\nNote: Rejected listings are deleted after a few days',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (widget.data['isActive'] == true &&
+                            widget.data['isRejected'] == false &&
+                            widget.data['isSold'] == false)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Chip(
+                                  backgroundColor: greenColor,
+                                  label: Text(
+                                    'ACTIVE',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (widget.data['isSold'] == true)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Chip(
+                                  backgroundColor: blueColor,
+                                  label: Text(
+                                    'SOLD',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    style: GoogleFonts.interTight(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                      color: whiteColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -920,6 +872,24 @@ class _MyListingScreenProductCardState
                                 const SizedBox(
                                   height: 10,
                                 ),
+                                if (widget.data['isRejected'] == false)
+                                  CustomButton(
+                                    icon: MdiIcons.trendingUp,
+                                    text: 'Promote Listing',
+                                    onPressed: () {
+                                      Get.to(
+                                        () => PromoteListingScreen(
+                                          productId: widget.data.id,
+                                          title: widget.data['title'],
+                                          imageUrl: widget.data['images'][0],
+                                        ),
+                                      );
+                                    },
+                                    isFullWidth: true,
+                                    bgColor: blueColor,
+                                    borderColor: blueColor,
+                                    textIconColor: whiteColor,
+                                  ),
                                 CustomButton(
                                   icon: MdiIcons.pencilBoxOutline,
                                   text: 'Edit Product',

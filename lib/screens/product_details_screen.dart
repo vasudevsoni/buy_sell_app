@@ -727,9 +727,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       int index = images.indexOf(url);
                                       return Container(
                                         width:
-                                            currentImage == index ? 12.0 : 8.0,
+                                            currentImage == index ? 10.0 : 6.0,
                                         height:
-                                            currentImage == index ? 12.0 : 8.0,
+                                            currentImage == index ? 10.0 : 6.0,
                                         margin: const EdgeInsets.only(
                                           left: 2,
                                           right: 2,

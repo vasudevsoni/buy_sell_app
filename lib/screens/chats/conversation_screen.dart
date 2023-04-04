@@ -657,6 +657,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           top: 5,
                                           bottom: 2,
                                         ),
+                                        constraints: BoxConstraints(
+                                            maxWidth: size.width * 0.75),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,
                                           vertical: 5,
@@ -706,6 +708,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           horizontal: 12,
                                           vertical: 5,
                                         ),
+                                        constraints: BoxConstraints(
+                                            maxWidth: size.width * 0.75),
                                         decoration: BoxDecoration(
                                           color: sentBy == me
                                               ? blueColor
