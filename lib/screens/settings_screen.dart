@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '/auth/screens/location_screen.dart';
 import '/widgets/custom_list_tile_with_subtitle.dart';
@@ -29,10 +31,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String address = '';
   String country = '';
 
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
   @override
   void initState() {
     super.initState();
     _fetchUserData();
+    _initNativeAd();
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
   }
 
   void _fetchUserData() async {
@@ -168,6 +199,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
@@ -289,6 +328,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: SmallNativeAd(
+        nativeAd: _nativeAd,
+        isAdLoaded: _isAdLoaded,
       ),
     );
   }

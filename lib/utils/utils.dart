@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
 void showSnackBar({
@@ -67,7 +68,61 @@ const BoxShadow customShadow = BoxShadow(
   offset: Offset(0, 4),
 );
 
-Border greyBorder = Border.all(
+final Border greyBorder = Border.all(
   color: greyColor,
   width: 1,
+);
+
+final NativeTemplateStyle smallNativeAdStyle = NativeTemplateStyle(
+  templateType: TemplateType.small,
+  mainBackgroundColor: whiteColor,
+  cornerRadius: 10,
+  callToActionTextStyle: NativeTemplateTextStyle(
+    textColor: whiteColor,
+    backgroundColor: blueColor,
+    style: NativeTemplateFontStyle.bold,
+    size: 15,
+  ),
+  primaryTextStyle: NativeTemplateTextStyle(
+    textColor: blackColor,
+    style: NativeTemplateFontStyle.bold,
+    size: 15,
+  ),
+  secondaryTextStyle: NativeTemplateTextStyle(
+    textColor: blueColor,
+    style: NativeTemplateFontStyle.italic,
+    size: 14,
+  ),
+  tertiaryTextStyle: NativeTemplateTextStyle(
+    textColor: blackColor,
+    style: NativeTemplateFontStyle.normal,
+    size: 15,
+  ),
+);
+
+final NativeTemplateStyle mediumNativeAdStyle = NativeTemplateStyle(
+  templateType: TemplateType.medium,
+  mainBackgroundColor: whiteColor,
+  cornerRadius: 10,
+  callToActionTextStyle: NativeTemplateTextStyle(
+    textColor: whiteColor,
+    backgroundColor: blueColor,
+    style: NativeTemplateFontStyle.bold,
+    size: 15,
+  ),
+  primaryTextStyle: NativeTemplateTextStyle(
+    textColor: blackColor,
+    style: NativeTemplateFontStyle.bold,
+    size: 15,
+  ),
+  secondaryTextStyle: NativeTemplateTextStyle(
+    textColor: blueColor,
+    style: NativeTemplateFontStyle.italic,
+    size: 14,
+  ),
+  tertiaryTextStyle: NativeTemplateTextStyle(
+    textColor: blackColor,
+    style: NativeTemplateFontStyle.normal,
+    size: 15,
+  ),
 );

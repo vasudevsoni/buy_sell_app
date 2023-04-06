@@ -2,7 +2,9 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
@@ -23,6 +25,47 @@ class SearchResultsScreen extends StatefulWidget {
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   final FirebaseServices _services = FirebaseServices();
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initNativeAd();
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
+  }
+
+  @override
+  void dispose() {
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,6 +237,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: SmallNativeAd(
+        nativeAd: _nativeAd,
+        isAdLoaded: _isAdLoaded,
       ),
     );
   }

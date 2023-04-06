@@ -50,7 +50,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
   final TextEditingController reportTextController = TextEditingController();
   final MapController mapController = MapController();
-  late BannerAd? _bannerAd;
+  late NativeAd? _nativeAd;
+  // late BannerAd? _bannerAd;
   bool _isAdLoaded = false;
   int currentImage = 0;
   List fav = [];
@@ -72,14 +73,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void initState() {
     super.initState();
     getDetails();
-    _initBannerAd();
+    _initNativeAd();
+    // _initBannerAd();
   }
 
-  _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.mediumRectangle,
-      adUnitId: AdmobServices.bannerAdUnitId,
-      listener: BannerAdListener(
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
         onAdLoaded: (ad) {
           setState(() {
             _isAdLoaded = true;
@@ -95,10 +96,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         },
       ),
       request: const AdRequest(),
+      nativeTemplateStyle: mediumNativeAdStyle,
     );
     // Preload the ad
-    _bannerAd!.load();
+    await _nativeAd!.load();
   }
+
+  // _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.mediumRectangle,
+  //     adUnitId: AdmobServices.bannerAdUnitId,
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) {
+  //         setState(() {
+  //           _isAdLoaded = true;
+  //         });
+  //       },
+  //       onAdFailedToLoad: (ad, error) {
+  //         setState(() {
+  //           _isAdLoaded = false;
+  //         });
+  //         if (mounted) {
+  //           ad.dispose();
+  //         }
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   // Preload the ad
+  //   _bannerAd!.load();
+  // }
 
   Future<void> getDetails() async {
     setState(() {
@@ -187,9 +214,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void dispose() {
     mapController.dispose();
     reportTextController.dispose();
-    if (_bannerAd != null && mounted) {
-      _bannerAd!.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
     }
+    // if (_bannerAd != null && mounted) {
+    //   _bannerAd!.dispose();
+    // }
     super.dispose();
   }
 
@@ -1631,53 +1661,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
                         ),
-                        _isAdLoaded
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: greyBorder,
-                                      ),
-                                      height: 250,
-                                      width: 300,
-                                      child: AdWidget(ad: _bannerAd!),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Center(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: greyBorder,
-                                      ),
-                                      height: 250,
-                                      width: 300,
-                                      child: const Center(
-                                        child: Text('Ad'),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                         const SizedBox(
-                          height: 20,
+                          height: 15,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: MediumNativeAd(
+                            nativeAd: _nativeAd,
+                            isAdLoaded: _isAdLoaded,
+                          ),
                         ),
                         if (widget.productData['sellerUid'] !=
                             services.user!.uid)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 15),

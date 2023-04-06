@@ -19,21 +19,22 @@ class CongratulationsScreen extends StatefulWidget {
 }
 
 class _CongratulationsScreenState extends State<CongratulationsScreen> {
-  late BannerAd? _bannerAd;
+  late NativeAd? _nativeAd;
+  // late BannerAd? _bannerAd;
   bool _isAdLoaded = false;
   final InAppReview inAppReview = InAppReview.instance;
 
   @override
   void initState() {
     super.initState();
-    _initBannerAd();
+    _initNativeAd();
+    // _initBannerAd();
   }
 
-  _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.mediumRectangle,
-      adUnitId: AdmobServices.bannerAdUnitId,
-      listener: BannerAdListener(
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
         onAdLoaded: (ad) {
           setState(() {
             _isAdLoaded = true;
@@ -49,16 +50,45 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
         },
       ),
       request: const AdRequest(),
+      nativeTemplateStyle: mediumNativeAdStyle,
     );
     // Preload the ad
-    _bannerAd!.load();
+    await _nativeAd!.load();
   }
+
+  // _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.mediumRectangle,
+  //     adUnitId: AdmobServices.bannerAdUnitId,
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) {
+  //         setState(() {
+  //           _isAdLoaded = true;
+  //         });
+  //       },
+  //       onAdFailedToLoad: (ad, error) {
+  //         setState(() {
+  //           _isAdLoaded = false;
+  //         });
+  //         if (mounted) {
+  //           ad.dispose();
+  //         }
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   // Preload the ad
+  //   _bannerAd!.load();
+  // }
 
   @override
   void dispose() {
-    if (_bannerAd != null && mounted) {
-      _bannerAd!.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
     }
+    // if (_bannerAd != null && mounted) {
+    //   _bannerAd!.dispose();
+    // }
     super.dispose();
   }
 
@@ -86,7 +116,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   height: 15,
                 ),
                 Text(
-                  'We will review your product and then publish it.\nIn the meantime, browse some products, or just sit back and relax.',
+                  'We will review your product and then publish it',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.interTight(
                     fontSize: 15,
@@ -116,25 +146,10 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   ),
                 ),
                 const Spacer(),
-                _isAdLoaded
-                    ? Container(
-                        decoration: BoxDecoration(
-                          border: greyBorder,
-                        ),
-                        height: 250,
-                        width: 300,
-                        child: AdWidget(ad: _bannerAd!),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          border: greyBorder,
-                        ),
-                        height: 250,
-                        width: 300,
-                        child: const Center(
-                          child: Text('Ad'),
-                        ),
-                      ),
+                MediumNativeAd(
+                  nativeAd: _nativeAd,
+                  isAdLoaded: _isAdLoaded,
+                ),
                 const Spacer(),
                 CustomButton(
                   text: 'Go to Home',

@@ -3,8 +3,10 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
 import '/services/firebase_services.dart';
@@ -13,7 +15,7 @@ import '/screens/main_screen.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
 
-class CategoryProductsScreen extends StatelessWidget {
+class CategoryProductsScreen extends StatefulWidget {
   final String catName;
   final String subCatName;
   const CategoryProductsScreen({
@@ -21,6 +23,53 @@ class CategoryProductsScreen extends StatelessWidget {
     required this.catName,
     required this.subCatName,
   });
+
+  @override
+  State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
+}
+
+class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initNativeAd();
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
+  }
+
+  @override
+  void dispose() {
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +81,7 @@ class CategoryProductsScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
         title: Text(
-          '$catName > $subCatName',
+          '${widget.catName} > ${widget.subCatName}',
           maxLines: 1,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
@@ -45,9 +94,13 @@ class CategoryProductsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: CategoryScreenProductsList(
-          catName: catName,
-          subCatName: subCatName,
+          catName: widget.catName,
+          subCatName: widget.subCatName,
         ),
+      ),
+      bottomNavigationBar: SmallNativeAd(
+        nativeAd: _nativeAd,
+        isAdLoaded: _isAdLoaded,
       ),
     );
   }

@@ -1,13 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../services/admob_services.dart';
 import '/utils/utils.dart';
 
-class CommunityGuidelinesScreen extends StatelessWidget {
+class CommunityGuidelinesScreen extends StatefulWidget {
   const CommunityGuidelinesScreen({
     super.key,
   });
+
+  @override
+  State<CommunityGuidelinesScreen> createState() =>
+      _CommunityGuidelinesScreenState();
+}
+
+class _CommunityGuidelinesScreenState extends State<CommunityGuidelinesScreen> {
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initNativeAd();
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
+  }
+
+  @override
+  void dispose() {
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -488,6 +538,10 @@ class CommunityGuidelinesScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: SmallNativeAd(
+        nativeAd: _nativeAd,
+        isAdLoaded: _isAdLoaded,
       ),
     );
   }
