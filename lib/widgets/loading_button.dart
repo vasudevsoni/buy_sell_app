@@ -16,7 +16,7 @@ class LoadingButton extends StatelessWidget {
     return GFButton(
       onPressed: null,
       borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(50),
       ),
       splashColor: transparentColor,
       color: bgColor,

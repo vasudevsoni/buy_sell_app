@@ -56,21 +56,21 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
         backgroundColor: whiteColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: whiteColor,
-          elevation: 0.2,
-          iconTheme: const IconThemeData(color: blackColor),
+          elevation: 0,
+          backgroundColor: blueColor,
+          iconTheme: const IconThemeData(color: whiteColor),
           centerTitle: true,
           title: Text(
             'Inbox',
             style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
-              color: blackColor,
+              color: whiteColor,
               fontSize: 15,
             ),
           ),
           bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.label,
-            indicatorColor: blueColor,
+            indicatorColor: whiteColor,
             indicatorWeight: 3,
             splashBorderRadius: BorderRadius.circular(10),
             labelStyle: GoogleFonts.interTight(
@@ -81,8 +81,8 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
               fontWeight: FontWeight.w500,
               fontSize: 14,
             ),
-            labelColor: blackColor,
-            unselectedLabelColor: lightBlackColor,
+            labelColor: whiteColor,
+            unselectedLabelColor: whiteColor,
             tabs: const [
               Tab(child: Text('All')),
               Tab(child: Text('Buying')),
@@ -96,6 +96,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             StreamBuilder<QuerySnapshot>(
               stream: _services.chats
                   .where('users', arrayContains: _services.user!.uid)
+                  .orderBy('lastChatTime', descending: true)
                   .snapshots(),
               builder: (
                 BuildContext context,
@@ -524,7 +525,7 @@ class _ChatCardState extends State<ChatCard> {
           child: Column(
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50),
@@ -616,77 +617,6 @@ class _ChatCardState extends State<ChatCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: greyColor,
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: size.width * 0.12,
-                                  height: size.width * 0.12,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(0),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(0),
-                                    ),
-                                    child: CachedNetworkImage(
-                                      imageUrl: productImage,
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.high,
-                                      memCacheHeight:
-                                          (size.width * 0.12).round(),
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(
-                                          MdiIcons.alertDecagramOutline,
-                                          size: 20,
-                                          color: redColor,
-                                        );
-                                      },
-                                      placeholder: (context, url) {
-                                        return const Icon(
-                                          MdiIcons.imageFilterHdr,
-                                          size: 20,
-                                          color: lightBlackColor,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Text(
-                                      prodTitle,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w500,
-                                        color: blackColor,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
                           widget.chatData['users'][0] == _services.user!.uid
                               ? RichText(
                                   text: TextSpan(
@@ -741,19 +671,19 @@ class _ChatCardState extends State<ChatCard> {
                           if (widget.chatData['lastChat'] != null)
                             Text(
                               widget.chatData['lastChat'],
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               softWrap: true,
                               style: widget.chatData['read'] == false
                                   ? GoogleFonts.interTight(
                                       fontWeight: FontWeight.w700,
                                       color: blueColor,
-                                      fontSize: 14,
+                                      fontSize: 15,
                                     )
                                   : GoogleFonts.interTight(
                                       fontWeight: FontWeight.w500,
                                       color: blackColor,
-                                      fontSize: 14,
+                                      fontSize: 15,
                                     ),
                             ),
                         ],
@@ -761,6 +691,73 @@ class _ChatCardState extends State<ChatCard> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: greyColor,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.12,
+                      height: size.width * 0.12,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: productImage,
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.high,
+                          memCacheHeight: (size.width * 0.12).round(),
+                          errorWidget: (context, url, error) {
+                            return const Icon(
+                              MdiIcons.alertDecagramOutline,
+                              size: 20,
+                              color: redColor,
+                            );
+                          },
+                          placeholder: (context, url) {
+                            return const Icon(
+                              MdiIcons.imageFilterHdr,
+                              size: 20,
+                              color: lightBlackColor,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(
+                          prodTitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w500,
+                            color: blackColor,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               if (isActive == false)
                 Text(

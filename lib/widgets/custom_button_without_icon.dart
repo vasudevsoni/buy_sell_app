@@ -28,7 +28,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
     return GFButton(
       onPressed: onPressed,
       borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(50),
         side: BorderSide(
           color: borderColor,
           strokeAlign: StrokeAlign.inside,

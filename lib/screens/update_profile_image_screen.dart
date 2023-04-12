@@ -1,7 +1,7 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
-import 'package:buy_sell_app/services/cloudinary_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloudinary/cloudinary.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
@@ -59,46 +59,46 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
       isLoading = true;
     });
     // try {
-    final cloudinary = Cloudinary.signedConfig(
-      apiKey: CloudinaryServices.apiKey,
-      apiSecret: CloudinaryServices.apiSecret,
-      cloudName: CloudinaryServices.cloudName,
-    );
-    final response = await cloudinary.upload(
-      file: image.path,
-      fileBytes: image.readAsBytesSync(),
-      resourceType: CloudinaryResourceType.image,
-      folder: 'profileImages/${_services.user!.uid}',
-      fileName: uuid.v1(),
-    );
-    if (response.isSuccessful) {
-      downloadUrl = response.secureUrl!;
-      await _services.users.doc(_services.user!.uid).update({
-        'profileImage': downloadUrl,
-      });
-      setState(() {
-        isLoading = false;
-      });
-    } else if (!response.isSuccessful) {
-      showSnackBar(
-        content: 'Something has gone wrong. Please try again',
-        color: redColor,
-      );
-      setState(() {
-        isLoading = false;
-      });
-    }
-    // final Reference storageReference = FirebaseStorage.instance
-    //     .ref()
-    //     .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
-    // final UploadTask uploadTask = storageReference.putFile(image);
-    // downloadUrl = await (await uploadTask).ref.getDownloadURL();
-    // await _services.users.doc(_services.user!.uid).update({
-    //   'profileImage': downloadUrl,
-    // });
-    // setState(() {
-    //   isLoading = false;
-    // });
+    // final cloudinary = Cloudinary.signedConfig(
+    //   apiKey: CloudinaryServices.apiKey,
+    //   apiSecret: CloudinaryServices.apiSecret,
+    //   cloudName: CloudinaryServices.cloudName,
+    // );
+    // final response = await cloudinary.upload(
+    //   file: image.path,
+    //   fileBytes: image.readAsBytesSync(),
+    //   resourceType: CloudinaryResourceType.image,
+    //   folder: 'profileImages/${_services.user!.uid}',
+    //   fileName: uuid.v1(),
+    // );
+    // if (response.isSuccessful) {
+    //   downloadUrl = response.secureUrl!;
+    //   await _services.users.doc(_services.user!.uid).update({
+    //     'profileImage': downloadUrl,
+    //   });
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // } else if (!response.isSuccessful) {
+    //   showSnackBar(
+    //     content: 'Something has gone wrong. Please try again',
+    //     color: redColor,
+    //   );
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
+    final Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
+    final UploadTask uploadTask = storageReference.putFile(image);
+    downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    await _services.users.doc(_services.user!.uid).update({
+      'profileImage': downloadUrl,
+    });
+    setState(() {
+      isLoading = false;
+    });
   }
   // on FirebaseException {
   //   showSnackBar(

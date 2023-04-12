@@ -1,9 +1,8 @@
-import 'package:buy_sell_app/services/cloudinary_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:cloudinary_dart/cloudinary.dart';
+// import 'package:cloudinary_dart/cloudinary.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,10 +39,10 @@ Future<void> main() async {
   );
 
   // Initialize Cloudinary
-  Cloudinary.fromCloudName(
-    cloudName: CloudinaryServices.cloudName,
-    apiKey: CloudinaryServices.apiKey,
-  );
+  // Cloudinary.fromCloudName(
+  //   cloudName: CloudinaryServices.cloudName,
+  //   apiKey: CloudinaryServices.apiKey,
+  // );
 
   // Initialize Google Mobile Ads
   await MobileAds.instance.initialize();

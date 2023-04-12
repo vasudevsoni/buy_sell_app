@@ -252,6 +252,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                Text(
+                  'Good offer: Rs.${(prod['price'] * 85) / 100} - Rs.${(prod['price'] * 95) / 100}',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: blueColor,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -794,24 +805,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        if (sellerUid != _services.user!.uid)
-                          ActionChip(
-                            pressElevation: 5,
-                            label: const Text('Make offer'),
-                            backgroundColor: greenColor,
-                            labelStyle: GoogleFonts.interTight(
-                              color: whiteColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            onPressed: showMakeOfferDialog,
-                            padding: const EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        if (sellerUid != _services.user!.uid)
-                          const SizedBox(
-                            width: 5,
+                        if (sellerUid != _services.user!.uid &&
+                            prod['catName'] != 'Jobs')
+                          Row(
+                            children: [
+                              ActionChip(
+                                pressElevation: 5,
+                                label: const Text('Make offer'),
+                                backgroundColor: greenColor,
+                                labelStyle: GoogleFonts.interTight(
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                onPressed: showMakeOfferDialog,
+                                padding: const EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                            ],
                           ),
                         ActionChip(
                           pressElevation: 5,

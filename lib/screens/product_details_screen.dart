@@ -169,7 +169,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final product = {
       'productId': widget.productData.id,
       'productImage': widget.productData['images'][0],
-      'price': widget.productData['price'],
+      'price': widget.productData['catName'] == 'Jobs'
+          ? ''
+          : widget.productData['price'],
       'title': widget.productData['title'],
       'seller': widget.productData['sellerUid'],
     };
@@ -443,7 +445,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               backgroundColor: whiteColor,
               elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
-              centerTitle: true,
+              centerTitle: false,
               title: Text(
                 'Product',
                 style: GoogleFonts.interTight(
@@ -1021,7 +1023,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     width: 0,
                                   ),
                         if (widget.productData['sellerUid'] !=
-                            services.user!.uid)
+                                services.user!.uid &&
+                            widget.productData['catName'] != 'Jobs')
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomButton(
@@ -1078,59 +1081,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      MdiIcons.listBoxOutline,
-                                      size: 15,
-                                      color: blackColor,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                      child: Text.rich(
-                                        TextSpan(
-                                          children: [
-                                            const TextSpan(text: 'In '),
-                                            TextSpan(
-                                              text:
-                                                  '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () => Get.to(
-                                                      () =>
-                                                          CategoryProductsScreen(
-                                                        catName:
-                                                            widget.productData[
-                                                                'catName'],
-                                                        subCatName:
-                                                            widget.productData[
-                                                                'subCat'],
-                                                      ),
-                                                      transition:
-                                                          Transition.downToUp,
-                                                    ),
-                                              style: GoogleFonts.interTight(
-                                                fontWeight: FontWeight.w700,
-                                                color: blueColor,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w500,
-                                            color: blackColor,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
-                                child: Row(
-                                  children: [
-                                    const Icon(
                                       MdiIcons.mapMarkerOutline,
                                       size: 15,
                                       color: blackColor,
@@ -1177,6 +1127,59 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           fontWeight: FontWeight.w500,
                                           color: blackColor,
                                           fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 15),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      MdiIcons.listBoxOutline,
+                                      size: 15,
+                                      color: blackColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            const TextSpan(text: 'In '),
+                                            TextSpan(
+                                              text:
+                                                  '${widget.productData['catName']} > ${widget.productData['subCat']}',
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () => Get.to(
+                                                      () =>
+                                                          CategoryProductsScreen(
+                                                        catName:
+                                                            widget.productData[
+                                                                'catName'],
+                                                        subCatName:
+                                                            widget.productData[
+                                                                'subCat'],
+                                                      ),
+                                                      transition:
+                                                          Transition.downToUp,
+                                                    ),
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blueColor,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 13,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1652,7 +1655,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 Text(
                                   'Show full description',
                                   style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w600,
                                     color: blueColor,
                                     fontSize: 13,
                                   ),
@@ -1885,6 +1888,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 5,
                         ),
                         Container(
+                          decoration: const BoxDecoration(
+                            boxShadow: [customShadow],
+                          ),
                           margin: const EdgeInsets.symmetric(horizontal: 15),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -1969,7 +1975,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1979,8 +1985,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w400,
-                              color: lightBlackColor,
+                              fontWeight: FontWeight.w500,
+                              color: blackColor,
                               fontSize: 13,
                             ),
                           ),

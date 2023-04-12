@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloudinary/cloudinary.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '/utils/utils.dart';
-import 'cloudinary_services.dart';
 
 class FirebaseServices {
   final User? user = FirebaseAuth.instance.currentUser;
@@ -186,7 +185,7 @@ class FirebaseServices {
     }
   }
 
-  Future<void> deleteChat({chatRoomId}) async {
+  Future<void> deleteChat({required String chatRoomId}) async {
     try {
       await chats.doc(chatRoomId).delete();
       showSnackBar(
@@ -201,24 +200,24 @@ class FirebaseServices {
     }
   }
 
-  // deleteListingImage({
-  //   listingId,
-  //   required String imageUrl,
-  // }) async {
-  //   final cloudinary = Cloudinary.signedConfig(
-  //     apiKey: CloudinaryServices.apiKey,
-  //     apiSecret: CloudinaryServices.apiSecret,
-  //     cloudName: CloudinaryServices.cloudName,
-  //   );
-  //   try {
-  //     await cloudinary.destroy('', url: imageUrl);
-  //   } catch (e) {
-  //     showSnackBar(
-  //       content: 'Something has gone wrong. Please try again',
-  //       color: redColor,
-  //     );
-  //   }
-  // }
+  Future<void> deleteListingImage({
+    required String imageUrl,
+  }) async {
+    // final cloudinary = Cloudinary.signedConfig(
+    //   apiKey: CloudinaryServices.apiKey,
+    //   apiSecret: CloudinaryServices.apiSecret,
+    //   cloudName: CloudinaryServices.cloudName,
+    // );
+    try {
+      // await cloudinary.destroy('', url: imageUrl);
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+    } catch (e) {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
 
   Future<void> deleteListing({listingId}) async {
     List<String> images = [];
@@ -229,12 +228,6 @@ class FirebaseServices {
           images.add(value['images'][i].toString());
         }
       });
-      // for (var link in images) {
-      //   await deleteListingImage(
-      //     listingId: listingId,
-      //     imageUrl: link,
-      //   );
-      // }
       await chats
           .where('product.productId', isEqualTo: listingId)
           .get()
@@ -243,6 +236,9 @@ class FirebaseServices {
           chatsToDelete.add(element.id);
         }
       });
+      for (var link in images) {
+        await deleteListingImage(imageUrl: link);
+      }
       for (var chatRoomId in chatsToDelete) {
         await deleteChat(chatRoomId: chatRoomId.toString());
       }
@@ -288,23 +284,23 @@ class FirebaseServices {
   }) async {
     final id = uuid.v4();
     try {
-      final cloudinary = Cloudinary.signedConfig(
-        apiKey: CloudinaryServices.apiKey,
-        apiSecret: CloudinaryServices.apiSecret,
-        cloudName: CloudinaryServices.cloudName,
-      );
-      final response = await cloudinary.upload(
-        file: screenshot.path,
-        fileBytes: screenshot.readAsBytesSync(),
-        resourceType: CloudinaryResourceType.image,
-        folder: 'reportImages/${user!.uid}',
-        fileName: id,
-      );
-      final String? downloadUrl = response.secureUrl;
-      // final Reference storageReference =
-      //     FirebaseStorage.instance.ref().child('reportImages/${user!.uid}/$id');
-      // final UploadTask uploadTask = storageReference.putFile(screenshot);
-      // final String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      // final cloudinary = Cloudinary.signedConfig(
+      //   apiKey: CloudinaryServices.apiKey,
+      //   apiSecret: CloudinaryServices.apiSecret,
+      //   cloudName: CloudinaryServices.cloudName,
+      // );
+      // final response = await cloudinary.upload(
+      //   file: screenshot.path,
+      //   fileBytes: screenshot.readAsBytesSync(),
+      //   resourceType: CloudinaryResourceType.image,
+      //   folder: 'reportImages/${user!.uid}',
+      //   fileName: id,
+      // );
+      // final String? downloadUrl = response.secureUrl;
+      final Reference storageReference =
+          FirebaseStorage.instance.ref().child('reportImages/${user!.uid}/$id');
+      final UploadTask uploadTask = storageReference.putFile(screenshot);
+      final String downloadUrl = await (await uploadTask).ref.getDownloadURL();
       await reports.doc(id).set({
         'type': 'screenshotReport',
         'userId': user!.uid,

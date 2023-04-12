@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,11 +14,11 @@ import '../widgets/custom_loading_indicator.dart';
 import '../widgets/svg_picture.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
-import '/screens/search_field_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_product_card.dart';
 import 'categories/categories_list_screen.dart';
 import 'categories/sub_categories_list_screen.dart';
+import 'search_field_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final LocationData? locationData;
@@ -41,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen>
   String city = '';
   String state = '';
   bool isLocationEmpty = false;
+  bool isLoading = true;
 
   late DateTime currentBackPressTime;
 
@@ -61,6 +61,9 @@ class _HomeScreenState extends State<HomeScreen>
     } else {
       _getAddressToUI(value);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void _getAddressToUI(DocumentSnapshot<Object?> value) {
@@ -182,20 +185,20 @@ class _HomeScreenState extends State<HomeScreen>
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
-        elevation: 0.2,
-        backgroundColor: whiteColor,
-        iconTheme: const IconThemeData(color: blackColor),
+        elevation: 0,
+        backgroundColor: blueColor,
+        iconTheme: const IconThemeData(color: whiteColor),
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(
-              MdiIcons.mapMarkerRadiusOutline,
-              size: 25,
-              color: blackColor,
+              MdiIcons.mapMarkerOutline,
+              size: 20,
+              color: whiteColor,
             ),
             const SizedBox(
-              width: 5,
+              width: 3,
             ),
             Expanded(
               child: GestureDetector(
@@ -205,84 +208,71 @@ class _HomeScreenState extends State<HomeScreen>
                     isOpenedFromSellButton: false,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Row(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: AutoSizeText(
-                            isLocationEmpty == true
-                                ? 'Set location'
-                                : area == ''
-                                    ? city
-                                    : area,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: blackColor,
-                            ),
-                          ),
-                        ),
-                        const Icon(
-                          MdiIcons.menuDownOutline,
-                          size: 20,
-                          color: blackColor,
-                        ),
-                      ],
-                    ),
-                    if (isLocationEmpty == false)
-                      Text(
-                        '$city, $state',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 11,
-                          color: fadedColor,
-                        ),
+                    Text(
+                      isLocationEmpty == true ? 'Set Location' : city,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.interTight(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: whiteColor,
                       ),
+                    ),
+                    const Icon(
+                      MdiIcons.chevronDown,
+                      size: 18,
+                      color: whiteColor,
+                    ),
                   ],
                 ),
               ),
             ),
             GestureDetector(
-              behavior: HitTestBehavior.opaque,
               onTap: () => Get.to(
                 () => const SearchFieldScreen(),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    MdiIcons.magnify,
-                    color: blueColor,
-                    size: 25,
-                  ),
-                  Text(
-                    'Search',
-                    style: TextStyle(
-                      color: lightBlackColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Icon(
+                      MdiIcons.magnify,
+                      color: blackColor,
+                      size: 20,
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text(
+                      'Search',
+                      style: TextStyle(
+                        color: blackColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )
+            ),
           ],
         ),
         bottom: TabBar(
           controller: tabBarController,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: blueColor,
+          indicatorColor: whiteColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
           splashBorderRadius: BorderRadius.circular(10),
@@ -291,11 +281,11 @@ class _HomeScreenState extends State<HomeScreen>
             fontSize: 14,
           ),
           unselectedLabelStyle: GoogleFonts.interTight(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             fontSize: 14,
           ),
-          labelColor: blueColor,
-          unselectedLabelColor: lightBlackColor,
+          labelColor: whiteColor,
+          unselectedLabelColor: whiteColor,
           tabs: const [
             Tab(
               text: 'Nearby',
@@ -309,24 +299,26 @@ class _HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: tabBarController,
-        physics: const BouncingScrollPhysics(),
-        children: [
-          //near me screen
-          NearbyProductsScreen(
-            city: city,
-            isLocationEmpty: isLocationEmpty,
-            tabBarController: tabBarController,
-          ),
-          //all products screen
-          AllProductsScreen(
-            city: city,
-            tabBarController: tabBarController,
-          ),
-          const CategoriesListScreen(),
-        ],
-      ),
+      body: isLoading == true
+          ? const CustomLoadingIndicator()
+          : TabBarView(
+              controller: tabBarController,
+              physics: const BouncingScrollPhysics(),
+              children: [
+                //near me screen
+                NearbyProductsScreen(
+                  city: city,
+                  isLocationEmpty: isLocationEmpty,
+                  tabBarController: tabBarController,
+                ),
+                //all products screen
+                AllProductsScreen(
+                  city: city,
+                  tabBarController: tabBarController,
+                ),
+                const CategoriesListScreen(),
+              ],
+            ),
     );
   }
 }
@@ -534,7 +526,7 @@ class CategoriesListView extends StatelessWidget {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.interTight(
-                          fontSize: 13.5,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: lightBlackColor,
                         ),

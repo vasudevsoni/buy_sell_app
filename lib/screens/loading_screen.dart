@@ -21,13 +21,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     //check whether user is logged in or not. Then navigate her accordingly.
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        Get.offAll(
-          () => const MainScreen(selectedIndex: 0),
-        );
+        Get.offAll(() => const MainScreen(selectedIndex: 0));
       } else {
-        Get.offAll(
-          () => const LandingScreen(),
-        );
+        Get.offAll(() => const LandingScreen());
       }
     });
   }

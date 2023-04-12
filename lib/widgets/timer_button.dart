@@ -77,7 +77,7 @@ class _TimerButtonState extends State<TimerButton> {
         ? GFButton(
             onPressed: _onPressed,
             borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(50),
             ),
             splashColor: transparentColor,
             color: widget.color,
@@ -101,7 +101,7 @@ class _TimerButtonState extends State<TimerButton> {
         : GFButton(
             onPressed: null,
             borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(50),
             ),
             splashColor: transparentColor,
             color: widget.disabledColor,
