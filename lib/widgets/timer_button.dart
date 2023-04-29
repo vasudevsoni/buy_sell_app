@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const int secondsPerUpdate = 1;
@@ -74,17 +73,19 @@ class _TimerButtonState extends State<TimerButton> {
   @override
   Widget build(BuildContext context) {
     return timeUpFlag
-        ? GFButton(
+        ? ElevatedButton(
             onPressed: _onPressed,
-            borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              enableFeedback: true,
+              backgroundColor: widget.color,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              splashFactory: InkRipple.splashFactory,
+              animationDuration: const Duration(milliseconds: 100),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
             ),
-            splashColor: transparentColor,
-            color: widget.color,
-            enableFeedback: true,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            size: GFSize.LARGE,
-            animationDuration: const Duration(milliseconds: 100),
             child: AutoSizeText(
               widget.label,
               maxLines: 2,
@@ -98,17 +99,19 @@ class _TimerButtonState extends State<TimerButton> {
               ),
             ),
           )
-        : GFButton(
+        : ElevatedButton(
             onPressed: null,
-            borderShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              enableFeedback: true,
+              backgroundColor: widget.disabledColor,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              splashFactory: InkRipple.splashFactory,
+              animationDuration: const Duration(milliseconds: 100),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
             ),
-            splashColor: transparentColor,
-            color: widget.disabledColor,
-            enableFeedback: true,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            size: GFSize.LARGE,
-            animationDuration: const Duration(milliseconds: 100),
             child: AutoSizeText(
               'Please wait for $_timerText',
               maxLines: 2,

@@ -1,9 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+// import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../utils/utils.dart';
 
 class CustomButtonWithoutIcon extends StatelessWidget {
   final String text;
@@ -25,22 +23,24 @@ class CustomButtonWithoutIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GFButton(
+    return ElevatedButton(
       onPressed: onPressed,
-      borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-        side: BorderSide(
-          color: borderColor,
-          strokeAlign: StrokeAlign.inside,
-          width: 1.2,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          side: BorderSide(
+            color: borderColor,
+            strokeAlign: StrokeAlign.inside,
+            width: 1.2,
+          ),
         ),
       ),
-      splashColor: transparentColor,
-      color: bgColor,
-      enableFeedback: true,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      size: GFSize.LARGE,
-      animationDuration: const Duration(milliseconds: 100),
       child: AutoSizeText(
         text,
         maxLines: 2,

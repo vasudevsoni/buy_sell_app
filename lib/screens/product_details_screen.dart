@@ -58,7 +58,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isLiked = false;
   String profileImage = '';
   String sellerName = '';
-  int dateJoined = 0;
   bool isActive = true;
   bool isSold = false;
   bool isLoading = false;
@@ -142,7 +141,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         await services.getUserData(widget.productData['sellerUid']);
     setState(() {
       profileImage = userData['profileImage'] ?? '';
-      dateJoined = userData['dateJoined'];
       sellerName = userData['name'];
       rating = userData['rating'] == 0
           ? 0
@@ -228,9 +226,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
-      dateJoined,
-    );
     final productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
       widget.productData['postedAt'],
     );
@@ -940,6 +935,90 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const SizedBox(
                           height: 10,
                         ),
+                        if (widget.productData['sellerUid'] !=
+                            services.user!.uid)
+                          GestureDetector(
+                            onTap: () => Get.to(
+                              () => ProfileScreen(
+                                userId: widget.productData['sellerUid'],
+                              ),
+                            ),
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  profileImage == ''
+                                      ? Container(
+                                          height: size.width * 0.06,
+                                          width: size.width * 0.06,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            color: blueColor,
+                                          ),
+                                          child: const Icon(
+                                            MdiIcons.accountOutline,
+                                            color: whiteColor,
+                                            size: 20,
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          height: size.width * 0.06,
+                                          width: size.width * 0.06,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            child: CachedNetworkImage(
+                                              imageUrl: profileImage,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high,
+                                              memCacheHeight:
+                                                  (size.width * 0.06).round(),
+                                              memCacheWidth:
+                                                  (size.width * 0.06).round(),
+                                              errorWidget:
+                                                  (context, url, error) {
+                                                return const Icon(
+                                                  MdiIcons.alertDecagramOutline,
+                                                  size: 10,
+                                                  color: redColor,
+                                                );
+                                              },
+                                              placeholder: (context, url) {
+                                                return const Center(
+                                                  child:
+                                                      CustomLoadingIndicator(),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                  const SizedBox(
+                                    width: 7,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * 0.6,
+                                    child: Text(
+                                      sellerName,
+                                      maxLines: 1,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: blackColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         widget.productData['sellerUid'] == services.user!.uid &&
                                 isSold == false
                             ? Padding(
@@ -949,7 +1028,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Expanded(
                                       child: CustomButton(
-                                        text: 'Promote Listing',
+                                        text: 'Reach more people',
                                         onPressed: () => Get.to(
                                           () => PromoteListingScreen(
                                             productId: widget.productData.id,
@@ -1007,7 +1086,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
                                     child: CustomButton(
-                                      text: 'Chat Now',
+                                      text: 'Chat now',
                                       onPressed: () {
                                         createChatRoom(makeOffer: false);
                                       },
@@ -1022,13 +1101,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     height: 0,
                                     width: 0,
                                   ),
-                        if (widget.productData['sellerUid'] !=
+                        if (isSold == false &&
+                            widget.productData['sellerUid'] !=
                                 services.user!.uid &&
                             widget.productData['catName'] != 'Jobs')
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomButton(
-                              text: 'Make Offer',
+                              text: 'Make an offer',
                               onPressed: () {
                                 createChatRoom(makeOffer: true);
                               },
@@ -1674,199 +1754,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             isAdLoaded: _isAdLoaded,
                           ),
                         ),
-                        if (widget.productData['sellerUid'] !=
-                            services.user!.uid)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  'About this seller',
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w700,
-                                    color: blackColor,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: InkWell(
-                                  onTap: () => Get.to(
-                                    () => ProfileScreen(
-                                      userId: widget.productData['sellerUid'],
-                                    ),
-                                  ),
-                                  splashFactory: InkRipple.splashFactory,
-                                  splashColor: transparentColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Ink(
-                                    width: size.width,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: whiteColor,
-                                      border: greyBorder,
-                                      boxShadow: const [customShadow],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                      vertical: 10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        profileImage == ''
-                                            ? Container(
-                                                height: size.width * 0.1,
-                                                width: size.width * 0.1,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  color: blueColor,
-                                                ),
-                                                child: const Icon(
-                                                  MdiIcons.accountOutline,
-                                                  color: whiteColor,
-                                                  size: 20,
-                                                ),
-                                              )
-                                            : SizedBox(
-                                                height: size.width * 0.1,
-                                                width: size.width * 0.1,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: profileImage,
-                                                    fit: BoxFit.cover,
-                                                    filterQuality:
-                                                        FilterQuality.high,
-                                                    memCacheHeight:
-                                                        (size.width * 0.1)
-                                                            .round(),
-                                                    memCacheWidth:
-                                                        (size.width * 0.1)
-                                                            .round(),
-                                                    errorWidget:
-                                                        (context, url, error) {
-                                                      return const Icon(
-                                                        MdiIcons
-                                                            .alertDecagramOutline,
-                                                        size: 10,
-                                                        color: redColor,
-                                                      );
-                                                    },
-                                                    placeholder:
-                                                        (context, url) {
-                                                      return const Center(
-                                                        child:
-                                                            CustomLoadingIndicator(),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: size.width * 0.5,
-                                              child: Text(
-                                                sellerName,
-                                                maxLines: 1,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: GoogleFonts.interTight(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 3),
-                                              decoration: BoxDecoration(
-                                                color: rating > 0 && rating < 3
-                                                    ? redColor
-                                                    : rating == 3
-                                                        ? Colors.orange
-                                                        : rating == 0
-                                                            ? blackColor
-                                                            : greenColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    rating == 0
-                                                        ? 'Unrated'
-                                                        : rating
-                                                            .toStringAsFixed(1),
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 2,
-                                                  ),
-                                                  const Icon(
-                                                    MdiIcons.star,
-                                                    size: 10,
-                                                    color: whiteColor,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Text(
-                                              'Joined ${timeago.format(sellerJoinTime)}',
-                                              style: GoogleFonts.interTight(
-                                                fontWeight: FontWeight.w400,
-                                                color: blackColor,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        const Icon(
-                                          MdiIcons.chevronRight,
-                                          color: blackColor,
-                                          size: 13,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         const SizedBox(
                           height: 20,
                         ),

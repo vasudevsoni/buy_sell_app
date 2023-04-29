@@ -340,6 +340,7 @@ class AllProductsScreen extends StatefulWidget {
 class _AllProductsScreenState extends State<AllProductsScreen>
     with AutomaticKeepAliveClientMixin {
   final FirebaseServices _services = FirebaseServices();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -787,6 +788,20 @@ class _ProductsListState extends State<ProductsList> {
                 ),
                 const SizedBox(
                   height: 15,
+                ),
+                CustomButton(
+                  text: 'Set Location',
+                  onPressed: () {
+                    Get.to(
+                      () => const LocationScreen(
+                        isOpenedFromSellButton: false,
+                      ),
+                    );
+                  },
+                  icon: MdiIcons.crosshairsGps,
+                  borderColor: blackColor,
+                  bgColor: blackColor,
+                  textIconColor: whiteColor,
                 ),
                 CustomButton(
                   text: 'Show All Products',

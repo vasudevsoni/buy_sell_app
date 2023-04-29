@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/dropdown/gf_dropdown.dart';
+// import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -893,48 +893,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: greyColor,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        borderRadius: BorderRadius.circular(5),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
                         style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          color: fadedColor,
                         ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        MdiIcons.chevronDown,
-                        size: 15,
-                      ),
-                      items: fuelType
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
+                        icon: const Icon(
+                          MdiIcons.chevronDown,
+                          size: 15,
+                        ),
+                        items: fuelType
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                      value: fuelTypeSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          fuelTypeSelectedValue = value as String;
-                        });
-                      },
+                            )
+                            .toList(),
+                        value: fuelTypeSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            fuelTypeSelectedValue = value as String;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -948,48 +953,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: greyColor,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        borderRadius: BorderRadius.circular(5),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
                         style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          color: fadedColor,
                         ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        MdiIcons.chevronDown,
-                        size: 15,
-                      ),
-                      items: yor
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
+                        icon: const Icon(
+                          MdiIcons.chevronDown,
+                          size: 15,
+                        ),
+                        items: yor
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                      value: yorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          yorSelectedValue = value as String;
-                        });
-                      },
+                            )
+                            .toList(),
+                        value: yorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            yorSelectedValue = value as String;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -1003,48 +1013,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: greyColor,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        borderRadius: BorderRadius.circular(5),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
                         style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          color: fadedColor,
                         ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        MdiIcons.chevronDown,
-                        size: 15,
-                      ),
-                      items: colors
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
+                        icon: const Icon(
+                          MdiIcons.chevronDown,
+                          size: 15,
+                        ),
+                        items: colors
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                      value: colorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          colorSelectedValue = value as String;
-                        });
-                      },
+                            )
+                            .toList(),
+                        value: colorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            colorSelectedValue = value as String;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -1058,48 +1073,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: GFDropdown(
-                      isExpanded: true,
-                      padding: const EdgeInsets.all(15),
-                      borderRadius: BorderRadius.circular(5),
-                      itemHeight: 50,
-                      dropdownButtonColor: greyColor,
-                      hint: Text(
-                        '--Select--',
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: greyColor,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        borderRadius: BorderRadius.circular(5),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
                         style: GoogleFonts.interTight(
                           fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          color: fadedColor,
                         ),
-                      ),
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.normal,
-                        color: fadedColor,
-                      ),
-                      icon: const Icon(
-                        MdiIcons.chevronDown,
-                        size: 15,
-                      ),
-                      items: noOfOwners
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
+                        icon: const Icon(
+                          MdiIcons.chevronDown,
+                          size: 15,
+                        ),
+                        items: noOfOwners
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                      value: noOfOwnersSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          noOfOwnersSelectedValue = value as String;
-                        });
-                      },
+                            )
+                            .toList(),
+                        value: noOfOwnersSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            noOfOwnersSelectedValue = value as String;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),

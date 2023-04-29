@@ -1,20 +1,17 @@
+import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
-
-import '../utils/utils.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CustomLoadingIndicator extends StatelessWidget {
   const CustomLoadingIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const GFLoader(
-      type: GFLoaderType.ios,
-      duration: Duration(milliseconds: 1000),
-      loaderColorOne: blueColor,
-      loaderColorTwo: blackColor,
-      loaderColorThree: blueColor,
-      size: GFSize.SMALL,
+    return Center(
+      child: LoadingAnimationWidget.twoRotatingArc(
+        color: blueColor,
+        size: 25,
+      ),
     );
   }
 }

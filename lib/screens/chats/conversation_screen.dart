@@ -552,14 +552,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     decoration: const BoxDecoration(
                       color: blueColor,
                     ),
-                    child: const Center(
-                      child: AutoSizeText(
-                        'Stay Safe! Read our Community Guidelines',
-                        style: TextStyle(
-                          color: whiteColor,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          AutoSizeText(
+                            'Stay safe! Please read community guidelines',
+                            style: TextStyle(
+                              color: whiteColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            MdiIcons.arrowRight,
+                            color: whiteColor,
+                            size: 15,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -811,7 +824,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             children: [
                               ActionChip(
                                 pressElevation: 5,
-                                label: const Text('Make offer'),
+                                label: const Text('Make an offer'),
                                 backgroundColor: greenColor,
                                 labelStyle: GoogleFonts.interTight(
                                   color: whiteColor,

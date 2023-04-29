@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
+// import 'package:getwidget/getwidget.dart';
 
-import '../utils/utils.dart';
 import 'custom_loading_indicator.dart';
 
 class LoadingButton extends StatelessWidget {
@@ -13,17 +12,19 @@ class LoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GFButton(
+    return ElevatedButton(
       onPressed: null,
-      borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
       ),
-      splashColor: transparentColor,
-      color: bgColor,
-      enableFeedback: true,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      size: GFSize.LARGE,
-      animationDuration: const Duration(milliseconds: 1000),
       child: const Center(
         child: CustomLoadingIndicator(),
       ),

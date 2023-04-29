@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -179,7 +180,7 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, locationProv, mainProv, child) {
         final int selectedIndex = mainProv.currentPageIndex;
 
-        final pages = [
+        final List<Widget> pages = [
           HomeScreen(
             locationData: locationProv.locationData,
           ),
@@ -188,8 +189,38 @@ class _MainScreenState extends State<MainScreen> {
           const MyProfileScreen(),
         ];
 
-        onItemTapped(int index) {
+        const List<IconData> iconsList = [
+          MdiIcons.homeOutline,
+          MdiIcons.forumOutline,
+          MdiIcons.heartOutline,
+          MdiIcons.accountCircleOutline,
+        ];
+
+        const List<IconData> selectedIconsList = [
+          MdiIcons.home,
+          MdiIcons.forum,
+          MdiIcons.heart,
+          MdiIcons.accountCircle,
+        ];
+
+        const List<String> titlesList = [
+          'Explore',
+          'Chats',
+          'Favorites',
+          'Account',
+        ];
+
+        void onItemTapped(int index) {
           mainProv.switchToPage(index);
+        }
+
+        void onFloatingActionButtonPressed() {
+          if (!user!.emailVerified &&
+              user!.providerData[0].providerId == 'password') {
+            Get.to(() => const EmailVerificationScreen());
+          } else {
+            onSellButtonClicked();
+          }
         }
 
         return Scaffold(
@@ -203,14 +234,7 @@ class _MainScreenState extends State<MainScreen> {
             elevation: 0,
             tooltip: 'List a product',
             enableFeedback: true,
-            onPressed: () {
-              if (!user!.emailVerified &&
-                  user!.providerData[0].providerId == 'password') {
-                Get.to(() => const EmailVerificationScreen());
-              } else {
-                onSellButtonClicked();
-              }
-            },
+            onPressed: onFloatingActionButtonPressed,
             child: const Center(
               child: Icon(
                 MdiIcons.plus,
@@ -220,24 +244,44 @@ class _MainScreenState extends State<MainScreen> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: AnimatedBottomNavigationBar(
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
             onTap: onItemTapped,
             gapLocation: GapLocation.center,
             activeIndex: selectedIndex,
-            icons: const [
-              MdiIcons.homeOutline,
-              MdiIcons.chatOutline,
-              MdiIcons.heartOutline,
-              MdiIcons.accountCircleOutline,
-            ],
             backgroundColor: greyColor,
             elevation: 5,
             height: 55,
+            leftCornerRadius: 10,
+            rightCornerRadius: 10,
             notchSmoothness: NotchSmoothness.defaultEdge,
-            activeColor: blackColor,
-            inactiveColor: lightBlackColor,
-            iconSize: 27,
             splashColor: transparentColor,
+            itemCount: pages.length,
+            tabBuilder: (index, isActive) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    selectedIndex == index
+                        ? selectedIconsList[index]
+                        : iconsList[index],
+                    size: 24,
+                    color: blackColor,
+                  ),
+                  AutoSizeText(
+                    titlesList[index],
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: selectedIndex == index
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      color: blackColor,
+                    ),
+                  )
+                ],
+              );
+            },
           ),
         );
       },

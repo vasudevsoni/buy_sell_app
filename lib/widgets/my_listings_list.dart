@@ -541,7 +541,7 @@ class _MyListingScreenProductCardState
                               width: size.width * 0.3,
                               height: size.width * 0.3,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(7),
                                 child: CachedNetworkImage(
                                   imageUrl: widget.data['images'][0],
                                   fit: BoxFit.cover,

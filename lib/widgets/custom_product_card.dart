@@ -139,7 +139,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                         style: GoogleFonts.interTight(
                                           fontWeight: FontWeight.w800,
                                           color: blackColor,
-                                          fontSize: 16,
+                                          fontSize: 15,
                                         ),
                                       )
                                     : Text(
@@ -151,7 +151,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                         style: GoogleFonts.interTight(
                                           fontWeight: FontWeight.w800,
                                           color: blackColor,
-                                          fontSize: 16,
+                                          fontSize: 15,
                                         ),
                                       ),
                                 if (widget.data['catName'] == 'Jobs')
@@ -244,7 +244,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       child: Icon(
                         isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
                         size: 22,
-                        color: isLiked ? redColor : lightBlackColor,
+                        color: isLiked ? redColor : blackColor,
                       ),
                     ),
                   ),

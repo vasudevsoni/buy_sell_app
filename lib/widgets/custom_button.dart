@@ -1,6 +1,4 @@
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
@@ -27,28 +25,32 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GFButton(
+    return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(
         icon,
         color: textIconColor,
       ),
-      borderShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-        side: BorderSide(
-          color: borderColor,
-          strokeAlign: StrokeAlign.inside,
-          width: 1.2,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        fixedSize: isFullWidth == true
+            ? Size.fromWidth(MediaQuery.of(context).size.width)
+            : null,
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          side: BorderSide(
+            color: borderColor,
+            strokeAlign: StrokeAlign.inside,
+            width: 1.2,
+          ),
         ),
       ),
-      splashColor: transparentColor,
-      color: bgColor,
-      enableFeedback: true,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      size: GFSize.LARGE,
-      fullWidthButton: isFullWidth,
-      animationDuration: const Duration(milliseconds: 100),
-      child: Text(
+      label: Text(
         text,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
