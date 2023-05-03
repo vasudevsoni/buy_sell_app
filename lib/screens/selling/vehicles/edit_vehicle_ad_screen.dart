@@ -708,11 +708,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 1 - Vehicle Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -751,7 +752,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     controller: brandNameController,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
+                    hint: 'Ex: Maruti Suzuki, Honda',
                     maxLength: 20,
                     isEnabled: isLoading ? false : true,
                     validator: (value) {
@@ -768,7 +769,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Model and Variant'),
+                  child: TextFieldLabel(labelText: 'Model/Variant'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -781,7 +782,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     isEnabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter model and variant name';
+                        return 'Please enter model/variant name';
                       }
                       return null;
                     },
@@ -817,7 +818,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                      hintText: 'Ex: 20000, 150000',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -1128,11 +1129,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 2 - Listing Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,

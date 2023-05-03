@@ -160,7 +160,16 @@ class _SellerSubCategoriesListScreenState
                   trailingIcon: MdiIcons.chevronRight,
                   isEnabled: true,
                   onTap: () {
-                    if (widget.doc['catName'] == 'Vehicles') {
+                    if (widget.doc['catName'] == 'Vehicles'
+                        // (snapshot.data!['subCat'] == 'Cars' ||
+                        //     snapshot.data!['subCat'] == 'Motorcycles' ||
+                        //     snapshot.data!['subCat'] == 'Boats' ||
+                        //     snapshot.data!['subCat'] ==
+                        //         '3-Wheelers, Trucks & Buses' ||
+                        //     snapshot.data!['subCat'] ==
+                        //         'Agriculture & Industrial' ||
+                        //     snapshot.data!['subCat'] == 'RVs & Campers')
+                        ) {
                       Get.offAll(
                         () => VehicleAdPostScreen(subCatName: data[index]),
                         transition: Transition.downToUp,

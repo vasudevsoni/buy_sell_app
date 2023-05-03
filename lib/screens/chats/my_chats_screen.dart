@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../provider/providers.dart';
 import '../../widgets/custom_loading_indicator.dart';
@@ -202,8 +203,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     return const Divider(
                       color: fadedColor,
                       height: 0,
-                      indent: 15,
-                      endIndent: 15,
+                      indent: 80,
                     );
                   },
                   itemBuilder: (context, index) {
@@ -325,8 +325,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     return const Divider(
                       color: fadedColor,
                       height: 0,
-                      indent: 15,
-                      endIndent: 15,
+                      indent: 80,
                     );
                   },
                   physics: const ClampingScrollPhysics(),
@@ -432,8 +431,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                     return const Divider(
                       color: fadedColor,
                       height: 0,
-                      indent: 15,
-                      endIndent: 15,
+                      indent: 80,
                     );
                   },
                   physics: const ClampingScrollPhysics(),
@@ -506,6 +504,8 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final lastChatTime =
+        DateTime.fromMillisecondsSinceEpoch(widget.chatData['lastChatTime']);
 
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
@@ -525,89 +525,130 @@ class _ChatCardState extends State<ChatCard> {
           child: Column(
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: widget.chatData['users'][0] != _services.user!.uid
-                        ? sellerProfileImage == ''
-                            ? Container(
-                                width: size.width * 0.12,
-                                height: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: blueColor,
-                                ),
-                                child: const Icon(
-                                  MdiIcons.accountOutline,
-                                  color: whiteColor,
-                                  size: 20,
-                                ),
-                              )
-                            : SizedBox(
-                                width: size.width * 0.12,
-                                height: size.width * 0.12,
-                                child: CachedNetworkImage(
-                                  imageUrl: sellerProfileImage,
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.high,
-                                  memCacheHeight: (size.width * 0.12).round(),
-                                  memCacheWidth: (size.width * 0.12).round(),
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      MdiIcons.alertDecagramOutline,
-                                      size: 20,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Icon(
-                                      MdiIcons.imageFilterHdr,
-                                      size: 20,
-                                      color: lightBlackColor,
-                                    );
-                                  },
-                                ),
-                              )
-                        : buyerProfileImage == ''
-                            ? Container(
-                                width: size.width * 0.12,
-                                height: size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: blueColor,
-                                ),
-                                child: const Icon(
-                                  MdiIcons.accountOutline,
-                                  color: whiteColor,
-                                  size: 20,
-                                ),
-                              )
-                            : SizedBox(
-                                width: size.width * 0.12,
-                                height: size.width * 0.12,
-                                child: CachedNetworkImage(
-                                  imageUrl: buyerProfileImage,
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.high,
-                                  memCacheHeight: (size.width * 0.12).round(),
-                                  memCacheWidth: (size.width * 0.12).round(),
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      MdiIcons.alertDecagramOutline,
-                                      size: 20,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Icon(
-                                      MdiIcons.imageFilterHdr,
-                                      size: 20,
-                                      color: lightBlackColor,
-                                    );
-                                  },
-                                ),
-                              ),
+                  Stack(
+                    children: [
+                      Container(
+                        width: size.width * 0.13,
+                        height: size.width * 0.13,
+                        padding: const EdgeInsets.only(right: 3, bottom: 3),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: CachedNetworkImage(
+                            imageUrl: productImage,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                            memCacheHeight: (size.width * 0.13).round(),
+                            errorWidget: (context, url, error) {
+                              return const Icon(
+                                MdiIcons.alertDecagramOutline,
+                                size: 20,
+                                color: redColor,
+                              );
+                            },
+                            placeholder: (context, url) {
+                              return const Icon(
+                                MdiIcons.imageFilterHdr,
+                                size: 20,
+                                color: lightBlackColor,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: widget.chatData['users'][0] !=
+                                  _services.user!.uid
+                              ? sellerProfileImage == ''
+                                  ? Container(
+                                      width: size.width * 0.06,
+                                      height: size.width * 0.06,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: blueColor,
+                                      ),
+                                      child: const Icon(
+                                        MdiIcons.accountOutline,
+                                        color: whiteColor,
+                                        size: 20,
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: size.width * 0.06,
+                                      height: size.width * 0.06,
+                                      child: CachedNetworkImage(
+                                        imageUrl: sellerProfileImage,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                        memCacheHeight:
+                                            (size.width * 0.06).round(),
+                                        memCacheWidth:
+                                            (size.width * 0.06).round(),
+                                        errorWidget: (context, url, error) {
+                                          return const Icon(
+                                            MdiIcons.alertDecagramOutline,
+                                            size: 20,
+                                            color: redColor,
+                                          );
+                                        },
+                                        placeholder: (context, url) {
+                                          return const Icon(
+                                            MdiIcons.imageFilterHdr,
+                                            size: 20,
+                                            color: lightBlackColor,
+                                          );
+                                        },
+                                      ),
+                                    )
+                              : buyerProfileImage == ''
+                                  ? Container(
+                                      width: size.width * 0.06,
+                                      height: size.width * 0.06,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: blueColor,
+                                      ),
+                                      child: const Icon(
+                                        MdiIcons.accountOutline,
+                                        color: whiteColor,
+                                        size: 20,
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: size.width * 0.06,
+                                      height: size.width * 0.06,
+                                      child: CachedNetworkImage(
+                                        imageUrl: buyerProfileImage,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                        memCacheHeight:
+                                            (size.width * 0.06).round(),
+                                        memCacheWidth:
+                                            (size.width * 0.06).round(),
+                                        errorWidget: (context, url, error) {
+                                          return const Icon(
+                                            MdiIcons.alertDecagramOutline,
+                                            size: 20,
+                                            color: redColor,
+                                          );
+                                        },
+                                        placeholder: (context, url) {
+                                          return const Icon(
+                                            MdiIcons.imageFilterHdr,
+                                            size: 20,
+                                            color: lightBlackColor,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                        ),
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: Padding(
@@ -616,148 +657,96 @@ class _ChatCardState extends State<ChatCard> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          widget.chatData['users'][0] == _services.user!.uid
-                              ? RichText(
-                                  text: TextSpan(
-                                    text: buyerName == ''
-                                        ? 'BechDe User •'
-                                        : '$buyerName •',
-                                    children: [
-                                      TextSpan(
-                                        text: ' Buyer',
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: widget.chatData['users'][0] ==
+                                        _services.user!.uid
+                                    ? Text(
+                                        buyerName == ''
+                                            ? 'BechDe User'
+                                            : buyerName,
                                         style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w700,
+                                          color: blackColor,
                                           fontSize: 14,
-                                          color: redColor,
                                         ),
-                                      ),
-                                    ],
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      color: blackColor,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    text: sellerName == ''
-                                        ? 'BechDe User •'
-                                        : '$sellerName •',
-                                    children: [
-                                      TextSpan(
-                                        text: ' Seller',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                      )
+                                    : Text(
+                                        sellerName == ''
+                                            ? 'BechDe User'
+                                            : sellerName,
                                         style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w700,
+                                          color: blackColor,
                                           fontSize: 14,
-                                          color: blueColor,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
                                       ),
-                                    ],
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      color: blackColor,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
+                              ),
+                              AutoSizeText(
+                                timeago.format(lastChatTime),
+                                maxLines: 1,
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.w500,
+                                  color: lightBlackColor,
+                                  fontSize: 12,
                                 ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            prodTitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.interTight(
+                              fontWeight: FontWeight.w500,
+                              color: blackColor,
+                              fontSize: 13,
+                            ),
+                          ),
                           if (widget.chatData['lastChat'] != null)
-                            Text(
-                              widget.chatData['lastChat'],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: widget.chatData['read'] == false
-                                  ? GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w700,
-                                      color: blueColor,
-                                      fontSize: 15,
-                                    )
-                                  : GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      color: blackColor,
-                                      fontSize: 15,
-                                    ),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  widget.chatData['lastChat'],
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: widget.chatData['read'] == false
+                                      ? GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w700,
+                                          color: blueColor,
+                                          fontSize: 13,
+                                        )
+                                      : GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w500,
+                                          color: blackColor,
+                                          fontSize: 13,
+                                        ),
+                                ),
+                              ],
                             ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: greyColor,
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.12,
-                      height: size.width * 0.12,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl: productImage,
-                          fit: BoxFit.cover,
-                          filterQuality: FilterQuality.high,
-                          memCacheHeight: (size.width * 0.12).round(),
-                          errorWidget: (context, url, error) {
-                            return const Icon(
-                              MdiIcons.alertDecagramOutline,
-                              size: 20,
-                              color: redColor,
-                            );
-                          },
-                          placeholder: (context, url) {
-                            return const Icon(
-                              MdiIcons.imageFilterHdr,
-                              size: 20,
-                              color: lightBlackColor,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text(
-                          prodTitle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: GoogleFonts.interTight(
-                            fontWeight: FontWeight.w500,
-                            color: blackColor,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
               if (isActive == false)
                 Text(

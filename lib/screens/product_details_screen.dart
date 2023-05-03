@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -15,6 +16,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import '../auth/screens/email_verification_screen.dart';
+import '../auth/screens/location_screen.dart';
 import '../promotion/promote_listing_screen.dart';
 import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
@@ -33,6 +36,7 @@ import '/widgets/custom_product_card.dart';
 import 'profile_screen.dart';
 import 'selling/common/edit_ad_screen.dart';
 import 'selling/jobs/edit_job_post_screen.dart';
+import 'selling/seller_categories_list_screen.dart';
 import 'selling/vehicles/edit_vehicle_ad_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -48,6 +52,7 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
   final TextEditingController reportTextController = TextEditingController();
   final MapController mapController = MapController();
   late NativeAd? _nativeAd;
@@ -431,6 +436,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           );
         },
       );
+    }
+
+    onSellButtonClicked() async {
+      final value = await services.getCurrentUserData();
+      final location = value['location'];
+      if (location == null) {
+        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+        showSnackBar(
+          content: 'Please set your location to sell products',
+          color: redColor,
+        );
+      } else {
+        Get.to(
+          () => const SellerCategoriesListScreen(),
+        );
+      }
     }
 
     return isActive == false && isSold == false
@@ -1775,9 +1796,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 5,
                         ),
                         Container(
-                          decoration: const BoxDecoration(
-                            boxShadow: [customShadow],
-                          ),
                           margin: const EdgeInsets.symmetric(horizontal: 15),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -1879,7 +1897,84 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 25,
+                          height: 20,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                            border: greyBorder,
+                            boxShadow: const [customShadow],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        MdiIcons.currencyRupee,
+                                        color: greenColor,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Sell similar on BechDe',
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w600,
+                                          color: blackColor,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * 0.6,
+                                    child: AutoSizeText(
+                                      'Have a similar item? List in a few clicks and earn quick cash.',
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              CustomButtonWithoutIcon(
+                                text: 'List Now',
+                                onPressed: !user!.emailVerified &&
+                                        user!.providerData[0].providerId ==
+                                            'password'
+                                    ? () => Get.to(
+                                          () => const EmailVerificationScreen(),
+                                        )
+                                    : onSellButtonClicked,
+                                borderColor: blueColor,
+                                bgColor: blueColor,
+                                textIconColor: whiteColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1948,7 +2043,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           .where('subCat', isEqualTo: widget.subCatName)
           .where('postedAt', isNotEqualTo: widget.postedAt)
           .where('isActive', isEqualTo: true)
-          .limit(4)
+          .limit(10)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -2008,7 +2103,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               ),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
+              itemCount: snapshot.data!.size >= 10 ? 10 : snapshot.data!.size,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
                 final time =
@@ -2030,7 +2125,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 right: 15,
               ),
               child: CustomButton(
-                text: 'See similar products',
+                text: 'See more similar items',
                 onPressed: () => Get.to(
                   () => CategoryProductsScreen(
                     catName: widget.catName,

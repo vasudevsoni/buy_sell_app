@@ -900,11 +900,12 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 1 - User Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -949,11 +950,12 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 2 - Job Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -1304,11 +1306,12 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 3 - Listing Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -1379,11 +1382,12 @@ class _JobAdPostScreenState extends State<JobAdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 4 - Job Images',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,

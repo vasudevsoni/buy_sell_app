@@ -566,11 +566,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 1 - Product Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,

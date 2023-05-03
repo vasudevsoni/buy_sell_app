@@ -93,14 +93,14 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       children: [
                         Container(
                           padding: const EdgeInsets.only(
-                            left: 5,
-                            top: 5,
-                            bottom: 5,
+                            left: 3,
+                            top: 3,
+                            bottom: 3,
                           ),
                           width: size.width * 0.28,
                           height: size.width * 0.3,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(7),
+                            borderRadius: BorderRadius.circular(6),
                             child: CachedNetworkImage(
                               imageUrl: widget.data['images'][0],
                               fit: BoxFit.cover,

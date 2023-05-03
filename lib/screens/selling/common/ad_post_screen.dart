@@ -805,11 +805,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 1 - User Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -854,11 +855,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 2 - Product Details',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
@@ -1044,11 +1046,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
                   child: Text(
                     'Step 3 - Product Images',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,

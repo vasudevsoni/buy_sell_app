@@ -62,7 +62,7 @@ const Color fadedColor = Colors.black45;
 
 const BoxShadow customShadow = BoxShadow(
   color: greyColor,
-  spreadRadius: 2,
+  spreadRadius: 1,
   blurRadius: 8,
   blurStyle: BlurStyle.normal,
   offset: Offset(0, 4),

@@ -308,7 +308,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                         ),
                                       ),
                                       child: const Icon(
-                                        MdiIcons.closeOutline,
+                                        MdiIcons.close,
                                         size: 18,
                                         color: whiteColor,
                                       ),
@@ -327,18 +327,27 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         color: greyColor,
                       ),
                       height: 100,
-                      child: Center(
-                        child: Text(
-                          'Upload some pictures',
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: GoogleFonts.interTight(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Upload pictures',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.interTight(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(
+                            MdiIcons.image,
+                          ),
+                        ],
                       ),
                     ),
               if (provider.imagePaths.isNotEmpty)
@@ -352,9 +361,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 ),
             ],
           ),
-        ),
-        const SizedBox(
-          height: 10,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),

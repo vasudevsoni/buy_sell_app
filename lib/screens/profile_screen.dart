@@ -362,13 +362,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 25,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   profileImage == ''
                       ? Container(
@@ -469,7 +469,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: whiteColor,
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            padding: const EdgeInsets.all(3),
+                            margin: const EdgeInsets.only(left: 15, right: 10),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: CachedNetworkImage(
@@ -495,7 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                   const SizedBox(
-                    width: 15,
+                    width: 5,
                   ),
                   Container(
                     padding:
@@ -550,27 +550,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              if (bio != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Get.to(
-                      () => FullBioScreen(bio: bio),
-                    ),
-                    child: Text(
-                      bio,
-                      maxLines: 3,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
-                        color: blackColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
               if (instagramLink == '' &&
                   facebookLink == '' &&
                   websiteLink == '')
@@ -583,90 +562,170 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (instagramLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_instagram,
-                            iconColor: const Color(0xffdd2a7b),
-                            link: instagramLink,
-                          ),
-                        if (facebookLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_facebook,
-                            iconColor: const Color(0xff1778f2),
-                            link: facebookLink,
-                          ),
-                        if (websiteLink != '')
-                          ExternalLinkIcon(
-                            icon: MdiIcons.linkVariant,
-                            iconColor: blueColor,
-                            link: websiteLink,
-                          ),
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if (instagramLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_instagram,
+                              iconColor: const Color(0xffdd2a7b),
+                              link: instagramLink,
+                            ),
+                          if (facebookLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_facebook,
+                              iconColor: const Color(0xff1778f2),
+                              link: facebookLink,
+                            ),
+                          if (websiteLink != '')
+                            ExternalLinkIcon(
+                              icon: MdiIcons.linkVariant,
+                              iconColor: blueColor,
+                              link: websiteLink,
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                   ],
                 ),
+              if (bio != '')
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.to(
+                          () => FullBioScreen(bio: bio),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              MdiIcons.informationOutline,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              bio,
+                              maxLines: 3,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.interTight(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  'Joined - ${timeago.format(dateJoined)}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: GoogleFonts.interTight(
-                    color: lightBlackColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                  ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      MdiIcons.calendarAccount,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'Joined - ${timeago.format(dateJoined)}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.interTight(
+                        color: blackColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (address != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    address,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: GoogleFonts.interTight(
-                      color: lightBlackColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 5,
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            MdiIcons.mapMarker,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            address,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.interTight(
+                              color: blackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               const SizedBox(
                 height: 5,
               ),
-              CustomButton(
-                text: 'Rate User',
-                onPressed: () async {
-                  final value = await services.getUserData(sellerUid);
-                  if (value['ratedBy'].contains(services.user!.uid)) {
-                    showSnackBar(
-                      content: 'You have already rated this user',
-                      color: redColor,
-                    );
-                  } else {
-                    Get.to(
-                      () => UserRatingScreen(
-                        userId: sellerUid,
-                        name: name,
-                      ),
-                    );
-                  }
-                },
-                icon: MdiIcons.starOutline,
-                borderColor: blueColor,
-                bgColor: blueColor,
-                textIconColor: whiteColor,
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  CustomButton(
+                    text: 'Rate User',
+                    onPressed: () async {
+                      final value = await services.getUserData(sellerUid);
+                      if (value['ratedBy'].contains(services.user!.uid)) {
+                        showSnackBar(
+                          content: 'You have already rated this user',
+                          color: redColor,
+                        );
+                      } else {
+                        Get.to(
+                          () => UserRatingScreen(
+                            userId: sellerUid,
+                            name: name,
+                          ),
+                        );
+                      }
+                    },
+                    icon: MdiIcons.starOutline,
+                    borderColor: blueColor,
+                    bgColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                ],
               ),
               // SizedBox(
               //   height: 10,
@@ -709,8 +768,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //           textIconColor: whiteColor,
               //         ),
               // ),
-              const SizedBox(
-                height: 5,
+              const Divider(
+                height: 20,
+                thickness: 3,
+                color: greyColor,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

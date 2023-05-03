@@ -1,5 +1,4 @@
 import 'package:buy_sell_app/screens/follow_us_screen.dart';
-import 'package:buy_sell_app/screens/update_profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -48,7 +47,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   String facebookLink = '';
   String websiteLink = '';
   var iconSize = 16;
-  int profileCompletePercent = 0;
   DateTime dateJoined = DateTime.now();
   double rating = 0;
   // int followers = 0;
@@ -66,17 +64,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       setState(() {
         name = value['name'] ?? name;
         bio = value['bio'] ?? '';
-        bio.isNotEmpty ? profileCompletePercent += 1 : null;
         profileImage = value['profileImage'] ?? '';
         address = value['location'] != null
             ? '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}'
             : '';
         instagramLink = value['instagramLink'] ?? '';
-        instagramLink.isNotEmpty ? profileCompletePercent += 1 : null;
         facebookLink = value['facebookLink'] ?? '';
-        facebookLink.isNotEmpty ? profileCompletePercent += 1 : null;
         websiteLink = value['websiteLink'] ?? '';
-        websiteLink.isNotEmpty ? profileCompletePercent += 1 : null;
         dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
         rating = value['rating'] == 0
             ? 0
@@ -176,49 +170,47 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 height: 15,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   profileImage == ''
-                      ? Center(
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: size.width * 0.25,
-                                width: size.width * 0.25,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: blueColor,
-                                ),
+                      ? Stack(
+                          children: [
+                            Container(
+                              height: size.width * 0.25,
+                              width: size.width * 0.25,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: blueColor,
+                              ),
+                              child: const Icon(
+                                MdiIcons.accountOutline,
+                                color: whiteColor,
+                                size: 50,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  Get.to(
+                                    () => const UpdateProfileImageScreen(),
+                                  );
+                                },
                                 child: const Icon(
-                                  MdiIcons.accountOutline,
-                                  color: whiteColor,
-                                  size: 50,
+                                  MdiIcons.pencilBoxOutline,
+                                  color: lightBlackColor,
+                                  shadows: [
+                                    Shadow(
+                                      color: lightBlackColor,
+                                      blurRadius: 2,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    Get.to(
-                                      () => const UpdateProfileImageScreen(),
-                                    );
-                                  },
-                                  child: const Icon(
-                                    MdiIcons.pencilBoxOutline,
-                                    color: lightBlackColor,
-                                    shadows: [
-                                      Shadow(
-                                        color: lightBlackColor,
-                                        blurRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         )
                       : GestureDetector(
                           behavior: HitTestBehavior.opaque,
@@ -298,65 +290,56 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               );
                             },
                           ),
-                          child: Center(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: size.width * 0.25,
-                                  width: size.width * 0.25,
-                                  decoration: BoxDecoration(
-                                    color: whiteColor,
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: CachedNetworkImage(
-                                      imageUrl: profileImage,
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.high,
-                                      memCacheHeight:
-                                          (size.width * 0.25).round(),
-                                      memCacheWidth:
-                                          (size.width * 0.25).round(),
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(
-                                          MdiIcons.alertDecagramOutline,
-                                          size: 30,
-                                          color: redColor,
-                                        );
-                                      },
-                                      placeholder: (context, url) {
-                                        return const Center(
-                                          child: CustomLoadingIndicator(),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: size.width * 0.25,
+                                width: size.width * 0.25,
+                                margin: const EdgeInsets.only(left: 15),
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      Get.to(
-                                        () => const UpdateProfileImageScreen(),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: CachedNetworkImage(
+                                    imageUrl: profileImage,
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.high,
+                                    memCacheHeight: (size.width * 0.25).round(),
+                                    memCacheWidth: (size.width * 0.25).round(),
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(
+                                        MdiIcons.alertDecagramOutline,
+                                        size: 30,
+                                        color: redColor,
                                       );
                                     },
-                                    child: const Icon(
-                                      MdiIcons.pencilBoxOutline,
-                                      color: blackColor,
-                                      shadows: [
-                                        Shadow(
-                                          color: lightBlackColor,
-                                          blurRadius: 2,
-                                        ),
-                                      ],
-                                    ),
+                                    placeholder: (context, url) {
+                                      return const Center(
+                                        child: CustomLoadingIndicator(),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Get.to(
+                                      () => const UpdateProfileImageScreen(),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    MdiIcons.pencilBox,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                   const SizedBox(
@@ -412,117 +395,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(
                 height: 15,
               ),
-              if (profileCompletePercent >= 0 && profileCompletePercent < 4)
-                GestureDetector(
-                  onTap: () => Get.to(() => const UpdateProfileScreen()),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: blueColor,
-                      border: greyBorder,
-                      boxShadow: const [customShadow],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Your profile is incomplete 😕',
-                              style: TextStyle(
-                                color: whiteColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                '${((profileCompletePercent / 4) * 100).toStringAsFixed(0)}%',
-                                style: const TextStyle(
-                                  color: blackColor,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        LinearProgressIndicator(
-                          value: profileCompletePercent / 4,
-                          color: whiteColor,
-                          minHeight: 5,
-                          backgroundColor: lightBlackColor,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        const Text(
-                          'Maximize your reach, gain trust and sell faster with a complete profile',
-                          maxLines: 2,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: greyColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Center(
-                  child: Text(
-                    name,
-                    maxLines: 1,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.interTight(
-                      color: blackColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: bio.isEmpty
-                    ? null
-                    : () => Get.to(() => FullBioScreen(bio: bio)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Center(
-                    child: Text(
-                      bio == '' ? 'Your bio will show here' : bio,
-                      maxLines: 2,
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
-                        color: blackColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                child: Text(
+                  name,
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.interTight(
+                    color: blackColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -538,71 +421,139 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (instagramLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_instagram,
-                            iconColor: const Color(0xffdd2a7b),
-                            link: instagramLink,
-                          ),
-                        if (facebookLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_facebook,
-                            iconColor: const Color(0xff1778f2),
-                            link: facebookLink,
-                          ),
-                        if (websiteLink != '')
-                          ExternalLinkIcon(
-                            icon: MdiIcons.linkVariant,
-                            iconColor: blueColor,
-                            link: websiteLink,
-                          ),
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if (instagramLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_instagram,
+                              iconColor: const Color(0xffdd2a7b),
+                              link: instagramLink,
+                            ),
+                          if (facebookLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_facebook,
+                              iconColor: const Color(0xff1778f2),
+                              link: facebookLink,
+                            ),
+                          if (websiteLink != '')
+                            ExternalLinkIcon(
+                              icon: MdiIcons.linkVariant,
+                              iconColor: blueColor,
+                              link: websiteLink,
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
+                    ),
+                  ],
+                ),
+              if (bio != '')
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.to(
+                          () => FullBioScreen(bio: bio),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              MdiIcons.informationOutline,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              bio,
+                              maxLines: 3,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.interTight(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
                     ),
                   ],
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Center(
-                  child: Text(
-                    'Joined - ${timeago.format(dateJoined)}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: GoogleFonts.interTight(
-                      color: lightBlackColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
+                child: Row(
+                  children: [
+                    const Icon(
+                      MdiIcons.calendarAccount,
+                      size: 15,
                     ),
-                  ),
-                ),
-              ),
-              if (address != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Center(
-                    child: Text(
-                      address,
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'Joined - ${timeago.format(dateJoined)}',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: GoogleFonts.interTight(
-                        color: lightBlackColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
+                        color: blackColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
+                  ],
+                ),
+              ),
+              if (address != '')
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            MdiIcons.mapMarker,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            address,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.interTight(
+                              color: blackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -611,54 +562,42 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 decoration: BoxDecoration(
                   boxShadow: const [customShadow],
                   gradient: const LinearGradient(
-                    colors: [blueColor, greenColor],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                    colors: [greenColor, blueColor],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Make money selling on BechDe',
-                            textAlign: TextAlign.start,
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              color: whiteColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Icon(
-                            MdiIcons.cashMultiple,
-                            color: whiteColor,
-                          ),
-                        ],
-                      ),
-                    ),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                          horizontal: 15, vertical: 5),
                       decoration: BoxDecoration(
                         color: whiteColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            'Sell on BechDe & make extra cash',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.interTight(
+                              color: blackColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Row(
                             children: [
                               const Icon(
@@ -696,7 +635,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  'Reach thousands of buyers',
+                                  'Reach tens of thousands of buyers',
                                   maxLines: 2,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
@@ -842,53 +781,53 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: whiteColor,
-                    boxShadow: const [customShadow],
-                    border: greyBorder,
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Made with ',
-                          style: GoogleFonts.interTight(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: blackColor,
-                          ),
-                        ),
-                        Icon(
-                          MdiIcons.heartOutline,
-                          color: redColor,
-                          size: iconSize.toDouble(),
-                        ),
-                        Text(
-                          ' in India',
-                          style: GoogleFonts.interTight(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: blackColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   child: Container(
+              //     width: size.width,
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 15,
+              //       vertical: 10,
+              //     ),
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(10),
+              //       color: whiteColor,
+              //       boxShadow: const [customShadow],
+              //       border: greyBorder,
+              //     ),
+              //     child: Center(
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           Text(
+              //             'Made with ',
+              //             style: GoogleFonts.interTight(
+              //               fontSize: 13,
+              //               fontWeight: FontWeight.w500,
+              //               color: blackColor,
+              //             ),
+              //           ),
+              //           Icon(
+              //             MdiIcons.heartOutline,
+              //             color: redColor,
+              //             size: iconSize.toDouble(),
+              //           ),
+              //           Text(
+              //             ' in India',
+              //             style: GoogleFonts.interTight(
+              //               fontSize: 13,
+              //               fontWeight: FontWeight.w500,
+              //               color: blackColor,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(
-                height: 50,
+                height: 30,
               ),
             ],
           ),
