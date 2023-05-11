@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
@@ -11,11 +12,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../auth/screens/location_screen.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
+import '../widgets/custom_product_card_grid.dart';
 import '../widgets/svg_picture.dart';
 import '/widgets/custom_button.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
-import '/widgets/custom_product_card.dart';
 import 'categories/categories_list_screen.dart';
 import 'categories/sub_categories_list_screen.dart';
 import 'search_field_screen.dart';
@@ -216,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen>
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
                       style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
                         color: whiteColor,
                       ),
                     ),
@@ -236,31 +237,27 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               behavior: HitTestBehavior.opaque,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: whiteColor,
+                  border: Border.all(color: whiteColor),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       MdiIcons.magnify,
-                      color: blackColor,
+                      color: whiteColor,
                       size: 20,
                     ),
-                    SizedBox(
-                      width: 2,
+                    const SizedBox(
+                      width: 3,
                     ),
                     Text(
                       'Search',
-                      style: TextStyle(
-                        color: blackColor,
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
+                        fontSize: 13,
+                        color: whiteColor,
                       ),
                     ),
                   ],
@@ -490,36 +487,35 @@ class CategoriesListView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [customShadow],
                     border: greyBorder,
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-                  width: size.height * 0.12,
+                  width: size.height * 0.14,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: CachedNetworkImage(
-                            imageUrl: doc['image'],
-                            fit: BoxFit.fitHeight,
-                            filterQuality: FilterQuality.high,
-                            errorWidget: (context, url, error) {
-                              return const Icon(
-                                MdiIcons.alertDecagramOutline,
-                                size: 30,
-                                color: redColor,
-                              );
-                            },
-                            placeholder: (context, url) {
-                              return const Center(
-                                child: CustomLoadingIndicator(),
-                              );
-                            },
-                          ),
+                        child: CachedNetworkImage(
+                          imageUrl: doc['image'],
+                          fit: BoxFit.fitHeight,
+                          filterQuality: FilterQuality.high,
+                          errorWidget: (context, url, error) {
+                            return const Icon(
+                              MdiIcons.alertDecagramOutline,
+                              size: 30,
+                              color: redColor,
+                            );
+                          },
+                          placeholder: (context, url) {
+                            return const Center(
+                              child: CustomLoadingIndicator(),
+                            );
+                          },
                         ),
+                      ),
+                      const SizedBox(
+                        height: 5,
                       ),
                       Text(
                         doc['catName'],
@@ -528,7 +524,7 @@ class CategoriesListView extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.interTight(
                           fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           color: lightBlackColor,
                         ),
                       ),
@@ -831,7 +827,7 @@ class _ProductsListState extends State<ProductsList> {
                     )
                     .where('isActive', isEqualTo: true)
                     .where('location.city', isEqualTo: widget.city),
-            pageSize: 11,
+            pageSize: 12,
             builder: (context, snapshot, child) {
               if (snapshot.isFetching) {
                 return const Padding(
@@ -897,12 +893,10 @@ class _ProductsListState extends State<ProductsList> {
                   ),
                 );
               }
-              return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return const SizedBox(
-                    height: 6,
-                  );
-                },
+              return AlignedGridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(
@@ -925,7 +919,7 @@ class _ProductsListState extends State<ProductsList> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomProductCard(
+                      CustomProductCardGrid(
                         data: data,
                         time: time,
                       ),

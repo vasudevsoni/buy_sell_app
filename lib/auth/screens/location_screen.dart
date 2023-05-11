@@ -186,7 +186,6 @@ class _LocationScreenState extends State<LocationScreen> {
                 borderRadius: BorderRadius.circular(15),
                 color: whiteColor,
                 border: greyBorder,
-                boxShadow: const [customShadow],
               ),
               child: const SVGPictureWidget(
                 url:

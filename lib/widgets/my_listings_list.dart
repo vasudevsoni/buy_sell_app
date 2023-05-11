@@ -450,7 +450,6 @@ class _MyListingScreenProductCardState
                     borderRadius: BorderRadius.circular(10),
                     color: whiteColor,
                     border: greyBorder,
-                    boxShadow: const [customShadow],
                   ),
                   child: Text(
                     'Your product will be permanently deleted.\nAll your chats with buyers for this listing will also be deleted.\n\nNote - This action cannot be reversed.',
@@ -527,7 +526,6 @@ class _MyListingScreenProductCardState
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: whiteColor,
-                    boxShadow: const [customShadow],
                     border: greyBorder,
                   ),
                   child: Padding(
@@ -740,9 +738,9 @@ class _MyListingScreenProductCardState
                               Expanded(
                                 child: Chip(
                                   backgroundColor: blackColor,
-                                  label: Text(
-                                    'UNDER REVIEW. Usually takes 2-8 hrs',
-                                    maxLines: 2,
+                                  label: AutoSizeText(
+                                    'UNDER REVIEW. Usually takes up to 24 hours to complete. May take longer than 24 hours during weekends or holidays when our team is not fully staffed.',
+                                    maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
                                     style: GoogleFonts.interTight(

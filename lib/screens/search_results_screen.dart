@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -12,10 +13,10 @@ import '../services/admob_services.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
+import '../widgets/custom_product_card_grid.dart';
 import '../widgets/svg_picture.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
-import '/widgets/custom_product_card.dart';
 
 class SearchResultsScreen extends StatefulWidget {
   final String query;
@@ -369,7 +370,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
                     .where('isActive', isEqualTo: true)
                     .where('location.city', isEqualTo: widget.city)
                     .orderBy('postedAt', descending: true),
-            pageSize: 11,
+            pageSize: 12,
             builder: (context, snapshot, child) {
               if (snapshot.isFetching) {
                 return const Padding(
@@ -442,12 +443,10 @@ class _SearchProductsListState extends State<SearchProductsList> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 6,
-                        );
-                      },
+                    AlignedGridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
                       padding: const EdgeInsets.only(
                         left: 15,
                         top: 10,
@@ -468,7 +467,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            CustomProductCard(
+                            CustomProductCardGrid(
                               data: data,
                               time: time,
                             ),
@@ -509,7 +508,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
     //           )
     //           .where('isActive', isEqualTo: true)
     //           .where('location.city', isEqualTo: widget.city),
-    //   pageSize: 11,
+    //   pageSize: 12,
     //   builder: (context, snapshot, child) {
     //     if (snapshot.isFetching) {
     //       return const Padding(

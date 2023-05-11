@@ -191,14 +191,14 @@ class _MainScreenState extends State<MainScreen> {
 
         const List<IconData> iconsList = [
           MdiIcons.homeOutline,
-          MdiIcons.forumOutline,
+          MdiIcons.chatOutline,
           MdiIcons.heartOutline,
           MdiIcons.accountCircleOutline,
         ];
 
         const List<IconData> selectedIconsList = [
           MdiIcons.home,
-          MdiIcons.forum,
+          MdiIcons.chat,
           MdiIcons.heart,
           MdiIcons.accountCircle,
         ];

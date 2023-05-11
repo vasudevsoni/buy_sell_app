@@ -132,12 +132,11 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   decoration: BoxDecoration(
                     color: redColor,
                     border: greyBorder,
-                    boxShadow: const [customShadow],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Note: The review usually takes 2-6 working hours, but it may take more time due to high demand.',
-                    textAlign: TextAlign.center,
+                    'Note: Reviewing usually takes up to 24 hours to complete.\nMay take longer than 24 hours during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
+                    textAlign: TextAlign.start,
                     style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -159,15 +158,6 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
-                CustomButton(
-                  text: 'Rate our App',
-                  onPressed: () => inAppReview.openStoreListing(),
-                  isFullWidth: true,
-                  icon: MdiIcons.starOutline,
-                  bgColor: greenColor,
-                  borderColor: greenColor,
                   textIconColor: whiteColor,
                 ),
                 CustomButton(

@@ -876,7 +876,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 decoration: BoxDecoration(
                                   color: whiteColor,
                                   border: greyBorder,
-                                  boxShadow: const [customShadow],
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Row(
@@ -1166,7 +1165,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: whiteColor,
                             border: greyBorder,
-                            boxShadow: const [customShadow],
                           ),
                           padding: const EdgeInsets.symmetric(
                             vertical: 10,
@@ -1319,7 +1317,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     color: whiteColor,
                                     border: greyBorder,
-                                    boxShadow: const [customShadow],
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 15,
@@ -1614,7 +1611,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     color: whiteColor,
                                     border: greyBorder,
-                                    boxShadow: const [customShadow],
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 15,
@@ -1730,7 +1726,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               borderRadius: BorderRadius.circular(10),
                               color: whiteColor,
                               border: greyBorder,
-                              boxShadow: const [customShadow],
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
@@ -1745,16 +1740,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     color: blackColor,
                                     fontSize: 14,
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 4,
+                                  height: 3,
                                 ),
                                 Text(
-                                  'Show full description',
+                                  'Show full description...',
                                   style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     color: blueColor,
@@ -1900,13 +1895,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 20,
                         ),
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           width: size.width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: whiteColor,
                             border: greyBorder,
-                            boxShadow: const [customShadow],
                           ),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,

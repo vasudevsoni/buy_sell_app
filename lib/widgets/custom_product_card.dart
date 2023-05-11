@@ -86,7 +86,6 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: whiteColor,
-                      boxShadow: const [customShadow],
                       border: greyBorder,
                     ),
                     child: Row(

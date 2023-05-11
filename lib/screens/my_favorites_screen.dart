@@ -1,15 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/providers.dart';
+import '../widgets/custom_product_card_grid.dart';
 import '/utils/utils.dart';
 import '/services/firebase_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
-import '../widgets/custom_product_card.dart';
 import '../widgets/svg_picture.dart';
 
 class MyFavoritesScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
           query: services.listings
               .orderBy('title', descending: false)
               .where('favorites', arrayContains: services.user!.uid),
-          pageSize: 11,
+          pageSize: 12,
           builder: (context, snapshot, child) {
             if (snapshot.isFetching) {
               return const Padding(
@@ -149,12 +150,10 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                       ),
                     ),
                   ),
-                  ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 6,
-                      );
-                    },
+                  AlignedGridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                     padding: const EdgeInsets.only(
                       left: 15,
                       top: 10,
@@ -174,7 +173,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          CustomProductCard(
+                          CustomProductCardGrid(
                             data: data,
                             time: time,
                           ),

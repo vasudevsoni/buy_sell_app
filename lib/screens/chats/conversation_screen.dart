@@ -678,7 +678,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         margin: const EdgeInsets.only(
                                           left: 15,
                                           right: 15,
-                                          top: 5,
+                                          top: 10,
                                           bottom: 2,
                                         ),
                                         constraints: BoxConstraints(
@@ -688,32 +688,31 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           vertical: 5,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: greenColor,
-                                          borderRadius: sentBy == me
-                                              ? const BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(10),
-                                                  bottomRight:
-                                                      Radius.circular(3),
-                                                )
-                                              : const BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(3),
-                                                  bottomRight:
-                                                      Radius.circular(10),
-                                                ),
+                                          color: whiteColor,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(color: greenColor),
                                         ),
-                                        child: Text(
-                                          snapshot.data!.docs[index]['message'],
-                                          style: GoogleFonts.interTight(
-                                            color: whiteColor,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Offer',
+                                              style: GoogleFonts.interTight(
+                                                color: blackColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.docs[index]
+                                                  ['message'],
+                                              style: GoogleFonts.interTight(
+                                                color: greenColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     )
@@ -725,7 +724,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                         margin: const EdgeInsets.only(
                                           left: 15,
                                           right: 15,
-                                          top: 5,
+                                          top: 10,
                                           bottom: 2,
                                         ),
                                         padding: const EdgeInsets.symmetric(
@@ -736,34 +735,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                             maxWidth: size.width * 0.75),
                                         decoration: BoxDecoration(
                                           color: sentBy == me
-                                              ? blueColor
-                                              : greyColor,
-                                          borderRadius: sentBy == me
-                                              ? const BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(10),
-                                                  bottomRight:
-                                                      Radius.circular(3),
-                                                )
-                                              : const BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(3),
-                                                  bottomRight:
-                                                      Radius.circular(10),
-                                                ),
+                                              ? greyColor
+                                              : whiteColor,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(color: greyColor),
                                         ),
                                         child: Text(
                                           snapshot.data!.docs[index]['message'],
                                           style: GoogleFonts.interTight(
-                                            color: sentBy == me
-                                                ? whiteColor
-                                                : blackColor,
+                                            color: blackColor,
                                             fontSize: 15,
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -789,12 +772,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                           ),
                                         ),
                                         const SizedBox(
-                                          width: 3,
+                                          width: 4,
                                         ),
                                         Text(
                                           date,
                                           style: GoogleFonts.interTight(
-                                            color: fadedColor,
+                                            color: lightBlackColor,
                                             fontSize: 10,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -817,6 +800,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     width: size.width,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         if (sellerUid != _services.user!.uid &&
                             prod['catName'] != 'Jobs')
@@ -841,88 +825,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                             ],
                           ),
-                        ActionChip(
-                          pressElevation: 5,
-                          label: const Text('Is it available?'),
-                          backgroundColor: greyColor,
-                          labelStyle: GoogleFonts.interTight(
-                            color: blackColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onPressed: () => sendMessage('Is it available?'),
-                          padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
+                        chatOptionsChip(text: 'Hello'),
                         const SizedBox(
                           width: 5,
                         ),
-                        ActionChip(
-                          pressElevation: 5,
-                          label: const Text('Hello'),
-                          backgroundColor: greyColor,
-                          labelStyle: GoogleFonts.interTight(
-                            color: blackColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onPressed: () => sendMessage('Hello'),
-                          padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
+                        chatOptionsChip(text: 'Is it available?'),
                         const SizedBox(
                           width: 5,
                         ),
-                        ActionChip(
-                          pressElevation: 5,
-                          label: const Text('Please reply'),
-                          backgroundColor: greyColor,
-                          labelStyle: GoogleFonts.interTight(
-                            color: blackColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onPressed: () => sendMessage('Please reply'),
-                          padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
+                        chatOptionsChip(text: 'Please reply'),
                         const SizedBox(
                           width: 5,
                         ),
-                        ActionChip(
-                          pressElevation: 5,
-                          label: const Text('Not interested'),
-                          backgroundColor: greyColor,
-                          labelStyle: GoogleFonts.interTight(
-                            color: blackColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onPressed: () => sendMessage('Not interested'),
-                          padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
+                        chatOptionsChip(text: 'Not interested'),
                         const SizedBox(
                           width: 5,
                         ),
-                        ActionChip(
-                          pressElevation: 5,
-                          label: const Text('Let\'s meet'),
-                          backgroundColor: greyColor,
-                          labelStyle: GoogleFonts.interTight(
-                            color: blackColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onPressed: () => sendMessage('Let\'s meet'),
-                          padding: const EdgeInsets.all(0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                        chatOptionsChip(text: 'What is your last offer?'),
+                        const SizedBox(
+                          width: 5,
                         ),
+                        chatOptionsChip(text: 'Let\'s meet'),
                         const SizedBox(
                           width: 15,
                         ),
@@ -990,6 +913,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
               ],
             ),
+    );
+  }
+
+  ActionChip chatOptionsChip({required String text}) {
+    return ActionChip(
+      pressElevation: 5,
+      label: Text(text),
+      backgroundColor: blueColor,
+      labelStyle: GoogleFonts.interTight(
+        color: whiteColor,
+        fontWeight: FontWeight.w600,
+      ),
+      onPressed: () => sendMessage(text),
+      padding: const EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
     );
   }
 }

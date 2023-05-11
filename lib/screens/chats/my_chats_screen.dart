@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../../provider/providers.dart';
 import '../../widgets/custom_loading_indicator.dart';
@@ -504,8 +502,6 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final lastChatTime =
-        DateTime.fromMillisecondsSinceEpoch(widget.chatData['lastChatTime']);
 
     return Opacity(
       opacity: isActive == false ? 0.5 : 1,
@@ -525,7 +521,7 @@ class _ChatCardState extends State<ChatCard> {
           child: Column(
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
                     children: [
@@ -659,50 +655,29 @@ class _ChatCardState extends State<ChatCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: widget.chatData['users'][0] ==
-                                        _services.user!.uid
-                                    ? Text(
-                                        buyerName == ''
-                                            ? 'BechDe User'
-                                            : buyerName,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w700,
-                                          color: blackColor,
-                                          fontSize: 14,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: true,
-                                      )
-                                    : Text(
-                                        sellerName == ''
-                                            ? 'BechDe User'
-                                            : sellerName,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w700,
-                                          color: blackColor,
-                                          fontSize: 14,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: true,
-                                      ),
-                              ),
-                              AutoSizeText(
-                                timeago.format(lastChatTime),
-                                maxLines: 1,
-                                style: GoogleFonts.interTight(
-                                  fontWeight: FontWeight.w500,
-                                  color: lightBlackColor,
-                                  fontSize: 12,
+                          widget.chatData['users'][0] == _services.user!.uid
+                              ? Text(
+                                  buyerName == '' ? 'BechDe User' : buyerName,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                )
+                              : Text(
+                                  sellerName == '' ? 'BechDe User' : sellerName,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
                                 ),
-                              ),
-                            ],
-                          ),
                           const SizedBox(
                             height: 3,
                           ),

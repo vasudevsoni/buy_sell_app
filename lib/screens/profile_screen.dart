@@ -2,6 +2,7 @@ import 'package:buy_sell_app/screens/user_rating_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -15,13 +16,13 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
+import '../widgets/custom_product_card_grid.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import 'full_bio_screen.dart';
-import '/widgets/custom_product_card.dart';
 import '/services/firebase_services.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -827,7 +828,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 11,
+      pageSize: 12,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
@@ -869,12 +870,10 @@ class _SellerProductsListState extends State<SellerProductsList> {
             ),
           );
         }
-        return ListView.separated(
-          separatorBuilder: (context, index) {
-            return const SizedBox(
-              height: 6,
-            );
-          },
+        return AlignedGridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
           padding: const EdgeInsets.only(
             left: 15,
             top: 10,
@@ -893,7 +892,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CustomProductCard(
+                CustomProductCardGrid(
                   data: data,
                   time: time,
                 ),

@@ -160,6 +160,39 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     return Scaffold(
       backgroundColor: whiteColor,
+      appBar: AppBar(
+        elevation: 0.2,
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(
+              () => const SettingsScreen(),
+            ),
+            behavior: HitTestBehavior.opaque,
+            child: const Icon(
+              MdiIcons.cogOutline,
+              color: blackColor,
+              size: 25,
+            ),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
+        centerTitle: true,
+        title: Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: true,
+          style: GoogleFonts.interTight(
+            fontWeight: FontWeight.w500,
+            color: blackColor,
+            fontSize: 15,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -334,7 +367,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     );
                                   },
                                   child: const Icon(
-                                    MdiIcons.pencilBox,
+                                    MdiIcons.pencilBoxOutline,
                                     color: blackColor,
                                   ),
                                 ),
@@ -553,19 +586,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ],
                 ),
               const SizedBox(
-                height: 20,
+                height: 15,
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
-                  boxShadow: const [customShadow],
-                  gradient: const LinearGradient(
-                    colors: [greenColor, blueColor],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
+                  color: whiteColor,
+                  border: greyBorder,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -574,107 +603,76 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sell on BechDe & make extra cash',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              color: blackColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Sell on BechDe & make extra cash',
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.interTight(
+                            color: blackColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const Divider(
+                          color: lightBlackColor,
+                          height: 15,
+                          thickness: 1,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              MdiIcons.checkCircle,
+                              color: greenColor,
+                              size: 15,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                MdiIcons.checkCircle,
-                                color: greenColor,
-                                size: 15,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'List unlimited products for free',
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                  ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                'List unlimited products for free',
+                                maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: blackColor,
                                 ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                MdiIcons.checkCircle,
-                                color: greenColor,
-                                size: 15,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'Reach tens of thousands of buyers',
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                  ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              MdiIcons.checkCircle,
+                              color: greenColor,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Reach tens of thousands of buyers',
+                                maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: blackColor,
                                 ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                MdiIcons.checkCircle,
-                                color: greenColor,
-                                size: 15,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'Your listings won\'t expire',
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blackColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 10,
@@ -689,9 +687,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               )
                           : onSellButtonClicked,
                       icon: MdiIcons.basketPlusOutline,
-                      bgColor: whiteColor,
-                      borderColor: whiteColor,
-                      textIconColor: blackColor,
+                      bgColor: blueColor,
+                      borderColor: blueColor,
+                      textIconColor: whiteColor,
                     ),
                   ],
                 ),
@@ -709,17 +707,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       text: 'My Listings',
                       onTap: () => Get.to(
                         () => const MyListingsScreen(),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    MyProfileItemWidget(
-                      icon: MdiIcons.cogOutline,
-                      iconColor: blackColor,
-                      text: 'Settings',
-                      onTap: () => Get.to(
-                        () => const SettingsScreen(),
                       ),
                     ),
                   ],
@@ -792,7 +779,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               //     decoration: BoxDecoration(
               //       borderRadius: BorderRadius.circular(10),
               //       color: whiteColor,
-              //       boxShadow: const [customShadow],
               //       border: greyBorder,
               //     ),
               //     child: Center(
@@ -867,7 +853,6 @@ class MyProfileItemWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: whiteColor,
-            boxShadow: const [customShadow],
             border: greyBorder,
           ),
           child: Column(

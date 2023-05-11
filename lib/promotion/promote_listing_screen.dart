@@ -184,7 +184,6 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                         borderRadius: BorderRadius.circular(10),
                         color: blueColor,
                         border: greyBorder,
-                        boxShadow: const [customShadow],
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

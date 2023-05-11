@@ -218,7 +218,6 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                       child: Container(
                         decoration: const BoxDecoration(
                           color: blackColor,
-                          boxShadow: [customShadow],
                         ),
                         width: double.infinity,
                         height: size.height * 0.25,

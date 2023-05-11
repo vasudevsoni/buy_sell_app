@@ -29,7 +29,6 @@ class CustomListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: whiteColor,
           border: greyBorder,
-          boxShadow: const [customShadow],
         ),
         width: double.infinity,
         height: double.infinity,
