@@ -697,6 +697,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(
                 height: 10,
               ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(

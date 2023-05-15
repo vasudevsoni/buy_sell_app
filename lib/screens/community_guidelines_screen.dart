@@ -1,9 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../services/admob_services.dart';
+import '../widgets/custom_button_without_icon.dart';
 import '/utils/utils.dart';
 
 class CommunityGuidelinesScreen extends StatefulWidget {
@@ -84,6 +86,75 @@ class _CommunityGuidelinesScreenState extends State<CommunityGuidelinesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: whiteColor,
+                  border: greyBorder,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              MdiIcons.robotHappyOutline,
+                              color: greenColor,
+                              size: 16,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Participate in our survey',
+                              style: GoogleFonts.interTight(
+                                fontWeight: FontWeight.w600,
+                                color: blackColor,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: AutoSizeText(
+                            'Help us improve BechDe by filling this survey.',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.interTight(
+                              fontWeight: FontWeight.w500,
+                              color: blackColor,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    CustomButtonWithoutIcon(
+                      text: 'Let\'s go',
+                      onPressed: () => showSurveyPopUp(context),
+                      borderColor: blueColor,
+                      bgColor: blueColor,
+                      textIconColor: whiteColor,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
               Container(
                 decoration: BoxDecoration(
                   color: blueColor,

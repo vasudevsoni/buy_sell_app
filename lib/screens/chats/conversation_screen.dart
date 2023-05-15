@@ -290,6 +290,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           sendOfferMessage(
                               'I would like to buy this for $offerPrice');
                           Get.back();
+                          showSurveyPopUp(context);
                         },
                         bgColor: blueColor,
                         borderColor: blueColor,

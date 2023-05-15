@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void showSnackBar({
   required final String content,
@@ -34,6 +36,79 @@ void showSnackBar({
       snackPosition: SnackPosition.TOP,
     ),
   );
+}
+
+void showSurveyPopUp(BuildContext context) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool hasShownPopup = prefs.getBool('isSurveyPopupShown') ?? false;
+
+  if (!hasShownPopup) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: lightBlackColor,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "👋 Hey! Do you have a minute to spare?",
+            style: GoogleFonts.interTight(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: blackColor,
+            ),
+          ),
+          content: Text(
+            "We would love to hear your feedback. Please take a moment to fill out our survey. 😊",
+            style: GoogleFonts.interTight(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: blackColor,
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          actions: [
+            OutlinedButton(
+              child: Text(
+                "Maybe later",
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                ),
+              ),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: blackColor,
+                elevation: 0,
+              ),
+              child: Text(
+                "Take Survey",
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w600,
+                  color: whiteColor,
+                ),
+              ),
+              onPressed: () {
+                launchUrl(
+                  Uri.parse(
+                      'https://docs.google.com/forms/d/e/1FAIpQLSe5G68ParoPNZMo4nySwtqD7Mp2tOaWcTaxhog9MejyYa2Ydg/viewform?usp=sf_link'),
+                  mode: LaunchMode.externalApplication,
+                );
+                prefs.setBool('isSurveyPopupShown', true);
+                Get.back();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 final priceFormat = NumberFormat.currency(

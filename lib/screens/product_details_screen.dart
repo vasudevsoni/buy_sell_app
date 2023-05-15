@@ -16,8 +16,6 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import '../auth/screens/email_verification_screen.dart';
-import '../auth/screens/location_screen.dart';
 import '../promotion/promote_listing_screen.dart';
 import '../services/admob_services.dart';
 import '../widgets/custom_loading_indicator.dart';
@@ -36,7 +34,6 @@ import '/widgets/custom_product_card.dart';
 import 'profile_screen.dart';
 import 'selling/common/edit_ad_screen.dart';
 import 'selling/jobs/edit_job_post_screen.dart';
-import 'selling/seller_categories_list_screen.dart';
 import 'selling/vehicles/edit_vehicle_ad_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -436,22 +433,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           );
         },
       );
-    }
-
-    onSellButtonClicked() async {
-      final value = await services.getCurrentUserData();
-      final location = value['location'];
-      if (location == null) {
-        Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
-        showSnackBar(
-          content: 'Please set your location to sell products',
-          color: redColor,
-        );
-      } else {
-        Get.to(
-          () => const SellerCategoriesListScreen(),
-        );
-      }
     }
 
     return isActive == false && isSold == false
@@ -1895,7 +1876,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 20,
                         ),
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
                           width: size.width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -1915,7 +1896,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        MdiIcons.currencyRupee,
+                                        MdiIcons.robotHappyOutline,
                                         color: greenColor,
                                         size: 16,
                                       ),
@@ -1923,7 +1904,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         width: 10,
                                       ),
                                       Text(
-                                        'Sell similar on BechDe',
+                                        'Participate in our survey',
                                         style: GoogleFonts.interTight(
                                           fontWeight: FontWeight.w600,
                                           color: blackColor,
@@ -1938,7 +1919,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   SizedBox(
                                     width: size.width * 0.6,
                                     child: AutoSizeText(
-                                      'Have a similar item? List in a few clicks and earn quick cash.',
+                                      'Help us improve BechDe by filling this survey.',
                                       maxLines: 2,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
@@ -1952,14 +1933,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ],
                               ),
                               CustomButtonWithoutIcon(
-                                text: 'List Now',
-                                onPressed: !user!.emailVerified &&
-                                        user!.providerData[0].providerId ==
-                                            'password'
-                                    ? () => Get.to(
-                                          () => const EmailVerificationScreen(),
-                                        )
-                                    : onSellButtonClicked,
+                                text: 'Let\'s go',
+                                onPressed: () => showSurveyPopUp(context),
                                 borderColor: blueColor,
                                 bgColor: blueColor,
                                 textIconColor: whiteColor,

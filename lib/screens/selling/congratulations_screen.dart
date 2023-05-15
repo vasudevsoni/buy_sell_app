@@ -94,87 +94,92 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: whiteColor,
-          body: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                const Spacer(),
-                Text(
-                  '🎉 Well Done!',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.interTight(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w800,
-                    color: blueColor,
-                  ),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: whiteColor,
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              const Spacer(),
+              Text(
+                '🎉 Well Done!',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.interTight(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800,
+                  color: blueColor,
                 ),
-                const SizedBox(
-                  height: 15,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                'We will review your product and then publish it',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.interTight(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: blackColor,
                 ),
-                Text(
-                  'We will review your product and then publish it',
-                  textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: redColor,
+                  border: greyBorder,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Note: Reviewing usually takes up to 24 hours to complete.\nMay take longer than 24 hours during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
+                  textAlign: TextAlign.start,
                   style: GoogleFonts.interTight(
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: blackColor,
+                    fontWeight: FontWeight.w700,
+                    color: whiteColor,
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: redColor,
-                    border: greyBorder,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'Note: Reviewing usually takes up to 24 hours to complete.\nMay take longer than 24 hours during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
-                    textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: whiteColor,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                MediumNativeAd(
-                  nativeAd: _nativeAd,
-                  isAdLoaded: _isAdLoaded,
-                ),
-                const Spacer(),
-                CustomButton(
-                  text: 'Go to Home',
-                  onPressed: () =>
-                      Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: MdiIcons.homeOutline,
-                  isFullWidth: true,
-                  bgColor: blueColor,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
-                CustomButton(
-                  text: 'Share with Friends',
-                  onPressed: () => Share.share(
-                      'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
-                  isFullWidth: true,
-                  icon: MdiIcons.shareVariantOutline,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: whiteColor,
-                ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              MediumNativeAd(
+                nativeAd: _nativeAd,
+                isAdLoaded: _isAdLoaded,
+              ),
+              const Spacer(),
+              CustomButton(
+                text: 'Go to Home',
+                onPressed: () async {
+                  Get.offAll(
+                    () => const MainScreen(selectedIndex: 0),
+                  );
+                  showSurveyPopUp(context);
+                },
+                icon: MdiIcons.homeOutline,
+                isFullWidth: true,
+                bgColor: blueColor,
+                borderColor: blueColor,
+                textIconColor: whiteColor,
+              ),
+              CustomButton(
+                text: 'Share with Friends',
+                onPressed: () => Share.share(
+                    'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
+                isFullWidth: true,
+                icon: MdiIcons.shareVariantOutline,
+                bgColor: blackColor,
+                borderColor: blackColor,
+                textIconColor: whiteColor,
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

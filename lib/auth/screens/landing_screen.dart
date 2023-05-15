@@ -405,7 +405,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       text: 'Terms of Service',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () => launchUrl(
-                              Uri.parse('https://www.bechdeapp.com/terms'),
+                              Uri.parse(
+                                'https://www.bechdeapp.com/terms',
+                              ),
+                              mode: LaunchMode.externalApplication,
                             ),
                       style: GoogleFonts.interTight(
                         fontSize: 11,
@@ -422,6 +425,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         ..onTap = () => launchUrl(
                               Uri.parse(
                                   'https://www.bechdeapp.com/privacy-policy'),
+                              mode: LaunchMode.externalApplication,
                             ),
                       style: GoogleFonts.interTight(
                         fontSize: 11,

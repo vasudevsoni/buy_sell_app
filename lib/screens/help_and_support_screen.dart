@@ -1,5 +1,4 @@
 import 'package:buy_sell_app/screens/community_guidelines_screen.dart';
-import 'package:buy_sell_app/screens/feedback_screen.dart';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -102,16 +101,13 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               ),
             ),
             CustomListTileWithSubtitle(
-              text: 'Help us improve',
-              subTitle:
-                  'If you have some feedback, suggestions or improvements for our app, we would love to hear them',
-              icon: MdiIcons.lightningBoltOutline,
+              text: 'Participate in our survey',
+              subTitle: 'Help us improve BechDe by filling this survey',
+              icon: MdiIcons.robotHappyOutline,
               textColor: blackColor,
               trailingIcon: MdiIcons.chevronRight,
               isEnabled: true,
-              onTap: () => Get.to(
-                () => const FeedbackScreen(),
-              ),
+              onTap: () => showSurveyPopUp(context),
             ),
             CustomListTileWithSubtitle(
               text: 'Contact Us',
@@ -166,6 +162,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/faqs'),
+                mode: LaunchMode.externalApplication,
               ),
             ),
             CustomListTileNoImage(
@@ -175,6 +172,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/terms'),
+                mode: LaunchMode.externalApplication,
               ),
             ),
             CustomListTileNoImage(
@@ -184,6 +182,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/privacy-policy'),
+                mode: LaunchMode.externalApplication,
               ),
             ),
             CustomListTileNoImage(
@@ -193,6 +192,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://icons8.com/'),
+                mode: LaunchMode.externalApplication,
               ),
             ),
             CustomListTileWithSubtitle(

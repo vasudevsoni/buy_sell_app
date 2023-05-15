@@ -1,8 +1,8 @@
+import 'package:buy_sell_app/screens/loading_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-// import 'package:cloudinary_dart/cloudinary.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 
 import 'provider/providers.dart';
 import 'error.dart';
-import 'screens/loading_screen.dart';
 
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'high_importance_channel',
@@ -31,18 +30,14 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase App
   await Firebase.initializeApp();
 
   // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-
-  // Initialize Cloudinary
-  // Cloudinary.fromCloudName(
-  //   cloudName: CloudinaryServices.cloudName,
-  //   apiKey: CloudinaryServices.apiKey,
-  // );
 
   // Initialize Google Mobile Ads
   await MobileAds.instance.initialize();

@@ -1,4 +1,5 @@
 import 'package:buy_sell_app/widgets/custom_list_tile_no_image.dart';
+import 'package:buy_sell_app/widgets/custom_list_tile_with_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -102,6 +103,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
               onTap: () => launchUrl(
                 Uri.parse(
                     'https://www.facebook.com/profile.php?id=100088872034817'),
+                mode: LaunchMode.externalApplication,
               ),
               isEnabled: true,
             ),
@@ -111,6 +113,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
               trailingIcon: MdiIcons.chevronRight,
               onTap: () => launchUrl(
                 Uri.parse('https://www.instagram.com/bechdeofficial/'),
+                mode: LaunchMode.externalApplication,
               ),
               isEnabled: true,
             ),
@@ -120,7 +123,28 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
               trailingIcon: MdiIcons.chevronRight,
               onTap: () => launchUrl(
                 Uri.parse('https://twitter.com/BechDeOfficial'),
+                mode: LaunchMode.externalApplication,
               ),
+              isEnabled: true,
+            ),
+            Container(
+              width: size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Text(
+                'Actions',
+                style: GoogleFonts.interTight(
+                  color: blackColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            CustomListTileWithSubtitle(
+              text: 'Participate in our survey',
+              subTitle: 'Help us improve BechDe by filling this survey',
+              icon: MdiIcons.robotHappyOutline,
+              trailingIcon: MdiIcons.chevronRight,
+              onTap: () => showSurveyPopUp(context),
               isEnabled: true,
             ),
             const SizedBox(
