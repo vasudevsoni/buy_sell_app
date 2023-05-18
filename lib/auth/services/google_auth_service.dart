@@ -39,6 +39,11 @@ class GoogleAuthentication {
           content: 'Invalid credentials. Please try again',
           color: redColor,
         );
+      } else if (err.code == 'user-disabled') {
+        showSnackBar(
+          content: 'Your account has been disabled.',
+          color: redColor,
+        );
       } else {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',

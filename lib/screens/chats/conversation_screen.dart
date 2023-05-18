@@ -48,6 +48,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   late DocumentSnapshot prod;
   late DocumentSnapshot sellerData;
   bool isLoading = false;
+  bool isUserDisabled = false;
 
   @override
   void initState() {
@@ -84,6 +85,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
       setState(() {
         sellerData = seller;
         name = seller['name'];
+      });
+    }
+
+    final currentUser = await _services.getCurrentUserData();
+    if (mounted) {
+      setState(() {
+        isUserDisabled = currentUser['isDisabled'];
       });
     }
 
@@ -307,6 +315,92 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
+  showReportDialog() {
+    showModalBottomSheet<dynamic>(
+      context: context,
+      backgroundColor: transparentColor,
+      isScrollControlled: true,
+      builder: (context) {
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: whiteColor,
+            ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 15,
+              left: 15,
+              right: 15,
+              top: 5,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 80.0,
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: fadedColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Report this chat',
+                  style: GoogleFonts.interTight(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        icon: MdiIcons.arrowRight,
+                        text: 'Report',
+                        onPressed: () {
+                          _services.reportChat();
+                          Get.back();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   showDeleteDialog() {
     showModalBottomSheet<dynamic>(
       context: context,
@@ -447,17 +541,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
       appBar: AppBar(
         elevation: 0.2,
         actions: [
-          GestureDetector(
-            onTap: showDeleteDialog,
-            behavior: HitTestBehavior.opaque,
-            child: const Icon(
+          IconButton(
+            onPressed: showReportDialog,
+            icon: const Icon(
+              MdiIcons.flagOutline,
+              color: redColor,
+            ),
+            visualDensity: VisualDensity.compact,
+          ),
+          IconButton(
+            onPressed: showDeleteDialog,
+            icon: const Icon(
               MdiIcons.deleteOutline,
               color: redColor,
-              size: 25,
             ),
-          ),
-          const SizedBox(
-            width: 15,
+            visualDensity: VisualDensity.compact,
           ),
         ],
         backgroundColor: whiteColor,
@@ -794,7 +892,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     },
                   ),
                 ),
-                if (isActive == true)
+                if (isActive == true && isUserDisabled == false)
                   Container(
                     padding: const EdgeInsets.only(left: 15),
                     height: 50,
@@ -873,45 +971,66 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ),
                         ),
                       )
-                    : Container(
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          bottom: 15,
-                          top: 5,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                controller: chatMessageController,
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.send,
-                                hint: 'Chat here...',
-                                maxLength: 500,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Tooltip(
-                              message: 'Send message',
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (chatMessageController.text.isNotEmpty) {
-                                    sendMessage(chatMessageController.text);
-                                  }
-                                },
-                                child: const Icon(
-                                  MdiIcons.send,
-                                  size: 25,
-                                  color: blueColor,
+                    : isUserDisabled == true
+                        ? Container(
+                            color: redColor,
+                            height: 80,
+                            padding: const EdgeInsets.all(15),
+                            width: size.width,
+                            child: Center(
+                              child: Text(
+                                'Your account has been disabled. You cannot message any longer.',
+                                maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: whiteColor,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              right: 15,
+                              bottom: 15,
+                              top: 5,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: chatMessageController,
+                                    keyboardType: TextInputType.text,
+                                    textInputAction: TextInputAction.send,
+                                    hint: 'Chat here...',
+                                    maxLength: 500,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Tooltip(
+                                  message: 'Send message',
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (chatMessageController
+                                          .text.isNotEmpty) {
+                                        sendMessage(chatMessageController.text);
+                                      }
+                                    },
+                                    child: const Icon(
+                                      MdiIcons.send,
+                                      size: 25,
+                                      color: blueColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
               ],
             ),
     );

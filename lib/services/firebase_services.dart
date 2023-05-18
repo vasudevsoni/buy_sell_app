@@ -369,6 +369,27 @@ class FirebaseServices {
     }
   }
 
+  Future<void> reportChat() async {
+    final id = uuid.v4();
+    try {
+      await reports.doc(id).set({
+        'type': 'chatReport',
+        'reporterId': user!.uid,
+        'postedAt': DateTime.now().toLocal().toString(),
+        'isResolved': false,
+      });
+      showSnackBar(
+        content: 'Chat reported. We will look into it as soon as possible',
+        color: blueColor,
+      );
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
   Future<void> rateUser({required int stars, required String userId}) async {
     try {
       await users.doc(userId).update({
