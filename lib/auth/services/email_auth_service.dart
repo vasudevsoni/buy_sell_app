@@ -79,6 +79,7 @@ class EmailAuthService {
         'instagramLink': null,
         'facebookLink': null,
         'websiteLink': null,
+        'isDisabled': false,
         // 'followers': [],
         // 'following': [],
       });
