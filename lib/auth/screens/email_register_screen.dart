@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/custom_button_without_icon.dart';
 import '../../widgets/loading_button.dart';
@@ -155,11 +155,11 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              MdiIcons.eyeOffOutline,
+                              Ionicons.eye_off_outline,
                               size: 30,
                             )
                           : const Icon(
-                              MdiIcons.eyeOutline,
+                              Ionicons.eye_outline,
                               size: 30,
                             ),
                     ),
@@ -176,7 +176,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
                     )
                   : CustomButton(
                       text: 'Create Account',
-                      icon: MdiIcons.accountPlusOutline,
+                      icon: Ionicons.person_add,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

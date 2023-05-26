@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -103,27 +103,27 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Participate in our survey',
               subTitle: 'Help us improve BechDe by filling this survey',
-              icon: MdiIcons.robotHappyOutline,
+              icon: Ionicons.flash_outline,
               textColor: blackColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => showSurveyPopUp(context),
             ),
             CustomListTileWithSubtitle(
               text: 'Contact Us',
               subTitle: 'Contact us for any issues you are facing',
-              icon: MdiIcons.emailCheckOutline,
+              icon: Ionicons.mail_open_outline,
               textColor: blackColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => openMail(contactUsEmail),
             ),
             CustomListTileWithSubtitle(
               text: 'Report a problem',
               subTitle: 'If something is not right, please report it here',
-              icon: MdiIcons.bugOutline,
+              icon: Ionicons.bug_outline,
               textColor: redColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const ReportScreen(),
@@ -148,8 +148,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Community Guidelines',
-              icon: MdiIcons.accountGroupOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.people_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => Get.to(
                 () => const CommunityGuidelinesScreen(),
@@ -157,8 +157,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'FAQs',
-              icon: MdiIcons.frequentlyAskedQuestions,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.help_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/faqs'),
@@ -167,8 +167,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Terms of Service',
-              icon: MdiIcons.bookOpenPageVariantOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.book_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/terms'),
@@ -177,8 +177,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Privacy Policy',
-              icon: MdiIcons.lockOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.lock_closed_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://www.bechdeapp.com/privacy-policy'),
@@ -187,8 +187,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             ),
             CustomListTileNoImage(
               text: 'Icons by Icons8',
-              icon: MdiIcons.emoticonOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.happy_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => launchUrl(
                 Uri.parse('https://icons8.com/'),
@@ -198,7 +198,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             CustomListTileWithSubtitle(
               text: 'Version',
               subTitle: version,
-              icon: MdiIcons.cellphoneLock,
+              icon: Ionicons.phone_portrait_outline,
               isEnabled: false,
               onTap: () {},
             ),
@@ -223,9 +223,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               text: 'Request Account Deletion',
               subTitle:
                   'If you would like to delete your account and data, leave us a request here',
-              icon: MdiIcons.deleteOutline,
+              icon: Ionicons.trash_outline,
               textColor: redColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => openMail(dataDeleteEmail),
             ),

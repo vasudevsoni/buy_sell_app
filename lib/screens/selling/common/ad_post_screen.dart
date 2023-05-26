@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/providers.dart';
@@ -330,7 +330,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(
-                                              MdiIcons.alertDecagramOutline,
+                                              Ionicons.alert_circle_outline,
                                               size: 20,
                                               color: redColor,
                                             );
@@ -441,7 +441,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Post',
-                          icon: MdiIcons.checkOutline,
+                          icon: Ionicons.checkmark_outline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -771,7 +771,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(MdiIcons.closeCircleOutline),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           actions: [
             TextButton(
@@ -1087,7 +1087,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: MdiIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

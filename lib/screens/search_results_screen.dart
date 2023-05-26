@@ -7,7 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../services/admob_services.dart';
 import '../widgets/custom_button.dart';
@@ -135,8 +135,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen>
         ),
         bottom: TabBar(
           controller: tabBarController,
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: blackColor,
+          indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
           splashBorderRadius: BorderRadius.circular(10),
@@ -148,14 +147,14 @@ class _SearchResultsScreenState extends State<SearchResultsScreen>
             fontWeight: FontWeight.w500,
             fontSize: 14,
           ),
-          labelColor: blackColor,
+          labelColor: blueColor,
           unselectedLabelColor: lightBlackColor,
           tabs: const [
             Tab(
               text: 'Nearby',
             ),
             Tab(
-              text: 'Everywhere',
+              text: 'All Products',
             ),
           ],
         ),
@@ -341,7 +340,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
                       ),
                     );
                   },
-                  icon: MdiIcons.crosshairsGps,
+                  icon: Ionicons.locate,
                   borderColor: blackColor,
                   bgColor: blackColor,
                   textIconColor: whiteColor,
@@ -351,7 +350,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
                   onPressed: () {
                     widget.tabController.animateTo(1);
                   },
-                  icon: MdiIcons.earth,
+                  icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,

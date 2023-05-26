@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
@@ -22,12 +22,14 @@ class ConversationScreen extends StatefulWidget {
   final String prodId;
   final String sellerId;
   final bool makeOffer;
+  final List users;
   const ConversationScreen({
     super.key,
     required this.chatRoomId,
     required this.prodId,
     required this.sellerId,
     required this.makeOffer,
+    required this.users,
   });
 
   @override
@@ -287,7 +289,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     Expanded(
                       child: CustomButton(
-                        icon: MdiIcons.arrowRight,
+                        icon: Ionicons.arrow_forward,
                         text: 'Send Offer',
                         onPressed: () {
                           if (offerPriceController.text.isEmpty) {
@@ -380,10 +382,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                     Expanded(
                       child: CustomButton(
-                        icon: MdiIcons.arrowRight,
+                        icon: Ionicons.arrow_forward,
                         text: 'Report',
                         onPressed: () {
-                          _services.reportChat();
+                          _services.reportChat(ids: widget.users);
                           Get.back();
                         },
                         bgColor: redColor,
@@ -544,7 +546,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           IconButton(
             onPressed: showReportDialog,
             icon: const Icon(
-              MdiIcons.flagOutline,
+              Ionicons.flag_outline,
               color: redColor,
             ),
             visualDensity: VisualDensity.compact,
@@ -552,7 +554,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           IconButton(
             onPressed: showDeleteDialog,
             icon: const Icon(
-              MdiIcons.deleteOutline,
+              Ionicons.trash_outline,
               color: redColor,
             ),
             visualDensity: VisualDensity.compact,
@@ -608,14 +610,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   memCacheHeight: (size.height * 0.15).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      MdiIcons.alertDecagramOutline,
+                                      Ionicons.alert_circle_outline,
                                       size: 15,
                                       color: redColor,
                                     );
                                   },
                                   placeholder: (context, url) {
                                     return const Icon(
-                                      MdiIcons.imageFilterHdr,
+                                      Ionicons.image,
                                       size: 15,
                                       color: lightBlackColor,
                                     );
@@ -667,7 +669,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             width: 5,
                           ),
                           Icon(
-                            MdiIcons.arrowRight,
+                            Ionicons.arrow_forward,
                             color: whiteColor,
                             size: 15,
                           ),
@@ -1022,7 +1024,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                       }
                                     },
                                     child: const Icon(
-                                      MdiIcons.send,
+                                      Ionicons.send,
                                       size: 25,
                                       color: blueColor,
                                     ),

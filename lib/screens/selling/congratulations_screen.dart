@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/utils/utils.dart';
@@ -160,7 +160,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   );
                   showSurveyPopUp(context);
                 },
-                icon: MdiIcons.homeOutline,
+                icon: Ionicons.home_outline,
                 isFullWidth: true,
                 bgColor: blueColor,
                 borderColor: blueColor,
@@ -171,7 +171,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                 onPressed: () => Share.share(
                     'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
                 isFullWidth: true,
-                icon: MdiIcons.shareVariantOutline,
+                icon: Ionicons.share_social_outline,
                 bgColor: blackColor,
                 borderColor: blackColor,
                 textIconColor: whiteColor,

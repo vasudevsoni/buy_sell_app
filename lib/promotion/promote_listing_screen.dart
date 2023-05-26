@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../utils/utils.dart';
@@ -108,14 +108,14 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 memCacheHeight: (size.height * 0.20).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    MdiIcons.alertDecagramOutline,
+                                    Ionicons.alert_circle_outline,
                                     size: 15,
                                     color: redColor,
                                   );
                                 },
                                 placeholder: (context, url) {
                                   return const Icon(
-                                    MdiIcons.imageFilterHdr,
+                                    Ionicons.image,
                                     size: 15,
                                     color: lightBlackColor,
                                   );
@@ -167,7 +167,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                           width: 5,
                         ),
                         const Icon(
-                          MdiIcons.packageVariantClosedCheck,
+                          Ionicons.checkbox_outline,
                           color: blueColor,
                         ),
                       ],
@@ -248,7 +248,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.arrowUpCircleOutline,
+                                  Ionicons.arrow_up_circle_outline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -276,7 +276,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.trendingUp,
+                                  Ionicons.trending_up,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -304,7 +304,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.creditCardCheckOutline,
+                                  Ionicons.card_outline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -345,7 +345,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 }
                               },
                               isFullWidth: true,
-                              icon: MdiIcons.basketCheckOutline,
+                              icon: Ionicons.bag_check_outline,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,
@@ -356,7 +356,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 () => const BoostInfoScreen(),
                               ),
                               isFullWidth: true,
-                              icon: MdiIcons.informationOutline,
+                              icon: Ionicons.information_outline,
                               borderColor: whiteColor,
                               bgColor: whiteColor,
                               textIconColor: blackColor,

@@ -145,7 +145,7 @@ const BoxShadow customShadow = BoxShadow(
 
 final Border greyBorder = Border.all(
   color: greyColor,
-  width: 1,
+  width: 0.7,
 );
 
 final NativeTemplateStyle smallNativeAdStyle = NativeTemplateStyle(

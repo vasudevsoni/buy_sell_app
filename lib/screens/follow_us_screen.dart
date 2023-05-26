@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../services/admob_services.dart';
@@ -99,7 +98,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
             CustomListTileNoImage(
               text: 'Facebook',
               icon: Ionicons.logo_facebook,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => launchUrl(
                 Uri.parse(
                     'https://www.facebook.com/profile.php?id=100088872034817'),
@@ -110,7 +109,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
             CustomListTileNoImage(
               text: 'Instagram',
               icon: Ionicons.logo_instagram,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => launchUrl(
                 Uri.parse('https://www.instagram.com/bechdeofficial/'),
                 mode: LaunchMode.externalApplication,
@@ -120,7 +119,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
             CustomListTileNoImage(
               text: 'Twitter',
               icon: Ionicons.logo_twitter,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => launchUrl(
                 Uri.parse('https://twitter.com/BechDeOfficial'),
                 mode: LaunchMode.externalApplication,
@@ -142,8 +141,8 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
             CustomListTileWithSubtitle(
               text: 'Participate in our survey',
               subTitle: 'Help us improve BechDe by filling this survey',
-              icon: MdiIcons.robotHappyOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.flash_outline,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => showSurveyPopUp(context),
               isEnabled: true,
             ),

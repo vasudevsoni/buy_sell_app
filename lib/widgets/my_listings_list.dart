@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../auth/screens/email_verification_screen.dart';
 import '../auth/screens/location_screen.dart';
@@ -325,7 +325,7 @@ class _MyListingScreenProductCardState
                     );
                     Get.back();
                   },
-                  icon: MdiIcons.checkCircleOutline,
+                  icon: Ionicons.checkmark_circle_outline,
                   isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
@@ -340,7 +340,7 @@ class _MyListingScreenProductCardState
                     );
                     Get.back();
                   },
-                  icon: MdiIcons.cancel,
+                  icon: Ionicons.arrow_up,
                   isFullWidth: true,
                   bgColor: greyColor,
                   borderColor: greyColor,
@@ -349,7 +349,7 @@ class _MyListingScreenProductCardState
                 CustomButton(
                   text: 'Cancel',
                   onPressed: () => Get.back(),
-                  icon: MdiIcons.close,
+                  icon: Ionicons.close,
                   isFullWidth: true,
                   bgColor: whiteColor,
                   borderColor: greyColor,
@@ -547,14 +547,14 @@ class _MyListingScreenProductCardState
                                   memCacheHeight: (size.height * 0.3).round(),
                                   errorWidget: (context, url, error) {
                                     return const Icon(
-                                      MdiIcons.alertDecagramOutline,
+                                      Ionicons.alert_circle_outline,
                                       size: 30,
                                       color: redColor,
                                     );
                                   },
                                   placeholder: (context, url) {
                                     return const Icon(
-                                      MdiIcons.imageFilterHdr,
+                                      Ionicons.image,
                                       size: 30,
                                       color: lightBlackColor,
                                     );
@@ -664,7 +664,7 @@ class _MyListingScreenProductCardState
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.eyeOutline,
+                                  Ionicons.eye_outline,
                                   size: 20,
                                   color: blueColor,
                                 ),
@@ -687,7 +687,7 @@ class _MyListingScreenProductCardState
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.heartOutline,
+                                  Ionicons.heart_outline,
                                   size: 20,
                                   color: redColor,
                                 ),
@@ -712,7 +712,7 @@ class _MyListingScreenProductCardState
                         Row(
                           children: [
                             const Icon(
-                              MdiIcons.fingerprint,
+                              Ionicons.finger_print,
                               size: 20,
                               color: blackColor,
                             ),
@@ -872,7 +872,7 @@ class _MyListingScreenProductCardState
                                 ),
                                 if (widget.data['isRejected'] == false)
                                   CustomButton(
-                                    icon: MdiIcons.trendingUp,
+                                    icon: Ionicons.trending_up,
                                     text: 'Promote Listing',
                                     onPressed: () {
                                       Get.to(
@@ -889,7 +889,7 @@ class _MyListingScreenProductCardState
                                     textIconColor: whiteColor,
                                   ),
                                 CustomButton(
-                                  icon: MdiIcons.pencilBoxOutline,
+                                  icon: Ionicons.create_outline,
                                   text: 'Edit Product',
                                   onPressed: () {
                                     Get.back();
@@ -922,7 +922,7 @@ class _MyListingScreenProductCardState
                                 ),
                                 if (widget.data['isRejected'] == false)
                                   CustomButton(
-                                    icon: MdiIcons.checkDecagramOutline,
+                                    icon: Ionicons.checkmark_circle_outline,
                                     text: 'Mark as Sold',
                                     onPressed: () {
                                       Get.back();
@@ -934,7 +934,7 @@ class _MyListingScreenProductCardState
                                     textIconColor: blueColor,
                                   ),
                                 CustomButton(
-                                  icon: MdiIcons.deleteOutline,
+                                  icon: Ionicons.trash_outline,
                                   text: 'Delete Product',
                                   onPressed: () {
                                     Get.back();
@@ -952,7 +952,7 @@ class _MyListingScreenProductCardState
                       },
                     ),
                     child: const Icon(
-                      MdiIcons.dotsVertical,
+                      Ionicons.ellipsis_vertical,
                       size: 22,
                     ),
                   ),

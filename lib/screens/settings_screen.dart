@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../services/admob_services.dart';
@@ -244,9 +244,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             CustomListTileWithSubtitle(
               text: 'Edit Profile',
-              icon: MdiIcons.pencilBoxOutline,
+              icon: Ionicons.create_outline,
               subTitle: 'Edit your name, bio or add social links',
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => Get.to(
                 () => const UpdateProfileScreen(),
               ),
@@ -257,8 +257,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subTitle: address == ''
                   ? 'No location selected'
                   : 'Current location - $address',
-              icon: MdiIcons.mapMarkerOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.location_outline,
+              trailingIcon: Ionicons.chevron_forward,
               onTap: () => Get.to(
                 () => const LocationScreen(
                   isOpenedFromSellButton: false,
@@ -270,7 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
                 subTitle: 'Google',
-                icon: MdiIcons.login,
+                icon: Ionicons.log_in_outline,
                 isEnabled: false,
                 onTap: () {},
               ),
@@ -278,14 +278,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               CustomListTileWithSubtitle(
                 text: 'Logged in using',
                 subTitle: 'Email',
-                icon: MdiIcons.login,
+                icon: Ionicons.log_in_outline,
                 isEnabled: false,
                 onTap: () {},
               ),
             CustomListTileWithSubtitle(
               text: 'Unique User Id',
               subTitle: user!.uid,
-              icon: MdiIcons.identifier,
+              icon: Ionicons.id_card_outline,
               onTap: () {},
               isEnabled: false,
             ),
@@ -309,17 +309,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomListTileWithSubtitle(
               text: 'Participate in our survey',
               subTitle: 'Help us improve BechDe by filling this survey',
-              icon: MdiIcons.robotHappyOutline,
+              icon: Ionicons.flash_outline,
               textColor: blackColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () => showSurveyPopUp(context),
             ),
             CustomListTileWithSubtitle(
               text: 'Invite friends to BechDe',
               subTitle: 'Invite your friends to buy and sell on BechDe',
-              icon: MdiIcons.accountGroupOutline,
-              trailingIcon: MdiIcons.chevronRight,
+              icon: Ionicons.people_outline,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
               onTap: () {
                 Share.share(
@@ -330,9 +330,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               text: 'Log out',
               subTitle: 'Log out of your account from this device',
               onTap: showLogoutConfirmation,
-              icon: MdiIcons.logout,
+              icon: Ionicons.log_out_outline,
               textColor: blackColor,
-              trailingIcon: MdiIcons.chevronRight,
+              trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
             ),
           ],

@@ -3,7 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/loading_button.dart';
 import '../../widgets/text_field_label.dart';
@@ -117,7 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     )
                   : CustomButton(
                       text: 'Send',
-                      icon: MdiIcons.arrowRight,
+                      icon: Ionicons.arrow_forward,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

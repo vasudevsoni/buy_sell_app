@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '/screens/main_screen.dart';
 import '/utils/utils.dart';
@@ -114,7 +114,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Container(
               padding: const EdgeInsets.only(left: 15, top: 15),
               child: const Icon(
-                MdiIcons.shieldCheckOutline,
+                Ionicons.shield_checkmark,
                 color: blueColor,
                 size: 60,
               ),

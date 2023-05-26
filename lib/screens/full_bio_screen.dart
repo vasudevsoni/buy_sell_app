@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
@@ -149,7 +149,7 @@ class _FullBioScreenState extends State<FullBioScreen> {
                         Row(
                           children: [
                             const Icon(
-                              MdiIcons.robotHappyOutline,
+                              Ionicons.flash_outline,
                               color: greenColor,
                               size: 16,
                             ),

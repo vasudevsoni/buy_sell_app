@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 // import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/providers.dart';
@@ -353,7 +353,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.clockOutline,
+                                  Ionicons.time_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -379,7 +379,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.calendarOutline,
+                                  Ionicons.calendar_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -439,7 +439,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.checkOutline,
+                          icon: Ionicons.checkmark_outline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -634,7 +634,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(MdiIcons.closeCircleOutline),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
           title: Text(
@@ -919,7 +919,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         items: salaryPeriod
@@ -979,7 +979,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         items: positionType
@@ -1105,7 +1105,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: MdiIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

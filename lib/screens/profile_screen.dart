@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -224,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Expanded(
                       child: CustomButton(
-                        icon: MdiIcons.arrowRight,
+                        icon: Ionicons.arrow_forward,
                         text: 'Report',
                         onPressed: () {
                           if (reportTextController.text.isEmpty) {
@@ -290,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: MdiIcons.shieldAccountOutline,
+                  icon: Ionicons.shield_outline,
                   text: 'Report User',
                   onPressed: () {
                     Get.back();
@@ -337,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              MdiIcons.dotsVertical,
+              Ionicons.ellipsis_vertical,
               color: blackColor,
               size: 25,
             ),
@@ -380,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: blueColor,
                           ),
                           child: const Icon(
-                            MdiIcons.accountOutline,
+                            Ionicons.person_outline,
                             color: whiteColor,
                             size: 40,
                           ),
@@ -423,7 +422,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return const Icon(
-                                                MdiIcons.alertDecagramOutline,
+                                                Ionicons.alert_circle_outline,
                                                 size: 20,
                                                 color: redColor,
                                               );
@@ -444,7 +443,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           splashColor: transparentColor,
                                           splashRadius: 30,
                                           icon: const Icon(
-                                            MdiIcons.closeCircleOutline,
+                                            Ionicons.close_circle_outline,
                                             size: 30,
                                             color: whiteColor,
                                             shadows: [
@@ -481,7 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 memCacheWidth: (size.width * 0.25).round(),
                                 errorWidget: (context, url, error) {
                                   return const Icon(
-                                    MdiIcons.alertDecagramOutline,
+                                    Ionicons.alert_circle_outline,
                                     size: 30,
                                     color: redColor,
                                   );
@@ -525,7 +524,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 2,
                         ),
                         const Icon(
-                          MdiIcons.star,
+                          Ionicons.star,
                           size: 15,
                           color: whiteColor,
                         ),
@@ -584,7 +583,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           if (websiteLink != '')
                             ExternalLinkIcon(
-                              icon: MdiIcons.linkVariant,
+                              icon: Ionicons.link,
                               iconColor: blueColor,
                               link: websiteLink,
                             ),
@@ -610,21 +609,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              MdiIcons.informationOutline,
+                              Ionicons.information_circle_outline,
                               size: 15,
                             ),
                             const SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              bio,
-                              maxLines: 3,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
-                                color: blackColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                            SizedBox(
+                              width: size.width * 0.8,
+                              child: Text(
+                                bio,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  color: blackColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
@@ -642,7 +644,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     const Icon(
-                      MdiIcons.calendarAccount,
+                      Ionicons.calendar_number_outline,
                       size: 15,
                     ),
                     const SizedBox(
@@ -673,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Row(
                         children: [
                           const Icon(
-                            MdiIcons.mapMarker,
+                            Ionicons.location_outline,
                             size: 15,
                           ),
                           const SizedBox(
@@ -721,7 +723,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       }
                     },
-                    icon: MdiIcons.starOutline,
+                    icon: Ionicons.star_outline,
                     borderColor: blueColor,
                     bgColor: blueColor,
                     textIconColor: whiteColor,

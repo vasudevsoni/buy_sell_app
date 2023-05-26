@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart' as geocode;
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:location/location.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/providers.dart';
@@ -212,7 +212,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                     child: CustomButton(
                       text: 'Use Current Location',
-                      icon: MdiIcons.crosshairsGps,
+                      icon: Ionicons.locate,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

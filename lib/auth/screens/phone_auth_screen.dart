@@ -200,7 +200,7 @@
 //                   ? LoadingButton()
 //                   : CustomButton(
 //                       text: 'Proceed',
-//                       icon: MdiIcons.arrowRight,
+//                       icon: Ionicons.arrow_forward,
 //                       bgColor: blueColor,
 //                       borderColor: blueColor,
 //                       textIconColor: whiteColor,

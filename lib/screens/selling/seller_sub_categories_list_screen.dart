@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../services/admob_services.dart';
 import '../../widgets/custom_loading_indicator.dart';
@@ -157,7 +157,7 @@ class _SellerSubCategoriesListScreenState
               itemBuilder: (context, index) {
                 return CustomListTileNoImage(
                   text: data[index],
-                  trailingIcon: MdiIcons.chevronRight,
+                  trailingIcon: Ionicons.chevron_forward,
                   isEnabled: true,
                   onTap: () {
                     if (widget.doc['catName'] == 'Vehicles'

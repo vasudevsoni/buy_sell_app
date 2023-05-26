@@ -7,7 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/screens/email_verification_screen.dart';
@@ -190,24 +190,24 @@ class _MainScreenState extends State<MainScreen> {
         ];
 
         const List<IconData> iconsList = [
-          MdiIcons.homeOutline,
-          MdiIcons.chatOutline,
-          MdiIcons.heartOutline,
-          MdiIcons.accountCircleOutline,
+          Ionicons.home_outline,
+          Ionicons.chatbox_ellipses_outline,
+          Ionicons.heart_outline,
+          Ionicons.person_circle_outline,
         ];
 
         const List<IconData> selectedIconsList = [
-          MdiIcons.home,
-          MdiIcons.chat,
-          MdiIcons.heart,
-          MdiIcons.accountCircle,
+          Ionicons.home,
+          Ionicons.chatbox_ellipses,
+          Ionicons.heart,
+          Ionicons.person_circle,
         ];
 
         const List<String> titlesList = [
-          'Explore',
+          'Home',
           'Chats',
           'Favorites',
-          'Account',
+          'Profile',
         ];
 
         void onItemTapped(int index) {
@@ -237,8 +237,8 @@ class _MainScreenState extends State<MainScreen> {
             onPressed: onFloatingActionButtonPressed,
             child: const Center(
               child: Icon(
-                MdiIcons.plus,
-                size: 35,
+                Ionicons.add,
+                size: 30,
               ),
             ),
           ),
@@ -248,8 +248,8 @@ class _MainScreenState extends State<MainScreen> {
             onTap: onItemTapped,
             gapLocation: GapLocation.center,
             activeIndex: selectedIndex,
-            backgroundColor: greyColor,
-            elevation: 5,
+            backgroundColor: whiteColor,
+            blurEffect: true,
             height: 55,
             leftCornerRadius: 10,
             rightCornerRadius: 10,
@@ -266,17 +266,16 @@ class _MainScreenState extends State<MainScreen> {
                         ? selectedIconsList[index]
                         : iconsList[index],
                     size: 24,
-                    color: blackColor,
+                    color: selectedIndex == index ? blueColor : lightBlackColor,
                   ),
                   AutoSizeText(
                     titlesList[index],
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: selectedIndex == index
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      color: blackColor,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          selectedIndex == index ? blueColor : lightBlackColor,
                     ),
                   )
                 ],

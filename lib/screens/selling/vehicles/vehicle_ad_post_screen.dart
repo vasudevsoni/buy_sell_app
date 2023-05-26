@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 // import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/providers.dart';
@@ -344,7 +344,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(
-                                              MdiIcons.alertDecagramOutline,
+                                              Ionicons.alert_circle_outline,
                                               size: 20,
                                               color: redColor,
                                             );
@@ -430,7 +430,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.accountOutline,
+                                  Ionicons.person_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -453,7 +453,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.fuel,
+                                  Ionicons.funnel,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -479,7 +479,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.calendarOutline,
+                                  Ionicons.calendar_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -505,7 +505,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  MdiIcons.mapMarkerDistance,
+                                  Ionicons.map_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -567,7 +567,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Post',
-                          icon: MdiIcons.checkOutline,
+                          icon: Ionicons.checkmark_outline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -919,7 +919,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(MdiIcons.closeCircleOutline),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           actions: [
             TextButton(
@@ -1213,7 +1213,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         value: fuelTypeSelectedValue,
@@ -1273,7 +1273,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         items: yor
@@ -1335,7 +1335,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         items: colors
@@ -1396,7 +1396,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
                           color: fadedColor,
                         ),
                         icon: const Icon(
-                          MdiIcons.chevronDown,
+                          Ionicons.chevron_down,
                           size: 15,
                         ),
                         items: noOfOwners
@@ -1614,7 +1614,7 @@ class _VehicleAdPostScreenState extends State<VehicleAdPostScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: MdiIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

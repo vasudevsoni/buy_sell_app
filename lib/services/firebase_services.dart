@@ -369,12 +369,13 @@ class FirebaseServices {
     }
   }
 
-  Future<void> reportChat() async {
+  Future<void> reportChat({required List ids}) async {
     final id = uuid.v4();
     try {
       await reports.doc(id).set({
         'type': 'chatReport',
         'reporterId': user!.uid,
+        'userId': ids[0] == user!.uid ? ids[1] : ids[0],
         'postedAt': DateTime.now().toLocal().toString(),
         'isResolved': false,
       });
@@ -414,8 +415,7 @@ class FirebaseServices {
   //     var querySnapshots = await users.get();
   //     for (var doc in querySnapshots.docs) {
   //       await doc.reference.update({
-  //         'rating': 0,
-  //         'ratedBy': {''},
+  //         'isDisabled': false,
   //       });
   //     }
   //     showSnackBar(

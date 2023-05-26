@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -200,8 +200,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      MdiIcons
-                                                          .alertDecagramOutline,
+                                                      Ionicons
+                                                          .alert_circle_outline,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -210,7 +210,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                               },
                                               loadingBuilder: (context, event) {
                                                 return const Icon(
-                                                  MdiIcons.imageFilterHdr,
+                                                  Ionicons.image,
                                                   size: 20,
                                                   color: lightBlackColor,
                                                 );
@@ -225,7 +225,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                                   Get.back();
                                                 },
                                                 icon: const Icon(
-                                                  MdiIcons.closeCircleOutline,
+                                                  Ionicons.close_circle_outline,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -254,7 +254,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                             .round(),
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
-                                        MdiIcons.alertDecagramOutline,
+                                        Ionicons.alert_circle_outline,
                                         size: 20,
                                         color: redColor,
                                       );
@@ -308,7 +308,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                         ),
                                       ),
                                       child: const Icon(
-                                        MdiIcons.close,
+                                        Ionicons.close,
                                         size: 18,
                                         color: whiteColor,
                                       ),
@@ -345,7 +345,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             width: 5,
                           ),
                           const Icon(
-                            MdiIcons.image,
+                            Ionicons.image,
                           ),
                         ],
                       ),
@@ -372,7 +372,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   onPressed: provider.imagesCount >= 8
                       ? showMaximumError
                       : requestCameraPermission,
-                  icon: MdiIcons.camera,
+                  icon: Ionicons.camera,
                   bgColor: whiteColor,
                   borderColor: blackColor,
                   textIconColor: blackColor,
@@ -388,7 +388,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   onPressed: provider.imagesCount >= 8
                       ? showMaximumError
                       : requestGalleryPermission,
-                  icon: MdiIcons.imagePlus,
+                  icon: Ionicons.images,
                   bgColor: whiteColor,
                   borderColor: blackColor,
                   textIconColor: blackColor,

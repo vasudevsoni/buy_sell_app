@@ -2,8 +2,7 @@ import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../widgets/loading_button.dart';
 import '../widgets/text_field_label.dart';
@@ -193,7 +192,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.checkOutline,
+                          icon: Ionicons.checkmark_outline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -385,7 +384,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             : CustomButton(
                 text: 'Proceed',
                 onPressed: validateForm,
-                icon: MdiIcons.arrowRight,
+                icon: Ionicons.arrow_forward,
                 bgColor: blueColor,
                 borderColor: blueColor,
                 textIconColor: whiteColor,

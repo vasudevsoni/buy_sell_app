@@ -8,8 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -53,20 +53,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final TextEditingController reportTextController = TextEditingController();
   final MapController mapController = MapController();
   late NativeAd? _nativeAd;
-  // late BannerAd? _bannerAd;
+
   bool _isAdLoaded = false;
-  int currentImage = 0;
-  List fav = [];
   bool isLiked = false;
-  String profileImage = '';
-  String sellerName = '';
+  int currentImage = 0;
   bool isActive = true;
   bool isSold = false;
   bool isLoading = false;
+  String profileImage = '';
+  String sellerName = '';
   String location = '';
   double latitude = 0;
   double longitude = 0;
-  double rating = 0;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
@@ -75,7 +73,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     super.initState();
     getDetails();
     _initNativeAd();
-    // _initBannerAd();
   }
 
   _initNativeAd() async {
@@ -103,32 +100,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     await _nativeAd!.load();
   }
 
-  // _initBannerAd() {
-  //   _bannerAd = BannerAd(
-  //     size: AdSize.mediumRectangle,
-  //     adUnitId: AdmobServices.bannerAdUnitId,
-  //     listener: BannerAdListener(
-  //       onAdLoaded: (ad) {
-  //         setState(() {
-  //           _isAdLoaded = true;
-  //         });
-  //       },
-  //       onAdFailedToLoad: (ad, error) {
-  //         setState(() {
-  //           _isAdLoaded = false;
-  //         });
-  //         if (mounted) {
-  //           ad.dispose();
-  //         }
-  //       },
-  //     ),
-  //     request: const AdRequest(),
-  //   );
-  //   // Preload the ad
-  //   _bannerAd!.load();
-  // }
-
   Future<void> getDetails() async {
+    final userData =
+        await services.getUserData(widget.productData['sellerUid']);
+
     setState(() {
       isLoading = true;
       final locationData = widget.productData['location'];
@@ -136,21 +111,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
       latitude = locationData['latitude'];
       longitude = locationData['longitude'];
-      fav = widget.productData['favorites'];
-    });
-
-    final userData =
-        await services.getUserData(widget.productData['sellerUid']);
-    setState(() {
       profileImage = userData['profileImage'] ?? '';
       sellerName = userData['name'];
-      rating = userData['rating'] == 0
-          ? 0
-          : (userData['rating'] / (userData['ratedBy'].length - 1));
-    });
-
-    setState(() {
-      isLiked = fav.contains(services.user?.uid);
+      isLiked = widget.productData['favorites'].contains(services.user?.uid);
       isActive = widget.productData['isActive'] ?? false;
       isSold = widget.productData['isSold'] ?? false;
     });
@@ -199,6 +162,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               chatRoomId: chatRoomId,
               prodId: widget.productData.id,
               sellerId: widget.productData['sellerUid'],
+              users: users,
               makeOffer: true,
             ),
           )
@@ -206,6 +170,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             () => ConversationScreen(
               chatRoomId: chatRoomId,
               prodId: widget.productData.id,
+              users: users,
               sellerId: widget.productData['sellerUid'],
               makeOffer: false,
             ),
@@ -214,15 +179,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   void dispose() {
+    super.dispose();
     mapController.dispose();
     reportTextController.dispose();
     if (_nativeAd != null && mounted) {
       _nativeAd!.dispose();
     }
-    // if (_bannerAd != null && mounted) {
-    //   _bannerAd!.dispose();
-    // }
-    super.dispose();
   }
 
   @override
@@ -348,7 +310,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       Expanded(
                         child: CustomButton(
-                          icon: MdiIcons.arrowRight,
+                          icon: Ionicons.arrow_forward,
                           text: 'Report',
                           onPressed: () {
                             if (reportTextController.text.isEmpty) {
@@ -415,7 +377,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   Center(
                     child: CustomButton(
-                      icon: MdiIcons.flagOutline,
+                      icon: Ionicons.flag_outline,
                       isFullWidth: true,
                       text: 'Report Product',
                       onPressed: () {
@@ -533,7 +495,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             );
                           },
                           icon: Icon(
-                            isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                            isLiked ? Ionicons.heart : Ionicons.heart_outline,
                             color: isLiked ? redColor : blackColor,
                             size: 25,
                           ),
@@ -545,7 +507,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         visualDensity: VisualDensity.compact,
                         splashRadius: 20,
                         icon: const Icon(
-                          MdiIcons.dotsHorizontal,
+                          Ionicons.ellipsis_horizontal,
                           color: blackColor,
                           size: 25,
                         ),
@@ -630,8 +592,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      MdiIcons
-                                                          .alertDecagramOutline,
+                                                      Ionicons
+                                                          .alert_circle_outline,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -656,7 +618,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 splashColor: transparentColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
-                                                  MdiIcons.closeCircleOutline,
+                                                  Ionicons.close_circle_outline,
                                                   size: 30,
                                                   color: whiteColor,
                                                   shadows: [
@@ -692,7 +654,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           (size.height * 0.35).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          MdiIcons.alertDecagramOutline,
+                                          Ionicons.alert_circle_outline,
                                           size: 20,
                                           color: redColor,
                                         );
@@ -802,7 +764,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     width: 5,
                                   ),
                                   const Icon(
-                                    MdiIcons.basketOffOutline,
+                                    Ionicons.bag_remove_outline,
                                     color: whiteColor,
                                   ),
                                 ],
@@ -860,55 +822,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          MdiIcons.eyeOutline,
-                                          size: 16,
-                                          color: blueColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          numberFormat.format(widget
-                                              .productData['views'].length),
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13,
-                                            color: blackColor,
-                                          ),
-                                        ),
-                                      ],
+                                    const Icon(
+                                      Ionicons.eye_outline,
+                                      size: 16,
+                                      color: blueColor,
                                     ),
                                     const SizedBox(
                                       width: 7,
                                     ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          MdiIcons.heartOutline,
-                                          size: 16,
-                                          color: redColor,
-                                        ),
-                                        const SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          numberFormat.format(widget
-                                              .productData['favorites'].length),
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13,
-                                            color: blackColor,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      numberFormat.format(
+                                          widget.productData['views'].length),
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13,
+                                        color: blackColor,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -924,7 +855,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                               color: blackColor,
                               fontSize: 15,
                               decoration: isSold
@@ -960,7 +891,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             color: blueColor,
                                           ),
                                           child: const Icon(
-                                            MdiIcons.accountOutline,
+                                            Ionicons.person_outline,
                                             color: whiteColor,
                                             size: 20,
                                           ),
@@ -982,7 +913,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               errorWidget:
                                                   (context, url, error) {
                                                 return const Icon(
-                                                  MdiIcons.alertDecagramOutline,
+                                                  Ionicons.alert_circle_outline,
                                                   size: 10,
                                                   color: redColor,
                                                 );
@@ -1038,7 +969,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 widget.productData['images'][0],
                                           ),
                                         ),
-                                        icon: MdiIcons.trendingUp,
+                                        icon: Ionicons.trending_up,
                                         bgColor: blueColor,
                                         borderColor: blueColor,
                                         textIconColor: whiteColor,
@@ -1074,7 +1005,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                         );
                                       },
-                                      icon: MdiIcons.pencilBoxOutline,
+                                      icon: Ionicons.create_outline,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
@@ -1092,7 +1023,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         createChatRoom(makeOffer: false);
                                       },
                                       isFullWidth: true,
-                                      icon: MdiIcons.chatProcessing,
+                                      icon: Ionicons.chatbubble_ellipses,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -1114,7 +1045,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 createChatRoom(makeOffer: true);
                               },
                               isFullWidth: true,
-                              icon: MdiIcons.cashFast,
+                              icon: Ionicons.cash,
                               bgColor: greenColor,
                               borderColor: greenColor,
                               textIconColor: whiteColor,
@@ -1161,7 +1092,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      MdiIcons.mapMarkerOutline,
+                                      Ionicons.location_outline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1190,7 +1121,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      MdiIcons.clockOutline,
+                                      Ionicons.time_outline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1219,7 +1150,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      MdiIcons.listBoxOutline,
+                                      Ionicons.list_outline,
                                       size: 15,
                                       color: blackColor,
                                     ),
@@ -1409,7 +1340,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.accountOutline,
+                                            Ionicons.person_outline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1445,7 +1376,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.fuel,
+                                            Ionicons.funnel_outline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1481,7 +1412,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.calendarOutline,
+                                            Ionicons.calendar_outline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1518,7 +1449,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           const Icon(
-                                            MdiIcons.mapMarkerDistance,
+                                            Ionicons.map_outline,
                                             size: 15,
                                             color: blueColor,
                                           ),
@@ -1896,7 +1827,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        MdiIcons.robotHappyOutline,
+                                        Ionicons.flash_outline,
                                         color: greenColor,
                                         size: 16,
                                       ),
@@ -1966,7 +1897,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 width: 3,
                               ),
                               const Icon(
-                                MdiIcons.heart,
+                                Ionicons.heart,
                                 size: 18,
                                 color: Colors.pink,
                               ),
@@ -2101,7 +2032,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                     subCatName: widget.subCatName,
                   ),
                 ),
-                icon: MdiIcons.arrowRight,
+                icon: Ionicons.arrow_forward,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

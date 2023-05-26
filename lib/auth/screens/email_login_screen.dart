@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
@@ -133,11 +133,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       }),
                       icon: isObscured
                           ? const Icon(
-                              MdiIcons.eyeOffOutline,
+                              Ionicons.eye_off_outline,
                               size: 30,
                             )
                           : const Icon(
-                              MdiIcons.eyeOutline,
+                              Ionicons.eye_outline,
                               size: 30,
                             ),
                     ),
@@ -168,7 +168,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                     )
                   : CustomButton(
                       text: 'Login',
-                      icon: MdiIcons.login,
+                      icon: Ionicons.log_in,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,

@@ -2,7 +2,7 @@ import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../utils/utils.dart';
 
@@ -144,7 +144,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   GestureDetector(
                     onTap: () => select1Star(),
                     child: Icon(
-                      MdiIcons.star,
+                      Ionicons.star,
                       color: isStar1Selected ? whiteColor : blackColor,
                       size: 30,
                     ),
@@ -152,7 +152,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   GestureDetector(
                     onTap: () => select2Star(),
                     child: Icon(
-                      MdiIcons.star,
+                      Ionicons.star,
                       color: isStar2Selected ? whiteColor : blackColor,
                       size: 30,
                     ),
@@ -160,7 +160,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   GestureDetector(
                     onTap: () => select3Star(),
                     child: Icon(
-                      MdiIcons.star,
+                      Ionicons.star,
                       color: isStar3Selected ? whiteColor : blackColor,
                       size: 30,
                     ),
@@ -168,7 +168,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   GestureDetector(
                     onTap: () => select4Star(),
                     child: Icon(
-                      MdiIcons.star,
+                      Ionicons.star,
                       color: isStar4Selected ? whiteColor : blackColor,
                       size: 30,
                     ),
@@ -176,7 +176,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                   GestureDetector(
                     onTap: () => select5Star(),
                     child: Icon(
-                      MdiIcons.star,
+                      Ionicons.star,
                       color: isStar5Selected ? whiteColor : blackColor,
                       size: 30,
                     ),
@@ -210,7 +210,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                         userId: widget.userId,
                       ),
               isFullWidth: true,
-              icon: MdiIcons.checkOutline,
+              icon: Ionicons.checkmark_outline,
               borderColor: blueColor,
               bgColor: blueColor,
               textIconColor: whiteColor,

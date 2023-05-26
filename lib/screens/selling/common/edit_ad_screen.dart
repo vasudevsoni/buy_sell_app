@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/providers.dart';
@@ -356,7 +356,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       Expanded(
                         child: CustomButton(
                           text: 'Update',
-                          icon: MdiIcons.checkOutline,
+                          icon: Ionicons.checkmark_outline,
                           onPressed: () async {
                             setState(() {
                               isLoading = true;
@@ -544,7 +544,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           leading: IconButton(
             onPressed: closePageAndGoToHome,
             enableFeedback: true,
-            icon: const Icon(MdiIcons.closeCircleOutline),
+            icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
           title: Text(
@@ -774,7 +774,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
               : CustomButton(
                   text: 'Proceed',
                   onPressed: validateForm,
-                  icon: MdiIcons.arrowRight,
+                  icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,
                   textIconColor: whiteColor,

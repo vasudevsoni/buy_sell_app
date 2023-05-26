@@ -6,7 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../auth/screens/location_screen.dart';
 import '../services/admob_services.dart';
@@ -136,8 +136,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen>
         ),
         bottom: TabBar(
           controller: tabBarController,
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: blackColor,
+          indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
           splashBorderRadius: BorderRadius.circular(10),
@@ -149,14 +148,14 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen>
             fontWeight: FontWeight.w500,
             fontSize: 14,
           ),
-          labelColor: blackColor,
+          labelColor: blueColor,
           unselectedLabelColor: lightBlackColor,
           tabs: const [
             Tab(
               text: 'Nearby',
             ),
             Tab(
-              text: 'Everywhere',
+              text: 'All Products',
             ),
           ],
         ),
@@ -353,7 +352,7 @@ class _CategoryScreenProductsListState
                       ),
                     );
                   },
-                  icon: MdiIcons.crosshairsGps,
+                  icon: Ionicons.locate,
                   borderColor: blackColor,
                   bgColor: blackColor,
                   textIconColor: whiteColor,
@@ -363,7 +362,7 @@ class _CategoryScreenProductsListState
                   onPressed: () {
                     widget.tabController.animateTo(1);
                   },
-                  icon: MdiIcons.earth,
+                  icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,
@@ -459,7 +458,7 @@ class _CategoryScreenProductsListState
                         text: 'Go to Home',
                         onPressed: () => Get.offAll(
                             () => const MainScreen(selectedIndex: 0)),
-                        icon: MdiIcons.homeOutline,
+                        icon: Ionicons.home_outline,
                         borderColor: blueColor,
                         bgColor: blueColor,
                         textIconColor: whiteColor,

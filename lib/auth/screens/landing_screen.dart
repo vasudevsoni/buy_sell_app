@@ -12,7 +12,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/svg_picture.dart';
@@ -30,7 +29,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
   bool isLoading = false;
@@ -159,7 +157,6 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   void dispose() {
-    subscription.cancel();
     super.dispose();
   }
 
@@ -379,7 +376,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           padding: const EdgeInsets.only(right: 15, left: 5),
                           child: CustomButton(
                             text: 'Email',
-                            icon: MdiIcons.emailOutline,
+                            icon: Ionicons.mail_outline,
                             bgColor: whiteColor,
                             borderColor: blackColor,
                             textIconColor: blackColor,

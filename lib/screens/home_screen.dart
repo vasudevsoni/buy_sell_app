@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:location/location.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../auth/screens/location_screen.dart';
 import '../widgets/custom_button_without_icon.dart';
@@ -186,17 +186,17 @@ class _HomeScreenState extends State<HomeScreen>
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: blueColor,
-        iconTheme: const IconThemeData(color: whiteColor),
+        elevation: 0.2,
+        backgroundColor: whiteColor,
+        iconTheme: const IconThemeData(color: blackColor),
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Icon(
-              MdiIcons.mapMarkerOutline,
+              Ionicons.location_outline,
               size: 20,
-              color: whiteColor,
+              color: blackColor,
             ),
             const SizedBox(
               width: 3,
@@ -219,11 +219,11 @@ class _HomeScreenState extends State<HomeScreen>
                       style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
-                        color: whiteColor,
+                        color: blackColor,
                       ),
                     ),
                     const Icon(
-                      MdiIcons.chevronDown,
+                      Ionicons.chevron_down,
                       size: 18,
                       color: whiteColor,
                     ),
@@ -237,16 +237,16 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               behavior: HitTestBehavior.opaque,
               child: Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                 decoration: BoxDecoration(
-                  border: Border.all(color: whiteColor),
+                  border: Border.all(color: blackColor),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Row(
                   children: [
                     const Icon(
-                      MdiIcons.magnify,
-                      color: whiteColor,
+                      Ionicons.search,
+                      color: blackColor,
                       size: 20,
                     ),
                     const SizedBox(
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen>
                       style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
-                        color: whiteColor,
+                        color: blackColor,
                       ),
                     ),
                   ],
@@ -268,8 +268,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         bottom: TabBar(
           controller: tabBarController,
-          indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: whiteColor,
+          indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
           splashBorderRadius: BorderRadius.circular(10),
@@ -281,8 +280,8 @@ class _HomeScreenState extends State<HomeScreen>
             fontWeight: FontWeight.w500,
             fontSize: 14,
           ),
-          labelColor: whiteColor,
-          unselectedLabelColor: whiteColor,
+          labelColor: blueColor,
+          unselectedLabelColor: lightBlackColor,
           tabs: const [
             Tab(
               text: 'Nearby',
@@ -502,7 +501,7 @@ class CategoriesListView extends StatelessWidget {
                           filterQuality: FilterQuality.high,
                           errorWidget: (context, url, error) {
                             return const Icon(
-                              MdiIcons.alertDecagramOutline,
+                              Ionicons.alert_circle_outline,
                               size: 30,
                               color: redColor,
                             );
@@ -794,7 +793,7 @@ class _ProductsListState extends State<ProductsList> {
                       ),
                     );
                   },
-                  icon: MdiIcons.crosshairsGps,
+                  icon: Ionicons.locate,
                   borderColor: blackColor,
                   bgColor: blackColor,
                   textIconColor: whiteColor,
@@ -804,7 +803,7 @@ class _ProductsListState extends State<ProductsList> {
                   onPressed: () {
                     widget.tabController.animateTo(1);
                   },
-                  icon: MdiIcons.earth,
+                  icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
                   textIconColor: whiteColor,

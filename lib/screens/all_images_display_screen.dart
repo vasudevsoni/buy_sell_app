@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -180,7 +180,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return const Icon(
-                                              MdiIcons.alertDecagramOutline,
+                                              Ionicons.alert_circle_outline,
                                               size: 20,
                                               color: redColor,
                                             );
@@ -204,7 +204,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                                         splashColor: transparentColor,
                                         splashRadius: 30,
                                         icon: const Icon(
-                                          MdiIcons.closeCircleOutline,
+                                          Ionicons.close_circle_outline,
                                           size: 30,
                                           color: whiteColor,
                                           shadows: [
@@ -238,7 +238,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                               memCacheHeight: (size.height * 0.25).round(),
                               errorWidget: (context, url, error) {
                                 return const Icon(
-                                  MdiIcons.alertDecagramOutline,
+                                  Ionicons.alert_circle_outline,
                                   size: 30,
                                   color: redColor,
                                 );
@@ -298,7 +298,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                         Row(
                           children: [
                             const Icon(
-                              MdiIcons.robotHappyOutline,
+                              Ionicons.flash_outline,
                               color: greenColor,
                               size: 16,
                             ),
