@@ -165,8 +165,6 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                     itemCount: snapshot.docs.length,
                     itemBuilder: (context, index) {
                       final data = snapshot.docs[index];
-                      final time =
-                          DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
                       final hasMoreReached = snapshot.hasMore &&
                           index + 1 == snapshot.docs.length &&
                           !snapshot.isFetchingMore;
@@ -175,7 +173,6 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                         children: [
                           CustomProductCardGrid(
                             data: data,
-                            time: time,
                           ),
                           if (hasMoreReached)
                             Column(

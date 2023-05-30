@@ -260,11 +260,9 @@ class _ReportScreenState extends State<ReportScreen> {
                               right: -10,
                               child: IconButton(
                                 tooltip: 'Delete image',
-                                onPressed: () {
-                                  setState(() {
-                                    reportImage = null;
-                                  });
-                                },
+                                onPressed: () => setState(() {
+                                  reportImage = null;
+                                }),
                                 icon: const Icon(
                                   Ionicons.close_circle_outline,
                                   size: 15,

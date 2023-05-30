@@ -144,13 +144,15 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> getConnectivity() async {
-    await for (final _ in Connectivity().onConnectivityChanged) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
       if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
         setState(() => isAlertSet = true);
       }
-    }
+    });
   }
 
   Future<void> onSellButtonClicked() async {
@@ -234,7 +236,7 @@ class _MainScreenState extends State<MainScreen> {
             elevation: 0,
             tooltip: 'List a product',
             enableFeedback: true,
-            onPressed: onFloatingActionButtonPressed,
+            onPressed: () => onFloatingActionButtonPressed(),
             child: const Center(
               child: Icon(
                 Ionicons.add,

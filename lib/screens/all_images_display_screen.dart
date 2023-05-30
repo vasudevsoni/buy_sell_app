@@ -140,89 +140,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                     children: [
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => showDialog(
-                          context: context,
-                          builder: (_) {
-                            final pageController =
-                                PageController(initialPage: index);
-                            return Dismissible(
-                              key: UniqueKey(),
-                              direction: DismissDirection.down,
-                              onDismissed: (direction) {
-                                pageController.dispose();
-                                Get.back();
-                              },
-                              child: Material(
-                                color: blackColor,
-                                child: Stack(
-                                  children: [
-                                    PhotoViewGallery.builder(
-                                      scrollPhysics:
-                                          const ClampingScrollPhysics(),
-                                      itemCount: widget.images.length,
-                                      pageController: pageController,
-                                      builder:
-                                          (BuildContext context, int index) {
-                                        return PhotoViewGalleryPageOptions(
-                                          imageProvider:
-                                              CachedNetworkImageProvider(
-                                            widget.images[index],
-                                          ),
-                                          initialScale:
-                                              PhotoViewComputedScale.contained *
-                                                  1,
-                                          minScale:
-                                              PhotoViewComputedScale.contained *
-                                                  1,
-                                          maxScale:
-                                              PhotoViewComputedScale.contained *
-                                                  10,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(
-                                              Ionicons.alert_circle_outline,
-                                              size: 20,
-                                              color: redColor,
-                                            );
-                                          },
-                                        );
-                                      },
-                                      loadingBuilder: (context, event) {
-                                        return const Center(
-                                          child: CustomLoadingIndicator(),
-                                        );
-                                      },
-                                    ),
-                                    Positioned(
-                                      top: 15,
-                                      right: 15,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          pageController.dispose();
-                                          Get.back();
-                                        },
-                                        splashColor: transparentColor,
-                                        splashRadius: 30,
-                                        icon: const Icon(
-                                          Ionicons.close_circle_outline,
-                                          size: 30,
-                                          color: whiteColor,
-                                          shadows: [
-                                            BoxShadow(
-                                              offset: Offset(0, 0),
-                                              blurRadius: 15,
-                                              spreadRadius: 15,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        onTap: () => showImageDialog(context, index),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
@@ -348,6 +266,81 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showImageDialog(BuildContext context, int index) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        final pageController = PageController(initialPage: index);
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            pageController.dispose();
+            Get.back();
+          },
+          child: Material(
+            color: blackColor,
+            child: Stack(
+              children: [
+                PhotoViewGallery.builder(
+                  scrollPhysics: const ClampingScrollPhysics(),
+                  itemCount: widget.images.length,
+                  pageController: pageController,
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: CachedNetworkImageProvider(
+                        widget.images[index],
+                      ),
+                      initialScale: PhotoViewComputedScale.contained * 1,
+                      minScale: PhotoViewComputedScale.contained * 1,
+                      maxScale: PhotoViewComputedScale.contained * 10,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Ionicons.alert_circle_outline,
+                          size: 20,
+                          color: redColor,
+                        );
+                      },
+                    );
+                  },
+                  loadingBuilder: (context, event) {
+                    return const Center(
+                      child: CustomLoadingIndicator(),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: IconButton(
+                    onPressed: () {
+                      pageController.dispose();
+                      Get.back();
+                    },
+                    splashColor: transparentColor,
+                    splashRadius: 30,
+                    icon: const Icon(
+                      Ionicons.close_circle_outline,
+                      size: 30,
+                      color: whiteColor,
+                      shadows: [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                          spreadRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

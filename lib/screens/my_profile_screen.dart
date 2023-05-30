@@ -221,11 +221,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               right: 0,
                               child: GestureDetector(
                                 behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  Get.to(
-                                    () => const UpdateProfileImageScreen(),
-                                  );
-                                },
+                                onTap: () => Get.to(
+                                  () => const UpdateProfileImageScreen(),
+                                ),
                                 child: const Icon(
                                   Ionicons.create_outline,
                                   color: lightBlackColor,
@@ -242,82 +240,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         )
                       : GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (_) {
-                              return Dismissible(
-                                key: UniqueKey(),
-                                direction: DismissDirection.down,
-                                onDismissed: (direction) {
-                                  Get.back();
-                                },
-                                child: Material(
-                                  color: blackColor,
-                                  child: Stack(
-                                    children: [
-                                      PhotoViewGallery.builder(
-                                        scrollPhysics:
-                                            const ClampingScrollPhysics(),
-                                        itemCount: 1,
-                                        builder:
-                                            (BuildContext context, int index) {
-                                          return PhotoViewGalleryPageOptions(
-                                            imageProvider:
-                                                CachedNetworkImageProvider(
-                                              profileImage,
-                                            ),
-                                            initialScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            minScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            maxScale: PhotoViewComputedScale
-                                                    .contained *
-                                                2,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Ionicons.alert_circle_outline,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                          );
-                                        },
-                                        loadingBuilder: (context, event) {
-                                          return const Center(
-                                            child: CustomLoadingIndicator(),
-                                          );
-                                        },
-                                      ),
-                                      Positioned(
-                                        top: 15,
-                                        right: 15,
-                                        child: IconButton(
-                                          onPressed: () => Get.back(),
-                                          splashColor: transparentColor,
-                                          splashRadius: 30,
-                                          icon: const Icon(
-                                            Ionicons.close_circle_outline,
-                                            size: 30,
-                                            color: whiteColor,
-                                            shadows: [
-                                              BoxShadow(
-                                                offset: Offset(0, 0),
-                                                blurRadius: 15,
-                                                spreadRadius: 15,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                          onTap: () => openProfileImage(context),
                           child: Stack(
                             children: [
                               Container(
@@ -356,11 +279,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 right: 0,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    Get.to(
-                                      () => const UpdateProfileImageScreen(),
-                                    );
-                                  },
+                                  onTap: () => Get.to(
+                                    () => const UpdateProfileImageScreen(),
+                                  ),
                                   child: const Icon(
                                     Ionicons.create_outline,
                                     color: blackColor,
@@ -374,13 +295,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     width: 15,
                   ),
                   GestureDetector(
-                    onTap: () {
-                      showSnackBar(
-                        content:
-                            'This is your star rating given by other users',
-                        color: blueColor,
-                      );
-                    },
+                    onTap: () => showSnackBar(
+                      content: 'This is your star rating given by other users',
+                      color: blueColor,
+                    ),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
@@ -647,12 +565,21 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ? () => Get.to(
                                 () => const EmailVerificationScreen(),
                               )
-                          : onSellButtonClicked,
+                          : () => onSellButtonClicked(),
                       icon: Ionicons.bag_add_outline,
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
                     ),
+                    // CustomButton(
+                    //   text: 'check',
+                    //   isFullWidth: true,
+                    //   onPressed: () => services.addFields(),
+                    //   icon: Ionicons.checkbox,
+                    //   bgColor: blueColor,
+                    //   borderColor: blueColor,
+                    //   textIconColor: whiteColor,
+                    // ),
                   ],
                 ),
               ),
@@ -695,9 +622,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       icon: Ionicons.star_outline,
                       iconColor: blueColor,
                       text: 'Rate our App',
-                      onTap: () {
-                        _showRatingDialog();
-                      },
+                      onTap: () => _showRatingDialog(),
                     ),
                   ],
                 ),
@@ -782,6 +707,75 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> openProfileImage(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            Get.back();
+          },
+          child: Material(
+            color: blackColor,
+            child: Stack(
+              children: [
+                PhotoViewGallery.builder(
+                  scrollPhysics: const ClampingScrollPhysics(),
+                  itemCount: 1,
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: CachedNetworkImageProvider(
+                        profileImage,
+                      ),
+                      initialScale: PhotoViewComputedScale.contained * 1,
+                      minScale: PhotoViewComputedScale.contained * 1,
+                      maxScale: PhotoViewComputedScale.contained * 2,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Ionicons.alert_circle_outline,
+                          size: 20,
+                          color: redColor,
+                        );
+                      },
+                    );
+                  },
+                  loadingBuilder: (context, event) {
+                    return const Center(
+                      child: CustomLoadingIndicator(),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: IconButton(
+                    onPressed: () => Get.back(),
+                    splashColor: transparentColor,
+                    splashRadius: 30,
+                    icon: const Icon(
+                      Ionicons.close_circle_outline,
+                      size: 30,
+                      color: whiteColor,
+                      shadows: [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                          spreadRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

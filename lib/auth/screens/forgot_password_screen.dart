@@ -121,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
-                      onPressed: _validateEmail,
+                      onPressed: () => _validateEmail(),
                     ),
             ],
           ),

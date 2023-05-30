@@ -31,6 +31,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   bool isDeviceConnected = false;
   bool isAlertSet = false;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isLoading = false;
   int currentImage = 0;
 
@@ -146,17 +147,20 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Future<void> getConnectivity() async {
-    await for (final _ in Connectivity().onConnectivityChanged) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
       if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
         setState(() => isAlertSet = true);
       }
-    }
+    });
   }
 
   @override
   void dispose() {
+    subscription.cancel();
     super.dispose();
   }
 

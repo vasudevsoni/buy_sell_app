@@ -383,7 +383,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               )
             : CustomButton(
                 text: 'Proceed',
-                onPressed: validateForm,
+                onPressed: () => validateForm(),
                 icon: Ionicons.arrow_forward,
                 bgColor: blueColor,
                 borderColor: blueColor,

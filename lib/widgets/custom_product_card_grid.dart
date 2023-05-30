@@ -12,12 +12,10 @@ import 'custom_loading_indicator.dart';
 
 class CustomProductCardGrid extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> data;
-  final DateTime time;
 
   const CustomProductCardGrid({
     Key? key,
     required this.data,
-    required this.time,
   }) : super(key: key);
 
   @override
@@ -60,6 +58,7 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return isLoading
         ? const Center(
             child: CustomLoadingIndicator(),
@@ -84,7 +83,6 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                   borderRadius: BorderRadius.circular(10),
                   color: whiteColor,
                   border: greyBorder,
-                  //
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,14 +134,14 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   color: whiteColor,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                                 child: Icon(
                                   isLiked
                                       ? Ionicons.heart
                                       : Ionicons.heart_outline,
-                                  size: 22,
-                                  color: isLiked ? redColor : blackColor,
+                                  size: 21,
+                                  color: redColor,
                                 ),
                               ),
                             ),

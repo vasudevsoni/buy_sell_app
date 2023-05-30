@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '/screens/product_details_screen.dart';
 import '/services/firebase_services.dart';
@@ -13,12 +12,10 @@ import 'custom_loading_indicator.dart';
 
 class CustomProductCard extends StatefulWidget {
   final QueryDocumentSnapshot<Object?> data;
-  final DateTime time;
 
   const CustomProductCard({
     Key? key,
     required this.data,
-    required this.time,
   }) : super(key: key);
 
   @override
@@ -184,40 +181,17 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                 ),
                                 const Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: AutoSizeText(
-                                        '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                        maxLines: 2,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        minFontSize: 8,
-                                        maxFontSize: 11,
-                                        style: GoogleFonts.interTight(
-                                          color: lightBlackColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        timeago.format(widget.time),
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                        style: GoogleFonts.interTight(
-                                          color: lightBlackColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  '${widget.data['location']['area']}, ${widget.data['location']['city']}',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                  style: GoogleFonts.interTight(
+                                    color: lightBlackColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11,
+                                  ),
                                 ),
                               ],
                             ),

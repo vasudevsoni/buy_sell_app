@@ -298,34 +298,6 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Ionicons.card_outline,
-                                  color: whiteColor,
-                                  size: 20,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'One-time purchase',
-                                    maxLines: 2,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: greyColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             const Divider(
                               color: whiteColor,
                               height: 20,

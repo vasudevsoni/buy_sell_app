@@ -171,7 +171,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               child: TimerButton(
                 label: "Resend Code",
                 timeOutInSeconds: 30,
-                onPressed: sendVerificationEmail,
+                onPressed: () => sendVerificationEmail(),
                 disabledColor: greyColor,
                 color: blackColor,
               ),

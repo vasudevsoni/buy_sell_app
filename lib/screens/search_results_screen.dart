@@ -333,13 +333,11 @@ class _SearchProductsListState extends State<SearchProductsList> {
                 ),
                 CustomButton(
                   text: 'Set Location',
-                  onPressed: () {
-                    Get.to(
-                      () => const LocationScreen(
-                        isOpenedFromSellButton: false,
-                      ),
-                    );
-                  },
+                  onPressed: () => Get.to(
+                    () => const LocationScreen(
+                      isOpenedFromSellButton: false,
+                    ),
+                  ),
                   icon: Ionicons.locate,
                   borderColor: blackColor,
                   bgColor: blackColor,
@@ -347,9 +345,7 @@ class _SearchProductsListState extends State<SearchProductsList> {
                 ),
                 CustomButton(
                   text: 'Show All Products',
-                  onPressed: () {
-                    widget.tabController.animateTo(1);
-                  },
+                  onPressed: () => widget.tabController.animateTo(1),
                   icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
@@ -457,8 +453,6 @@ class _SearchProductsListState extends State<SearchProductsList> {
                       itemCount: snapshot.docs.length,
                       itemBuilder: (context, index) {
                         final data = snapshot.docs[index];
-                        final time = DateTime.fromMillisecondsSinceEpoch(
-                            data['postedAt']);
                         final hasMoreReached = snapshot.hasMore &&
                             index + 1 == snapshot.docs.length &&
                             !snapshot.isFetchingMore;
@@ -468,7 +462,6 @@ class _SearchProductsListState extends State<SearchProductsList> {
                           children: [
                             CustomProductCardGrid(
                               data: data,
-                              time: time,
                             ),
                             if (hasMoreReached)
                               const SizedBox(

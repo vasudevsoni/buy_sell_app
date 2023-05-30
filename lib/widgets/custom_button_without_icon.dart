@@ -33,7 +33,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         splashFactory: InkRipple.splashFactory,
         animationDuration: const Duration(milliseconds: 100),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(10),
           side: BorderSide(
             color: borderColor,
             strokeAlign: StrokeAlign.inside,

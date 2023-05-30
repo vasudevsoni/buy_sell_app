@@ -22,7 +22,7 @@ class LoadingButton extends StatelessWidget {
         splashFactory: InkRipple.splashFactory,
         animationDuration: const Duration(milliseconds: 100),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       child: const Center(

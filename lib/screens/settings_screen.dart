@@ -74,10 +74,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           address =
               '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
           country = value['location']['country'];
-        });
-      }
-      if (mounted) {
-        setState(() {
           signInMethod = user!.providerData[0].providerId.toString();
         });
       }
@@ -321,10 +317,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: Ionicons.people_outline,
               trailingIcon: Ionicons.chevron_forward,
               isEnabled: true,
-              onTap: () {
-                Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
-              },
+              onTap: () => Share.share(
+                  'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
             ),
             CustomListTileWithSubtitle(
               text: 'Log out',

@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +32,6 @@ import 'help_and_support_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
-import 'profile_screen.dart';
 import 'selling/common/edit_ad_screen.dart';
 import 'selling/jobs/edit_job_post_screen.dart';
 import 'selling/vehicles/edit_vehicle_ad_screen.dart';
@@ -104,25 +104,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final userData =
         await services.getUserData(widget.productData['sellerUid']);
 
-    setState(() {
-      isLoading = true;
-      final locationData = widget.productData['location'];
-      location =
-          '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
-      latitude = locationData['latitude'];
-      longitude = locationData['longitude'];
-      profileImage = userData['profileImage'] ?? '';
-      sellerName = userData['name'];
-      isLiked = widget.productData['favorites'].contains(services.user?.uid);
-      isActive = widget.productData['isActive'] ?? false;
-      isSold = widget.productData['isSold'] ?? false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+        final locationData = widget.productData['location'];
+        location =
+            '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
+        latitude = locationData['latitude'];
+        longitude = locationData['longitude'];
+        profileImage = userData['profileImage'] ?? '';
+        sellerName = userData['name'];
+        isLiked = widget.productData['favorites'].contains(services.user?.uid);
+        isActive = widget.productData['isActive'] ?? false;
+        isSold = widget.productData['isSold'] ?? false;
+      });
+    }
 
     if (services.user?.uid != widget.productData['sellerUid']) {
       await services.listings.doc(widget.productData.id).update({
         'views': FieldValue.arrayUnion([services.user!.uid]),
       });
     }
+
     setState(() {
       isLoading = false;
     });
@@ -162,6 +165,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               chatRoomId: chatRoomId,
               prodId: widget.productData.id,
               sellerId: widget.productData['sellerUid'],
+              buyerUid: user!.uid,
               users: users,
               makeOffer: true,
             ),
@@ -170,8 +174,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             () => ConversationScreen(
               chatRoomId: chatRoomId,
               prodId: widget.productData.id,
-              users: users,
               sellerId: widget.productData['sellerUid'],
+              buyerUid: user!.uid,
+              users: users,
               makeOffer: false,
             ),
           );
@@ -503,7 +508,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           splashRadius: 20,
                         ),
                       IconButton(
-                        onPressed: showOptionsDialog,
+                        onPressed: () => showOptionsDialog(),
                         visualDensity: VisualDensity.compact,
                         splashRadius: 20,
                         icon: const Icon(
@@ -781,37 +786,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: widget.productData['catName'] == 'Jobs'
-                                    ? Text(
-                                        '${priceFormat.format(widget.productData['salaryFrom'])} - ${priceFormat.format(widget.productData['salaryTo'])}',
-                                        maxLines: 2,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 18,
-                                          color: blackColor,
-                                          decoration: isSold
-                                              ? TextDecoration.lineThrough
-                                              : TextDecoration.none,
-                                        ),
-                                      )
-                                    : Text(
-                                        priceFormat.format(
-                                          widget.productData['price'],
-                                        ),
-                                        maxLines: 1,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 18,
-                                          color: blackColor,
-                                          decoration: isSold
-                                              ? TextDecoration.lineThrough
-                                              : TextDecoration.none,
-                                        ),
-                                      ),
+                                child: Text(
+                                  widget.productData['title'],
+                                  maxLines: 3,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 17,
+                                    decoration: isSold
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -847,107 +835,135 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Text(
-                            widget.productData['title'],
-                            maxLines: 3,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
-                              color: blackColor,
-                              fontSize: 15,
-                              decoration: isSold
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         if (widget.productData['sellerUid'] !=
                             services.user!.uid)
-                          GestureDetector(
-                            onTap: () => Get.to(
-                              () => ProfileScreen(
-                                userId: widget.productData['sellerUid'],
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  profileImage == ''
-                                      ? Container(
-                                          height: size.width * 0.06,
-                                          width: size.width * 0.06,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(7),
-                                            color: blueColor,
-                                          ),
-                                          child: const Icon(
-                                            Ionicons.person_outline,
-                                            color: whiteColor,
-                                            size: 20,
-                                          ),
-                                        )
-                                      : SizedBox(
-                                          height: size.width * 0.06,
-                                          width: size.width * 0.06,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(7),
-                                            child: CachedNetworkImage(
-                                              imageUrl: profileImage,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high,
-                                              memCacheHeight:
-                                                  (size.width * 0.06).round(),
-                                              memCacheWidth:
-                                                  (size.width * 0.06).round(),
-                                              errorWidget:
-                                                  (context, url, error) {
-                                                return const Icon(
-                                                  Ionicons.alert_circle_outline,
-                                                  size: 10,
-                                                  color: redColor,
-                                                );
-                                              },
-                                              placeholder: (context, url) {
-                                                return const Center(
-                                                  child:
-                                                      CustomLoadingIndicator(),
-                                                );
-                                              },
+                              GestureDetector(
+                                onTap: () => Get.to(
+                                  () => ProfileScreen(
+                                    userId: widget.productData['sellerUid'],
+                                  ),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      profileImage == ''
+                                          ? Container(
+                                              height: size.width * 0.06,
+                                              width: size.width * 0.06,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                color: blueColor,
+                                              ),
+                                              child: const Icon(
+                                                Ionicons.person_outline,
+                                                color: whiteColor,
+                                                size: 15,
+                                              ),
+                                            )
+                                          : SizedBox(
+                                              height: size.width * 0.06,
+                                              width: size.width * 0.06,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: profileImage,
+                                                  fit: BoxFit.cover,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  memCacheHeight:
+                                                      (size.width * 0.06)
+                                                          .round(),
+                                                  memCacheWidth:
+                                                      (size.width * 0.06)
+                                                          .round(),
+                                                  errorWidget:
+                                                      (context, url, error) {
+                                                    return const Icon(
+                                                      Ionicons
+                                                          .alert_circle_outline,
+                                                      size: 10,
+                                                      color: redColor,
+                                                    );
+                                                  },
+                                                  placeholder: (context, url) {
+                                                    return const Center(
+                                                      child:
+                                                          CustomLoadingIndicator(),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
                                             ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      SizedBox(
+                                        width: size.width * 0.6,
+                                        child: Text(
+                                          sellerName,
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 14,
                                           ),
                                         ),
-                                  const SizedBox(
-                                    width: 7,
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.6,
-                                    child: Text(
-                                      sellerName,
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: blackColor,
-                                        fontSize: 13,
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: widget.productData['catName'] == 'Jobs'
+                              ? Text(
+                                  '${priceFormat.format(widget.productData['salaryFrom'])} - ${priceFormat.format(widget.productData['salaryTo'])}',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 19,
+                                    color: blackColor,
+                                    decoration: isSold
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                )
+                              : Text(
+                                  priceFormat.format(
+                                    widget.productData['price'],
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 19,
+                                    color: blackColor,
+                                    decoration: isSold
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -1019,9 +1035,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         horizontal: 15),
                                     child: CustomButton(
                                       text: 'Chat now',
-                                      onPressed: () {
-                                        createChatRoom(makeOffer: false);
-                                      },
+                                      onPressed: () =>
+                                          createChatRoom(makeOffer: false),
                                       isFullWidth: true,
                                       icon: Ionicons.chatbubble_ellipses,
                                       bgColor: blueColor,
@@ -1041,9 +1056,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomButton(
                               text: 'Make an offer',
-                              onPressed: () {
-                                createChatRoom(makeOffer: true);
-                              },
+                              onPressed: () => createChatRoom(makeOffer: true),
                               isFullWidth: true,
                               icon: Ionicons.cash,
                               bgColor: greenColor,
@@ -1088,7 +1101,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             children: [
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -1115,9 +1128,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ],
                                 ),
                               ),
+                              const SizedBox(
+                                height: 5,
+                              ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -1144,9 +1160,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ],
                                 ),
                               ),
+                              const SizedBox(
+                                height: 5,
+                              ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 15, right: 15),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Row(
                                   children: [
                                     const Icon(
@@ -1266,7 +1285,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1298,7 +1317,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1367,7 +1386,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1403,7 +1422,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1440,7 +1459,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1481,7 +1500,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                     ],
                                   ),
@@ -1561,7 +1580,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ],
                                       ),
                                       const SizedBox(
-                                        height: 3,
+                                        height: 5,
                                       ),
                                       Row(
                                         crossAxisAlignment:
@@ -1658,7 +1677,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 3,
+                                  height: 5,
                                 ),
                                 Text(
                                   'Show full description...',
@@ -2006,11 +2025,8 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               itemCount: snapshot.data!.size >= 10 ? 10 : snapshot.data!.size,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
-                final time =
-                    DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
                 return CustomProductCard(
                   data: data,
-                  time: time,
                 );
               },
               physics: const NeverScrollableScrollPhysics(),

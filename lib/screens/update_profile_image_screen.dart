@@ -396,7 +396,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(
               text: 'Take Photo',
-              onPressed: requestCameraPermission,
+              onPressed: () => requestCameraPermission(),
               isFullWidth: true,
               icon: Ionicons.camera,
               bgColor: whiteColor,
@@ -409,7 +409,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(
               text: 'Upload Photo',
-              onPressed: requestGalleryPermission,
+              onPressed: () => requestGalleryPermission(),
               icon: Ionicons.image,
               isFullWidth: true,
               bgColor: whiteColor,
@@ -434,7 +434,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               )
             : CustomButton(
                 text: 'Proceed',
-                onPressed: pickedImage != null ? showConfirmationDialog : () {},
+                onPressed: pickedImage != null
+                    ? () => showConfirmationDialog()
+                    : () {},
                 icon: Ionicons.arrow_forward,
                 bgColor: blueColor,
                 borderColor: blueColor,

@@ -62,9 +62,6 @@ class _MyChatsScreenState extends State<MyChatsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
-
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -107,359 +104,165 @@ class _MyChatsScreenState extends State<MyChatsScreen>
       body: TabBarView(
         controller: tabBarController,
         physics: const BouncingScrollPhysics(),
-        children: [
-          StreamBuilder<QuerySnapshot>(
-            stream: _services.chats
-                .where('users', arrayContains: _services.user!.uid)
-                .orderBy('lastChatTime', descending: true)
-                .snapshots(),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot,
-            ) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (snapshot.hasData && snapshot.data!.size == 0) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      height: size.height * 0.3,
-                      width: size.width,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: greyColor,
-                      ),
-                      child: const SVGPictureWidget(
-                        url:
-                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
-                        fit: BoxFit.contain,
-                        semanticsLabel: 'Empty messages image',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'You have got no messages!',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'When you chat with a seller, it will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          color: lightBlackColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      child: CustomButtonWithoutIcon(
-                        text: 'Explore Products',
-                        onPressed: () => setState(() {
-                          mainProv.switchToPage(0);
-                        }),
-                        bgColor: blueColor,
-                        borderColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-                    ),
-                  ],
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Center(
-                    child: CustomLoadingIndicator(),
-                  ),
-                );
-              }
-              return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: fadedColor,
-                    height: 0,
-                    indent: 80,
-                  );
-                },
-                itemBuilder: (context, index) {
-                  final Map<String, dynamic> data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return ChatCard(chatData: data);
-                },
-                itemCount: snapshot.data!.docs.length,
-                physics: const ClampingScrollPhysics(),
-              );
-            },
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _services.chats
-                .where('users', arrayContains: _services.user!.uid)
-                .where('product.seller', isNotEqualTo: _services.user!.uid)
-                .snapshots(),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot,
-            ) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (snapshot.hasData && snapshot.data!.size == 0) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      height: size.height * 0.3,
-                      width: size.width,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: greyColor,
-                      ),
-                      child: const SVGPictureWidget(
-                        url:
-                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
-                        fit: BoxFit.contain,
-                        semanticsLabel: 'Empty messages image',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'You have got no messages!',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'When you chat with a seller, it will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          color: lightBlackColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      child: CustomButtonWithoutIcon(
-                        text: 'Explore Products',
-                        onPressed: () => setState(() {
-                          mainProv.switchToPage(0);
-                        }),
-                        bgColor: blueColor,
-                        borderColor: blueColor,
-                        textIconColor: whiteColor,
-                      ),
-                    ),
-                  ],
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Center(
-                    child: CustomLoadingIndicator(),
-                  ),
-                );
-              }
-              return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: fadedColor,
-                    height: 0,
-                    indent: 80,
-                  );
-                },
-                physics: const ClampingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final Map<String, dynamic> data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return ChatCard(chatData: data);
-                },
-                itemCount: snapshot.data!.docs.length,
-              );
-            },
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _services.chats
-                .where('users', arrayContains: _services.user!.uid)
-                .where('product.seller', isEqualTo: _services.user!.uid)
-                .snapshots(),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot,
-            ) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (snapshot.hasData && snapshot.data!.size == 0) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      height: size.height * 0.3,
-                      width: size.width,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: greyColor,
-                      ),
-                      child: const SVGPictureWidget(
-                        url:
-                            'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
-                        fit: BoxFit.contain,
-                        semanticsLabel: 'Empty messages image',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'You have got no messages!',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        'When someone sends you a message, it will show here',
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
-                          color: lightBlackColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Center(
-                    child: CustomLoadingIndicator(),
-                  ),
-                );
-              }
-              return ListView.separated(
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    color: fadedColor,
-                    height: 0,
-                    indent: 80,
-                  );
-                },
-                physics: const ClampingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final Map<String, dynamic> data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  return ChatCard(chatData: data);
-                },
-                itemCount: snapshot.data!.docs.length,
-              );
-            },
-          ),
+        children: const [
+          ChatStreamBuilder(screenCat: 'All'),
+          ChatStreamBuilder(screenCat: 'Buying'),
+          ChatStreamBuilder(screenCat: 'Selling'),
         ],
       ),
+    );
+  }
+}
+
+class ChatStreamBuilder extends StatefulWidget {
+  final String screenCat;
+  const ChatStreamBuilder({super.key, required this.screenCat});
+
+  @override
+  State<ChatStreamBuilder> createState() => _ChatStreamBuilderState();
+}
+
+class _ChatStreamBuilderState extends State<ChatStreamBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
+    final FirebaseServices services = FirebaseServices();
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget.screenCat == 'All'
+          ? services.chats
+              .where('users', arrayContains: services.user!.uid)
+              .orderBy('lastChatTime', descending: true)
+              .snapshots()
+          : widget.screenCat == 'Buying'
+              ? services.chats
+                  .where('users', arrayContains: services.user!.uid)
+                  .where('product.seller', isNotEqualTo: services.user!.uid)
+                  .snapshots()
+              : services.chats
+                  .where('users', arrayContains: services.user!.uid)
+                  .where('product.seller', isEqualTo: services.user!.uid)
+                  .snapshots(),
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot> snapshot,
+      ) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                'Something has gone wrong. Please try again',
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          );
+        }
+        if (snapshot.hasData && snapshot.data!.size == 0) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(15),
+                height: size.height * 0.3,
+                width: size.width,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: greyColor,
+                ),
+                child: const SVGPictureWidget(
+                  url:
+                      'https://res.cloudinary.com/bechdeapp/image/upload/v1674460521/illustrations/empty-message_z6lwtu.svg',
+                  fit: BoxFit.contain,
+                  semanticsLabel: 'Empty messages image',
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'You have got no messages!',
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.interTight(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  widget.screenCat == 'Selling'
+                      ? 'When someone sends you a message, it will show here'
+                      : 'When you chat with a seller, it will show here',
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.interTight(
+                    color: lightBlackColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              if (widget.screenCat != 'Selling')
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  child: CustomButtonWithoutIcon(
+                    text: 'Explore Products',
+                    onPressed: () => setState(() {
+                      mainProv.switchToPage(0);
+                    }),
+                    bgColor: blueColor,
+                    borderColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                ),
+            ],
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Center(
+              child: CustomLoadingIndicator(),
+            ),
+          );
+        }
+        return ListView.separated(
+          separatorBuilder: (context, index) {
+            return const Divider(
+              color: fadedColor,
+              height: 0,
+              indent: 80,
+            );
+          },
+          physics: const ClampingScrollPhysics(),
+          itemBuilder: (context, index) {
+            final Map<String, dynamic> data =
+                snapshot.data!.docs[index].data() as Map<String, dynamic>;
+            return ChatCard(chatData: data);
+          },
+          itemCount: snapshot.data!.docs.length,
+        );
+      },
     );
   }
 }
@@ -481,6 +284,7 @@ class _ChatCardState extends State<ChatCard> {
   String prodTitle = '';
   String productImage = '';
   String buyerName = '';
+  String buyerUid = '';
   String buyerProfileImage = '';
   String sellerName = '';
   String sellerUid = '';
@@ -509,6 +313,7 @@ class _ChatCardState extends State<ChatCard> {
         sellerUid = seller['uid'];
         sellerName = seller['name'] ?? '';
         buyerName = buyer['name'] ?? '';
+        buyerUid = buyer['uid'] ?? '';
         buyerProfileImage = buyer['profileImage'] ?? '';
       });
     }
@@ -528,6 +333,7 @@ class _ChatCardState extends State<ChatCard> {
             chatRoomId: widget.chatData['chatRoomId'],
             prodId: prodId,
             sellerId: sellerUid,
+            buyerUid: buyerUid,
             users: widget.chatData['users'],
             makeOffer: false,
           ),

@@ -372,6 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   profileImage == ''
                       ? Container(
+                          margin: const EdgeInsets.only(left: 15, right: 10),
                           height: size.width * 0.25,
                           width: size.width * 0.25,
                           decoration: BoxDecoration(
@@ -386,82 +387,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       : GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dismissible(
-                                key: UniqueKey(),
-                                direction: DismissDirection.down,
-                                onDismissed: (direction) {
-                                  Get.back();
-                                },
-                                child: Material(
-                                  color: blackColor,
-                                  child: Stack(
-                                    children: [
-                                      PhotoViewGallery.builder(
-                                        scrollPhysics:
-                                            const ClampingScrollPhysics(),
-                                        itemCount: 1,
-                                        builder:
-                                            (BuildContext context, int index) {
-                                          return PhotoViewGalleryPageOptions(
-                                            imageProvider:
-                                                CachedNetworkImageProvider(
-                                              profileImage,
-                                            ),
-                                            initialScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            minScale: PhotoViewComputedScale
-                                                    .contained *
-                                                1,
-                                            maxScale: PhotoViewComputedScale
-                                                    .contained *
-                                                2,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Ionicons.alert_circle_outline,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                          );
-                                        },
-                                        loadingBuilder: (context, event) {
-                                          return const Center(
-                                            child: CustomLoadingIndicator(),
-                                          );
-                                        },
-                                      ),
-                                      Positioned(
-                                        top: 15,
-                                        right: 15,
-                                        child: IconButton(
-                                          onPressed: () => Get.back(),
-                                          splashColor: transparentColor,
-                                          splashRadius: 30,
-                                          icon: const Icon(
-                                            Ionicons.close_circle_outline,
-                                            size: 30,
-                                            color: whiteColor,
-                                            shadows: [
-                                              BoxShadow(
-                                                offset: Offset(0, 0),
-                                                blurRadius: 15,
-                                                spreadRadius: 15,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                          onTap: () => showProfileImage(context),
                           child: Container(
                             height: size.width * 0.25,
                             width: size.width * 0.25,
@@ -804,6 +730,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  Future<dynamic> showProfileImage(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            Get.back();
+          },
+          child: Material(
+            color: blackColor,
+            child: Stack(
+              children: [
+                PhotoViewGallery.builder(
+                  scrollPhysics: const ClampingScrollPhysics(),
+                  itemCount: 1,
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: CachedNetworkImageProvider(
+                        profileImage,
+                      ),
+                      initialScale: PhotoViewComputedScale.contained * 1,
+                      minScale: PhotoViewComputedScale.contained * 1,
+                      maxScale: PhotoViewComputedScale.contained * 2,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Ionicons.alert_circle_outline,
+                          size: 20,
+                          color: redColor,
+                        );
+                      },
+                    );
+                  },
+                  loadingBuilder: (context, event) {
+                    return const Center(
+                      child: CustomLoadingIndicator(),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: IconButton(
+                    onPressed: () => Get.back(),
+                    splashColor: transparentColor,
+                    splashRadius: 30,
+                    icon: const Icon(
+                      Ionicons.close_circle_outline,
+                      size: 30,
+                      color: whiteColor,
+                      shadows: [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                          spreadRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class SellerProductsList extends StatefulWidget {
@@ -887,7 +882,6 @@ class _SellerProductsListState extends State<SellerProductsList> {
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
             final data = snapshot.docs[index];
-            final time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
             final hasMoreReached = snapshot.hasMore &&
                 index + 1 == snapshot.docs.length &&
                 !snapshot.isFetchingMore;
@@ -896,7 +890,6 @@ class _SellerProductsListState extends State<SellerProductsList> {
               children: [
                 CustomProductCardGrid(
                   data: data,
-                  time: time,
                 ),
                 if (hasMoreReached)
                   const SizedBox(

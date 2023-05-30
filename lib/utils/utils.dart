@@ -78,9 +78,7 @@ void showSurveyPopUp(BuildContext context) async {
                   color: blackColor,
                 ),
               ),
-              onPressed: () {
-                Get.back();
-              },
+              onPressed: () => Get.back(),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

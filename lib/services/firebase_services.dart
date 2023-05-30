@@ -412,10 +412,12 @@ class FirebaseServices {
 
   // Future<void> addFields() async {
   //   try {
-  //     var querySnapshots = await users.get();
+  //     var querySnapshots =
+  //         await listings.where('isShowedInConsole', isEqualTo: true).get();
   //     for (var doc in querySnapshots.docs) {
   //       await doc.reference.update({
-  //         'isDisabled': false,
+  //         'isShowedInConsole': false,
+  //         'isActive': true,
   //       });
   //     }
   //     showSnackBar(

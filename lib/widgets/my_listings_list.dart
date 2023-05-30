@@ -874,15 +874,13 @@ class _MyListingScreenProductCardState
                                   CustomButton(
                                     icon: Ionicons.trending_up,
                                     text: 'Promote Listing',
-                                    onPressed: () {
-                                      Get.to(
-                                        () => PromoteListingScreen(
-                                          productId: widget.data.id,
-                                          title: widget.data['title'],
-                                          imageUrl: widget.data['images'][0],
-                                        ),
-                                      );
-                                    },
+                                    onPressed: () => Get.to(
+                                      () => PromoteListingScreen(
+                                        productId: widget.data.id,
+                                        title: widget.data['title'],
+                                        imageUrl: widget.data['images'][0],
+                                      ),
+                                    ),
                                     isFullWidth: true,
                                     bgColor: blueColor,
                                     borderColor: blueColor,

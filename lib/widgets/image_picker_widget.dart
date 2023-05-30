@@ -157,93 +157,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             children: [
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
-                                onTap: () => showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dismissible(
-                                      key: UniqueKey(),
-                                      direction: DismissDirection.down,
-                                      onDismissed: (direction) {
-                                        pageController.dispose();
-                                        Get.back();
-                                      },
-                                      child: Material(
-                                        color: blackColor,
-                                        child: Stack(
-                                          children: [
-                                            PhotoViewGallery.builder(
-                                              scrollPhysics:
-                                                  const ClampingScrollPhysics(),
-                                              itemCount:
-                                                  provider.imagePaths.length,
-                                              pageController: pageController,
-                                              builder: (BuildContext context,
-                                                  int index) {
-                                                return PhotoViewGalleryPageOptions(
-                                                  imageProvider: FileImage(
-                                                    provider.imagePaths[index],
-                                                  ),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  initialScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  minScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          1,
-                                                  maxScale:
-                                                      PhotoViewComputedScale
-                                                              .contained *
-                                                          5,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    return const Icon(
-                                                      Ionicons
-                                                          .alert_circle_outline,
-                                                      size: 20,
-                                                      color: redColor,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              loadingBuilder: (context, event) {
-                                                return const Icon(
-                                                  Ionicons.image,
-                                                  size: 20,
-                                                  color: lightBlackColor,
-                                                );
-                                              },
-                                            ),
-                                            Positioned(
-                                              top: 15,
-                                              right: 15,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  pageController.dispose();
-                                                  Get.back();
-                                                },
-                                                icon: const Icon(
-                                                  Ionicons.close_circle_outline,
-                                                  size: 30,
-                                                  color: whiteColor,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 15,
-                                                      spreadRadius: 15,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                onTap: () => showFullImage(
+                                    context, pageController, provider),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.file(
@@ -399,6 +314,82 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<dynamic> showFullImage(BuildContext context,
+      PageController pageController, SellerFormProvider provider) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            pageController.dispose();
+            Get.back();
+          },
+          child: Material(
+            color: blackColor,
+            child: Stack(
+              children: [
+                PhotoViewGallery.builder(
+                  scrollPhysics: const ClampingScrollPhysics(),
+                  itemCount: provider.imagePaths.length,
+                  pageController: pageController,
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: FileImage(
+                        provider.imagePaths[index],
+                      ),
+                      filterQuality: FilterQuality.high,
+                      initialScale: PhotoViewComputedScale.contained * 1,
+                      minScale: PhotoViewComputedScale.contained * 1,
+                      maxScale: PhotoViewComputedScale.contained * 5,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Ionicons.alert_circle_outline,
+                          size: 20,
+                          color: redColor,
+                        );
+                      },
+                    );
+                  },
+                  loadingBuilder: (context, event) {
+                    return const Icon(
+                      Ionicons.image,
+                      size: 20,
+                      color: lightBlackColor,
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: IconButton(
+                    onPressed: () {
+                      pageController.dispose();
+                      Get.back();
+                    },
+                    icon: const Icon(
+                      Ionicons.close_circle_outline,
+                      size: 30,
+                      color: whiteColor,
+                      shadows: [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                          spreadRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

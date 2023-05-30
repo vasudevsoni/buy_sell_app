@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/screens/community_guidelines_screen.dart';
+import 'package:buy_sell_app/screens/profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,7 @@ class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
   final String prodId;
   final String sellerId;
+  final String buyerUid;
   final bool makeOffer;
   final List users;
   const ConversationScreen({
@@ -28,6 +31,7 @@ class ConversationScreen extends StatefulWidget {
     required this.chatRoomId,
     required this.prodId,
     required this.sellerId,
+    required this.buyerUid,
     required this.makeOffer,
     required this.users,
   });
@@ -39,13 +43,16 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   final FirebaseServices _services = FirebaseServices();
   final ScrollController scrollController = ScrollController();
+  final User? user = FirebaseAuth.instance.currentUser;
   final TextEditingController chatMessageController = TextEditingController();
   final TextEditingController offerPriceController = TextEditingController();
 
   String sellerUid = '';
+  String sellerName = '';
+  String buyerUid = '';
+  String buyerName = '';
   String imageUrl = '';
   String title = '';
-  String name = '';
   bool isActive = true;
   late DocumentSnapshot prod;
   late DocumentSnapshot sellerData;
@@ -73,33 +80,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
     setState(() {
       isLoading = true;
     });
+
     final chatRoom = await _services.chats.doc(widget.chatRoomId).get();
+    final seller = await _services.getUserData(widget.sellerId);
+    final buyer = await _services.getUserData(widget.buyerUid);
+    final currentUser = await _services.getCurrentUserData();
+    final product = await _services.getProductDetails(widget.prodId);
+
     if (mounted) {
       setState(() {
         sellerUid = chatRoom['users'][0];
+        buyerUid = chatRoom['users'][1];
+        sellerData = seller;
+        sellerName = seller['name'];
+        buyerName = buyer['name'];
         title = chatRoom['product']['title'];
         imageUrl = chatRoom['product']['productImage'];
-      });
-    }
-
-    final seller = await _services.getUserData(widget.sellerId);
-    if (mounted) {
-      setState(() {
-        sellerData = seller;
-        name = seller['name'];
-      });
-    }
-
-    final currentUser = await _services.getCurrentUserData();
-    if (mounted) {
-      setState(() {
         isUserDisabled = currentUser['isDisabled'];
-      });
-    }
-
-    final product = await _services.getProductDetails(widget.prodId);
-    if (mounted) {
-      setState(() {
         prod = product;
         isActive = product['isActive'];
       });
@@ -544,7 +541,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         elevation: 0.2,
         actions: [
           IconButton(
-            onPressed: showReportDialog,
+            onPressed: () => showReportDialog(),
             icon: const Icon(
               Ionicons.flag_outline,
               color: redColor,
@@ -552,7 +549,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             visualDensity: VisualDensity.compact,
           ),
           IconButton(
-            onPressed: showDeleteDialog,
+            onPressed: () => showDeleteDialog(),
             icon: const Icon(
               Ionicons.trash_outline,
               color: redColor,
@@ -562,16 +559,32 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
-        centerTitle: true,
-        title: Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: true,
-          style: GoogleFonts.interTight(
-            fontWeight: FontWeight.w500,
-            color: blackColor,
-            fontSize: 15,
+        centerTitle: false,
+        title: GestureDetector(
+          onTap: () {
+            if (sellerUid == user!.uid) {
+              Get.to(ProfileScreen(userId: buyerUid));
+            } else {
+              Get.to(ProfileScreen(userId: sellerUid));
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                sellerUid == user!.uid ? buyerName : sellerName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                style: GoogleFonts.interTight(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
+                  decorationStyle: TextDecorationStyle.solid,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -915,7 +928,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   color: whiteColor,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                onPressed: showMakeOfferDialog,
+                                onPressed: () => showMakeOfferDialog(),
                                 padding: const EdgeInsets.all(0),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),

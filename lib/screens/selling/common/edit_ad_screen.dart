@@ -161,13 +161,15 @@ class _EditAdScreenState extends State<EditAdScreen> {
   }
 
   Future<void> getConnectivity() async {
-    await for (final _ in Connectivity().onConnectivityChanged) {
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
       if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
         setState(() => isAlertSet = true);
       }
-    }
+    });
   }
 
   @override
@@ -542,7 +544,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           leading: IconButton(
-            onPressed: closePageAndGoToHome,
+            onPressed: () => closePageAndGoToHome(),
             enableFeedback: true,
             icon: const Icon(Ionicons.close_circle_outline),
           ),
@@ -773,7 +775,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: validateForm,
+                  onPressed: () => validateForm(),
                   icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,

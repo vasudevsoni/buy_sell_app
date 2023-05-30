@@ -35,15 +35,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabBarController;
-  final _services = FirebaseServices();
+  final FirebaseServices _services = FirebaseServices();
   final User? user = FirebaseAuth.instance.currentUser;
   String area = '';
   String city = '';
   String state = '';
   bool isLocationEmpty = false;
   bool isLoading = true;
-
-  late DateTime currentBackPressTime;
 
   @override
   void initState() {
@@ -55,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen>
     _getCurrentUserData();
   }
 
-  void _getCurrentUserData() async {
+  Future<void> _getCurrentUserData() async {
     final value = await _services.getCurrentUserData();
     if (value['location'] == null) {
       _getEmptyLocationUI();
@@ -86,84 +84,6 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-  // showFilterBottomSheet() {
-  //   showModalBottomSheet<dynamic>(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     backgroundColor: transparentColor,
-  //     builder: (context) {
-  //       return SafeArea(
-  //         child: Container(
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.only(
-  //               topLeft: Radius.circular(10),
-  //               topRight: Radius.circular(10),
-  //             ),
-  //             color: whiteColor,
-  //           ),
-  //           padding: EdgeInsets.only(
-  //             top: 5,
-  //             left: 15,
-  //             right: 15,
-  //             bottom: 15,
-  //           ),
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               Center(
-  //                 child: Container(
-  //                   width: 80.0,
-  //                   height: 5.0,
-  //                   decoration: BoxDecoration(
-  //                     borderRadius: BorderRadius.circular(10.0),
-  //                     color: fadedColor,
-  //                   ),
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               Center(
-  //                 child: Text(
-  //                   'Filter your Results',
-  //                   style: GoogleFonts.interTight(
-  //                     fontSize: 20,
-  //                     fontWeight: FontWeight.w500,
-  //                   ),
-  //                   textAlign: TextAlign.start,
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               CustomButtonWithoutIcon(
-  //                 text: 'Show Products in My Area',
-  //                 onPressed: () async {
-  //                   Get.back();
-  //                 },
-  //                 bgColor: blueColor,
-  //                 borderColor: blueColor,
-  //                 textIconColor: whiteColor,
-  //               ),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               CustomButtonWithoutIcon(
-  //                 text: 'Show Products in My City',
-  //                 onPressed: () => Get.back(),
-  //                 bgColor: blueColor,
-  //                 borderColor: blueColor,
-  //                 textIconColor: whiteColor,
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   void dispose() {
     tabBarController.dispose();
@@ -174,17 +94,6 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
-      // floatingActionButton: FloatingActionButton.small(
-      //   onPressed: showFilterBottomSheet,
-      //   backgroundColor: blueColor,
-      //   elevation: 0,
-      //   focusElevation: 0,
-      //   hoverElevation: 0,
-      //   disabledElevation: 0,
-      //   highlightElevation: 0,
-      //   child: Icon(Mdicons.filterVariant),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         elevation: 0.2,
         backgroundColor: whiteColor,
@@ -640,85 +549,6 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
   }
 }
 
-// class CustomBannerAdHomeScreen extends StatefulWidget {
-//   CustomBannerAdHomeScreen({super.key});
-
-//   @override
-//   State<CustomBannerAdHomeScreen> createState() =>
-//       _CustomBannerAdHomeScreenState();
-// }
-
-// class _CustomBannerAdHomeScreenState extends State<CustomBannerAdHomeScreen> {
-//   late BannerAd? _bannerAd;
-//   bool _isAdLoaded = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initBannerAd();
-//   }
-
-//   _initBannerAd() {
-//     _bannerAd = BannerAd(
-//       size: AdSize.largeBanner,
-//       adUnitId: AdmobServices.bannerAdUnitId,
-//       listener: BannerAdListener(
-//         onAdLoaded: (ad) {
-//           setState(() {
-//             _isAdLoaded = true;
-//           });
-//         },
-//         onAdFailedToLoad: (ad, error) {
-//           setState(() {
-//             _isAdLoaded = false;
-//           });
-//           ad.dispose();
-//         },
-//       ),
-//       request: AdRequest(),
-//     );
-//     _bannerAd!.load();
-//   }
-
-//   @override
-//   void dispose() {
-//     _bannerAd!.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final size = MediaQuery.of(context).size;
-//     return _isAdLoaded
-//         ? Container(
-//             decoration: BoxDecoration(
-//               border: Border.all(
-//                 color: greyColor,
-//                 width: 1,
-//               ),
-//               borderRadius: BorderRadius.circular(10),
-//             ),
-//             height: size.width * 0.3,
-//             width: 300,
-//             child: AdWidget(ad: _bannerAd!),
-//           )
-//         : Container(
-//             decoration: BoxDecoration(
-//               border: Border.all(
-//                 color: greyColor,
-//                 width: 1,
-//               ),
-//               borderRadius: BorderRadius.circular(10),
-//             ),
-//             height: size.width * 0.3,
-//             width: 300,
-//             child: Center(
-//               child: Text('Ad'),
-//             ),
-//           );
-//   }
-// }
-
 class ProductsList extends StatefulWidget {
   final String city;
   final bool isLocationEmpty;
@@ -786,13 +616,11 @@ class _ProductsListState extends State<ProductsList> {
                 ),
                 CustomButton(
                   text: 'Set Location',
-                  onPressed: () {
-                    Get.to(
-                      () => const LocationScreen(
-                        isOpenedFromSellButton: false,
-                      ),
-                    );
-                  },
+                  onPressed: () => Get.to(
+                    () => const LocationScreen(
+                      isOpenedFromSellButton: false,
+                    ),
+                  ),
                   icon: Ionicons.locate,
                   borderColor: blackColor,
                   bgColor: blackColor,
@@ -800,9 +628,7 @@ class _ProductsListState extends State<ProductsList> {
                 ),
                 CustomButton(
                   text: 'Show All Products',
-                  onPressed: () {
-                    widget.tabController.animateTo(1);
-                  },
+                  onPressed: () => widget.tabController.animateTo(1),
                   icon: Ionicons.earth,
                   borderColor: blueColor,
                   bgColor: blueColor,
@@ -907,20 +733,14 @@ class _ProductsListState extends State<ProductsList> {
                 itemCount: snapshot.docs.length,
                 itemBuilder: (context, index) {
                   final data = snapshot.docs[index];
-                  final time =
-                      DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
                   final hasMoreReached = snapshot.hasMore &&
                       index + 1 == snapshot.docs.length &&
                       !snapshot.isFetchingMore;
-                  // if (index != 0 && index % 5 == 0) {
-                  //   return CustomBannerAdHomeScreen();
-                  // }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CustomProductCardGrid(
                         data: data,
-                        time: time,
                       ),
                       if (hasMoreReached)
                         Column(
