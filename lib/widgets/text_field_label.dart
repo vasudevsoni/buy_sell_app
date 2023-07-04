@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextFieldLabel extends StatelessWidget {
   final String labelText;
@@ -14,7 +15,7 @@ class TextFieldLabel extends StatelessWidget {
       children: [
         Text(
           labelText,
-          style: const TextStyle(
+          style: GoogleFonts.interTight(
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),

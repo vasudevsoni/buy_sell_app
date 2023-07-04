@@ -3,6 +3,7 @@ import 'package:buy_sell_app/widgets/custom_button.dart';
 import 'package:buy_sell_app/widgets/svg_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import 'utils/utils.dart';
@@ -32,7 +33,7 @@ class ErrorScreen extends StatelessWidget {
               ),
               child: const SVGPictureWidget(
                 url:
-                    'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2FBeep%20Beep%20-%20UFO.svg?alt=media&token=a040e797-0090-4bf9-ad81-7fa8246dc152',
+                    'https://res.cloudinary.com/bechdeapp/image/upload/v1674460680/illustrations/Beep_Beep_-_UFO_oez7zx.svg',
                 fit: BoxFit.contain,
                 semanticsLabel: 'Error picture',
               ),
@@ -40,12 +41,12 @@ class ErrorScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 'Uh-oh! Looks like you are lost in space!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: blackColor,

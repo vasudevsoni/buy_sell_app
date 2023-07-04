@@ -1,18 +1,15 @@
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:buy_sell_app/auth/services/social_auth_service.dart';
-import 'package:buy_sell_app/screens/web_view/privacy_policy_screen.dart';
-import 'package:buy_sell_app/screens/web_view/terms_of_service.dart';
-import 'package:buy_sell_app/widgets/loading_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/svg_picture.dart';
 import '/widgets/custom_button_without_icon.dart';
@@ -20,6 +17,8 @@ import '../services/google_auth_service.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import 'email_login_screen.dart';
+import '/widgets/loading_button.dart';
+import '/auth/services/social_auth_service.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
@@ -29,16 +28,16 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isLoading = false;
   int currentImage = 0;
 
   @override
   void initState() {
-    getConnectivity();
     super.initState();
+    getConnectivity();
   }
 
   showNetworkError() {
@@ -72,10 +71,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -102,13 +101,13 @@ class _LandingScreenState extends State<LandingScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -146,16 +145,14 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  getConnectivity() {
+  Future<void> getConnectivity() async {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
     });
   }
@@ -170,24 +167,27 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     List images = [
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fexchange.svg?alt=media&token=4634b16e-2db4-4823-b4c0-627ff396b057',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fshow.svg?alt=media&token=bfebb25c-e57b-459c-ae9d-97027e2ca71d',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fchat.svg?alt=media&token=5b60cd1b-d170-4934-a84a-0421179a8013',
-      'https://firebasestorage.googleapis.com/v0/b/bechde-buy-sell.appspot.com/o/illustrations%2Fphone.svg?alt=media&token=b10cbbcd-56ea-4f8c-8708-748a3abefad3',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459105/illustrations/exchange_km57ui.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/show_bzn7gm.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/chat_euv8er.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459124/illustrations/phone_wvkhvm.svg',
+      'https://res.cloudinary.com/bechdeapp/image/upload/v1674459123/illustrations/earth_v6cwzo.svg',
     ];
 
     List texts = [
-      'Turn old stuff into money',
-      'Discover quality products',
-      'Chat instantly',
+      'Turn old stuff into cash',
+      'Find high-quality items',
+      'Instant messaging',
       'Sell without limits',
+      'Save the planet'
     ];
 
     List subtitles = [
-      'Make money by selling your old products',
+      'Make money by selling gently used products',
       'Each listing is thoroughly reviewed by us',
-      'Chat with buyers and sellers without hassle',
+      'Chat freely with buyers and sellers',
       'Listing a product is completely free, now and always',
+      'Help the planet by reducing waste and supporting sustainable living'
     ];
 
     return Scaffold(
@@ -220,13 +220,11 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w800,
-                            fontSize: 22,
+                            fontSize: 24,
+                            color: blueColor,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
                         ),
                         Text(
                           subtitles[index],
@@ -234,9 +232,9 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: lightBlackColor,
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w600,
+                            color: blackColor,
                             fontSize: 15,
                           ),
                         ),
@@ -253,7 +251,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     pauseAutoPlayOnManualNavigate: true,
                     pauseAutoPlayOnTouch: true,
                     autoPlayInterval: const Duration(seconds: 4),
-                    scrollPhysics: const ClampingScrollPhysics(),
+                    scrollPhysics: const BouncingScrollPhysics(),
                     reverse: false,
                     scrollDirection: Axis.horizontal,
                     onPageChanged: (index, reason) {
@@ -278,7 +276,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: currentImage == index ? blueColor : greyColor,
+                    color: currentImage == index ? blackColor : greyColor,
                   ),
                 );
               }).toList(),
@@ -289,24 +287,24 @@ class _LandingScreenState extends State<LandingScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Row(
-                children: const [
-                  Expanded(
+                children: [
+                  const Expanded(
                     child: Divider(
                       color: lightBlackColor,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "Continue with",
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w500,
                         color: lightBlackColor,
                         fontSize: 12,
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Divider(
                       color: lightBlackColor,
                     ),
@@ -314,103 +312,132 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               ),
             ),
-            isLoading
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: LoadingButton(
-                      bgColor: googleColor,
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomButton(
-                      text: 'Google',
-                      icon: Ionicons.logo_google,
-                      bgColor: googleColor,
-                      borderColor: googleColor,
-                      textIconColor: whiteColor,
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        User? user =
-                            await GoogleAuthentication.signinWithGoogle();
-                        if (user == null) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                          return;
-                        }
-                        //login successful, add user to db and proceed
-                        final SocialAuthService auth = SocialAuthService();
-                        auth.addUser(user);
-                        setState(() {
-                          isLoading = false;
-                        });
-                      },
-                    ),
-                  ),
-            const SizedBox(
-              height: 10,
-            ),
-            isLoading
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: LoadingButton(
-                      bgColor: blackColor,
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: CustomButton(
-                      text: 'Email',
-                      icon: Ionicons.mail,
-                      bgColor: blackColor,
-                      borderColor: blackColor,
-                      textIconColor: whiteColor,
-                      onPressed: () => Get.to(
-                        () => const EmailLoginScreen(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                isLoading
+                    ? const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 15, right: 5),
+                          child: LoadingButton(
+                            bgColor: blueColor,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 5),
+                          child: CustomButton(
+                            text: 'Google',
+                            icon: Ionicons.logo_google,
+                            bgColor: blueColor,
+                            borderColor: blueColor,
+                            textIconColor: whiteColor,
+                            onPressed: () async {
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                              }
+                              User? user =
+                                  await GoogleAuthentication.signInWithGoogle();
+                              //login successful, add user to db and proceed
+                              if (user != null) {
+                                final SocialAuthService auth =
+                                    SocialAuthService();
+                                await auth.addUser(user);
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                                return;
+                              } else {
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                                return;
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                isLoading
+                    ? const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 15, left: 5),
+                          child: LoadingButton(
+                            bgColor: whiteColor,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15, left: 5),
+                          child: CustomButton(
+                            text: 'Email',
+                            icon: Ionicons.mail_outline,
+                            bgColor: whiteColor,
+                            borderColor: blackColor,
+                            textIconColor: blackColor,
+                            onPressed: () => Get.to(
+                              () => const EmailLoginScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
             const SizedBox(
-              height: 10,
+              height: 40,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: Text.rich(
                 TextSpan(
                   children: [
-                    const TextSpan(text: 'By signing up, you agree to our '),
+                    const TextSpan(
+                        text: 'By signing up, you agree to BechDe\'s '),
                     TextSpan(
                       text: 'Terms of Service',
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.to(
-                              () => const TermsOfService(),
-                              transition: Transition.downToUp,
+                        ..onTap = () => launchUrl(
+                              Uri.parse(
+                                'https://www.bechdeapp.com/terms',
+                              ),
+                              mode: LaunchMode.externalApplication,
                             ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: blackColor,
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
-                    const TextSpan(text: ' and'),
+                    const TextSpan(text: ' and '),
                     TextSpan(
-                      text: ' Privacy Policy.',
+                      text: 'Privacy Policy',
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.to(
-                              () => const PrivacyPolicy(),
-                              transition: Transition.downToUp,
+                        ..onTap = () => launchUrl(
+                              Uri.parse(
+                                  'https://www.bechdeapp.com/privacy-policy'),
+                              mode: LaunchMode.externalApplication,
                             ),
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: blueColor,
+                        color: blackColor,
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.dotted,
                       ),
                     ),
+                    const TextSpan(text: '.'),
                   ],
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     fontSize: 11,
                     fontWeight: FontWeight.w400,
                     color: blackColor,

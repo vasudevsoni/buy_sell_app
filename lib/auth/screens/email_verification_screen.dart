@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '/screens/main_screen.dart';
@@ -23,27 +24,18 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   void initState() {
-    isEmailVerified = user!.emailVerified;
-    if (!isEmailVerified) {
-      sendVerificationEmail();
-      timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-        checkEmailVerified();
-      });
-      return;
-    }
-    showSnackBar(
-      content: 'Email has been verified',
-      color: redColor,
-    );
     super.initState();
+    isEmailVerified = user!.emailVerified;
   }
 
-  Future checkEmailVerified() async {
+  Future<void> checkEmailVerified() async {
     await user!.reload();
     user = FirebaseAuth.instance.currentUser;
-    setState(() {
-      isEmailVerified = user!.emailVerified;
-    });
+    if (mounted) {
+      setState(() {
+        isEmailVerified = user!.emailVerified;
+      });
+    }
     if (isEmailVerified) {
       timer!.cancel();
       showSnackBar(
@@ -56,23 +48,43 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   Future sendVerificationEmail() async {
     try {
-      user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       await user!.sendEmailVerification();
       showSnackBar(
         content: 'Verification email sent successfully',
         color: blueColor,
       );
-    } on FirebaseAuthException catch (_) {
+      startEmailVerificationTimer();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showSnackBar(
+          content: 'User not found. Please try again',
+          color: redColor,
+        );
+      } else {
+        showSnackBar(
+          content: 'Unable to send verification email. Please try again',
+          color: redColor,
+        );
+      }
+    } on Exception catch (_) {
       showSnackBar(
-        content: 'Unable to send verification email. Please try again',
+        content: 'Something went wrong. Please try again',
         color: redColor,
       );
     }
   }
 
+  // Start a timer to periodically check if the user's email has been verified
+  void startEmailVerificationTimer() {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      checkEmailVerified();
+    });
+  }
+
   @override
   void dispose() {
-    timer!.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -86,9 +98,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Verify your email',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -97,7 +109,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               padding: const EdgeInsets.only(left: 15, top: 15),
@@ -107,11 +119,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 size: 60,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(15.0),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Click on the link you received on your registered email address to verify your email.',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w400,
                   color: lightBlackColor,
                   fontSize: 14,
@@ -130,9 +142,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   horizontal: 15,
                   vertical: 10,
                 ),
-                child: const Text(
+                child: Text(
                   'Note - Check your spam folder if you cannot find the verification email.',
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     color: blackColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -141,10 +153,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
             ),
             const Spacer(),
-            const Center(
+            Center(
               child: Text(
                 'Did not receive the mail yet?',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 15,
@@ -159,7 +171,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               child: TimerButton(
                 label: "Resend Code",
                 timeOutInSeconds: 30,
-                onPressed: sendVerificationEmail,
+                onPressed: () => sendVerificationEmail(),
                 disabledColor: greyColor,
                 color: blackColor,
               ),

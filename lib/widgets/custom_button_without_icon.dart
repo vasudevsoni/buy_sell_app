@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonWithoutIcon extends StatelessWidget {
   final String text;
@@ -22,37 +23,34 @@ class CustomButtonWithoutIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.vibrate();
-        onPressed();
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 45,
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(
             color: borderColor,
-            strokeAlign: StrokeAlign.center,
+            strokeAlign: StrokeAlign.inside,
             width: 1.2,
           ),
-          color: bgColor,
         ),
-        child: Center(
-          child: AutoSizeText(
-            text,
-            maxLines: 2,
-            softWrap: true,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 14.5,
-              color: textIconColor,
-            ),
-          ),
+      ),
+      child: AutoSizeText(
+        text,
+        maxLines: 2,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.interTight(
+          color: textIconColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

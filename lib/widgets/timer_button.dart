@@ -2,9 +2,10 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const int aSec = 1;
-const String _secPostFix = 's';
+const int secondsPerUpdate = 1;
+const String defaultSecondPostfix = 's';
 
 class TimerButton extends StatefulWidget {
   final String label;
@@ -20,7 +21,7 @@ class TimerButton extends StatefulWidget {
     required this.label,
     required this.onPressed,
     required this.timeOutInSeconds,
-    this.secPostFix = _secPostFix,
+    this.secPostFix = defaultSecondPostfix,
     required this.color,
     this.resetTimerOnPressed = true,
     required this.disabledColor,
@@ -40,88 +41,87 @@ class _TimerButtonState extends State<TimerButton> {
   void initState() {
     super.initState();
     timeCounter = widget.timeOutInSeconds;
-    _timerUpdate();
+    _startTimer();
   }
 
-  _timerUpdate() {
-    Timer(const Duration(seconds: aSec), () async {
-      if (mounted) {
-        setState(() {
-          timeCounter--;
-        });
-      }
+  _startTimer() {
+    Timer(const Duration(seconds: secondsPerUpdate), () async {
+      if (!mounted) return;
+      setState(() {
+        timeCounter--;
+      });
       if (timeCounter != 0) {
-        _timerUpdate();
+        _startTimer();
         return;
       }
       timeUpFlag = true;
     });
   }
 
-  _onPressed() {
-    if (timeUpFlag) {
-      setState(() {
-        timeUpFlag = false;
-      });
-      timeCounter = widget.timeOutInSeconds;
-      widget.onPressed();
-      if (widget.resetTimerOnPressed) {
-        _timerUpdate();
-      }
+  void _onPressed() {
+    if (!timeUpFlag) return;
+    setState(() {
+      timeUpFlag = false;
+    });
+    timeCounter = widget.timeOutInSeconds;
+    widget.onPressed();
+    if (widget.resetTimerOnPressed) {
+      _startTimer();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return timeUpFlag
-        ? GestureDetector(
-            onTap: _onPressed,
-            child: Container(
-              height: 45,
-              width: size.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: widget.color,
+        ? ElevatedButton(
+            onPressed: _onPressed,
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              enableFeedback: true,
+              backgroundColor: widget.color,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              splashFactory: InkRipple.splashFactory,
+              animationDuration: const Duration(milliseconds: 100),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
               ),
-              child: Center(
-                child: AutoSizeText(
-                  widget.label,
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.5,
-                    color: whiteColor,
-                  ),
-                ),
+            ),
+            child: AutoSizeText(
+              widget.label,
+              maxLines: 2,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.interTight(
+                color: whiteColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
           )
-        : GestureDetector(
-            onTap: null,
-            child: Container(
-              height: 45,
-              width: size.width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: widget.disabledColor,
+        : ElevatedButton(
+            onPressed: null,
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              enableFeedback: true,
+              backgroundColor: widget.disabledColor,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              splashFactory: InkRipple.splashFactory,
+              animationDuration: const Duration(milliseconds: 100),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
               ),
-              child: Center(
-                child: AutoSizeText(
-                  'Please wait for $_timerText',
-                  maxLines: 2,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.5,
-                    color: blackColor,
-                  ),
-                ),
+            ),
+            child: AutoSizeText(
+              'Please wait for $_timerText',
+              maxLines: 2,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.interTight(
+                color: blackColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
           );

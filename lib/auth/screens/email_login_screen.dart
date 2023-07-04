@@ -1,12 +1,13 @@
-import 'package:buy_sell_app/widgets/loading_button.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/text_field_label.dart';
 import '/utils/utils.dart';
+import '/widgets/custom_button_without_icon.dart';
+import '/widgets/loading_button.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_text_field.dart';
 import '../services/email_auth_service.dart';
@@ -14,7 +15,7 @@ import '/auth/screens/email_register_screen.dart';
 import '/auth/screens/forgot_password_screen.dart';
 
 class EmailLoginScreen extends StatefulWidget {
-  const EmailLoginScreen({super.key});
+  const EmailLoginScreen({Key? key}) : super(key: key);
 
   @override
   State<EmailLoginScreen> createState() => _EmailLoginScreenState();
@@ -28,7 +29,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   bool isObscured = true;
   bool isLoading = false;
 
-  _validateEmail() async {
+  Future<void> _validateEmail() async {
     if (_loginformKey.currentState!.validate() && mounted) {
       setState(() {
         isLoading = true;
@@ -61,9 +62,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Login with your email',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -111,7 +112,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       hint: 'doejohn\$2325',
                       maxLength: 15,
                       textInputAction: TextInputAction.go,
-                      isObscured: isObscured ? true : false,
+                      isObscured: isObscured,
                       isEnabled: isLoading ? false : true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -149,42 +150,18 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
+                  CustomButtonWithoutIcon(
+                    text: 'Forgot password?',
+                    bgColor: whiteColor,
+                    borderColor: blueColor,
+                    textIconColor: blueColor,
                     onPressed: () => Get.to(
                       () => const ForgotPasswordScreen(),
-                    ),
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: blueColor,
-                        fontSize: 15,
-                      ),
                     ),
                   ),
                 ],
               ),
               const Spacer(),
-              TextButton(
-                onPressed: () => Get.off(
-                  () => const EmailRegisterScreen(),
-                ),
-                child: const AutoSizeText(
-                  'Don\'t have an account? Create one',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: blueColor,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
               isLoading
                   ? const LoadingButton(
                       bgColor: blueColor,
@@ -197,6 +174,15 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                       textIconColor: whiteColor,
                       onPressed: () => _validateEmail(),
                     ),
+              CustomButtonWithoutIcon(
+                text: 'Don\'t have an account? Create one',
+                bgColor: whiteColor,
+                borderColor: blueColor,
+                textIconColor: blueColor,
+                onPressed: () => Get.off(
+                  () => const EmailRegisterScreen(),
+                ),
+              ),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/utils/utils.dart';
 
@@ -27,8 +28,8 @@ class CustomListTileWithSubtitle extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
+        style: GoogleFonts.interTight(
+          fontWeight: FontWeight.w600,
           fontSize: 15,
           color: textColor,
         ),
@@ -42,7 +43,7 @@ class CustomListTileWithSubtitle extends StatelessWidget {
       ),
       subtitle: Text(
         subTitle,
-        style: const TextStyle(
+        style: GoogleFonts.interTight(
           fontWeight: FontWeight.w500,
           color: lightBlackColor,
           fontSize: 12,

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../provider/providers.dart';
+import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '/auth/screens/location_screen.dart';
 import '/widgets/custom_list_tile_with_subtitle.dart';
 import '/services/firebase_services.dart';
 import '/auth/screens/landing_screen.dart';
 import '/utils/utils.dart';
+import 'update_profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,13 +29,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final FirebaseServices _services = FirebaseServices();
   final InAppReview inAppReview = InAppReview.instance;
   final User? user = FirebaseAuth.instance.currentUser;
-  String signInMethod = '';
   String address = '';
   String country = '';
 
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
   @override
   void initState() {
-    _services.getCurrentUserData().then((value) {
+    super.initState();
+    _fetchUserData();
+    _initNativeAd();
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
+  }
+
+  void _fetchUserData() async {
+    try {
+      final value = await _services.getCurrentUserData();
       if (value['location'] != null && mounted) {
         setState(() {
           address =
@@ -37,13 +77,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           country = value['location']['country'];
         });
       }
-    });
-    if (mounted) {
-      setState(() {
-        signInMethod = user!.providerData[0].providerId.toString();
-      });
+    } catch (e) {
+      showSnackBar(
+        content: 'Error fetching user details. Please try again',
+        color: redColor,
+      );
     }
-    super.initState();
   }
 
   showLogoutConfirmation() {
@@ -84,10 +123,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -104,9 +143,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Are you sure you want to log out of your account? You will need to log in again to access your account.',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -115,29 +154,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Log Out',
-                  onPressed: () async {
-                    Get.back();
-                    await FirebaseAuth.instance.signOut().then(
-                          (value) => Get.offAll(
-                            () => const LandingScreen(),
-                          ),
-                        );
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Log Out',
+                        onPressed: () async {
+                          Get.back();
+                          await FirebaseAuth.instance.signOut().then(
+                                (value) => Get.offAll(
+                                  () => const LandingScreen(),
+                                ),
+                              );
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -148,8 +195,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: whiteColor,
@@ -158,9 +214,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Settings',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -168,135 +224,151 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Container(
               width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
+              child: Text(
                 'Account',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
-            CustomListTileWithSubtitle(
-              text: 'Location',
-              subTitle: address == '' ? 'No location selected' : address,
-              icon: Ionicons.location,
-              trailingIcon: Ionicons.chevron_forward,
-              onTap: () => Get.to(
-                () => const LocationScreen(
-                  isOpenedFromSellButton: false,
-                ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                border: greyBorder,
+                borderRadius: BorderRadius.circular(10),
               ),
-              isEnabled: true,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  CustomListTileWithSubtitle(
+                    text: 'Edit Profile',
+                    icon: Ionicons.create_outline,
+                    subTitle: 'Edit your name, bio or add social links',
+                    trailingIcon: Ionicons.chevron_forward,
+                    onTap: () => Get.to(
+                      () => const UpdateProfileScreen(),
+                    ),
+                    isEnabled: true,
+                  ),
+                  const Divider(
+                    height: 0,
+                    color: fadedColor,
+                    indent: 15,
+                  ),
+                  CustomListTileWithSubtitle(
+                    text: 'Change Location',
+                    subTitle: address == ''
+                        ? 'No location selected'
+                        : 'Current location - $address',
+                    icon: Ionicons.location_outline,
+                    trailingIcon: Ionicons.chevron_forward,
+                    onTap: () => Get.to(
+                      () => const LocationScreen(
+                        isOpenedFromSellButton: false,
+                      ),
+                    ),
+                    isEnabled: true,
+                  ),
+                  const Divider(
+                    height: 0,
+                    color: fadedColor,
+                    indent: 15,
+                  ),
+                  CustomListTileWithSubtitle(
+                    text: 'Unique User Id',
+                    subTitle: user!.uid,
+                    icon: Ionicons.id_card_outline,
+                    onTap: () {},
+                    isEnabled: false,
+                  ),
+                ],
+              ),
             ),
-            if (signInMethod == 'google.com')
-              CustomListTileWithSubtitle(
-                text: 'Logged in using',
-                subTitle: 'Google',
-                icon: Ionicons.log_in,
-                isEnabled: false,
-                onTap: () {},
-              ),
-            if (signInMethod == 'password')
-              CustomListTileWithSubtitle(
-                text: 'Logged in using',
-                subTitle: 'Email Address',
-                icon: Ionicons.log_in,
-                isEnabled: false,
-                onTap: () {},
-              ),
-            CustomListTileWithSubtitle(
-              text: 'Unique User Id',
-              subTitle: user!.uid,
-              icon: Ionicons.id_card,
-              onTap: () {},
-              isEnabled: false,
-            ),
-            const Divider(
-              height: 0,
-              indent: 15,
-              color: lightBlackColor,
+            const SizedBox(
+              height: 15,
             ),
             Container(
               width: size.width,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: const Text(
+              child: Text(
                 'Actions',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   color: blackColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
-            CustomListTileWithSubtitle(
-              text: 'Leave us a review',
-              subTitle:
-                  'If you love our app, please take a moment to leave a review. It makes a huge difference.',
-              icon: Ionicons.star,
-              textColor: blueColor,
-              trailingIcon: Ionicons.chevron_forward,
-              isEnabled: true,
-              onTap: () {
-                inAppReview.openStoreListing();
-              },
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                border: greyBorder,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  CustomListTileWithSubtitle(
+                    text: 'Participate in our survey',
+                    subTitle: 'Help us improve BechDe by filling this survey',
+                    icon: Ionicons.flash_outline,
+                    textColor: blackColor,
+                    trailingIcon: Ionicons.chevron_forward,
+                    isEnabled: true,
+                    onTap: () => showSurveyPopUp(context),
+                  ),
+                  const Divider(
+                    height: 0,
+                    color: fadedColor,
+                    indent: 15,
+                  ),
+                  CustomListTileWithSubtitle(
+                    text: 'Invite friends to BechDe',
+                    subTitle: 'Invite your friends to buy and sell on BechDe',
+                    icon: Ionicons.people_outline,
+                    trailingIcon: Ionicons.chevron_forward,
+                    isEnabled: true,
+                    onTap: () => Share.share(
+                        'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
+                  ),
+                  const Divider(
+                    height: 0,
+                    color: fadedColor,
+                    indent: 15,
+                  ),
+                  CustomListTileWithSubtitle(
+                    text: 'Log out',
+                    subTitle: 'Log out of your account from this device',
+                    onTap: showLogoutConfirmation,
+                    icon: Ionicons.log_out_outline,
+                    textColor: redColor,
+                    trailingIcon: Ionicons.chevron_forward,
+                    isEnabled: true,
+                  ),
+                ],
+              ),
             ),
-
-            CustomListTileWithSubtitle(
-              text: 'Invite friends to BechDe',
-              subTitle: 'Invite your friends to buy and sell on BechDe',
-              icon: Ionicons.people,
-              trailingIcon: Ionicons.chevron_forward,
-              isEnabled: true,
-              onTap: () {
-                Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app');
-              },
-            ),
-            CustomListTileWithSubtitle(
-              text: 'Log out',
-              subTitle: 'Log out of your account from this device',
-              onTap: showLogoutConfirmation,
-              icon: Ionicons.log_out,
-              textColor: redColor,
-              trailingIcon: Ionicons.chevron_forward,
-              isEnabled: true,
-            ),
-            // const Divider(
-            //   height: 0,
-            //   indent: 15,
-            //   color: lightBlackColor,
-            // ),
-            // Container(
-            //   width: size.width,
-            //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            //   child: const Text(
-            //     'Danger Zone',
-            //     style: TextStyle(
-            //       color: blackColor,
-            //       fontSize: 18,
-            //       fontWeight: FontWeight.w700,
-            //     ),
-            //   ),
-            // ),
-            // CustomListTileWithSubtitle(
-            //   text: 'Delete account',
-            //   subTitle: 'This will delete all your data',
-            //   onTap: () {},
-            //   textColor: redColor,
-            //   icon: FontAwesomeIcons.trash,
-            //   trailingIcon: Ionicons.chevron_forward,
-            //   isEnabled: true,
-            // ),
           ],
         ),
       ),
+      bottomNavigationBar: mainProv.adsRemoved
+          ? null
+          : SmallNativeAd(
+              nativeAd: _nativeAd,
+              isAdLoaded: _isAdLoaded,
+            ),
     );
   }
 }

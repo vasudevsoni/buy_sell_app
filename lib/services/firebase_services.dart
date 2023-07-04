@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '/utils/utils.dart';
@@ -39,7 +42,7 @@ class FirebaseServices {
     return doc;
   }
 
-  updateUserDetails(
+  Future<void> updateUserDetails(
     id,
     Map<String, dynamic> data,
   ) async {
@@ -53,7 +56,7 @@ class FirebaseServices {
     }
   }
 
-  createChatRoomInFirebase({chatData}) async {
+  Future<void> createChatRoomInFirebase({chatData}) async {
     try {
       await chats.doc(chatData['chatRoomId']).set(chatData);
     } on FirebaseException {
@@ -64,7 +67,9 @@ class FirebaseServices {
     }
   }
 
-  sendChat({chatRoomId, message}) async {
+  Future<void> sendChat(
+      {required String chatRoomId,
+      required Map<String, dynamic> message}) async {
     try {
       await chats.doc(chatRoomId).collection('messages').add(message);
       await chats.doc(chatRoomId).update({
@@ -80,27 +85,36 @@ class FirebaseServices {
     }
   }
 
-  updateFavorite({isLiked, productId}) async {
+  Future<void> updateFavorite(
+      {required bool isLiked, required String productId}) async {
     try {
-      if (!isLiked) {
-        await listings.doc(productId).update({
-          'favorites': FieldValue.arrayRemove([user!.uid])
-        }).then((value) {
-          showSnackBar(
-            content: 'Removed from favorites',
-            color: redColor,
-          );
-        });
-        return;
-      }
-      await listings.doc(productId).update({
-        'favorites': FieldValue.arrayUnion([user!.uid])
-      }).then((value) {
-        showSnackBar(
-          content: 'Added to favorites',
-          color: blueColor,
-        );
-      });
+      final updateData = isLiked
+          ? {
+              'favorites': FieldValue.arrayUnion([user!.uid])
+            }
+          : {
+              'favorites': FieldValue.arrayRemove([user!.uid])
+            };
+      await listings.doc(productId).update(updateData);
+      // if (!isLiked) {
+      //   await listings.doc(productId).update({
+      //     'favorites': FieldValue.arrayRemove([user!.uid])
+      //   }).then((value) {
+      //     showSnackBar(
+      //       content: 'Removed from favorites',
+      //       color: redColor,
+      //     );
+      //   });
+      //   return;
+      // }
+      // await listings.doc(productId).update({
+      //   'favorites': FieldValue.arrayUnion([user!.uid])
+      // }).then((value) {
+      //   showSnackBar(
+      //     content: 'Added to favorites',
+      //     color: blueColor,
+      //   );
+      // });
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -134,17 +148,17 @@ class FirebaseServices {
   //   }
   // }
 
-  markAsSold({productId}) async {
+  Future<void> markAsSold({productId, required bool isSoldOnBechDe}) async {
     try {
       await listings.doc(productId).update({
-        'isActive': false,
         'isSold': true,
-      }).then((value) {
-        showSnackBar(
-          content: 'The product has been marked as sold',
-          color: blueColor,
-        );
+        'isShowedInConsole': false,
+        'soldOn': isSoldOnBechDe == true ? 'BechDe' : 'Outside of BechDe',
       });
+      showSnackBar(
+        content: 'The product has been marked as sold',
+        color: blueColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -153,16 +167,15 @@ class FirebaseServices {
     }
   }
 
-  promoteListingToTop({listingId}) async {
+  Future<void> promoteListingToTop({listingId}) async {
     try {
       await listings.doc(listingId).update({
         'postedAt': DateTime.now().millisecondsSinceEpoch,
-      }).then((value) {
-        showSnackBar(
-          content: 'Listing succesfully boosted to top',
-          color: blueColor,
-        );
       });
+      showSnackBar(
+        content: 'Listing boosted to top.  Thank you for your purchase.',
+        color: blueColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -171,14 +184,13 @@ class FirebaseServices {
     }
   }
 
-  deleteChat({chatRoomId}) async {
+  Future<void> deleteChat({required String chatRoomId}) async {
     try {
-      await chats.doc(chatRoomId).delete().then((value) {
-        showSnackBar(
-          content: 'Chat deleted successfully',
-          color: redColor,
-        );
-      });
+      await chats.doc(chatRoomId).delete();
+      showSnackBar(
+        content: 'Chat deleted successfully',
+        color: redColor,
+      );
     } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
@@ -187,14 +199,18 @@ class FirebaseServices {
     }
   }
 
-  deleteListingImage({
-    listingId,
+  Future<void> deleteListingImage({
     required String imageUrl,
   }) async {
-    final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+    // final cloudinary = Cloudinary.signedConfig(
+    //   apiKey: CloudinaryServices.apiKey,
+    //   apiSecret: CloudinaryServices.apiSecret,
+    //   cloudName: CloudinaryServices.cloudName,
+    // );
     try {
-      await storageRef.delete();
-    } on FirebaseException {
+      // await cloudinary.destroy('', url: imageUrl);
+      await FirebaseStorage.instance.refFromURL(imageUrl).delete();
+    } catch (e) {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -202,7 +218,7 @@ class FirebaseServices {
     }
   }
 
-  deleteListing({listingId}) async {
+  Future<void> deleteListing({listingId}) async {
     List<String> images = [];
     List<dynamic> chatsToDelete = [];
     try {
@@ -211,12 +227,6 @@ class FirebaseServices {
           images.add(value['images'][i].toString());
         }
       });
-      for (var link in images) {
-        await deleteListingImage(
-          listingId: listingId,
-          imageUrl: link,
-        );
-      }
       await chats
           .where('product.productId', isEqualTo: listingId)
           .get()
@@ -225,16 +235,18 @@ class FirebaseServices {
           chatsToDelete.add(element.id);
         }
       });
+      for (var link in images) {
+        await deleteListingImage(imageUrl: link);
+      }
       for (var chatRoomId in chatsToDelete) {
         await deleteChat(chatRoomId: chatRoomId.toString());
       }
-      await listings.doc(listingId.toString()).delete().then((value) {
-        showSnackBar(
-          content: 'Product has been deleted',
-          color: redColor,
-        );
-      });
-    } on FirebaseAuthException {
+      await listings.doc(listingId.toString()).delete();
+      showSnackBar(
+        content: 'Product has been deleted',
+        color: redColor,
+      );
+    } on FirebaseException {
       showSnackBar(
         content: 'Something has gone wrong. Please try again',
         color: redColor,
@@ -242,11 +254,8 @@ class FirebaseServices {
     }
   }
 
-  submitFeedback({
-    text,
-    model,
-    androidVersion,
-    securityPatch,
+  Future<void> submitFeedback({
+    required String text,
   }) async {
     try {
       final id = uuid.v4();
@@ -255,9 +264,6 @@ class FirebaseServices {
         'userId': user!.uid,
         'text': text,
         'postedAt': DateTime.now().toLocal().toString(),
-        'model': model,
-        'androidVersion': androidVersion,
-        'securityPatch': securityPatch,
       });
       showSnackBar(
         content: 'Feedback submitted. Thank you so much for your effort',
@@ -271,15 +277,25 @@ class FirebaseServices {
     }
   }
 
-  reportAProblem({
-    text,
-    model,
-    androidVersion,
-    securityPatch,
+  Future<void> reportAProblem({
+    required String text,
     screenshot,
   }) async {
     final id = uuid.v4();
     try {
+      // final cloudinary = Cloudinary.signedConfig(
+      //   apiKey: CloudinaryServices.apiKey,
+      //   apiSecret: CloudinaryServices.apiSecret,
+      //   cloudName: CloudinaryServices.cloudName,
+      // );
+      // final response = await cloudinary.upload(
+      //   file: screenshot.path,
+      //   fileBytes: screenshot.readAsBytesSync(),
+      //   resourceType: CloudinaryResourceType.image,
+      //   folder: 'reportImages/${user!.uid}',
+      //   fileName: id,
+      // );
+      // final String? downloadUrl = response.secureUrl;
       final Reference storageReference =
           FirebaseStorage.instance.ref().child('reportImages/${user!.uid}/$id');
       final UploadTask uploadTask = storageReference.putFile(screenshot);
@@ -290,9 +306,6 @@ class FirebaseServices {
         'text': text,
         'screenshot': downloadUrl,
         'postedAt': DateTime.now().toLocal().toString(),
-        'model': model,
-        'androidVersion': androidVersion,
-        'securityPatch': securityPatch,
         'isResolved': false,
       });
       showSnackBar(
@@ -307,7 +320,8 @@ class FirebaseServices {
     }
   }
 
-  reportItem({listingId, message}) async {
+  Future<void> reportItem(
+      {required String listingId, required String message}) async {
     final id = uuid.v4();
     try {
       await reports.doc(id).set({
@@ -330,7 +344,8 @@ class FirebaseServices {
     }
   }
 
-  reportUser({userId, message}) async {
+  Future<void> reportUser(
+      {required String userId, required String message}) async {
     final id = uuid.v4();
     try {
       await reports.doc(id).set({
@@ -351,6 +366,91 @@ class FirebaseServices {
         color: redColor,
       );
     }
+  }
+
+  Future<void> reportChat({required List ids}) async {
+    final id = uuid.v4();
+    try {
+      await reports.doc(id).set({
+        'type': 'chatReport',
+        'reporterId': user!.uid,
+        'userId': ids[0] == user!.uid ? ids[1] : ids[0],
+        'postedAt': DateTime.now().toLocal().toString(),
+        'isResolved': false,
+      });
+      showSnackBar(
+        content: 'Chat reported. We will look into it as soon as possible',
+        color: blueColor,
+      );
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  Future<void> rateUser({required int stars, required String userId}) async {
+    try {
+      await users.doc(userId).update({
+        'rating': FieldValue.increment(stars),
+        'ratedBy': FieldValue.arrayUnion([user!.uid]),
+      });
+      Get.back();
+      showSnackBar(
+        content: 'You have rated this user with $stars stars',
+        color: blueColor,
+      );
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
+  // Future<void> activateListings() async {
+  //   try {
+  //     var querySnapshots =
+  //         await listings.where('isShowedInConsole', isEqualTo: true).get();
+  //     for (var doc in querySnapshots.docs) {
+  //       await doc.reference.update({
+  //         'isShowedInConsole': false,
+  //         'isActive': true,
+  //       });
+  //     }
+  //     showSnackBar(
+  //       content: 'updated',
+  //       color: blueColor,
+  //     );
+  //   } on FirebaseException {
+  //     showSnackBar(
+  //       content: 'Something has gone wrong. Please try again',
+  //       color: redColor,
+  //     );
+  //   }
+  // }
+
+  Future<File> compressImage(File file) async {
+    // Define quality constants
+    const int lowQuality = 15;
+    const int mediumQuality = 40;
+    const int highQuality = 65;
+
+    // Determine the quality based on the file size
+    int fileSize = file.lengthSync();
+    int quality = fileSize <= 500000
+        ? highQuality
+        : fileSize > 500000 && fileSize <= 1500000
+            ? mediumQuality
+            : lowQuality;
+
+    // Compress the image using FlutterNativeImage
+    var result =
+        await FlutterNativeImage.compressImage(file.path, quality: quality);
+
+    // Return the compressed file
+    return result;
   }
 
   // Future<String> createDynamicLink() async {

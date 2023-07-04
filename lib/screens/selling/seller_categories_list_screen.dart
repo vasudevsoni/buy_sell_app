@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../widgets/custom_loading_indicator.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_list_tile.dart';
@@ -23,9 +24,9 @@ class SellerCategoriesListScreen extends StatelessWidget {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Select a category',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -34,13 +35,13 @@ class SellerCategoriesListScreen extends StatelessWidget {
       ),
       body: SizedBox(
         height: size.height,
-        child: FutureBuilder<QuerySnapshot>(
-          future: service.categories
+        child: StreamBuilder<QuerySnapshot>(
+          stream: service.categories
               .orderBy(
                 'sortId',
                 descending: false,
               )
-              .get(),
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -52,27 +53,24 @@ class SellerCategoriesListScreen extends StatelessWidget {
               return const Padding(
                 padding: EdgeInsets.all(15.0),
                 child: Center(
-                  child: SpinKitFadingCircle(
-                    color: lightBlackColor,
-                    size: 30,
-                    duration: Duration(milliseconds: 1000),
-                  ),
+                  child: CustomLoadingIndicator(),
                 ),
               );
             }
+            final docs = snapshot.data!.docs;
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
                 childAspectRatio: 1.3 / 1,
               ),
               scrollDirection: Axis.vertical,
-              physics: const ClampingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: snapshot.data!.docs.length,
               padding: const EdgeInsets.all(15),
               itemBuilder: (context, index) {
-                final doc = snapshot.data!.docs[index];
+                final doc = docs[index];
                 return CustomListTile(
                   text: doc['catName'],
                   url: doc['image'],

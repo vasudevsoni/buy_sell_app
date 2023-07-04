@@ -9,27 +9,43 @@ class EmailAuthService {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
+  static const String weakPasswordError =
+      'Password is weak. Please try a combination of numbers, letters and special characters';
+  static const String emailAlreadyInUseError =
+      'An account with this email already exists. Please log in';
+  static const String accountNotExistError =
+      'Account does not exist. Please create one';
+  static const String incorrectEmailOrPasswordError =
+      'Email or password is incorrect. Please try again';
+  static const String somethingWentWrongError =
+      'Something has gone wrong. Please try again';
+
   Future<void> loginUser({
     context,
-    email,
-    password,
+    required String email,
+    required String password,
   }) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        Get.offAll(() => const MainScreen(selectedIndex: 0));
-      });
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Get.offAll(() => const MainScreen(selectedIndex: 0));
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackBar(
-          content: 'Account does not exist. Please create one',
+          content: accountNotExistError,
           color: redColor,
         );
       }
       if (e.code == 'wrong-password') {
         showSnackBar(
-          content: 'Email or password is incorrect. Please try again',
+          content: incorrectEmailOrPasswordError,
+          color: redColor,
+        );
+      } else {
+        showSnackBar(
+          content: somethingWentWrongError,
           color: redColor,
         );
       }
@@ -38,10 +54,9 @@ class EmailAuthService {
 
   Future<void> registerUser({
     context,
-    name,
-    email,
-    password,
-    isLog,
+    required String name,
+    required String email,
+    required String password,
   }) async {
     try {
       UserCredential userCredential =
@@ -57,28 +72,34 @@ class EmailAuthService {
         'name': name,
         'bio': null,
         'location': null,
+        'rating': 0,
+        'ratedBy': {''},
         'dateJoined': DateTime.now().millisecondsSinceEpoch,
         'profileImage': null,
         'instagramLink': null,
         'facebookLink': null,
         'websiteLink': null,
+        'isDisabled': false,
         // 'followers': [],
         // 'following': [],
-      }).then((value) async {
-        //send to main screen
-        Get.offAll(() => const MainScreen(selectedIndex: 0));
       });
+      //send to main screen
+      Get.offAll(() => const MainScreen(selectedIndex: 0));
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
         showSnackBar(
-          content:
-              'Password is weak. Please try a combination of numbers, letters and special characters',
+          content: weakPasswordError,
           color: redColor,
         );
       }
       if (e.code == 'email-already-in-use') {
         showSnackBar(
-          content: 'An account with this email already exists. Please log in',
+          content: emailAlreadyInUseError,
+          color: redColor,
+        );
+      } else {
+        showSnackBar(
+          content: somethingWentWrongError,
           color: redColor,
         );
       }

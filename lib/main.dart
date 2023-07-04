@@ -1,20 +1,20 @@
-import 'package:buy_sell_app/utils/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import 'provider/location_provider.dart';
-import 'provider/main_provider.dart';
-import 'provider/seller_form_provider.dart';
 import 'screens/loading_screen.dart';
+import 'provider/providers.dart';
+import 'utils/utils.dart';
 import 'error.dart';
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'high_importance_channel',
   'High Importance Notifications',
   description: 'This channel is used for high importance notifications',
@@ -26,31 +26,46 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 // @pragma('vm:entry-point')
-// Future<void> _firebaseMessagingBackgroundHandler(_) async {
-//   await Firebase.initializeApp();
-// }
+// Future<void> _firebaseMessagingBackgroundHandler(_) async {}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase App
   await Firebase.initializeApp();
+
+  // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Initialize Google Mobile Ads
+  await MobileAds.instance.initialize();
+
+  // Set preferred device orientation
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Initialize Flutter Local Notifications Plugin
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+
+  // Set foreground notification presentation options
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MainProvider(),
+          create: (_) => AppNavigationProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => SellerFormProvider(),
@@ -62,10 +77,6 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
 }
 
 class MyApp extends StatefulWidget {
@@ -78,6 +89,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    super.initState();
+    registerMessaging();
+  }
+
+  void registerMessaging() async {
+    await compute(_registerMessaging, null);
+  }
+
+  static Future<void> _registerMessaging(void _) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -94,13 +114,13 @@ class _MyAppState extends State<MyApp> {
               playSound: true,
               importance: Importance.max,
               priority: Priority.high,
+              color: greenColor,
               icon: '@mipmap/ic_launcher',
             ),
           ),
         );
       }
     });
-    super.initState();
   }
 
   @override
@@ -109,7 +129,7 @@ class _MyAppState extends State<MyApp> {
       title: 'BechDe',
       color: blueColor,
       themeMode: ThemeMode.light,
-      theme: ThemeData(fontFamily: 'SFProDisplay'),
+      theme: ThemeData(fontFamily: 'Rubik'),
       debugShowCheckedModeBanner: false,
       home: const LoadingScreen(),
       onUnknownRoute: (RouteSettings settings) {

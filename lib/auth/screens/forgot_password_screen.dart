@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/loading_button.dart';
@@ -22,21 +23,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
   bool isLoading = false;
 
-  _validateEmail() async {
+  Future<void> _validateEmail() async {
     if (_forgotformKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
       try {
         await FirebaseAuth.instance
-            .sendPasswordResetEmail(email: emailController.text)
-            .then((value) {
-          showSnackBar(
-            content: 'Link to reset password sent on your email',
-            color: redColor,
-          );
-          Get.back();
-        });
+            .sendPasswordResetEmail(email: emailController.text);
+        showSnackBar(
+          content: 'Link to reset password sent on your email',
+          color: redColor,
+        );
+        Get.back();
       } on FirebaseAuthException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
@@ -64,9 +63,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Forgot password',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -78,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const TextFieldLabel(labelText: 'Email Address'),
               CustomTextField(
@@ -103,12 +102,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 'We\'ll send you a link to reset your password on this email',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w400,
                   color: lightBlackColor,
-                  fontSize: 14,
+                  fontSize: 13,
                 ),
               ),
               const Spacer(),
@@ -122,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       bgColor: blueColor,
                       borderColor: blueColor,
                       textIconColor: whiteColor,
-                      onPressed: _validateEmail,
+                      onPressed: () => _validateEmail(),
                     ),
             ],
           ),

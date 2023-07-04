@@ -4,14 +4,15 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../congratulations_screen.dart';
-import '/provider/seller_form_provider.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button_without_icon.dart';
 import '/widgets/custom_text_field.dart';
@@ -43,41 +44,39 @@ class _AdPostScreenState extends State<AdPostScreen> {
   final FirebaseServices _services = FirebaseServices();
   double latitude = 0;
   double longitude = 0;
-  String street = '';
   String area = '';
   String city = '';
   String state = '';
   String country = '';
   bool isLoading = false;
 
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
-  getUserLocation() async {
-    await _services.getCurrentUserData().then((value) async {
-      if (mounted) {
-        setState(() {
-          locationController.text =
-              '${value['location']['street']}, ${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}, ${value['location']['country']}';
-          street = value['location']['street'];
-          area = value['location']['area'];
-          city = value['location']['city'];
-          state = value['location']['state'];
-          country = value['location']['country'];
-          latitude = value['location']['latitude'];
-          longitude = value['location']['longitude'];
-        });
-      }
-    });
+  Future<void> getUserLocation() async {
+    final userData = await _services.getCurrentUserData();
+    final locationData = userData['location'];
+    if (mounted) {
+      setState(() {
+        locationController.text =
+            '${locationData['area']}, ${locationData['city']}, ${locationData['state']}, ${locationData['country']}';
+        area = locationData['area'];
+        city = locationData['city'];
+        state = locationData['state'];
+        country = locationData['country'];
+        latitude = locationData['latitude'];
+        longitude = locationData['longitude'];
+      });
+    }
   }
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     subCatNameController.text = '${widget.catName} > ${widget.subCatName}';
     getUserLocation();
-    super.initState();
   }
 
   showNetworkError() {
@@ -111,10 +110,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -141,13 +140,13 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -185,16 +184,14 @@ class _AdPostScreenState extends State<AdPostScreen> {
     );
   }
 
-  getConnectivity() {
+  Future<void> getConnectivity() async {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
     });
   }
@@ -217,20 +214,17 @@ class _AdPostScreenState extends State<AdPostScreen> {
 
     publishProductToFirebase(SellerFormProvider provider) async {
       try {
-        await _services.listings
-            .doc()
-            .set(provider.dataToFirestore)
-            .then((value) {
-          Get.off(
-            () => const CongratulationsScreen(),
-          );
-          provider.clearDataAfterSubmitListing();
-          if (mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
-        });
+        await _services.listings.doc().set(provider.dataToFirestore);
+        Get.off(
+          () => const CongratulationsScreen(),
+        );
+        provider.clearDataAfterSubmitListing();
+
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       } on FirebaseException {
         showSnackBar(
           content: 'Something has gone wrong. Please try again',
@@ -297,10 +291,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to post?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -328,26 +322,22 @@ class _AdPostScreenState extends State<AdPostScreen> {
                               children: [
                                 Stack(
                                   children: [
-                                    Opacity(
-                                      opacity: 0.7,
-                                      child: SizedBox(
-                                        width: size.width * 0.2,
-                                        height: size.width * 0.2,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: Image.file(
-                                            provider.imagePaths[0],
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return const Icon(
-                                                Ionicons.alert_circle,
-                                                size: 20,
-                                                color: redColor,
-                                              );
-                                            },
-                                          ),
+                                    SizedBox(
+                                      width: size.width * 0.2,
+                                      height: size.width * 0.2,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          provider.imagePaths[0],
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                              Ionicons.alert_circle_outline,
+                                              size: 20,
+                                              color: redColor,
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -361,12 +351,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                           child: Text(
                                             '+${(provider.imagesCount - 1).toString()}',
                                             textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w900,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w800,
                                               fontSize: 30,
                                               color: whiteColor,
                                               shadows: [
-                                                Shadow(
+                                                const Shadow(
                                                   offset: Offset(0, 2),
                                                   blurRadius: 10.0,
                                                   color: lightBlackColor,
@@ -389,7 +379,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                   children: [
                                     Text(
                                       titleController.text,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
                                       ),
@@ -404,7 +394,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                       maxLines: 1,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: GoogleFonts.interTight(
                                         fontWeight: FontWeight.w700,
                                         color: blueColor,
                                         fontSize: 15,
@@ -422,7 +412,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -437,98 +427,107 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Post',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      List<String> urls =
-                          await provider.uploadFiles(provider.imagePaths);
-                      var time = DateTime.now().millisecondsSinceEpoch;
-                      setSearchParams({
-                        required String s,
-                        required int n,
-                        required String catName,
-                        required String subCatName,
-                      }) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < catName.length; i++) {
-                          String catNameTemp = '';
-                          for (int j = i; j < catName.length; j++) {
-                            catNameTemp += catName[j];
-                            if (catNameTemp.length >= 3) {
-                              searchQueries.add(catNameTemp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < subCatName.length; i++) {
-                          String subCatNameTemp = '';
-                          for (int j = i; j < subCatName.length; j++) {
-                            subCatNameTemp += subCatName[j];
-                            if (subCatNameTemp.length >= 3) {
-                              searchQueries.add(subCatNameTemp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.dataToFirestore.addAll({
-                        'catName': widget.catName,
-                        'subCat': widget.subCatName,
-                        'title': titleController.text,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'sellerUid': _services.user!.uid,
-                        'images': urls,
-                        'postedAt': time,
-                        'favorites': [],
-                        'views': [],
-                        'searchQueries': setSearchParams(
-                          s: titleController.text.toLowerCase(),
-                          n: titleController.text.length,
-                          catName: widget.catName.toLowerCase(),
-                          subCatName: widget.subCatName.toLowerCase(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
                         ),
-                        'location': {
-                          'latitude': latitude,
-                          'longitude': longitude,
-                          'street': street,
-                          'area': area,
-                          'city': city,
-                          'state': state,
-                          'country': country,
-                        },
-                        'isSold': false,
-                        'isActive': false,
-                        'isRejected': false,
-                      });
-                      publishProductToFirebase(provider);
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Post',
+                          icon: Ionicons.checkmark_outline,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            List<String?> urls =
+                                await provider.uploadFiles(provider.imagePaths);
+                            if (urls.contains('')) {
+                              showSnackBar(
+                                content:
+                                    'Something has gone wrong. Please try again',
+                                color: redColor,
+                              );
+                              return;
+                            }
+                            var time = DateTime.now().millisecondsSinceEpoch;
+                            List<String> setSearchParams({
+                              required String s,
+                              required int n,
+                              required String catName,
+                              required String subCatName,
+                            }) {
+                              List<String> searchQueries = [];
+                              for (int i = 0; i < n; i++) {
+                                for (int j = i + 2; j < n; j++) {
+                                  searchQueries.add(s.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < catName.length; i++) {
+                                for (int j = i + 2; j < catName.length; j++) {
+                                  searchQueries
+                                      .add(catName.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < subCatName.length; i++) {
+                                for (int j = i + 2;
+                                    j < subCatName.length;
+                                    j++) {
+                                  searchQueries
+                                      .add(subCatName.substring(i, j + 1));
+                                }
+                              }
+                              return searchQueries;
+                            }
+
+                            provider.dataToFirestore.addAll({
+                              'catName': widget.catName,
+                              'subCat': widget.subCatName,
+                              'title': titleController.text,
+                              'description': descriptionController.text,
+                              'price': int.parse(priceController.text),
+                              'sellerUid': _services.user!.uid,
+                              'images': urls,
+                              'postedAt': time,
+                              'favorites': [],
+                              'views': [],
+                              'searchQueries': setSearchParams(
+                                s: titleController.text.toLowerCase(),
+                                n: titleController.text.length,
+                                catName: widget.catName.toLowerCase(),
+                                subCatName: widget.subCatName.toLowerCase(),
+                              ),
+                              'location': {
+                                'latitude': latitude,
+                                'longitude': longitude,
+                                'area': area,
+                                'city': city,
+                                'state': state,
+                                'country': country,
+                              },
+                              'isSold': false,
+                              'isActive': false,
+                              'isRejected': false,
+                              'isShowedInConsole': true,
+                            });
+                            publishProductToFirebase(provider);
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -576,10 +575,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Are you sure?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -595,9 +594,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'All your product details will be removed and you\'ll have to start fresh.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -606,31 +605,39 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Reset All',
-                    onPressed: () {
-                      setState(() {
-                        titleController.text = '';
-                        descriptionController.text = '';
-                        priceController.text = '';
-                        provider.imagePaths.clear();
-                        provider.clearImagesCount();
-                      });
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Reset All',
+                          onPressed: () {
+                            setState(() {
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              priceController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -678,10 +685,10 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -697,9 +704,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -708,31 +715,40 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Leave',
-                    onPressed: () {
-                      setState(() {
-                        titleController.text = '';
-                        descriptionController.text = '';
-                        priceController.text = '';
-                        provider.imagePaths.clear();
-                        provider.clearImagesCount();
-                      });
-                      Get.offAll(() => const MainScreen(selectedIndex: 0));
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Stay Here',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Stay Here',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Leave',
+                          onPressed: () {
+                            setState(() {
+                              titleController.text = '';
+                              descriptionController.text = '';
+                              priceController.text = '';
+                              provider.imagePaths.clear();
+                              provider.clearImagesCount();
+                            });
+                            Get.offAll(
+                                () => const MainScreen(selectedIndex: 0));
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -756,16 +772,16 @@ class _AdPostScreenState extends State<AdPostScreen> {
           iconTheme: const IconThemeData(color: blackColor),
           centerTitle: true,
           leading: IconButton(
-            onPressed: closePageAndGoToHome,
+            onPressed: () => closePageAndGoToHome(),
             enableFeedback: true,
             icon: const Icon(Ionicons.close_circle_outline),
           ),
           actions: [
             TextButton(
               onPressed: isLoading ? null : resetAll,
-              child: const Text(
+              child: Text(
                 'Reset all',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   color: redColor,
                   fontSize: 12,
@@ -773,9 +789,9 @@ class _AdPostScreenState extends State<AdPostScreen> {
               ),
             ),
           ],
-          title: const Text(
+          title: Text(
             'Create your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -784,7 +800,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -792,12 +808,63 @@ class _AdPostScreenState extends State<AdPostScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
-                  child: const Text(
-                    'Step 1 - Product Details',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                  child: Text(
+                    'Step 1 - User Details',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFieldLabel(labelText: 'Location'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomTextField(
+                    controller: locationController,
+                    keyboardType: TextInputType.text,
+                    hint: 'Choose your location to list product',
+                    maxLines: 2,
+                    showCounterText: false,
+                    isEnabled: false,
+                    textInputAction: TextInputAction.go,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Location can be changed from Settings > Change Location',
+                    style: GoogleFonts.interTight(
+                      color: lightBlackColor,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: size.width,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                  color: blackColor,
+                  child: Text(
+                    'Step 2 - Product Details',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -818,7 +885,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -835,7 +902,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     controller: titleController,
                     keyboardType: TextInputType.text,
                     hint: 'Mention key features of your item',
-                    maxLength: 70,
+                    maxLength: 35,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -843,8 +910,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
-                      if (value.length < 10) {
-                        return 'Please enter 10 or more characters';
+                      if (value.length < 5) {
+                        return 'Please enter 5 or more characters';
                       }
                       setState(() {});
                       return null;
@@ -865,7 +932,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your product to increase your chances of getting a good deal.\nInclude details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 1000,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -874,8 +941,8 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -894,7 +961,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -905,7 +972,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -943,7 +1010,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -965,12 +1032,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -982,12 +1049,13 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
-                  child: const Text(
-                    'Step 2 - Product Images',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                  child: Text(
+                    'Step 3 - Product Images',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -999,55 +1067,6 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 ),
                 ImagePickerWidget(
                   isButtonDisabled: isLoading ? true : false,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  color: blackColor,
-                  child: const Text(
-                    'Step 3 - User Location',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Location'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: CustomTextField(
-                    controller: locationController,
-                    keyboardType: TextInputType.text,
-                    hint: 'Choose your location to list product',
-                    maxLines: 2,
-                    showCounterText: false,
-                    isEnabled: false,
-                    textInputAction: TextInputAction.go,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'To change your location go to settings.',
-                    style: TextStyle(
-                      color: lightBlackColor,
-                      fontSize: 13,
-                    ),
-                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -1070,7 +1089,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: validateForm,
+                  onPressed: () => validateForm(),
                   icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,

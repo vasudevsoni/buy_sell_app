@@ -1,6 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -8,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final IconData icon;
   final Color bgColor;
   final Color borderColor;
+  final bool? isFullWidth;
   final bool isDisabled;
   final Color textIconColor;
 
@@ -18,59 +18,47 @@ class CustomButton extends StatelessWidget {
     required this.icon,
     required this.borderColor,
     this.isDisabled = false,
+    this.isFullWidth = false,
     required this.bgColor,
     required this.textIconColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.vibrate();
-        onPressed();
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 45,
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        color: textIconColor,
+      ),
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
+        fixedSize: isFullWidth == true
+            ? Size.fromWidth(MediaQuery.of(context).size.width)
+            : null,
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(
             color: borderColor,
-            strokeAlign: StrokeAlign.center,
+            strokeAlign: StrokeAlign.inside,
             width: 1.2,
           ),
-          color: bgColor,
         ),
-        width: size.width,
-        child: Stack(
-          children: [
-            Center(
-              child: AutoSizeText(
-                text,
-                maxLines: 2,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: textIconColor,
-                  fontSize: 14.5,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              right: 0,
-              child: Icon(
-                icon,
-                color: textIconColor,
-                size: 23,
-              ),
-            ),
-          ],
+      ),
+      label: Text(
+        text,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.interTight(
+          color: textIconColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

@@ -1,19 +1,26 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/screens/categories/categories_list_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
-import '/provider/main_provider.dart';
+import '../auth/screens/email_verification_screen.dart';
+import '../auth/screens/location_screen.dart';
+import '../provider/providers.dart';
+import '../services/firebase_services.dart';
 import '/widgets/custom_button_without_icon.dart';
-import '/provider/location_provider.dart';
 import '/utils/utils.dart';
-import 'my_profile_screen.dart';
-import 'home_screen.dart';
 import 'chats/my_chats_screen.dart';
-import 'my_favorites_screen.dart';
+import 'home_screen.dart';
+import 'my_profile_screen.dart';
+import 'selling/seller_categories_list_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final int selectedIndex;
@@ -24,14 +31,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late StreamSubscription subscription;
+  final FirebaseServices _services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
   @override
   void initState() {
-    getConnectivity();
     super.initState();
+    getConnectivity();
   }
 
   showNetworkError() {
@@ -61,10 +70,10 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Center(
+                Center(
                   child: Text(
                     'Network Connection Lost',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
@@ -91,13 +100,13 @@ class _MainScreenState extends State<MainScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Please check your internet connection',
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -134,18 +143,31 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  getConnectivity() {
+  Future<void> getConnectivity() async {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
     });
+  }
+
+  Future<void> onSellButtonClicked() async {
+    final userData = await _services.getCurrentUserData();
+    if (userData['location'] != null) {
+      Get.to(
+        () => const SellerCategoriesListScreen(),
+      );
+    } else {
+      Get.to(() => const LocationScreen(isOpenedFromSellButton: true));
+      showSnackBar(
+        content: 'Please set your location to sell products',
+        color: redColor,
+      );
+    }
   }
 
   @override
@@ -156,66 +178,115 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final locationProv = Provider.of<LocationProvider>(context);
-    final mainProv = Provider.of<MainProvider>(context);
-    final int selectedIndex = mainProv.currentPageIndex;
+    return Consumer<AppNavigationProvider>(
+      builder: (context, mainProv, child) {
+        final int selectedIndex = mainProv.currentPageIndex;
 
-    final pages = [
-      HomeScreen(
-        locationData: locationProv.locationData,
-      ),
-      const MyChatsScreen(),
-      const MyFavoritesScreen(),
-      const MyProfileScreen(),
-    ];
+        final List<Widget> pages = [
+          const HomeScreen(),
+          const MyChatsScreen(),
+          const CategoriesListScreen(),
+          const MyProfileScreen(),
+        ];
 
-    onItemTapped(int index) {
-      mainProv.switchToPage(index);
-    }
+        const List<IconData> iconsList = [
+          Ionicons.compass_outline,
+          Ionicons.chatbubbles_outline,
+          Ionicons.apps_outline,
+          Ionicons.person_outline,
+        ];
 
-    return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: selectedIndex,
-        selectedItemColor: blackColor,
-        unselectedItemColor: fadedColor,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        iconSize: 27,
-        elevation: 0,
-        backgroundColor: greyColor,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.home_outline),
-            activeIcon: Icon(Ionicons.home),
-            label: '',
+        const List<IconData> selectedIconsList = [
+          Ionicons.compass,
+          Ionicons.chatbubbles,
+          Ionicons.apps,
+          Ionicons.person,
+        ];
+
+        const List<String> titlesList = [
+          'Explore',
+          'Chats',
+          'Categories',
+          'Account',
+        ];
+
+        void onItemTapped(int index) {
+          mainProv.switchToPage(index);
+        }
+
+        void onFloatingActionButtonPressed() {
+          if (!user!.emailVerified &&
+              user!.providerData[0].providerId == 'password') {
+            Get.to(() => const EmailVerificationScreen());
+          } else {
+            onSellButtonClicked();
+          }
+        }
+
+        return Scaffold(
+          backgroundColor: whiteColor,
+          body: IndexedStack(
+            index: selectedIndex,
+            children: pages,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.chatbubbles_outline),
-            activeIcon: Icon(Ionicons.chatbubbles),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Ionicons.heart_outline,
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: blueColor,
+            elevation: 0,
+            tooltip: 'List a product',
+            enableFeedback: true,
+            onPressed: onFloatingActionButtonPressed,
+            child: const Center(
+              child: Icon(
+                Ionicons.add,
+                size: 30,
+              ),
             ),
-            activeIcon: Icon(
-              Ionicons.heart,
-            ),
-            label: '',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.person_circle_outline),
-            activeIcon: Icon(Ionicons.person_circle),
-            label: '',
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+            onTap: onItemTapped,
+            gapLocation: GapLocation.center,
+            borderColor: greyColor,
+            activeIndex: selectedIndex,
+            backgroundColor: whiteColor,
+            elevation: 5,
+            blurEffect: false,
+            height: 55,
+            leftCornerRadius: 10,
+            rightCornerRadius: 10,
+            notchSmoothness: NotchSmoothness.defaultEdge,
+            splashColor: transparentColor,
+            itemCount: pages.length,
+            tabBuilder: (index, isActive) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    selectedIndex == index
+                        ? selectedIconsList[index]
+                        : iconsList[index],
+                    size: 24,
+                    color:
+                        selectedIndex == index ? blackColor : lightBlackColor,
+                  ),
+                  AutoSizeText(
+                    titlesList[index],
+                    maxLines: 1,
+                    style: GoogleFonts.interTight(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color:
+                          selectedIndex == index ? blackColor : lightBlackColor,
+                    ),
+                  )
+                ],
+              );
+            },
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

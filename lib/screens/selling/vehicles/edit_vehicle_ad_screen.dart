@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+// import 'package:getwidget/components/dropdown/gf_dropdown.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
 import '../utils/selling_utils.dart';
-import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -40,26 +41,21 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
   final TextEditingController brandNameController = TextEditingController();
   final TextEditingController modelNameController = TextEditingController();
   final TextEditingController kmDrivenController = TextEditingController();
-  final TextEditingController fuelTypeSearchController =
-      TextEditingController();
-  final TextEditingController yorSearchController = TextEditingController();
-  final TextEditingController colorsSearchController = TextEditingController();
-  final TextEditingController noOfOwnersSearchController =
-      TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
-  String? fuelTypeSelectedValue;
-  String? yorSelectedValue;
-  String? noOfOwnersSelectedValue;
-  String? colorSelectedValue;
+  dynamic fuelTypeSelectedValue;
+  dynamic yorSelectedValue;
+  dynamic noOfOwnersSelectedValue;
+  dynamic colorSelectedValue;
 
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     subCatNameController.text = 'Vehicles > ${widget.productData['subCat']}';
     brandNameController.text = widget.productData['brandName'];
@@ -71,7 +67,6 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     yorSelectedValue = widget.productData['yearOfReg'].toString();
     noOfOwnersSelectedValue = widget.productData['noOfOwners'];
     colorSelectedValue = widget.productData['color'];
-    super.initState();
   }
 
   showNetworkError() {
@@ -105,10 +100,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -135,13 +130,13 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -179,16 +174,14 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     );
   }
 
-  getConnectivity() {
+  Future<void> getConnectivity() async {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
     });
   }
@@ -203,10 +196,6 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
     descriptionController.dispose();
     priceController.dispose();
     kmDrivenController.dispose();
-    fuelTypeSearchController.dispose();
-    yorSearchController.dispose();
-    noOfOwnersSearchController.dispose();
-    colorsSearchController.dispose();
     super.dispose();
   }
 
@@ -302,10 +291,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to update?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -330,7 +319,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                           children: [
                             Text(
                               '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -345,7 +334,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -365,7 +354,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.person,
+                                  Ionicons.person_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -374,7 +363,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 ),
                                 Text(
                                   noOfOwnersSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -397,7 +386,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 ),
                                 Text(
                                   fuelTypeSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -414,7 +403,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.calendar,
+                                  Ionicons.calendar_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -423,7 +412,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                 ),
                                 Text(
                                   yorSelectedValue.toString(),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -440,7 +429,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.speedometer,
+                                  Ionicons.map_outline,
                                   size: 13,
                                   color: blueColor,
                                 ),
@@ -451,7 +440,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                                   '${kmFormat.format(
                                     int.parse(kmDrivenController.text),
                                   )} Kms',
-                                  style: const TextStyle(
+                                  style: GoogleFonts.interTight(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -470,7 +459,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -485,90 +474,92 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      var uid = widget.productData.id;
-                      setSearchParams({
-                        required String s,
-                        required int n,
-                        required String catName,
-                        required String subCatName,
-                      }) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < catName.length; i++) {
-                          String catNameTemp = '';
-                          for (int j = i; j < catName.length; j++) {
-                            catNameTemp += catName[j];
-                            if (catNameTemp.length >= 3) {
-                              searchQueries.add(catNameTemp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < subCatName.length; i++) {
-                          String subCatNameTemp = '';
-                          for (int j = i; j < subCatName.length; j++) {
-                            subCatNameTemp += subCatName[j];
-                            if (subCatNameTemp.length >= 3) {
-                              searchQueries.add(subCatNameTemp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.updatedDataToFirestore.addAll({
-                        'title':
-                            '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
-                        'brandName': brandNameController.text,
-                        'modelName': modelNameController.text,
-                        'fuelType': fuelTypeSelectedValue,
-                        'yearOfReg': int.parse(yorSelectedValue!),
-                        'color': colorSelectedValue,
-                        'kmsDriven': int.parse(kmDrivenController.text),
-                        'noOfOwners': noOfOwnersSelectedValue,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'searchQueries': setSearchParams(
-                          s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
-                          n: brandNameController.text.length +
-                              modelNameController.text.length +
-                              1,
-                          catName: 'vehicles',
-                          subCatName:
-                              widget.productData['subCat'].toLowerCase(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
                         ),
-                        'isActive': false,
-                        'isRejected': false,
-                      });
-                      await updateProductOnFirebase(provider, uid);
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Update',
+                          icon: Ionicons.checkmark_outline,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            var uid = widget.productData.id;
+                            setSearchParams({
+                              required String s,
+                              required int n,
+                              required String catName,
+                              required String subCatName,
+                            }) {
+                              List<String> searchQueries = [];
+                              for (int i = 0; i < n; i++) {
+                                for (int j = i + 2; j < n; j++) {
+                                  searchQueries.add(s.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < catName.length; i++) {
+                                for (int j = i + 2; j < catName.length; j++) {
+                                  searchQueries
+                                      .add(catName.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < subCatName.length; i++) {
+                                for (int j = i + 2;
+                                    j < subCatName.length;
+                                    j++) {
+                                  searchQueries
+                                      .add(subCatName.substring(i, j + 1));
+                                }
+                              }
+                              return searchQueries;
+                            }
+
+                            provider.updatedDataToFirestore.addAll({
+                              'title':
+                                  '$yorSelectedValue ${brandNameController.text} ${modelNameController.text}',
+                              'brandName': brandNameController.text,
+                              'modelName': modelNameController.text,
+                              'fuelType': fuelTypeSelectedValue,
+                              'yearOfReg': int.parse(yorSelectedValue!),
+                              'color': colorSelectedValue,
+                              'kmsDriven': int.parse(kmDrivenController.text),
+                              'noOfOwners': noOfOwnersSelectedValue,
+                              'description': descriptionController.text,
+                              'price': int.parse(priceController.text),
+                              'searchQueries': setSearchParams(
+                                s: '${brandNameController.text.toLowerCase()} ${modelNameController.text.toLowerCase()}',
+                                n: brandNameController.text.length +
+                                    modelNameController.text.length +
+                                    1,
+                                catName: 'vehicles',
+                                subCatName:
+                                    widget.productData['subCat'].toLowerCase(),
+                              ),
+                              'isActive': false,
+                              'isRejected': false,
+                              'isShowedInConsole': true,
+                            });
+                            await updateProductOnFirebase(provider, uid);
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -616,10 +607,10 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -635,9 +626,9 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -646,25 +637,33 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Leave',
-                    onPressed: () {
-                      Get.back();
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Stay Here',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Stay Here',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Leave',
+                          onPressed: () {
+                            Get.back();
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -687,14 +686,14 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           leading: IconButton(
-            onPressed: closePageAndGoToHome,
+            onPressed: () => closePageAndGoToHome(),
             enableFeedback: true,
             icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Edit your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -703,7 +702,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -711,12 +710,13 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
-                  child: const Text(
+                  child: Text(
                     'Step 1 - Vehicle Details',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -737,7 +737,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -754,8 +754,8 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     controller: brandNameController,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    hint: 'Enter the brand name. Ex: Maruti Suzuki, Honda',
-                    maxLength: 30,
+                    hint: 'Ex: Maruti Suzuki, Honda',
+                    maxLength: 20,
                     isEnabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -771,7 +771,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFieldLabel(labelText: 'Model and Variant'),
+                  child: TextFieldLabel(labelText: 'Model/Variant'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -784,7 +784,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     isEnabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter model and variant name';
+                        return 'Please enter model/variant name';
                       }
                       return null;
                     },
@@ -814,13 +814,13 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Enter the Kms driven. Ex: 20000, 150000',
+                      hintText: 'Ex: 20000, 150000',
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 15,
                         vertical: 10,
@@ -852,7 +852,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -874,12 +874,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -896,101 +896,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: const Text(
-                        '--Select--',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
                         color: greyColor,
                       ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
                         borderRadius: BorderRadius.circular(5),
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      items: fuelType
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: fuelTypeSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          fuelTypeSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: fuelTypeSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: fuelTypeSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for fuel type',
-                            hintStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
                           ),
                         ),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.normal,
+                          color: fadedColor,
+                        ),
+                        icon: const Icon(
+                          Ionicons.chevron_down,
+                          size: 15,
+                        ),
+                        items: fuelType
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: fuelTypeSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            fuelTypeSelectedValue = value as String;
+                          });
+                        },
                       ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          fuelTypeSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1004,101 +956,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: const Text(
-                        '--Select--',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
                         color: greyColor,
                       ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
                         borderRadius: BorderRadius.circular(5),
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      items: yor
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: yorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          yorSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: yorSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: yorSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an year',
-                            hintStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
                           ),
                         ),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.normal,
+                          color: fadedColor,
+                        ),
+                        icon: const Icon(
+                          Ionicons.chevron_down,
+                          size: 15,
+                        ),
+                        items: yor
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: yorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            yorSelectedValue = value as String;
+                          });
+                        },
                       ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          yorSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1112,101 +1016,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: const Text(
-                        '--Select--',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
                         color: greyColor,
                       ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
                         borderRadius: BorderRadius.circular(5),
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      items: colors
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: colorSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          colorSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: colorsSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: colorsSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for a color',
-                            hintStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
                           ),
                         ),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.normal,
+                          color: fadedColor,
+                        ),
+                        icon: const Icon(
+                          Ionicons.chevron_down,
+                          size: 15,
+                        ),
+                        items: colors
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: colorSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            colorSelectedValue = value as String;
+                          });
+                        },
                       ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          colorsSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1220,101 +1076,53 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: const Text(
-                        '--Select--',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
                         color: greyColor,
                       ),
-                      buttonDecoration: BoxDecoration(
-                        color: greyColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        isExpanded: true,
                         borderRadius: BorderRadius.circular(5),
-                      ),
-                      icon: const Icon(
-                        Ionicons.chevron_down,
-                        size: 15,
-                      ),
-                      iconOnClick: const Icon(
-                        Ionicons.chevron_up,
-                        size: 15,
-                      ),
-                      buttonPadding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      items: noOfOwners
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: blackColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      value: noOfOwnersSelectedValue,
-                      onChanged: (value) {
-                        setState(() {
-                          noOfOwnersSelectedValue = value as String;
-                        });
-                      },
-                      buttonHeight: 50,
-                      buttonWidth: size.width,
-                      itemHeight: 50,
-                      dropdownMaxHeight: size.width,
-                      searchController: noOfOwnersSearchController,
-                      searchInnerWidget: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          bottom: 4,
-                          right: 8,
-                          left: 8,
-                        ),
-                        child: TextFormField(
-                          controller: noOfOwnersSearchController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Search for an item...',
-                            hintStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                        itemHeight: 50,
+                        hint: Text(
+                          '--Select--',
+                          style: GoogleFonts.interTight(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
                           ),
                         ),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.normal,
+                          color: fadedColor,
+                        ),
+                        icon: const Icon(
+                          Ionicons.chevron_down,
+                          size: 15,
+                        ),
+                        items: noOfOwners
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blackColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        value: noOfOwnersSelectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            noOfOwnersSelectedValue = value as String;
+                          });
+                        },
                       ),
-                      searchMatchFn: (item, searchValue) {
-                        return (item.value
-                            .toString()
-                            .toLowerCase()
-                            .contains(searchValue));
-                      },
-                      onMenuStateChange: (isOpen) {
-                        if (!isOpen) {
-                          noOfOwnersSearchController.clear();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -1323,12 +1131,13 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 ),
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
-                  child: const Text(
+                  child: Text(
                     'Step 2 - Listing Details',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -1349,7 +1158,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 1000,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -1358,8 +1167,8 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -1378,7 +1187,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -1389,7 +1198,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -1427,7 +1236,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -1449,12 +1258,12 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -1482,7 +1291,7 @@ class _EditVehicleAdScreenState extends State<EditVehicleAdScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: validateForm,
+                  onPressed: () => validateForm(),
                   icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,

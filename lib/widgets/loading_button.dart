@@ -1,6 +1,7 @@
-import 'package:buy_sell_app/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:getwidget/getwidget.dart';
+
+import 'custom_loading_indicator.dart';
 
 class LoadingButton extends StatelessWidget {
   final Color bgColor;
@@ -11,20 +12,21 @@ class LoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      curve: Curves.easeIn,
-      duration: const Duration(milliseconds: 1000),
-      height: 45,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(50),
+    return ElevatedButton(
+      onPressed: null,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        enableFeedback: true,
+        backgroundColor: bgColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        splashFactory: InkRipple.splashFactory,
+        animationDuration: const Duration(milliseconds: 100),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
       ),
       child: const Center(
-        child: SpinKitFadingCircle(
-          color: whiteColor,
-          size: 30,
-          duration: Duration(milliseconds: 1000),
-        ),
+        child: CustomLoadingIndicator(),
       ),
     );
   }

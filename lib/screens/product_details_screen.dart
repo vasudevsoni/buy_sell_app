@@ -1,43 +1,48 @@
-import 'package:buy_sell_app/promotion/promote_listing_screen.dart';
+import 'package:buy_sell_app/screens/profile_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import '../promotion/promote_listing_screen.dart';
+import '../provider/providers.dart';
+import '../services/admob_services.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/text_field_label.dart';
 import 'all_images_display_screen.dart';
-import '/screens/selling/common/edit_ad_screen.dart';
 import '/services/firebase_services.dart';
 import '/widgets/custom_button_without_icon.dart';
 import 'category_products_screen.dart';
 import '/screens/chats/conversation_screen.dart';
 import 'full_decription_screen.dart';
 import 'help_and_support_screen.dart';
-import '/screens/selling/vehicles/edit_vehicle_ad_screen.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import '/widgets/custom_product_card.dart';
-import 'profile_screen.dart';
+import 'selling/common/edit_ad_screen.dart';
+import 'selling/jobs/edit_job_post_screen.dart';
+import 'selling/vehicles/edit_vehicle_ad_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final DocumentSnapshot productData;
-  final DocumentSnapshot sellerData;
   const ProductDetailsScreen({
     super.key,
     required this.productData,
-    required this.sellerData,
   });
 
   @override
@@ -46,15 +51,19 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final FirebaseServices services = FirebaseServices();
+  final User? user = FirebaseAuth.instance.currentUser;
   final TextEditingController reportTextController = TextEditingController();
   final MapController mapController = MapController();
-  int currentImage = 0;
-  List fav = [];
+  late NativeAd? _nativeAd;
+
+  bool _isAdLoaded = false;
   bool isLiked = false;
-  String profileImage = '';
+  int currentImage = 0;
   bool isActive = true;
   bool isSold = false;
   bool isLoading = false;
+  String profileImage = '';
+  String sellerName = '';
   String location = '';
   double latitude = 0;
   double longitude = 0;
@@ -63,85 +72,89 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   void initState() {
-    getDetails();
     super.initState();
+    getDetails();
+    _initNativeAd();
   }
 
-  getDetails() async {
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: mediumNativeAdStyle,
+    );
+    // Preload the ad
+    await _nativeAd!.load();
+  }
+
+  Future<void> getDetails() async {
+    final userData =
+        await services.getUserData(widget.productData['sellerUid']);
+
     if (mounted) {
       setState(() {
         isLoading = true;
-      });
-      setState(() {
-        widget.sellerData['profileImage'] == null
-            ? profileImage = ''
-            : profileImage = widget.sellerData['profileImage'];
+        final locationData = widget.productData['location'];
         location =
-            '${widget.productData['location']['street']}, ${widget.productData['location']['area']}, ${widget.productData['location']['city']}, ${widget.productData['location']['state']}';
-        latitude = widget.productData['location']['latitude'];
-        longitude = widget.productData['location']['longitude'];
+            '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
+        latitude = locationData['latitude'];
+        longitude = locationData['longitude'];
+        profileImage = userData['profileImage'] ?? '';
+        sellerName = userData['name'];
+        isLiked = widget.productData['favorites'].contains(services.user?.uid);
+        isActive = widget.productData['isActive'] ?? false;
+        isSold = widget.productData['isSold'] ?? false;
       });
-      if (widget.productData['isActive'] == false) {
-        setState(() {
-          isActive = false;
-        });
-      } else {
-        setState(() {
-          isActive = true;
-        });
-      }
-      if (widget.productData['isSold'] == false) {
-        setState(() {
-          isSold = false;
-        });
-      } else {
-        setState(() {
-          isSold = true;
-        });
-      }
-      await services.listings.doc(widget.productData.id).get().then((value) {
-        setState(() {
-          fav = value['favorites'];
-        });
-        if (!fav.contains(services.user!.uid)) {
-          setState(() {
-            isLiked = false;
-          });
-          return;
-        }
-        setState(() {
-          isLiked = true;
-        });
+    }
+
+    if (services.user?.uid != widget.productData['sellerUid']) {
+      await services.listings.doc(widget.productData.id).update({
+        'views': FieldValue.arrayUnion([services.user!.uid]),
       });
-      if (services.user!.uid != widget.productData['sellerUid']) {
-        await services.listings.doc(widget.productData.id).update({
-          'views': FieldValue.arrayUnion([services.user!.uid]),
-        });
-      }
+    }
+
+    if (mounted) {
       setState(() {
         isLoading = false;
       });
     }
   }
 
-  createChatRoom() {
-    final Map<String, dynamic> product = {
+  createChatRoom({required bool makeOffer}) async {
+    final product = {
       'productId': widget.productData.id,
       'productImage': widget.productData['images'][0],
-      'price': widget.productData['price'],
+      'price': widget.productData['catName'] == 'Jobs'
+          ? ''
+          : widget.productData['price'],
       'title': widget.productData['title'],
       'seller': widget.productData['sellerUid'],
     };
 
-    final List<String> users = [
-      widget.sellerData['uid'],
+    final users = [
+      widget.productData['sellerUid'],
       services.user!.uid,
     ];
 
-    final String chatRoomId =
-        '${widget.sellerData['uid']}.${services.user!.uid}.${widget.productData.id}';
+    final chatRoomId =
+        '${widget.productData['sellerUid']}.${services.user!.uid}.${widget.productData.id}';
 
-    final Map<String, dynamic> chatData = {
+    final chatData = {
       'users': users,
       'chatRoomId': chatRoomId,
       'read': false,
@@ -149,30 +162,44 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       'lastChat': null,
       'lastChatTime': DateTime.now().microsecondsSinceEpoch,
     };
-
-    services.createChatRoomInFirebase(chatData: chatData);
-    Get.to(
-      () => ConversationScreen(
-        chatRoomId: chatRoomId,
-        prodId: widget.productData.id,
-        sellerId: widget.productData['sellerUid'],
-      ),
-    );
+    await services.createChatRoomInFirebase(chatData: chatData);
+    makeOffer
+        ? Get.to(
+            () => ConversationScreen(
+              chatRoomId: chatRoomId,
+              prodId: widget.productData.id,
+              sellerId: widget.productData['sellerUid'],
+              buyerUid: user!.uid,
+              users: users,
+              makeOffer: true,
+            ),
+          )
+        : Get.to(
+            () => ConversationScreen(
+              chatRoomId: chatRoomId,
+              prodId: widget.productData.id,
+              sellerId: widget.productData['sellerUid'],
+              buyerUid: user!.uid,
+              users: users,
+              makeOffer: false,
+            ),
+          );
   }
 
   @override
   void dispose() {
+    super.dispose();
     mapController.dispose();
     reportTextController.dispose();
-    super.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
-    final sellerJoinTime = DateTime.fromMillisecondsSinceEpoch(
-      widget.sellerData['dateJoined'],
-    );
     final productCreatedTime = DateTime.fromMillisecondsSinceEpoch(
       widget.productData['postedAt'],
     );
@@ -216,10 +243,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
-                      'Report this product',
-                      style: TextStyle(
+                      'Report this listing',
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -238,7 +265,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     maxLength: 1000,
                     maxLines: 3,
                     hint:
-                        'Explain in detail why you are reporting this product',
+                        'Explain in detail why you are reporting this listing',
                   ),
                   const SizedBox(
                     height: 10,
@@ -249,7 +276,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         TextSpan(
                           text: " go to Help and Support",
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             color: blueColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -260,15 +287,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Get.to(() => const HelpAndSupportScreen());
                             },
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: " section and report from there.",
-                          style: TextStyle(
+                          style: GoogleFonts.interTight(
                             color: lightBlackColor,
                             fontSize: 14,
                           ),
                         ),
                       ],
-                      style: const TextStyle(
+                      style: GoogleFonts.interTight(
                         color: lightBlackColor,
                         fontSize: 14,
                       ),
@@ -277,101 +304,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
-                    icon: Ionicons.arrow_forward,
-                    text: 'Submit',
-                    onPressed: () {
-                      if (reportTextController.text.isEmpty) {
-                        return;
-                      }
-                      services.reportItem(
-                        listingId: widget.productData.id,
-                        message: reportTextController.text,
-                      );
-                      Get.back();
-                      reportTextController.clear();
-                    },
-                    bgColor: redColor,
-                    borderColor: redColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    showOptionsDialog() {
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: transparentColor,
-        builder: (context) {
-          return SafeArea(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                color: whiteColor,
-              ),
-              padding: const EdgeInsets.only(
-                top: 5,
-                left: 15,
-                right: 15,
-                bottom: 15,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 80.0,
-                      height: 5.0,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: fadedColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: CustomButton(
-                      icon: Ionicons.shield_half,
-                      text: 'Report Product',
-                      onPressed: () {
-                        Get.back();
-                        showReportDialog();
-                      },
-                      bgColor: whiteColor,
-                      borderColor: redColor,
-                      textIconColor: redColor,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Cancel',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          icon: Ionicons.arrow_forward,
+                          text: 'Report',
+                          onPressed: () {
+                            if (reportTextController.text.isEmpty) {
+                              return;
+                            }
+                            services.reportItem(
+                              listingId: widget.productData.id,
+                              message: reportTextController.text,
+                            );
+                            Get.back();
+                            reportTextController.clear();
+                          },
+                          bgColor: redColor,
+                          borderColor: redColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -388,14 +355,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               backgroundColor: whiteColor,
               elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
-              centerTitle: true,
-              title: const Text(
-                'Product',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                  fontSize: 15,
-                ),
+              centerTitle: false,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Product',
+                    style: GoogleFonts.interTight(
+                      fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Views • ',
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.w400,
+                          color: blackColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        numberFormat.format(widget.productData['views'].length),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: blackColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             body: Container(
@@ -404,12 +398,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'This product is currently unavailable.',
-                      style: TextStyle(
+                    Text(
+                      'This listing is currently unavailable.',
+                      style: GoogleFonts.interTight(
                         color: blackColor,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(
@@ -427,28 +421,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'The reasons for this may include but are not limited to -',
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
                               color: whiteColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
                             '1) The product is currently under review and will be activated once it is found valid.',
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
                               color: whiteColor,
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             '2) The product goes against our guidelines and has been disabled temporarily or permanently.',
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
                               color: whiteColor,
                               fontSize: 14,
                             ),
@@ -467,11 +461,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               actions: isSold
                   ? []
                   : [
-                      GestureDetector(
-                        onTap: showOptionsDialog,
-                        behavior: HitTestBehavior.opaque,
-                        child: const Icon(
-                          Ionicons.ellipsis_horizontal,
+                      IconButton(
+                        onPressed: () => showReportDialog(),
+                        visualDensity: VisualDensity.compact,
+                        splashRadius: 20,
+                        icon: const Icon(
+                          Ionicons.flag_outline,
                           color: blackColor,
                           size: 25,
                         ),
@@ -484,51 +479,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: true,
-              title: const Text(
-                'Product',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                  fontSize: 15,
-                ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.productData['catName'] == 'Jobs' ? 'Job' : 'Product',
+                    style: GoogleFonts.interTight(
+                      fontWeight: FontWeight.w600,
+                      color: blackColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Views • ',
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.w400,
+                          color: blackColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        numberFormat.format(widget.productData['views'].length),
+                        style: GoogleFonts.interTight(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: blackColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             body: isLoading
                 ? const Padding(
                     padding: EdgeInsets.all(15.0),
                     child: Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     ),
                   )
                 : SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (isSold == true)
-                          Container(
-                            width: size.width,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
-                            color: redColor,
-                            child: const Center(
-                              child: Text(
-                                'This product has been sold',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: whiteColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
                         GestureDetector(
                           onTap: () => images.length >= 2
                               ? Get.to(
@@ -555,13 +553,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           children: [
                                             PhotoViewGallery.builder(
                                               scrollPhysics:
-                                                  const ClampingScrollPhysics(),
+                                                  const BouncingScrollPhysics(),
                                               itemCount: images.length,
                                               pageController: pageController,
                                               builder: (BuildContext context,
                                                   int index) {
                                                 return PhotoViewGalleryPageOptions(
-                                                  imageProvider: NetworkImage(
+                                                  imageProvider:
+                                                      CachedNetworkImageProvider(
                                                     images[index],
                                                   ),
                                                   initialScale:
@@ -579,7 +578,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return const Icon(
-                                                      Ionicons.alert_circle,
+                                                      Ionicons
+                                                          .alert_circle_outline,
                                                       size: 20,
                                                       color: redColor,
                                                     );
@@ -588,13 +588,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               },
                                               loadingBuilder: (context, event) {
                                                 return const Center(
-                                                  child: SpinKitFadingCircle(
-                                                    color: greyColor,
-                                                    size: 30,
-                                                    duration: Duration(
-                                                      milliseconds: 1000,
-                                                    ),
-                                                  ),
+                                                  child:
+                                                      CustomLoadingIndicator(),
                                                 );
                                               },
                                             ),
@@ -606,7 +601,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   pageController.dispose();
                                                   Get.back();
                                                 },
-                                                splashColor: blueColor,
+                                                splashColor: transparentColor,
                                                 splashRadius: 30,
                                                 icon: const Icon(
                                                   Ionicons.close_circle_outline,
@@ -634,35 +629,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 color: blackColor,
                                 width: size.width,
-                                height: size.height * 0.35,
                                 child: CarouselSlider.builder(
                                   itemCount: images.length,
                                   itemBuilder: (context, index, realIndex) {
                                     return CachedNetworkImage(
                                       imageUrl: images[index],
-                                      fit: BoxFit.contain,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                      memCacheHeight:
+                                          (size.height * 0.35).round(),
                                       errorWidget: (context, url, error) {
                                         return const Icon(
-                                          Ionicons.alert_circle,
+                                          Ionicons.alert_circle_outline,
                                           size: 20,
                                           color: redColor,
                                         );
                                       },
                                       placeholder: (context, url) {
                                         return const Center(
-                                          child: SpinKitFadingCircle(
-                                            color: greyColor,
-                                            size: 30,
-                                            duration:
-                                                Duration(milliseconds: 1000),
-                                          ),
+                                          child: CustomLoadingIndicator(),
                                         );
                                       },
                                     );
                                   },
                                   options: CarouselOptions(
                                     viewportFraction: 1,
-                                    height: size.height,
+                                    height: size.height * 0.35,
                                     enlargeCenterPage: false,
                                     enableInfiniteScroll:
                                         images.length == 1 ? false : true,
@@ -670,7 +662,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     reverse: false,
                                     scrollDirection: Axis.horizontal,
                                     scrollPhysics:
-                                        const ClampingScrollPhysics(),
+                                        const BouncingScrollPhysics(),
                                     onPageChanged: (index, reason) {
                                       setState(() {
                                         currentImage = index;
@@ -688,12 +680,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     vertical: 5,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7),
+                                    borderRadius: BorderRadius.circular(50),
                                     color: lightBlackColor,
                                   ),
                                   child: Text(
                                     '${currentImage + 1}/${widget.productData['images'].length}',
-                                    style: const TextStyle(
+                                    style: GoogleFonts.interTight(
                                       fontWeight: FontWeight.w500,
                                       color: whiteColor,
                                       fontSize: 12,
@@ -703,7 +695,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               if (images.length > 1)
                                 Positioned(
-                                  bottom: 7,
+                                  bottom: 10,
                                   left: 0,
                                   right: 0,
                                   child: Row(
@@ -711,8 +703,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     children: images.map((url) {
                                       int index = images.indexOf(url);
                                       return Container(
-                                        width: 8.0,
-                                        height: 8.0,
+                                        width:
+                                            currentImage == index ? 10.0 : 6.0,
+                                        height:
+                                            currentImage == index ? 10.0 : 6.0,
                                         margin: const EdgeInsets.only(
                                           left: 2,
                                           right: 2,
@@ -722,7 +716,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           shape: BoxShape.circle,
                                           color: currentImage == index
                                               ? blueColor
-                                              : lightBlackColor,
+                                              : greyColor,
                                         ),
                                       );
                                     }).toList(),
@@ -731,22 +725,55 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ],
                           ),
                         ),
+                        if (isSold == true)
+                          Container(
+                            width: size.width,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            color: redColor,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'This listing has been sold',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.interTight(
+                                      color: whiteColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Icon(
+                                    Ionicons.bag_remove_outline,
+                                    color: whiteColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 15, right: 15, top: 15),
+                            left: 15,
+                            right: 15,
+                            top: 10,
+                          ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
                                 child: Text(
-                                  priceFormat.format(
-                                    widget.productData['price'],
-                                  ),
-                                  maxLines: 1,
+                                  widget.productData['title'],
+                                  maxLines: 3,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w500,
                                     color: blackColor,
                                     fontSize: 17,
                                     decoration: isSold
@@ -755,248 +782,253 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Ionicons.eye_outline,
-                                    size: 20,
-                                    color: blueColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  Text(
-                                    numberFormat.format(
-                                        widget.productData['views'].length),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: blackColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Ionicons.heart_outline,
-                                    size: 20,
-                                    color: redColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  Text(
-                                    numberFormat.format(
-                                        widget.productData['favorites'].length),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: blackColor,
-                                    ),
-                                  ),
-                                ],
+                              Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  border: greyBorder,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (widget.productData['sellerUid'] !=
+                                        services.user!.uid)
+                                      GestureDetector(
+                                        onTap: () async {
+                                          setState(() {
+                                            isLiked = !isLiked;
+                                          });
+                                          await services.updateFavorite(
+                                            isLiked: isLiked,
+                                            productId: widget.productData.id,
+                                          );
+                                        },
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Icon(
+                                          isLiked
+                                              ? Ionicons.heart
+                                              : Ionicons.heart_outline,
+                                          color: redColor,
+                                          size: 20,
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        if (widget.productData['sellerUid'] !=
+                            services.user!.uid)
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () => Get.to(
+                                  () => ProfileScreen(
+                                    userId: widget.productData['sellerUid'],
+                                  ),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      profileImage == ''
+                                          ? Container(
+                                              height: size.width * 0.06,
+                                              width: size.width * 0.06,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                color: blueColor,
+                                              ),
+                                              child: const Icon(
+                                                Ionicons.person_outline,
+                                                color: whiteColor,
+                                                size: 15,
+                                              ),
+                                            )
+                                          : SizedBox(
+                                              height: size.width * 0.06,
+                                              width: size.width * 0.06,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: profileImage,
+                                                  fit: BoxFit.cover,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  memCacheHeight:
+                                                      (size.width * 0.06)
+                                                          .round(),
+                                                  memCacheWidth:
+                                                      (size.width * 0.06)
+                                                          .round(),
+                                                  errorWidget:
+                                                      (context, url, error) {
+                                                    return const Icon(
+                                                      Ionicons
+                                                          .alert_circle_outline,
+                                                      size: 10,
+                                                      color: redColor,
+                                                    );
+                                                  },
+                                                  placeholder: (context, url) {
+                                                    return const Center(
+                                                      child:
+                                                          CustomLoadingIndicator(),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                      const SizedBox(
+                                        width: 7,
+                                      ),
+                                      SizedBox(
+                                        width: size.width * 0.6,
+                                        child: Text(
+                                          sellerName,
+                                          maxLines: 1,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w400,
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(
-                          height: 3,
+                          height: 15,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Text(
-                            widget.productData['title'],
-                            maxLines: 3,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: blackColor,
-                              fontSize: 15,
-                              decoration: isSold
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: widget.productData['catName'] == 'Jobs'
+                              ? Text(
+                                  '${priceFormat.format(widget.productData['salaryFrom'])} - ${priceFormat.format(widget.productData['salaryTo'])}',
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 19,
+                                    color: blackColor,
+                                    decoration: isSold
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                )
+                              : Text(
+                                  priceFormat.format(
+                                    widget.productData['price'],
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 19,
+                                    color: blackColor,
+                                    decoration: isSold
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Ionicons.list,
-                                size: 15,
-                                color: lightBlackColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      const TextSpan(text: 'In '),
-                                      TextSpan(
-                                        text:
-                                            '${widget.productData['catName']} > ${widget.productData['subCat']}',
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () => Get.to(
-                                                () => CategoryProductsScreen(
-                                                  catName: widget
-                                                      .productData['catName'],
-                                                  subCatName: widget
-                                                      .productData['subCat'],
-                                                ),
-                                                transition: Transition.downToUp,
-                                              ),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: blueColor,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: lightBlackColor,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Ionicons.location,
-                                size: 15,
-                                color: lightBlackColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  location,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: lightBlackColor,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Ionicons.time,
-                                size: 15,
-                                color: lightBlackColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  timeago.format(productCreatedTime),
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: lightBlackColor,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
                         widget.productData['sellerUid'] == services.user!.uid &&
                                 isSold == false
-                            ? Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                    ),
-                                    child: CustomButton(
-                                      text: 'Reach More Buyers',
-                                      onPressed: () => Get.to(
-                                        () => PromoteListingScreen(
-                                          productId: widget.productData.id,
-                                          title: widget.productData['title'],
-                                          price: widget.productData['price']
-                                              .toDouble(),
-                                          imageUrl: widget.productData['images']
-                                              [0],
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomButton(
+                                        text: 'Reach more people',
+                                        onPressed: () => Get.to(
+                                          () => PromoteListingScreen(
+                                            productId: widget.productData.id,
+                                            title: widget.productData['title'],
+                                            imageUrl:
+                                                widget.productData['images'][0],
+                                          ),
                                         ),
+                                        icon: Ionicons.trending_up,
+                                        bgColor: blueColor,
+                                        borderColor: blueColor,
+                                        textIconColor: whiteColor,
                                       ),
-                                      icon: Ionicons.trending_up,
-                                      bgColor: blueColor,
-                                      borderColor: blueColor,
-                                      textIconColor: whiteColor,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
+                                    const SizedBox(
+                                      width: 5,
                                     ),
-                                    child: CustomButton(
-                                      text: 'Edit Product',
-                                      onPressed: () => widget
-                                                  .productData['catName'] ==
-                                              'Vehicles'
-                                          ? Get.to(
-                                              () => EditVehicleAdScreen(
-                                                productData: widget.productData,
-                                              ),
-                                            )
-                                          : Get.to(
-                                              () => EditAdScreen(
-                                                productData: widget.productData,
-                                              ),
+                                    CustomButton(
+                                      text: 'Edit',
+                                      onPressed: () {
+                                        if (widget.productData['catName'] ==
+                                            'Vehicles') {
+                                          Get.to(
+                                            () => EditVehicleAdScreen(
+                                              productData: widget.productData,
                                             ),
+                                          );
+                                          return;
+                                        } else if (widget
+                                                .productData['catName'] ==
+                                            'Jobs') {
+                                          Get.to(
+                                            () => EditJobAdScreen(
+                                              productData: widget.productData,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        Get.to(
+                                          () => EditAdScreen(
+                                            productData: widget.productData,
+                                          ),
+                                        );
+                                      },
                                       icon: Ionicons.create_outline,
                                       bgColor: whiteColor,
                                       borderColor: blackColor,
                                       textIconColor: blackColor,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               )
                             : isSold == false
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
                                     child: CustomButton(
-                                      text: 'Chat with Seller',
-                                      onPressed: createChatRoom,
-                                      icon: Ionicons.chatbox,
+                                      text: 'Chat with seller',
+                                      onPressed: () =>
+                                          createChatRoom(makeOffer: false),
+                                      isFullWidth: true,
+                                      icon: Ionicons.chatbox_ellipses_outline,
                                       bgColor: blueColor,
                                       borderColor: blueColor,
                                       textIconColor: whiteColor,
@@ -1006,348 +1038,592 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     height: 0,
                                     width: 0,
                                   ),
-                        if (widget.productData['sellerUid'] !=
+                        if (isSold == false &&
+                            widget.productData['sellerUid'] !=
                                 services.user!.uid &&
-                            isSold == false)
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        if (widget.productData['sellerUid'] !=
-                            services.user!.uid)
+                            widget.productData['catName'] != 'Jobs')
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomButton(
-                              text: isLiked
-                                  ? 'Added to Favorites'
-                                  : 'Add to Favorites',
-                              onPressed: () async {
-                                setState(() {
-                                  isLiked = !isLiked;
-                                });
-                                await services.updateFavorite(
-                                  isLiked: isLiked,
-                                  productId: widget.productData.id,
-                                );
-                              },
-                              icon: isLiked
-                                  ? Ionicons.heart
-                                  : Ionicons.heart_outline,
-                              bgColor: whiteColor,
-                              borderColor: redColor,
-                              textIconColor: redColor,
+                              text: 'Make an offer',
+                              onPressed: () => createChatRoom(makeOffer: true),
+                              isFullWidth: true,
+                              icon: Ionicons.cash_outline,
+                              bgColor: greenColor,
+                              borderColor: greenColor,
+                              textIconColor: whiteColor,
                             ),
                           ),
                         const SizedBox(
-                          height: 25,
+                          height: 15,
                         ),
-                        widget.productData['catName'] == 'Vehicles'
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'About this product',
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: blackColor,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      width: size.width,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: greyColor,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'Brand - ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget
-                                                      .productData['brandName'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'Model - ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget
-                                                      .productData['modelName'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'Color - ',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  widget.productData['color'],
-                                                  softWrap: true,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: blackColor,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Divider(
-                                            height: 20,
-                                            color: fadedColor,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.person,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              const Text(
-                                                'Owner',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget
-                                                    .productData['noOfOwners'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.funnel,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              const Text(
-                                                'Fuel Type',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget.productData['fuelType'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.calendar,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              const Text(
-                                                'Year of Reg.',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                widget.productData['yearOfReg']
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const Icon(
-                                                Ionicons.speedometer,
-                                                size: 15,
-                                                color: blueColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 7,
-                                              ),
-                                              const Text(
-                                                'Kms Driven',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: lightBlackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              Text(
-                                                kmFormat.format(
-                                                  widget
-                                                      .productData['kmsDriven'],
-                                                ),
-                                                maxLines: 2,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: blackColor,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(
-                                height: 0,
-                                width: 0,
-                              ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
-                            'Product description from the seller',
+                            'Listing details',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
+                              fontWeight: FontWeight.w700,
+                              color: blackColor,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                            border: greyBorder,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Ionicons.location_outline,
+                                      size: 15,
+                                      color: blackColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        location,
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w500,
+                                          color: blackColor,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Ionicons.time_outline,
+                                      size: 15,
+                                      color: blackColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        timeago.format(productCreatedTime),
+                                        maxLines: 1,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w500,
+                                          color: blackColor,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Ionicons.list_outline,
+                                      size: 15,
+                                      color: blackColor,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            const TextSpan(text: 'In '),
+                                            TextSpan(
+                                              text:
+                                                  '${widget.productData['catName']} > ${widget.productData['subCat']}',
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () => Get.to(
+                                                      () =>
+                                                          CategoryProductsScreen(
+                                                        catName:
+                                                            widget.productData[
+                                                                'catName'],
+                                                        subCatName:
+                                                            widget.productData[
+                                                                'subCat'],
+                                                      ),
+                                                      transition:
+                                                          Transition.downToUp,
+                                                    ),
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blueColor,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                          style: GoogleFonts.interTight(
+                                            fontWeight: FontWeight.w500,
+                                            color: blackColor,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        if (widget.productData['catName'] == 'Vehicles')
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this vehicle',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: whiteColor,
+                                    border: greyBorder,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Brand - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['brandName'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Model - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['modelName'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Color - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget.productData['color'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Divider(
+                                        height: 20,
+                                        color: fadedColor,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.person_outline,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Owner',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['noOfOwners'],
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.funnel_outline,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Fuel Type',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['fuelType'],
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.calendar_outline,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Year of Reg.',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            widget.productData['yearOfReg']
+                                                .toString(),
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.map_outline,
+                                            size: 15,
+                                            color: blueColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 7,
+                                          ),
+                                          Text(
+                                            'Kms Driven',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            kmFormat.format(
+                                              widget.productData['kmsDriven'],
+                                            ),
+                                            maxLines: 2,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w600,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                        if (widget.productData['catName'] == 'Jobs')
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'About this job',
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w700,
+                                    color: blackColor,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: whiteColor,
+                                    border: greyBorder,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Salary Period - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget
+                                                  .productData['salaryPeriod'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Position Type - ',
+                                            style: GoogleFonts.interTight(
+                                              fontWeight: FontWeight.w400,
+                                              color: blackColor,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              widget
+                                                  .productData['positionType'],
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.interTight(
+                                                fontWeight: FontWeight.w600,
+                                                color: blackColor,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            'Description',
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.interTight(
                               fontWeight: FontWeight.w700,
                               color: blackColor,
                               fontSize: 18,
@@ -1369,36 +1645,68 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             width: size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: greyColor,
+                              color: whiteColor,
+                              border: greyBorder,
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
                             ),
-                            child: Text(
-                              widget.productData['description'],
-                              maxLines: 5,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: blackColor,
-                                fontSize: 15,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.productData['description'],
+                                  maxLines: 5,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w500,
+                                    color: blackColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Show full description...',
+                                  style: GoogleFonts.interTight(
+                                    fontWeight: FontWeight.w600,
+                                    color: blueColor,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                        if (!mainProv.adsRemoved)
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: MediumNativeAd(
+                                  nativeAd: _nativeAd,
+                                  isAdLoaded: _isAdLoaded,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(
                           height: 20,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
                             'Product Location',
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: GoogleFonts.interTight(
                               fontWeight: FontWeight.w700,
                               color: blackColor,
                               fontSize: 18,
@@ -1408,243 +1716,206 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: SizedBox(
-                            height: size.height * 0.3,
-                            width: size.width,
-                            child: FlutterMap(
-                              mapController: mapController,
-                              options: MapOptions(
-                                center: LatLng(
-                                  latitude,
-                                  longitude,
-                                ),
-                                zoom: 15.0,
-                                maxZoom: 16.0,
-                                maxBounds: LatLngBounds(
-                                  LatLng(-90, -180.0),
-                                  LatLng(90.0, 180.0),
-                                ),
-                                interactiveFlags: InteractiveFlag.all &
-                                    ~InteractiveFlag.rotate,
-                              ),
-                              nonRotatedChildren: [
-                                AttributionWidget.defaultWidget(
-                                  source: 'OpenStreetMap contributors',
-                                ),
-                              ],
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName:
-                                      'com.bechde.buy_sell_app',
-                                  subdomains: const ['a', 'b', 'c'],
-                                  backgroundColor: greyColor,
-                                ),
-                                CircleLayer(
-                                  circles: [
-                                    CircleMarker(
-                                      point: LatLng(
-                                        latitude,
-                                        longitude,
-                                      ),
-                                      radius: 40,
-                                      borderColor: blueColor,
-                                      borderStrokeWidth: 5,
-                                      color: fadedColor,
-                                    ),
-                                  ],
-                                ),
-                                // MarkerLayer(
-                                //   markers: [
-                                //     Marker(
-                                //       point: LatLng(51.509364, -0.128928),
-                                //       builder: (context) => const Icon(
-                                //         Ionicons.location,
-                                //         size: 40,
-                                //         color: blackColor,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (widget.productData['sellerUid'] !=
-                            services.user!.uid)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 25,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  'About this seller',
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: blackColor,
-                                    fontSize: 18,
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                              height: size.height * 0.3,
+                              width: size.width,
+                              child: FlutterMap(
+                                mapController: mapController,
+                                options: MapOptions(
+                                  center: LatLng(
+                                    latitude,
+                                    longitude,
                                   ),
+                                  zoom: 15.0,
+                                  maxZoom: 16.0,
+                                  maxBounds: LatLngBounds(
+                                    LatLng(-90, -180.0),
+                                    LatLng(90.0, 180.0),
+                                  ),
+                                  interactiveFlags: InteractiveFlag.all &
+                                      ~InteractiveFlag.rotate,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () => Get.to(
-                                  () => ProfileScreen(
-                                    userId: widget.sellerData['uid'],
-                                  ),
-                                ),
-                                child: Container(
-                                  width: size.width,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: greyColor,
-                                  ),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                    vertical: 10,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      profileImage == ''
-                                          ? Container(
-                                              height: size.width * 0.1,
-                                              width: size.width * 0.1,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: blueColor,
-                                              ),
-                                              child: const Icon(
-                                                Ionicons.person,
-                                                color: whiteColor,
-                                                size: 20,
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              height: size.width * 0.1,
-                                              width: size.width * 0.1,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: profileImage,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget:
-                                                      (context, url, error) {
-                                                    return const Icon(
-                                                      Ionicons.alert_circle,
-                                                      size: 10,
-                                                      color: redColor,
-                                                    );
-                                                  },
-                                                  placeholder: (context, url) {
-                                                    return const Center(
-                                                      child:
-                                                          SpinKitFadingCircle(
-                                                        color: lightBlackColor,
-                                                        size: 20,
-                                                        duration: Duration(
-                                                            milliseconds: 1000),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          widget.sellerData['name'] == null
-                                              ? SizedBox(
-                                                  width: size.width * 0.5,
-                                                  child: const Text(
-                                                    'BechDe User',
-                                                    maxLines: 1,
-                                                    softWrap: true,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: blackColor,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                )
-                                              : SizedBox(
-                                                  width: size.width * 0.5,
-                                                  child: Text(
-                                                    widget.sellerData['name'],
-                                                    maxLines: 1,
-                                                    softWrap: true,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: blackColor,
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                          Text(
-                                            'Joined ${timeago.format(sellerJoinTime)}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: fadedColor,
-                                              fontSize: 13,
-                                            ),
+                                nonRotatedChildren: [
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ColoredBox(
+                                      color: greyColor,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Text(
+                                          'Location is approximate',
+                                          style: GoogleFonts.interTight(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                      const Spacer(),
-                                      const Icon(
-                                        Ionicons.chevron_forward,
-                                        color: blackColor,
-                                        size: 13,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: ColoredBox(
+                                      color: greyColor,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Text(
+                                          '© OpenStreetMap',
+                                          style: GoogleFonts.interTight(
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName:
+                                        'com.bechde.buy_sell_app',
+                                    subdomains: const ['a', 'b', 'c'],
+                                    backgroundColor: greyColor,
+                                  ),
+                                  CircleLayer(
+                                    circles: [
+                                      CircleMarker(
+                                        point: LatLng(
+                                          latitude,
+                                          longitude,
+                                        ),
+                                        radius: 40,
+                                        borderColor: blueColor,
+                                        borderStrokeWidth: 5,
+                                        color: fadedColor,
                                       ),
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        const SizedBox(
-                          height: 25,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
-                            'You might also like',
+                            'Product ID: ${widget.productData.id}',
                             maxLines: 1,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
+                            style: GoogleFonts.interTight(
+                              fontWeight: FontWeight.w500,
                               color: blackColor,
-                              fontSize: 18,
+                              fontSize: 13,
                             ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: whiteColor,
+                            border: greyBorder,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Ionicons.flash_outline,
+                                        color: greenColor,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        'Participate in our survey',
+                                        style: GoogleFonts.interTight(
+                                          fontWeight: FontWeight.w600,
+                                          color: blackColor,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    width: size.width * 0.6,
+                                    child: AutoSizeText(
+                                      'Help us improve BechDe by filling this survey.',
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.interTight(
+                                        fontWeight: FontWeight.w500,
+                                        color: blackColor,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              CustomButtonWithoutIcon(
+                                text: 'Let\'s go',
+                                onPressed: () => showSurveyPopUp(context),
+                                borderColor: blueColor,
+                                bgColor: blueColor,
+                                textIconColor: whiteColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'More like this',
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  fontWeight: FontWeight.w700,
+                                  color: blackColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              const Icon(
+                                Ionicons.heart,
+                                size: 18,
+                                color: Colors.pink,
+                              ),
+                            ],
                           ),
                         ),
                         MoreLikeThisProductsList(
@@ -1686,15 +1957,16 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           .where('subCat', isEqualTo: widget.subCatName)
           .where('postedAt', isNotEqualTo: widget.postedAt)
           .where('isActive', isEqualTo: true)
+          .limit(10)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -1703,8 +1975,8 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           );
         }
         if (snapshot.hasData && snapshot.data!.size == 0) {
-          return const Padding(
-            padding: EdgeInsets.all(15),
+          return Padding(
+            padding: const EdgeInsets.all(15),
             child: Center(
               child: Text(
                 'No similar products found',
@@ -1712,7 +1984,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
@@ -1724,11 +1996,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }
@@ -1738,7 +2006,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
             ListView.separated(
               separatorBuilder: (context, index) {
                 return const SizedBox(
-                  height: 10,
+                  height: 6,
                 );
               },
               padding: const EdgeInsets.only(
@@ -1749,22 +2017,17 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               ),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.size >= 4 ? 4 : snapshot.data!.size,
+              itemCount: snapshot.data!.size >= 10 ? 10 : snapshot.data!.size,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
-                final time =
-                    DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-                final sellerDetails = _services.getUserData(data['sellerUid']);
                 return CustomProductCard(
                   data: data,
-                  sellerDetails: sellerDetails,
-                  time: time,
                 );
               },
               physics: const NeverScrollableScrollPhysics(),
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -1773,14 +2036,14 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 right: 15,
               ),
               child: CustomButton(
-                text: 'See more similar products',
+                text: 'See more similar items',
                 onPressed: () => Get.to(
                   () => CategoryProductsScreen(
                     catName: widget.catName,
                     subCatName: widget.subCatName,
                   ),
                 ),
-                icon: Ionicons.chevron_forward,
+                icon: Ionicons.arrow_forward,
                 borderColor: blueColor,
                 bgColor: blueColor,
                 textIconColor: whiteColor,

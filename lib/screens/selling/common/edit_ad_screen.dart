@@ -4,13 +4,14 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/providers.dart';
 import '../../../widgets/loading_button.dart';
 import '../../../widgets/text_field_label.dart';
-import '/provider/seller_form_provider.dart';
 import '/services/firebase_services.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
@@ -39,19 +40,19 @@ class _EditAdScreenState extends State<EditAdScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
-  late StreamSubscription subscription;
+  late StreamSubscription<ConnectivityResult> subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
   @override
   void initState() {
+    super.initState();
     getConnectivity();
     categoryController.text =
         '${widget.productData['catName']} > ${widget.productData['subCat']}';
     titleController.text = widget.productData['title'];
     descriptionController.text = widget.productData['description'];
     priceController.text = widget.productData['price'].toString();
-    super.initState();
   }
 
   showNetworkError() {
@@ -85,10 +86,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -115,13 +116,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Please check your internet connection',
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -159,16 +160,14 @@ class _EditAdScreenState extends State<EditAdScreen> {
     );
   }
 
-  getConnectivity() {
+  Future<void> getConnectivity() async {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
       isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      if (!isDeviceConnected && isAlertSet == false) {
+      if (!isDeviceConnected && !isAlertSet) {
         showNetworkError();
-        setState(() {
-          isAlertSet = true;
-        });
+        setState(() => isAlertSet = true);
       }
     });
   }
@@ -270,10 +269,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Ready to update?',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -298,7 +297,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                           children: [
                             Text(
                               titleController.text,
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -313,7 +312,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: GoogleFonts.interTight(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -327,7 +326,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: const TextStyle(
+                          style: GoogleFonts.interTight(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -342,71 +341,83 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Confirm & Update',
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Get.back();
-                      String uid = widget.productData.id;
-                      setSearchParams({
-                        required String s,
-                        required int n,
-                        required String catName,
-                        required String subCatName,
-                      }) {
-                        List<String> searchQueries = [];
-                        for (int i = 0; i < n; i++) {
-                          String temp = '';
-                          for (int j = i; j < n; j++) {
-                            temp += s[j];
-                            if (temp.length >= 3) {
-                              searchQueries.add(temp);
-                            }
-                          }
-                        }
-                        for (int i = 0; i < catName.length; i++) {
-                          String catNameTemp = '';
-                          for (int j = i; j < catName.length; j++) {
-                            catNameTemp += catName[j];
-                            if (catNameTemp.length >= 3) {
-                              searchQueries.add(catNameTemp);
-                            }
-                          }
-                        }
-                        return searchQueries;
-                      }
-
-                      provider.updatedDataToFirestore.addAll({
-                        'title': titleController.text,
-                        'description': descriptionController.text,
-                        'price': int.parse(priceController.text),
-                        'searchQueries': setSearchParams(
-                          s: titleController.text.toLowerCase(),
-                          n: titleController.text.length,
-                          catName: widget.productData['catName'].toLowerCase(),
-                          subCatName:
-                              widget.productData['subCat'].toLowerCase(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Cancel',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
                         ),
-                        'isActive': false,
-                        'isRejected': false,
-                      });
-                      await updateProductOnFirebase(provider, uid);
-                    },
-                    bgColor: blueColor,
-                    borderColor: blueColor,
-                    textIconColor: whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'Go Back & Check',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButton(
+                          text: 'Update',
+                          icon: Ionicons.checkmark_outline,
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Get.back();
+                            String uid = widget.productData.id;
+                            setSearchParams({
+                              required String s,
+                              required int n,
+                              required String catName,
+                              required String subCatName,
+                            }) {
+                              List<String> searchQueries = [];
+                              for (int i = 0; i < n; i++) {
+                                for (int j = i + 2; j < n; j++) {
+                                  searchQueries.add(s.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < catName.length; i++) {
+                                for (int j = i + 2; j < catName.length; j++) {
+                                  searchQueries
+                                      .add(catName.substring(i, j + 1));
+                                }
+                              }
+                              for (int i = 0; i < subCatName.length; i++) {
+                                for (int j = i + 2;
+                                    j < subCatName.length;
+                                    j++) {
+                                  searchQueries
+                                      .add(subCatName.substring(i, j + 1));
+                                }
+                              }
+                              return searchQueries;
+                            }
+
+                            provider.updatedDataToFirestore.addAll({
+                              'title': titleController.text,
+                              'description': descriptionController.text,
+                              'price': int.parse(priceController.text),
+                              'searchQueries': setSearchParams(
+                                s: titleController.text.toLowerCase(),
+                                n: titleController.text.length,
+                                catName:
+                                    widget.productData['catName'].toLowerCase(),
+                                subCatName:
+                                    widget.productData['subCat'].toLowerCase(),
+                              ),
+                              'isActive': false,
+                              'isRejected': false,
+                              'isShowedInConsole': true,
+                            });
+                            await updateProductOnFirebase(provider, uid);
+                          },
+                          bgColor: blueColor,
+                          borderColor: blueColor,
+                          textIconColor: whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -454,10 +465,10 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
+                  Center(
                     child: Text(
                       'Warning',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -473,9 +484,9 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: greyColor,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -484,25 +495,33 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  CustomButtonWithoutIcon(
-                    text: 'Yes, Leave',
-                    onPressed: () {
-                      Get.back();
-                      Get.back();
-                    },
-                    bgColor: whiteColor,
-                    borderColor: redColor,
-                    textIconColor: redColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomButtonWithoutIcon(
-                    text: 'No, Stay Here',
-                    onPressed: () => Get.back(),
-                    bgColor: whiteColor,
-                    borderColor: greyColor,
-                    textIconColor: blackColor,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'No, Stay Here',
+                          onPressed: () => Get.back(),
+                          bgColor: whiteColor,
+                          borderColor: greyColor,
+                          textIconColor: blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: CustomButtonWithoutIcon(
+                          text: 'Yes, Leave',
+                          onPressed: () {
+                            Get.back();
+                            Get.back();
+                          },
+                          bgColor: whiteColor,
+                          borderColor: redColor,
+                          textIconColor: redColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -525,14 +544,14 @@ class _EditAdScreenState extends State<EditAdScreen> {
           backgroundColor: whiteColor,
           iconTheme: const IconThemeData(color: blackColor),
           leading: IconButton(
-            onPressed: closePageAndGoToHome,
+            onPressed: () => closePageAndGoToHome(),
             enableFeedback: true,
             icon: const Icon(Ionicons.close_circle_outline),
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Edit your product listing',
-            style: TextStyle(
+            style: GoogleFonts.interTight(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -541,7 +560,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Column(
@@ -549,12 +568,13 @@ class _EditAdScreenState extends State<EditAdScreen> {
               children: [
                 Container(
                   width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   color: blackColor,
-                  child: const Text(
+                  child: Text(
                     'Step 1 - Product Details',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -575,7 +595,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     keyboardType: TextInputType.text,
                     hint: '',
                     isEnabled: false,
-                    maxLength: 80,
+                    maxLength: 150,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -592,7 +612,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     controller: titleController,
                     keyboardType: TextInputType.text,
                     hint: 'Mention key features of your item',
-                    maxLength: 70,
+                    maxLength: 35,
                     textInputAction: TextInputAction.next,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -600,8 +620,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
-                      if (value.length < 10) {
-                        return 'Please enter 10 or more characters';
+                      if (value.length < 5) {
+                        return 'Please enter 5 or more characters';
                       }
                       setState(() {});
                       return null;
@@ -622,7 +642,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     keyboardType: TextInputType.multiline,
                     hint:
                         'Briefly describe your vehicle to increase your chances of getting a good deal. Include details like condition, features, reason for selling, etc.',
-                    maxLength: 3000,
+                    maxLength: 1000,
                     maxLines: 5,
                     showCounterText: true,
                     isEnabled: isLoading ? false : true,
@@ -631,8 +651,8 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a description';
                       }
-                      if (value.length < 30) {
-                        return 'Please enter 30 or more characters';
+                      if (value.length < 20) {
+                        return 'Please enter 20 or more characters';
                       }
                       return null;
                     },
@@ -651,7 +671,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     controller: priceController,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    maxLength: 10,
+                    maxLength: 9,
                     enabled: isLoading ? false : true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -662,7 +682,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: const TextStyle(
+                    style: GoogleFonts.interTight(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -700,7 +720,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: const TextStyle(
+                      errorStyle: GoogleFonts.interTight(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
@@ -722,12 +742,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.interTight(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: GoogleFonts.interTight(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -755,7 +775,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                 )
               : CustomButton(
                   text: 'Proceed',
-                  onPressed: validateForm,
+                  onPressed: () => validateForm(),
                   icon: Ionicons.arrow_forward,
                   bgColor: blueColor,
                   borderColor: blueColor,

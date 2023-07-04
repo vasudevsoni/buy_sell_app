@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/utils/utils.dart';
 
@@ -7,24 +8,24 @@ class CustomListTileNoImage extends StatelessWidget {
   final IconData? icon;
   final IconData? trailingIcon;
   final bool isEnabled;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
 
   const CustomListTileNoImage({
-    super.key,
+    Key? key,
     required this.text,
     this.icon,
     this.trailingIcon,
     required this.onTap,
     required this.isEnabled,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
         text,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
+        style: GoogleFonts.interTight(
+          fontWeight: FontWeight.w600,
           fontSize: 15,
         ),
       ),
@@ -36,11 +37,13 @@ class CustomListTileNoImage extends StatelessWidget {
         color: lightBlackColor,
       ),
       minLeadingWidth: icon == null ? 0 : 40,
-      leading: Icon(
-        icon,
-        size: 22,
-        color: blackColor,
-      ),
+      leading: icon == null
+          ? null
+          : Icon(
+              icon,
+              size: 22,
+              color: blackColor,
+            ),
       horizontalTitleGap: 0,
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
     );

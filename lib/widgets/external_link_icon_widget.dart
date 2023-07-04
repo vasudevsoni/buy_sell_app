@@ -7,11 +7,11 @@ class ExternalLinkIcon extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   const ExternalLinkIcon({
-    super.key,
+    Key? key,
     required this.link,
     required this.icon,
     required this.iconColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +28,7 @@ class ExternalLinkIcon extends StatelessWidget {
             decoration: BoxDecoration(
               color: whiteColor,
               borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                color: greyColor,
-                width: 2,
-                strokeAlign: StrokeAlign.inside,
-              ),
+              border: greyBorder,
             ),
             child: Icon(
               icon,

@@ -31,7 +31,7 @@
   //       }
   //     }),
   //     forceResendingToken: _resendToken,
-  //     timeout: const Duration(seconds: 2),
+  //     timeout: Duration(seconds: 2),
   //     codeAutoRetrievalTimeout: (String verificationId) {},
   //   );
   // }
@@ -55,7 +55,7 @@
   //         'followers': [],
   //         'following': [],
   //       }).then((value) {
-  //         Get.offAll(() => const MainScreen(selectedIndex: 0));
+  //         Get.offAll(() => MainScreen(selectedIndex: 0));
   //       });
   //     } on FirebaseAuthException catch (_) {
   //       showSnackBar(
@@ -66,6 +66,6 @@
   //     return;
   //   }
   //   //if user already exists in database, just navigate her to main screen
-  //   Get.offAll(() => const MainScreen(selectedIndex: 0));
+  //   Get.offAll(() => MainScreen(selectedIndex: 0));
   // }
 // }

@@ -1,23 +1,29 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:buy_sell_app/screens/user_rating_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../provider/providers.dart';
+import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
+import '../widgets/custom_product_card_grid.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/external_link_icon_widget.dart';
 import '../widgets/text_field_label.dart';
 import '/utils/utils.dart';
 import '/widgets/custom_button.dart';
 import 'full_bio_screen.dart';
-import '/widgets/custom_product_card.dart';
 import '/services/firebase_services.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,7 +40,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseServices services = FirebaseServices();
   final TextEditingController reportTextController = TextEditingController();
-  final User? user = FirebaseAuth.instance.currentUser;
   String name = '';
   String bio = '';
   String profileImage = '';
@@ -43,80 +48,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String instagramLink = '';
   String facebookLink = '';
   String websiteLink = '';
+  double rating = 0;
+
   DateTime dateJoined = DateTime.now();
   // int followers = 0;
   // int following = 0;
-
   // bool isFollowing = false;
 
   final NumberFormat numberFormat = NumberFormat.compact();
 
+  late NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
   @override
   void initState() {
-    getUserData();
     super.initState();
+    getUserData();
+    _initNativeAd();
   }
 
-  getUserData() async {
-    await services.getUserData(widget.userId).then((value) {
-      if (mounted) {
-        setState(() {
-          if (value['name'] == null) {
-            name = 'BechDe User';
-          } else {
-            name = value['name'];
-          }
-          if (value['bio'] == null) {
-            bio = '';
-          } else {
-            bio = value['bio'];
-          }
-          if (value['profileImage'] == null) {
-            profileImage = '';
-          } else {
-            profileImage = value['profileImage'];
-          }
-          if (value['location'] == null) {
-            address == '';
-          } else {
-            address =
-                '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}';
-          }
-          if (value['instagramLink'] == null) {
-            instagramLink = '';
-          } else {
-            instagramLink = value['instagramLink'];
-          }
-          if (value['facebookLink'] == null) {
-            facebookLink = '';
-          } else {
-            facebookLink = value['facebookLink'];
-          }
-          if (value['websiteLink'] == null) {
-            websiteLink = '';
-          } else {
-            websiteLink = value['websiteLink'];
-          }
-          // if (value['followers'].contains(user!.uid)) {
-          //   isFollowing = true;
-          // } else {
-          //   isFollowing = false;
-          // }
-          // if (value['followers'].isEmpty) {
-          //   followers = 0;
-          // } else {
-          //   followers = value['followers'].length;
-          // }
-          // if (value['following'].isEmpty) {
-          //   following = 0;
-          // } else {
-          //   following = value['following'].length;
-          // }
-          sellerUid = value['uid'];
-          dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
-        });
-      }
+  Future<void> getUserData() async {
+    final value = await services.getUserData(widget.userId);
+    if (!mounted) return;
+
+    setState(() {
+      name = value['name'] ?? 'BechDe User';
+      bio = value['bio'] ?? '';
+      profileImage = value['profileImage'] ?? '';
+      address = value['location'] != null
+          ? '${value['location']['area']}, ${value['location']['city']}, ${value['location']['state']}'
+          : '';
+      instagramLink = value['instagramLink'] ?? '';
+      facebookLink = value['facebookLink'] ?? '';
+      websiteLink = value['websiteLink'] ?? '';
+      sellerUid = value['uid'];
+      dateJoined = DateTime.fromMillisecondsSinceEpoch(value['dateJoined']);
+      rating = value['rating'] == 0
+          ? 0
+          : (value['rating'] / (value['ratedBy'].length - 1));
+      // isFollowing = value['followers'].contains(user!.uid);
+      // followers = value['followers'].isEmpty ? 0 : value['followers'].length;
+      // following = value['following'].isEmpty ? 0 : value['following'].length;
     });
+  }
+
+  _initNativeAd() async {
+    _nativeAd = NativeAd(
+      adUnitId: AdmobServices.nativeAdUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          setState(() {
+            _isAdLoaded = false;
+          });
+          if (mounted) {
+            ad.dispose();
+          }
+        },
+      ),
+      request: const AdRequest(),
+      nativeTemplateStyle: smallNativeAdStyle,
+    );
+    await _nativeAd!.load();
   }
 
   showReportDialog() {
@@ -157,10 +154,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Report this user',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -183,33 +180,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButton(
-                  icon: Ionicons.arrow_forward,
-                  text: 'Submit',
-                  onPressed: () {
-                    if (reportTextController.text.isEmpty) {
-                      return;
-                    }
-                    services.reportUser(
-                      message: reportTextController.text,
-                      userId: sellerUid,
-                    );
-                    Get.back();
-                    reportTextController.clear();
-                  },
-                  bgColor: redColor,
-                  borderColor: redColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        icon: Ionicons.arrow_forward,
+                        text: 'Report',
+                        onPressed: () {
+                          if (reportTextController.text.isEmpty) {
+                            return;
+                          }
+                          services.reportUser(
+                            message: reportTextController.text,
+                            userId: sellerUid,
+                          );
+                          Get.back();
+                          reportTextController.clear();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -257,25 +262,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 CustomButton(
-                  icon: Ionicons.shield_half,
+                  icon: Ionicons.shield_outline,
                   text: 'Report User',
                   onPressed: () {
                     Get.back();
                     showReportDialog();
                   },
+                  isFullWidth: true,
                   bgColor: whiteColor,
                   borderColor: redColor,
                   textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
                 ),
               ],
             ),
@@ -288,11 +284,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     reportTextController.dispose();
+    if (_nativeAd != null && mounted) {
+      _nativeAd!.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -307,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onTap: showOptionsDialog,
             behavior: HitTestBehavior.opaque,
             child: const Icon(
-              Ionicons.ellipsis_horizontal,
+              Ionicons.ellipsis_vertical,
               color: blackColor,
               size: 25,
             ),
@@ -318,188 +318,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text(
           name,
-          style: const TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
           ),
         ),
       ),
+      bottomNavigationBar: mainProv.adsRemoved
+          ? null
+          : SmallNativeAd(
+              nativeAd: _nativeAd,
+              isAdLoaded: _isAdLoaded,
+            ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
+              const SizedBox(
+                height: 25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 150,
-                    width: size.width,
-                    margin: EdgeInsets.only(bottom: size.width * 0.125),
-                    color: greyColor,
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          'https://images.wallpapersden.com/image/download/artistic-5k-mesmerizing-landscape_bWplbmiUmZqaraWkpJRqZmdlrWdtbWU.jpg',
-                      filterQuality: FilterQuality.medium,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.bottomCenter,
-                      errorWidget: (context, url, error) {
-                        return const Icon(
-                          Ionicons.alert_circle,
-                          size: 30,
-                          color: redColor,
-                        );
-                      },
-                      placeholder: (context, url) {
-                        return const Center(
-                          child: SpinKitFadingCircle(
-                            color: lightBlackColor,
-                            size: 30,
-                            duration: Duration(milliseconds: 1000),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
                   profileImage == ''
-                      ? Positioned(
-                          top: 150 - (size.width * 0.125),
+                      ? Container(
+                          margin: const EdgeInsets.only(left: 15, right: 10),
+                          height: size.width * 0.25,
+                          width: size.width * 0.25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: blueColor,
+                          ),
+                          child: const Icon(
+                            Ionicons.person_outline,
+                            color: whiteColor,
+                            size: 40,
+                          ),
+                        )
+                      : GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => showProfileImage(context),
                           child: Container(
                             height: size.width * 0.25,
                             width: size.width * 0.25,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: blueColor,
-                            ),
-                            child: const Icon(
-                              Ionicons.person,
                               color: whiteColor,
-                              size: 40,
+                              borderRadius: BorderRadius.circular(100),
                             ),
-                          ),
-                        )
-                      : Positioned(
-                          top: 150 - (size.width * 0.125),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dismissible(
-                                  key: UniqueKey(),
-                                  direction: DismissDirection.down,
-                                  onDismissed: (direction) {
-                                    Get.back();
-                                  },
-                                  child: Material(
-                                    color: blackColor,
-                                    child: Stack(
-                                      children: [
-                                        PhotoViewGallery.builder(
-                                          scrollPhysics:
-                                              const ClampingScrollPhysics(),
-                                          itemCount: 1,
-                                          builder: (BuildContext context,
-                                              int index) {
-                                            return PhotoViewGalleryPageOptions(
-                                              imageProvider: NetworkImage(
-                                                profileImage,
-                                              ),
-                                              initialScale:
-                                                  PhotoViewComputedScale
-                                                          .contained *
-                                                      1,
-                                              minScale: PhotoViewComputedScale
-                                                      .contained *
-                                                  1,
-                                              maxScale: PhotoViewComputedScale
-                                                      .contained *
-                                                  2,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return const Icon(
-                                                  Ionicons.alert_circle,
-                                                  size: 20,
-                                                  color: redColor,
-                                                );
-                                              },
-                                            );
-                                          },
-                                          loadingBuilder: (context, event) {
-                                            return const Center(
-                                              child: SpinKitFadingCircle(
-                                                color: greyColor,
-                                                size: 30,
-                                                duration: Duration(
-                                                    milliseconds: 1000),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        Positioned(
-                                          top: 15,
-                                          right: 15,
-                                          child: IconButton(
-                                            onPressed: () => Get.back(),
-                                            splashColor: blueColor,
-                                            splashRadius: 30,
-                                            icon: const Icon(
-                                              Ionicons.close_circle_outline,
-                                              size: 30,
-                                              color: whiteColor,
-                                              shadows: [
-                                                BoxShadow(
-                                                  offset: Offset(0, 0),
-                                                  blurRadius: 15,
-                                                  spreadRadius: 15,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            child: Container(
-                              height: size.width * 0.25,
-                              width: size.width * 0.25,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              padding: const EdgeInsets.all(3),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl: profileImage,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) {
-                                    return const Icon(
-                                      Ionicons.alert_circle,
-                                      size: 30,
-                                      color: redColor,
-                                    );
-                                  },
-                                  placeholder: (context, url) {
-                                    return const Center(
-                                      child: SpinKitFadingCircle(
-                                        color: lightBlackColor,
-                                        size: 30,
-                                        duration: Duration(milliseconds: 1000),
-                                      ),
-                                    );
-                                  },
-                                ),
+                            margin: const EdgeInsets.only(left: 15, right: 10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImage(
+                                imageUrl: profileImage,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                                memCacheHeight: (size.width * 0.25).round(),
+                                memCacheWidth: (size.width * 0.25).round(),
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    Ionicons.alert_circle_outline,
+                                    size: 30,
+                                    color: redColor,
+                                  );
+                                },
+                                placeholder: (context, url) {
+                                  return const Center(
+                                    child: CustomLoadingIndicator(),
+                                  );
+                                },
                               ),
                             ),
                           ),
                         ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: rating > 0 && rating < 3
+                          ? redColor
+                          : rating == 3
+                              ? Colors.orange
+                              : rating == 0
+                                  ? blackColor
+                                  : greenColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          rating == 0 ? 'Unrated' : rating.toStringAsFixed(1),
+                          style: GoogleFonts.interTight(
+                            fontSize: 15,
+                            color: whiteColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        const Icon(
+                          Ionicons.star,
+                          size: 15,
+                          color: whiteColor,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -512,34 +442,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   maxLines: 2,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: GoogleFonts.interTight(
                     color: blackColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
-              if (bio != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Get.to(
-                      () => FullBioScreen(bio: bio),
-                    ),
-                    child: Text(
-                      bio,
-                      maxLines: 3,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: blackColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
               if (instagramLink == '' &&
                   facebookLink == '' &&
                   websiteLink == '')
@@ -552,70 +461,179 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (instagramLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_instagram,
-                            iconColor: const Color(0xffdd2a7b),
-                            link: instagramLink,
-                          ),
-                        if (facebookLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.logo_facebook,
-                            iconColor: const Color(0xff1778f2),
-                            link: facebookLink,
-                          ),
-                        if (websiteLink != '')
-                          ExternalLinkIcon(
-                            icon: Ionicons.link,
-                            iconColor: blueColor,
-                            link: websiteLink,
-                          ),
-                      ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if (instagramLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_instagram,
+                              iconColor: const Color(0xffdd2a7b),
+                              link: instagramLink,
+                            ),
+                          if (facebookLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.logo_facebook,
+                              iconColor: const Color(0xff1778f2),
+                              link: facebookLink,
+                            ),
+                          if (websiteLink != '')
+                            ExternalLinkIcon(
+                              icon: Ionicons.link,
+                              iconColor: blueColor,
+                              link: websiteLink,
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                   ],
                 ),
+              if (bio != '')
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Get.to(
+                          () => FullBioScreen(bio: bio),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Ionicons.information_circle_outline,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              width: size.width * 0.8,
+                              child: Text(
+                                bio,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.interTight(
+                                  color: blackColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  'Joined - ${timeago.format(dateJoined)}',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: const TextStyle(
-                    color: lightBlackColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                  ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Ionicons.calendar_number_outline,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      'Joined - ${timeago.format(dateJoined)}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.interTight(
+                        color: blackColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (address != '')
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    address,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: const TextStyle(
-                      color: lightBlackColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 5,
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Ionicons.location_outline,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            address,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            style: GoogleFonts.interTight(
+                              color: blackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              // const SizedBox(
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  CustomButton(
+                    text: 'Rate User',
+                    onPressed: () async {
+                      final value = await services.getUserData(sellerUid);
+                      if (value['ratedBy'].contains(services.user!.uid)) {
+                        showSnackBar(
+                          content: 'You have already rated this user',
+                          color: redColor,
+                        );
+                      } else {
+                        Get.to(
+                          () => UserRatingScreen(
+                            userId: sellerUid,
+                            name: name,
+                          ),
+                        );
+                      }
+                    },
+                    icon: Ionicons.star_outline,
+                    borderColor: blueColor,
+                    bgColor: blueColor,
+                    textIconColor: whiteColor,
+                  ),
+                ],
+              ),
+              // SizedBox(
               //   height: 10,
               // ),
               // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   padding: EdgeInsets.symmetric(horizontal: 15),
               //   child: isFollowing
               //       ? CustomButton(
               //           text: 'Unfollow',
@@ -652,21 +670,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //           textIconColor: whiteColor,
               //         ),
               // ),
-              const SizedBox(
+              const Divider(
                 height: 20,
+                thickness: 3,
+                color: greyColor,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
+                  Padding(
+                    padding: const EdgeInsets.only(
                       left: 15,
                       right: 15,
                     ),
                     child: Text(
                       'Currently Selling',
                       maxLines: 1,
-                      style: TextStyle(
+                      style: GoogleFonts.interTight(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                       ),
@@ -681,6 +701,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showProfileImage(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.down,
+          onDismissed: (direction) {
+            Get.back();
+          },
+          child: Material(
+            color: blackColor,
+            child: Stack(
+              children: [
+                PhotoViewGallery.builder(
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  itemCount: 1,
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: CachedNetworkImageProvider(
+                        profileImage,
+                      ),
+                      initialScale: PhotoViewComputedScale.contained * 1,
+                      minScale: PhotoViewComputedScale.contained * 1,
+                      maxScale: PhotoViewComputedScale.contained * 2,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Ionicons.alert_circle_outline,
+                          size: 20,
+                          color: redColor,
+                        );
+                      },
+                    );
+                  },
+                  loadingBuilder: (context, event) {
+                    return const Center(
+                      child: CustomLoadingIndicator(),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 15,
+                  right: 15,
+                  child: IconButton(
+                    onPressed: () => Get.back(),
+                    splashColor: transparentColor,
+                    splashRadius: 30,
+                    icon: const Icon(
+                      Ionicons.close_circle_outline,
+                      size: 30,
+                      color: whiteColor,
+                      shadows: [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 15,
+                          spreadRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -709,27 +798,23 @@ class _SellerProductsListState extends State<SellerProductsList> {
           )
           .where('sellerUid', isEqualTo: widget.sellerUid)
           .where('isActive', isEqualTo: true),
-      pageSize: 15,
+      pageSize: 16,
       builder: (context, snapshot, child) {
         if (snapshot.isFetching) {
           return const Padding(
             padding: EdgeInsets.all(15.0),
             child: Center(
-              child: SpinKitFadingCircle(
-                color: lightBlackColor,
-                size: 30,
-                duration: Duration(milliseconds: 1000),
-              ),
+              child: CustomLoadingIndicator(),
             ),
           );
         }
         if (snapshot.hasError) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -738,8 +823,8 @@ class _SellerProductsListState extends State<SellerProductsList> {
           );
         }
         if (snapshot.hasData && snapshot.docs.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(15),
+          return Padding(
+            padding: const EdgeInsets.all(15),
             child: Center(
               child: Text(
                 'No products from this seller',
@@ -747,7 +832,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -755,12 +840,10 @@ class _SellerProductsListState extends State<SellerProductsList> {
             ),
           );
         }
-        return ListView.separated(
-          separatorBuilder: (context, index) {
-            return const SizedBox(
-              height: 10,
-            );
-          },
+        return AlignedGridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
           padding: const EdgeInsets.only(
             left: 15,
             top: 10,
@@ -772,18 +855,14 @@ class _SellerProductsListState extends State<SellerProductsList> {
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
             final data = snapshot.docs[index];
-            final time = DateTime.fromMillisecondsSinceEpoch(data['postedAt']);
-            final sellerDetails = _services.getUserData(data['sellerUid']);
             final hasMoreReached = snapshot.hasMore &&
                 index + 1 == snapshot.docs.length &&
                 !snapshot.isFetchingMore;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CustomProductCard(
+                CustomProductCardGrid(
                   data: data,
-                  sellerDetails: sellerDetails,
-                  time: time,
                 ),
                 if (hasMoreReached)
                   const SizedBox(
@@ -791,7 +870,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                   ),
                 if (hasMoreReached)
                   CustomButtonWithoutIcon(
-                    text: 'Load More',
+                    text: 'Show more',
                     onPressed: () => snapshot.fetchMore(),
                     borderColor: blackColor,
                     bgColor: whiteColor,
@@ -800,7 +879,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
               ],
             );
           },
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
         );
       },
     );

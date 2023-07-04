@@ -1,17 +1,19 @@
 import 'package:buy_sell_app/screens/main_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_loading_indicator.dart';
 import '../widgets/loading_button.dart';
 import '/widgets/custom_button.dart';
 import '/utils/utils.dart';
@@ -26,91 +28,121 @@ class UpdateProfileImageScreen extends StatefulWidget {
 }
 
 class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
-  final FirebaseServices services = FirebaseServices();
+  final FirebaseServices _services = FirebaseServices();
   final uuid = const Uuid();
   String profileImage = '';
-  XFile? pickedImage;
+  File? pickedImage;
   String downloadUrl = '';
   bool isLoading = false;
 
   @override
   void initState() {
-    getUserProfileImage();
     super.initState();
+    _fetchUserData();
   }
 
-  getUserProfileImage() async {
-    await services.getCurrentUserData().then((value) {
-      if (value['profileImage'] != null) {
-        if (mounted) {
-          setState(() {
-            profileImage = value['profileImage'];
-            return;
-          });
-        }
-        if (mounted) {
-          setState(() {
-            profileImage = '';
-          });
-        }
-      }
-    });
+  Future<void> _fetchUserData() async {
+    final value = await _services.getCurrentUserData();
+    if (value['profileImage'] != null) {
+      setState(() {
+        profileImage = value['profileImage'];
+      });
+    } else {
+      setState(() {
+        profileImage = '';
+      });
+    }
   }
 
   uploadImage(File image) async {
     setState(() {
       isLoading = true;
     });
-    try {
-      final Reference storageReference = FirebaseStorage.instance
-          .ref()
-          .child('profileImages/${services.user!.uid}/${uuid.v1()}');
-      final UploadTask uploadTask = storageReference.putFile(image);
-      downloadUrl = await (await uploadTask).ref.getDownloadURL();
-      await services.users.doc(services.user!.uid).update({
-        'profileImage': downloadUrl,
-      });
-      setState(() {
-        isLoading = false;
-      });
-    } on FirebaseException {
-      showSnackBar(
-        content: 'Something has gone wrong. Please try again',
-        color: redColor,
-      );
-      setState(() {
-        isLoading = false;
-      });
-    }
+    // try {
+    // final cloudinary = Cloudinary.signedConfig(
+    //   apiKey: CloudinaryServices.apiKey,
+    //   apiSecret: CloudinaryServices.apiSecret,
+    //   cloudName: CloudinaryServices.cloudName,
+    // );
+    // final response = await cloudinary.upload(
+    //   file: image.path,
+    //   fileBytes: image.readAsBytesSync(),
+    //   resourceType: CloudinaryResourceType.image,
+    //   folder: 'profileImages/${_services.user!.uid}',
+    //   fileName: uuid.v1(),
+    // );
+    // if (response.isSuccessful) {
+    //   downloadUrl = response.secureUrl!;
+    //   await _services.users.doc(_services.user!.uid).update({
+    //     'profileImage': downloadUrl,
+    //   });
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // } else if (!response.isSuccessful) {
+    //   showSnackBar(
+    //     content: 'Something has gone wrong. Please try again',
+    //     color: redColor,
+    //   );
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
+    final Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profileImages/${_services.user!.uid}/${uuid.v1()}');
+    final UploadTask uploadTask = storageReference.putFile(image);
+    downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    await _services.users.doc(_services.user!.uid).update({
+      'profileImage': downloadUrl,
+    });
     setState(() {
       isLoading = false;
     });
   }
+  // on FirebaseException {
+  //   showSnackBar(
+  //     content: 'Something has gone wrong. Please try again',
+  //     color: redColor,
+  //   );
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
+  // setState(() {
+  //   isLoading = false;
+  // });
+  // }
 
   choosePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 75,
-    );
-    if (mounted) {
-      setState(() {
-        pickedImage = picked;
-      });
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null && mounted) {
+      final compressedImage = await _services.compressImage(File(picked.path));
+      if (compressedImage.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          pickedImage = compressedImage;
+        });
+      }
     }
   }
 
   takePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 75,
-      preferredCameraDevice: CameraDevice.front,
-    );
-    if (mounted) {
-      setState(() {
-        pickedImage = picked;
-      });
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked != null && mounted) {
+      final compressedImage = await _services.compressImage(File(picked.path));
+      if (compressedImage.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          pickedImage = compressedImage;
+        });
+      }
     }
   }
 
@@ -196,10 +228,10 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Ready to update?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -216,9 +248,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Are you sure you want to update your profile image?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -227,28 +259,37 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Confirm & Update',
-                  onPressed: () async {
-                    Get.back();
-                    await uploadImage(File(pickedImage!.path));
-                    Get.offAll(() => const MainScreen(selectedIndex: 3));
-                  },
-                  bgColor: blueColor,
-                  isDisabled: isLoading,
-                  borderColor: blueColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'Go Back & Change',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  isDisabled: isLoading,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        isDisabled: isLoading,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Update',
+                        icon: Ionicons.checkmark_outline,
+                        onPressed: () async {
+                          Get.back();
+                          await uploadImage(File(pickedImage!.path));
+                          Get.offAll(() => const MainScreen(selectedIndex: 3));
+                        },
+                        bgColor: blueColor,
+                        isDisabled: isLoading,
+                        borderColor: blueColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -269,9 +310,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Update profile image',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -283,20 +324,6 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
           const SizedBox(
             height: 20,
           ),
-          if (profileImage == '' && pickedImage == null)
-            Container(
-              height: size.width * 0.3,
-              width: size.width * 0.3,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: blueColor,
-              ),
-              child: const Icon(
-                Ionicons.person,
-                color: whiteColor,
-                size: 45,
-              ),
-            ),
           if (profileImage != '' && pickedImage == null)
             SizedBox(
               height: size.width * 0.3,
@@ -306,26 +333,39 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 child: CachedNetworkImage(
                   imageUrl: profileImage,
                   fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
+                  memCacheHeight: (size.width * 0.3).round(),
+                  memCacheWidth: (size.width * 0.3).round(),
                   errorWidget: (context, url, error) {
                     return const Icon(
-                      Ionicons.alert_circle,
+                      Ionicons.alert_circle_outline,
                       size: 30,
                       color: redColor,
                     );
                   },
                   placeholder: (context, url) {
                     return const Center(
-                      child: SpinKitFadingCircle(
-                        color: lightBlackColor,
-                        size: 30,
-                        duration: Duration(milliseconds: 1000),
-                      ),
+                      child: CustomLoadingIndicator(),
                     );
                   },
                 ),
               ),
-            ),
-          if (profileImage == '' && pickedImage != null)
+            )
+          else if (profileImage == '' && pickedImage == null)
+            Container(
+              height: size.width * 0.3,
+              width: size.width * 0.3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: blueColor,
+              ),
+              child: const Icon(
+                Ionicons.person_outline,
+                color: whiteColor,
+                size: 45,
+              ),
+            )
+          else if (profileImage == '' && pickedImage != null)
             SizedBox(
               height: size.width * 0.3,
               width: size.width * 0.3,
@@ -336,8 +376,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-          if (profileImage != '' && pickedImage != null)
+            )
+          else if (profileImage != '' && pickedImage != null)
             SizedBox(
               height: size.width * 0.3,
               width: size.width * 0.3,
@@ -356,7 +396,8 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(
               text: 'Take Photo',
-              onPressed: requestCameraPermission,
+              onPressed: () => requestCameraPermission(),
+              isFullWidth: true,
               icon: Ionicons.camera,
               bgColor: whiteColor,
               borderColor: blackColor,
@@ -364,15 +405,13 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               isDisabled: isLoading ? true : false,
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: CustomButton(
-              text: 'Choose Photo',
-              onPressed: requestGalleryPermission,
+              text: 'Upload Photo',
+              onPressed: () => requestGalleryPermission(),
               icon: Ionicons.image,
+              isFullWidth: true,
               bgColor: whiteColor,
               borderColor: blackColor,
               textIconColor: blackColor,
@@ -395,7 +434,9 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
               )
             : CustomButton(
                 text: 'Proceed',
-                onPressed: pickedImage != null ? showConfirmationDialog : () {},
+                onPressed: pickedImage != null
+                    ? () => showConfirmationDialog()
+                    : () {},
                 icon: Ionicons.arrow_forward,
                 bgColor: blueColor,
                 borderColor: blueColor,

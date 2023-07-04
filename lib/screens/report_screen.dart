@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:buy_sell_app/utils/utils.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,11 +28,18 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future getImageFromGallery() async {
     final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 60);
+        await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null && mounted) {
-      setState(() {
-        reportImage = File(pickedFile.path);
-      });
+      final compressedFile =
+          await services.compressImage(File(pickedFile.path));
+      if (compressedFile.lengthSync() >= 2000000) {
+        showSnackBar(
+            color: redColor, content: 'Maximum image size allowed is 2MB');
+      } else {
+        setState(() {
+          reportImage = compressedFile;
+        });
+      }
     }
   }
 
@@ -96,10 +103,10 @@ class _ReportScreenState extends State<ReportScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Center(
+                Center(
                   child: Text(
                     'Are you sure?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -116,9 +123,9 @@ class _ReportScreenState extends State<ReportScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: greyColor,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Are you sure you want to send this report?',
-                    style: TextStyle(
+                    style: GoogleFonts.interTight(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -127,39 +134,42 @@ class _ReportScreenState extends State<ReportScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomButtonWithoutIcon(
-                  text: 'Yes, Send Report',
-                  onPressed: () async {
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo =
-                        await deviceInfo.androidInfo;
-                    services.reportAProblem(
-                      text: reportTextController.text,
-                      screenshot: reportImage,
-                      androidVersion: androidInfo.version.release,
-                      model: androidInfo.model,
-                      securityPatch: androidInfo.version.securityPatch,
-                    );
-                    Get.back();
-                    setState(() {
-                      reportImage == null;
-                      reportTextController.clear();
-                    });
-                    Get.back();
-                  },
-                  bgColor: whiteColor,
-                  borderColor: redColor,
-                  textIconColor: redColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButtonWithoutIcon(
-                  text: 'No, Cancel',
-                  onPressed: () => Get.back(),
-                  bgColor: whiteColor,
-                  borderColor: greyColor,
-                  textIconColor: blackColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButtonWithoutIcon(
+                        text: 'No, Cancel',
+                        onPressed: () => Get.back(),
+                        bgColor: whiteColor,
+                        borderColor: greyColor,
+                        textIconColor: blackColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Report',
+                        icon: Ionicons.arrow_forward,
+                        onPressed: () async {
+                          services.reportAProblem(
+                            text: reportTextController.text,
+                            screenshot: reportImage,
+                          );
+                          Get.back();
+                          setState(() {
+                            reportImage == null;
+                            reportTextController.clear();
+                          });
+                          Get.back();
+                        },
+                        bgColor: redColor,
+                        borderColor: redColor,
+                        textIconColor: whiteColor,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -185,9 +195,9 @@ class _ReportScreenState extends State<ReportScreen> {
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Report a problem',
-          style: TextStyle(
+          style: GoogleFonts.interTight(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -226,7 +236,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 width: 100,
                 child: reportImage == null
                     ? const Icon(
-                        Ionicons.cloud_upload,
+                        Ionicons.cloud_upload_outline,
                         color: lightBlackColor,
                       )
                     : ClipRRect(
@@ -238,7 +248,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               reportImage!,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(
-                                  Ionicons.alert_circle,
+                                  Ionicons.alert_circle_outline,
                                   size: 20,
                                   color: redColor,
                                 );
@@ -250,11 +260,9 @@ class _ReportScreenState extends State<ReportScreen> {
                               right: -10,
                               child: IconButton(
                                 tooltip: 'Delete image',
-                                onPressed: () {
-                                  setState(() {
-                                    reportImage = null;
-                                  });
-                                },
+                                onPressed: () => setState(() {
+                                  reportImage = null;
+                                }),
                                 icon: const Icon(
                                   Ionicons.close_circle_outline,
                                   size: 15,
@@ -284,6 +292,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 }
                 showConfirmation();
               },
+              isFullWidth: true,
               bgColor: redColor,
               borderColor: redColor,
               textIconColor: whiteColor,

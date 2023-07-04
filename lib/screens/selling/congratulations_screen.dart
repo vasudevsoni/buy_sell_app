@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -16,164 +17,130 @@ class CongratulationsScreen extends StatefulWidget {
 }
 
 class _CongratulationsScreenState extends State<CongratulationsScreen> {
-  final ConfettiController controller = ConfettiController();
+  final InAppReview inAppReview = InAppReview.instance;
+  // bool showAd = true;
 
-  @override
-  void initState() {
-    controller.play();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  // Future<void> _initInterstitialAd() async {
+  //   try {
+  //     await InterstitialAd.load(
+  //       adUnitId: AdmobServices.interstitialAdUnitId,
+  //       request: const AdRequest(),
+  //       adLoadCallback: InterstitialAdLoadCallback(
+  //         onAdLoaded: (ad) {
+  //           ad.fullScreenContentCallback = FullScreenContentCallback(
+  //             onAdFailedToShowFullScreenContent: (ad, err) {
+  //               setState(() {
+  //                 showAd = false;
+  //               });
+  //               ad.dispose();
+  //             },
+  //             onAdDismissedFullScreenContent: (ad) {
+  //               ad.dispose();
+  //             },
+  //           );
+  //           ad.show();
+  //         },
+  //         onAdFailedToLoad: (LoadAdError error) {
+  //           setState(() {
+  //             showAd = false;
+  //           });
+  //         },
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     setState(() {
+  //       showAd = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: whiteColor,
-          extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            backgroundColor: transparentColor,
-            elevation: 0.0,
-            actions: [
-              IconButton(
-                onPressed: () =>
-                    Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                icon: const Icon(
-                  Ionicons.close_circle_outline,
-                  color: blackColor,
-                  size: 30,
-                ),
-              ),
-            ],
-          ),
-          body: Padding(
+    // final mainProv = Provider.of<AppNavigationProvider>(context, listen: false);
+
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: whiteColor,
+        body: SafeArea(
+          child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomConfettiWidget(
-                      controller: controller,
-                      blastDirection: 225,
-                    ),
-                    CustomConfettiWidget(
-                      controller: controller,
-                      blastDirection: 180,
-                    ),
-                  ],
-                ),
-                const Text(
-                  '👍',
+                Text(
+                  '🎉 Well Done!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w900,
-                    color: blueColor,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Text(
-                  'Congratulations!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontSize: 30,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                     color: blueColor,
                   ),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                const Text(
-                  'Your product will be live once it is reviewed.',
+                Text(
+                  'We will review your product and then publish it',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.interTight(
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: blackColor,
                   ),
                 ),
-                const Text(
-                  'In the meantime, browse some products, or just sit back and relax.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: blackColor,
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: redColor,
+                    border: greyBorder,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    'Note: Reviewing usually takes up to 24 hours to complete.\nMay take longer than 24 hours during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.interTight(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: whiteColor,
+                    ),
                   ),
                 ),
                 const Spacer(),
-                CustomButton(
-                  text: 'Invite your Friends',
-                  onPressed: () => Share.share(
-                    'Hey! I found some really amazing deals on the BechDe app. Download it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app',
-                  ),
-                  icon: Ionicons.share_social,
-                  bgColor: blackColor,
-                  borderColor: blackColor,
-                  textIconColor: whiteColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 CustomButton(
                   text: 'Go to Home',
-                  onPressed: () =>
-                      Get.offAll(() => const MainScreen(selectedIndex: 0)),
-                  icon: Ionicons.home,
+                  onPressed: () => Get.offAll(
+                    () => const MainScreen(selectedIndex: 0),
+                  )
+                  // if (showAd && !mainProv.adsRemoved) {
+                  //   await _initInterstitialAd();
+                  // }
+                  ,
+                  icon: Ionicons.home_outline,
+                  isFullWidth: true,
                   bgColor: blueColor,
                   borderColor: blueColor,
+                  textIconColor: whiteColor,
+                ),
+                CustomButton(
+                  text: 'Share with Friends',
+                  onPressed: () => Share.share(
+                      'Hey! I found some really amazing deals on the BechDe app.\nAnd you can also sell products without any listing fees or monthly limits.\nDownload it now - https://play.google.com/store/apps/details?id=com.bechde.buy_sell_app'),
+                  isFullWidth: true,
+                  icon: Ionicons.share_social_outline,
+                  bgColor: blackColor,
+                  borderColor: blackColor,
                   textIconColor: whiteColor,
                 ),
               ],
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class CustomConfettiWidget extends StatelessWidget {
-  const CustomConfettiWidget({
-    Key? key,
-    required this.controller,
-    required this.blastDirection,
-  }) : super(key: key);
-
-  final ConfettiController controller;
-  final double blastDirection;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConfettiWidget(
-      confettiController: controller,
-      shouldLoop: false,
-      colors: const [
-        blueColor,
-        redColor,
-        Colors.blue,
-        Colors.yellow,
-      ],
-      blastDirectionality: BlastDirectionality.directional,
-      emissionFrequency: 0.01,
-      maxBlastForce: 50,
-      minBlastForce: 10,
-      blastDirection: blastDirection,
-      minimumSize: const Size(10, 10),
-      maximumSize: const Size(50, 50),
-      numberOfParticles: 10,
-      gravity: 0.1,
+      ),
     );
   }
 }

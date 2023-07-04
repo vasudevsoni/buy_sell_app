@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '/utils/utils.dart';
 
@@ -18,17 +19,16 @@ class CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
+      splashFactory: InkRipple.splashFactory,
+      splashColor: transparentColor,
+      borderRadius: BorderRadius.circular(10),
+      child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: whiteColor,
-          border: Border.all(
-            color: greyColor,
-            width: 1,
-          ),
+          border: greyBorder,
         ),
         width: double.infinity,
         height: double.infinity,
@@ -37,16 +37,12 @@ class CustomListTile extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: CachedNetworkImage(
-                    imageUrl: url,
-                  )
-                  // SVGPictureWidget(
-                  //   url: url,
-                  //   fit: BoxFit.contain,
-                  //   semanticsLabel: 'category image',
-                  // ),
-                  ),
+                padding: const EdgeInsets.all(15),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -59,9 +55,9 @@ class CustomListTile extends StatelessWidget {
                 maxLines: 1,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: GoogleFonts.interTight(
                   fontWeight: FontWeight.w700,
-                  fontSize: 20,
+                  fontSize: 18,
                   color: blackColor,
                 ),
               ),
