@@ -3,7 +3,7 @@ description: Buy Sell Used Products Nearby
 
 publish_to: "none"
 
-version: 1.9.4+68
+version: 1.9.5+69
 
 environment:
   sdk: ">=2.18.1 <4.0.0"
@@ -36,6 +36,7 @@ dependencies:
   firebase_core: ^2.14.0
   google_sign_in: ^6.1.4
   carousel_slider: ^4.2.1
+  cloud_functions: ^4.3.3
   cloud_firestore: ^4.8.2
   email_validator: ^2.1.17
   # cloudinary_dart: ^0.0.11

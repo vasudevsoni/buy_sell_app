@@ -10,6 +10,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/screens/location_screen.dart';
+import '../main.dart';
 import '../provider/providers.dart';
 import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
@@ -38,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
   String state = '';
   bool isLocationEmpty = false;
   bool isLoading = true;
+  bool tokenExists = false;
 
   @override
   void initState() {
@@ -58,7 +60,11 @@ class _HomeScreenState extends State<HomeScreen>
     } else {
       showMainUI(value);
     }
-    if ((value.data() as dynamic)['adsRemoved'] == true) {
+    if ((value.data() as dynamic)['Fcm_token'] == '' ||
+        (value.data() as dynamic)['Fcm_token'] != token) {
+      await _services.updateFirebaseToken(token: token);
+    }
+    if ((value.data() as dynamic)['adsRemoved'] == true && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Provider.of<AppNavigationProvider>(context, listen: false).removeAds();
       });

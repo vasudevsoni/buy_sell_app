@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,6 +20,8 @@ AndroidNotificationChannel channel = const AndroidNotificationChannel(
   importance: Importance.max,
   playSound: true,
 );
+
+String? token = '';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -93,12 +94,47 @@ class _MyAppState extends State<MyApp> {
     registerMessaging();
   }
 
-  void registerMessaging() async {
-    await compute(_registerMessaging, null);
+  void updateToken(bool isAllowed) async {
+    token = isAllowed ? await FirebaseMessaging.instance.getToken() : '';
   }
 
-  static Future<void> _registerMessaging(void _) async {
+  void registerMessaging() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      updateToken(true);
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      updateToken(false);
+      showSnackBar(
+        content: 'You won\'t get important notifications.',
+        color: redColor,
+      );
+    }
+
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      // Handle the initial notification message (if any)
+      handleNotificationMessage(message);
+    });
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Handle the incoming notification messages
+      handleNotificationMessage(message);
+    });
+  }
+
+  Future<void> handleNotificationMessage(RemoteMessage? message) async {
+    if (message != null) {
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
@@ -120,7 +156,7 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       }
-    });
+    }
   }
 
   @override

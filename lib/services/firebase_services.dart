@@ -56,6 +56,19 @@ class FirebaseServices {
     }
   }
 
+  Future<void> updateFirebaseToken({required String? token}) async {
+    try {
+      await users.doc(user!.uid).update({
+        "Fcm_token": token!.isEmpty ? '' : token,
+      });
+    } on FirebaseException {
+      showSnackBar(
+        content: 'Something has gone wrong. Please try again',
+        color: redColor,
+      );
+    }
+  }
+
   Future<void> createChatRoomInFirebase({chatData}) async {
     try {
       await chats.doc(chatData['chatRoomId']).set(chatData);

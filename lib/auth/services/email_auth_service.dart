@@ -26,10 +26,14 @@ class EmailAuthService {
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await users.doc(userCredential.user!.uid).update({
+        'Fcm_token': '',
+      });
       Get.offAll(() => const MainScreen(selectedIndex: 0));
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {
@@ -80,6 +84,7 @@ class EmailAuthService {
         'facebookLink': null,
         'websiteLink': null,
         'isDisabled': false,
+        'Fcm_token': '',
         // 'followers': [],
         // 'following': [],
       });

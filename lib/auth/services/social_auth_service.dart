@@ -31,6 +31,7 @@ class SocialAuthService {
           'facebookLink': null,
           'websiteLink': null,
           'isDisabled': false,
+          'Fcm_token': '',
           // 'followers': [],
           // 'following': [],
         });
@@ -46,6 +47,9 @@ class SocialAuthService {
     }
     //if user already exists in database, just navigate her to main screen
     if (document.isNotEmpty) {
+      await _users.doc(user.uid).update({
+        'Fcm_token': '',
+      });
       Get.offAll(() => const MainScreen(selectedIndex: 0));
       return;
     }

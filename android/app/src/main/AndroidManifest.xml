@@ -5,6 +5,8 @@
    <!-- Permissions options for the `internet` group -->
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+   <!-- Permissions options for the `notifications` group -->
+   <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- Permissions options for the `advertisement` group -->
    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
    <!-- Permissions options for the `location` group -->

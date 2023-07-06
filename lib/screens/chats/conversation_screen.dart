@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:buy_sell_app/screens/community_guidelines_screen.dart';
 import 'package:buy_sell_app/screens/profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,6 +53,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String sellerName = '';
   String buyerUid = '';
   String buyerName = '';
+  String buyerToken = '';
+  String sellerToken = '';
   String imageUrl = '';
   String title = '';
   bool isActive = true;
@@ -94,6 +98,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         sellerData = seller;
         sellerName = seller['name'];
         buyerName = buyer['name'];
+        buyerToken = buyer['Fcm_token'];
+        sellerToken = seller['Fcm_token'];
         title = chatRoom['product']['title'];
         imageUrl = chatRoom['product']['productImage'];
         isUserDisabled = currentUser['isDisabled'];
@@ -507,6 +513,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
+  Future<void> sendNotification({
+    required String token,
+  }) async {
+    try {
+      final FirebaseFunctions functions =
+          FirebaseFunctions.instanceFor(region: "us-central1");
+      final HttpsCallable callable =
+          functions.httpsCallable("sendNotification");
+      final response = await callable.call({
+        "token": token,
+      });
+      log("Message sent: ${response.data}");
+    } catch (e) {
+      log("Error: $e");
+    }
+  }
+
   sendMessage(String text) async {
     final Map<String, dynamic> message = {
       'message': text,
@@ -677,6 +700,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               fontWeight: FontWeight.w700,
                             ),
                             maxLines: 1,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(
                             width: 5,
@@ -1034,6 +1059,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                       if (chatMessageController
                                           .text.isNotEmpty) {
                                         sendMessage(chatMessageController.text);
+                                        if (sellerUid == user!.uid) {
+                                          if (buyerToken != '') {
+                                            sendNotification(token: buyerToken);
+                                          }
+                                        } else {
+                                          if (sellerToken != '') {
+                                            sendNotification(
+                                                token: sellerToken);
+                                          }
+                                        }
                                       }
                                     },
                                     child: const Icon(
