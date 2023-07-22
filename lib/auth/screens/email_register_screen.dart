@@ -65,7 +65,7 @@ class _EmailRegisterScreenState extends State<EmailRegisterScreen> {
         centerTitle: true,
         title: Text(
           'Register with your email',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

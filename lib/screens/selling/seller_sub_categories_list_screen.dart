@@ -88,7 +88,7 @@ class _SellerSubCategoriesListScreenState
         centerTitle: true,
         title: Text(
           'Select a sub category in ${widget.doc['catName']}',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

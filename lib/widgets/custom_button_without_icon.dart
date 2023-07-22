@@ -47,7 +47,7 @@ class CustomButtonWithoutIcon extends StatelessWidget {
         softWrap: true,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           color: textIconColor,
           fontSize: 14,
           fontWeight: FontWeight.w600,

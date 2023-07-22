@@ -26,7 +26,7 @@ class CategoriesListScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Categories',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w600,
             color: blackColor,
             fontSize: 15,

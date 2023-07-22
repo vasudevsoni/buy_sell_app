@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/widgets/custom_list_tile_with_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -11,12 +12,11 @@ import 'package:share_plus/share_plus.dart';
 import '../provider/providers.dart';
 import '../services/admob_services.dart';
 import '../widgets/custom_button_without_icon.dart';
+import '../widgets/custom_list_tile_no_image.dart';
 import '/auth/screens/location_screen.dart';
-import '/widgets/custom_list_tile_with_subtitle.dart';
 import '/services/firebase_services.dart';
 import '/auth/screens/landing_screen.dart';
 import '/utils/utils.dart';
-import 'update_profile_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -126,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Center(
                   child: Text(
                     'Are you sure?',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -145,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   child: Text(
                     'Are you sure you want to log out of your account? You will need to log in again to access your account.',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -216,7 +216,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         centerTitle: true,
         title: Text(
           'Settings',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -232,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
                 'Account',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -251,25 +251,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 physics: const BouncingScrollPhysics(),
                 children: [
                   CustomListTileWithSubtitle(
-                    text: 'Edit Profile',
-                    icon: Ionicons.create_outline,
-                    subTitle: 'Edit your name, bio or add social links',
-                    trailingIcon: Ionicons.chevron_forward,
-                    onTap: () => Get.to(
-                      () => const UpdateProfileScreen(),
-                    ),
-                    isEnabled: true,
-                  ),
-                  const Divider(
-                    height: 0,
-                    color: fadedColor,
-                    indent: 15,
-                  ),
-                  CustomListTileWithSubtitle(
                     text: 'Change Location',
-                    subTitle: address == ''
-                        ? 'No location selected'
-                        : 'Current location - $address',
+                    subTitle: address == '' ? 'No location selected' : address,
                     icon: Ionicons.location_outline,
                     trailingIcon: Ionicons.chevron_forward,
                     onTap: () => Get.to(
@@ -302,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
                 'Actions',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -320,11 +303,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Participate in our survey',
-                    subTitle: 'Help us improve BechDe by filling this survey',
                     icon: Ionicons.flash_outline,
-                    textColor: blackColor,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
                     onTap: () => showSurveyPopUp(context),
@@ -334,9 +315,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: fadedColor,
                     indent: 15,
                   ),
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Invite friends to BechDe',
-                    subTitle: 'Invite your friends to buy and sell on BechDe',
                     icon: Ionicons.people_outline,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
@@ -348,12 +328,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: fadedColor,
                     indent: 15,
                   ),
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Log out',
-                    subTitle: 'Log out of your account from this device',
                     onTap: showLogoutConfirmation,
                     icon: Ionicons.log_out_outline,
-                    textColor: redColor,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
                   ),

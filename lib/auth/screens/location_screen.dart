@@ -139,7 +139,7 @@ class _LocationScreenState extends State<LocationScreen> {
         centerTitle: true,
         title: Text(
           'Set your location',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -156,24 +156,10 @@ class _LocationScreenState extends State<LocationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'By setting your location, you can receive tailored product suggestions in your area and market your own products for sale',
-                style: GoogleFonts.interTight(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Text(
-                'In order to access all of our offerings, we must know where to look for them',
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w500,
-                  color: lightBlackColor,
+                'By setting your location, you can shop for products in your area and list your own products for sale',
+                style: GoogleFonts.sora(
                   fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -444,27 +442,61 @@ class FirebaseServices {
   //   }
   // }
 
-  Future<File> compressImage(File file) async {
-    // Define quality constants
-    const int lowQuality = 15;
-    const int mediumQuality = 40;
-    const int highQuality = 65;
+  // Future<void> addFields() async {
+  //   try {
+  //     var batchSize = 1000;
+  //     var query = users.limit(batchSize);
+  //     var querySnapshots = await query.get();
 
-    // Determine the quality based on the file size
-    int fileSize = file.lengthSync();
-    int quality = fileSize <= 500000
-        ? highQuality
-        : fileSize > 500000 && fileSize <= 1500000
-            ? mediumQuality
-            : lowQuality;
+  //     while (querySnapshots.docs.isNotEmpty) {
+  //       for (var doc in querySnapshots.docs) {
+  //         await doc.reference.update({
+  //           'Fcm_token': '',
+  //         });
+  //       }
 
-    // Compress the image using FlutterNativeImage
-    var result =
-        await FlutterNativeImage.compressImage(file.path, quality: quality);
+  //       // Get the last document from the previous query
+  //       var lastDocument = querySnapshots.docs[querySnapshots.docs.length - 1];
 
-    // Return the compressed file
-    return result;
-  }
+  //       // Construct the next query starting after the last document
+  //       query = users.startAfterDocument(lastDocument).limit(batchSize);
+
+  //       querySnapshots = await query.get();
+  //     }
+
+  //     showSnackBar(
+  //       content: 'Updated',
+  //       color: blueColor,
+  //     );
+  //   } catch (e) {
+  //     showSnackBar(
+  //       content: 'Something has gone wrong. Please try again',
+  //       color: redColor,
+  //     );
+  //   }
+  // }
+
+  // Future<File> compressImage(File file) async {
+  //   // Define quality constants
+  //   const int lowQuality = 15;
+  //   const int mediumQuality = 40;
+  //   const int highQuality = 65;
+
+  //   // Determine the quality based on the file size
+  //   int fileSize = file.lengthSync();
+  //   int quality = fileSize <= 500000
+  //       ? highQuality
+  //       : fileSize > 500000 && fileSize <= 1500000
+  //           ? mediumQuality
+  //           : lowQuality;
+
+  //   // Compress the image using FlutterNativeImage
+  //   var result =
+  //       await FlutterNativeImage.compressImage(file.path, quality: quality);
+
+  //   // Return the compressed file
+  //   return result;
+  // }
 
   // Future<String> createDynamicLink() async {
   //   final dynamicLinkParams = DynamicLinkParameters(

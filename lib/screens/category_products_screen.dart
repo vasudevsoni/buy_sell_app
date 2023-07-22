@@ -131,7 +131,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen>
           maxLines: 1,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -142,16 +142,16 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen>
           indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
-          labelStyle: GoogleFonts.interTight(
+          labelStyle: GoogleFonts.sora(
             fontWeight: FontWeight.w700,
             fontSize: 14,
           ),
-          unselectedLabelStyle: GoogleFonts.interTight(
-            fontWeight: FontWeight.w500,
+          unselectedLabelStyle: GoogleFonts.sora(
+            fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
           labelColor: blueColor,
-          unselectedLabelColor: lightBlackColor,
+          unselectedLabelColor: blackColor,
           tabs: const [
             Tab(
               text: 'Nearby',
@@ -338,7 +338,7 @@ class _CategoryScreenProductsListState
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,
                     ),
@@ -405,7 +405,7 @@ class _CategoryScreenProductsListState
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       ),
@@ -445,7 +445,7 @@ class _CategoryScreenProductsListState
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
                           ),

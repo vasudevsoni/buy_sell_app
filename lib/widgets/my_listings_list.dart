@@ -67,7 +67,7 @@ class MyListingsList extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -106,7 +106,7 @@ class MyListingsList extends StatelessWidget {
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,
                     ),
@@ -123,7 +123,7 @@ class MyListingsList extends StatelessWidget {
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -162,7 +162,7 @@ class MyListingsList extends StatelessWidget {
                 child: Text(
                   '${snapshot.docs.length} products',
                   maxLines: 1,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
                   ),
@@ -306,7 +306,7 @@ class _MyListingScreenProductCardState
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -434,7 +434,7 @@ class _MyListingScreenProductCardState
                 Center(
                   child: Text(
                     'Are you sure? 😱',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -453,7 +453,7 @@ class _MyListingScreenProductCardState
                   ),
                   child: Text(
                     'Your product will be permanently deleted.\nAll your chats with buyers for this listing will also be deleted.\n\nNote - This action cannot be reversed.',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -565,10 +565,11 @@ class _MyListingScreenProductCardState
                             Expanded(
                               child: Container(
                                 height: size.width * 0.3,
-                                padding: const EdgeInsets.all(10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     widget.data['catName'] == 'Jobs'
                                         ? AutoSizeText(
@@ -576,7 +577,7 @@ class _MyListingScreenProductCardState
                                             maxLines: 1,
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w800,
                                               color: blackColor,
                                               fontSize: 16,
@@ -588,7 +589,7 @@ class _MyListingScreenProductCardState
                                             maxLines: 1,
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w800,
                                               color: blackColor,
                                               fontSize: 16,
@@ -605,7 +606,7 @@ class _MyListingScreenProductCardState
                                             maxLines: 1,
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w500,
                                               color: blackColor,
                                               fontSize: 13,
@@ -622,10 +623,10 @@ class _MyListingScreenProductCardState
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             softWrap: true,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 15,
+                                              fontSize: 14,
                                             ),
                                           )
                                         : Text(
@@ -633,20 +634,22 @@ class _MyListingScreenProductCardState
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             softWrap: true,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 15,
+                                              fontSize: 14,
                                             ),
                                           ),
-                                    const Spacer(),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
                                     Text(
                                       widget.time,
                                       maxLines: 1,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                        color: lightBlackColor,
+                                      style: GoogleFonts.sora(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: blueColor,
                                       ),
                                     ),
                                   ],
@@ -673,9 +676,9 @@ class _MyListingScreenProductCardState
                                 ),
                                 Text(
                                   'Views: ${numberFormat.format(widget.data['views'].length)}',
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     color: blackColor,
                                   ),
                                 ),
@@ -696,9 +699,9 @@ class _MyListingScreenProductCardState
                                 ),
                                 Text(
                                   'Likes: ${numberFormat.format(widget.data['favorites'].length)}',
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     color: blackColor,
                                   ),
                                 ),
@@ -721,10 +724,10 @@ class _MyListingScreenProductCardState
                             ),
                             Text(
                               'Product ID: ${widget.data.id}',
-                              style: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: lightBlackColor,
+                              style: GoogleFonts.sora(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: blackColor,
                               ),
                             ),
                           ],
@@ -738,12 +741,16 @@ class _MyListingScreenProductCardState
                               Expanded(
                                 child: Chip(
                                   backgroundColor: blackColor,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 5,
+                                  ),
                                   label: AutoSizeText(
-                                    'UNDER REVIEW. Usually takes up to 24 hours to complete. May take longer than 24 hours during weekends or holidays when our team is not fully staffed.',
-                                    maxLines: 3,
+                                    'UNDER REVIEW. As we review each product manually, it can take some time to review. Thanks for your patience.',
+                                    maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                       color: whiteColor,
@@ -766,7 +773,7 @@ class _MyListingScreenProductCardState
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                       color: whiteColor,
@@ -782,22 +789,41 @@ class _MyListingScreenProductCardState
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Chip(
-                                  backgroundColor: greenColor,
-                                  label: Text(
-                                    'ACTIVE',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: true,
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                      color: whiteColor,
-                                    ),
+                              Chip(
+                                backgroundColor: greenColor,
+                                label: Text(
+                                  'ACTIVE',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: GoogleFonts.sora(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                    color: whiteColor,
                                   ),
                                 ),
                               ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              if (widget.data['isRejected'] == false)
+                                Expanded(
+                                  child: CustomButton(
+                                    icon: Ionicons.trending_up,
+                                    text: 'Promote Listing',
+                                    onPressed: () => Get.to(
+                                      () => PromoteListingScreen(
+                                        productId: widget.data.id,
+                                        title: widget.data['title'],
+                                        imageUrl: widget.data['images'][0],
+                                      ),
+                                    ),
+                                    isFullWidth: false,
+                                    bgColor: blueColor,
+                                    borderColor: blueColor,
+                                    textIconColor: whiteColor,
+                                  ),
+                                ),
                             ],
                           ),
                         if (widget.data['isSold'] == true)
@@ -812,7 +838,7 @@ class _MyListingScreenProductCardState
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: true,
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                       color: whiteColor,
@@ -870,22 +896,6 @@ class _MyListingScreenProductCardState
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                if (widget.data['isRejected'] == false)
-                                  CustomButton(
-                                    icon: Ionicons.trending_up,
-                                    text: 'Promote Listing',
-                                    onPressed: () => Get.to(
-                                      () => PromoteListingScreen(
-                                        productId: widget.data.id,
-                                        title: widget.data['title'],
-                                        imageUrl: widget.data['images'][0],
-                                      ),
-                                    ),
-                                    isFullWidth: true,
-                                    bgColor: blueColor,
-                                    borderColor: blueColor,
-                                    textIconColor: whiteColor,
-                                  ),
                                 CustomButton(
                                   icon: Ionicons.create_outline,
                                   text: 'Edit Product',

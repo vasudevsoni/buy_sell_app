@@ -82,7 +82,7 @@ class _SubCategoriesListScreenState extends State<SubCategoriesListScreen> {
         centerTitle: true,
         title: Text(
           widget.doc['catName'],
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

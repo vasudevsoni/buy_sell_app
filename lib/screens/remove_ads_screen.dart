@@ -63,7 +63,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
         centerTitle: true,
         title: Text(
           'Remove ads',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -109,7 +109,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
                                 Expanded(
                                   child: Text(
                                     product!.title.toString(),
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700,
                                       color: whiteColor,
@@ -123,7 +123,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
                                       Text(
                                         product!.priceString.toString(),
                                         textAlign: TextAlign.end,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
@@ -132,7 +132,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
                                       Text(
                                         '₹500.00',
                                         textAlign: TextAlign.end,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
@@ -157,7 +157,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
                             Row(
                               children: [
                                 const Icon(
-                                  Ionicons.arrow_up_circle_outline,
+                                  Ionicons.close_circle_outline,
                                   color: whiteColor,
                                   size: 20,
                                 ),
@@ -170,35 +170,7 @@ class _RemoveAdsScreenState extends State<RemoveAdsScreen> {
                                     maxLines: 2,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: greyColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Ionicons.trending_up,
-                                  color: whiteColor,
-                                  size: 20,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Reach more buyers',
-                                    maxLines: 2,
-                                    softWrap: true,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                       color: greyColor,

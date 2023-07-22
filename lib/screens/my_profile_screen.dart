@@ -3,7 +3,7 @@ import 'package:buy_sell_app/screens/follow_us_screen.dart';
 import 'package:buy_sell_app/screens/how_to_use_screen.dart';
 import 'package:buy_sell_app/screens/my_favorites_screen.dart';
 import 'package:buy_sell_app/screens/remove_ads_screen.dart';
-import 'package:buy_sell_app/widgets/custom_list_tile_with_subtitle.dart';
+import 'package:buy_sell_app/screens/update_profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +16,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../widgets/custom_list_tile_no_image.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '../widgets/external_link_icon_widget.dart';
 import 'full_bio_screen.dart';
@@ -113,7 +114,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   void _showRatingDialog() {
     final dialog = RatingDialog(
       initialRating: 5.0,
-      submitButtonTextStyle: GoogleFonts.interTight(
+      submitButtonTextStyle: GoogleFonts.sora(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: blueColor,
@@ -121,7 +122,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       title: Text(
         'Rate our app',
         textAlign: TextAlign.center,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           fontSize: 25,
           fontWeight: FontWeight.w800,
         ),
@@ -129,7 +130,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       message: Text(
         'Tap a star to set your rating. Add some comments if you want',
         textAlign: TextAlign.center,
-        style: GoogleFonts.interTight(fontSize: 15),
+        style: GoogleFonts.sora(fontSize: 15),
       ),
       submitButtonText: 'Submit',
       commentHint: 'Enter comments here',
@@ -160,18 +161,25 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         elevation: 0.2,
         backgroundColor: whiteColor,
         iconTheme: const IconThemeData(color: blackColor),
-        centerTitle: true,
-        title: Text(
-          'My Account',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: true,
-          style: GoogleFonts.interTight(
-            fontWeight: FontWeight.w500,
-            color: blackColor,
-            fontSize: 15,
+        actions: [
+          TextButton.icon(
+            onPressed: () => Get.to(
+              () => const UpdateProfileScreen(),
+            ),
+            icon: const Icon(
+              Ionicons.create_outline,
+              color: blackColor,
+              size: 18,
+            ),
+            label: Text(
+              'Edit profile',
+              style: GoogleFonts.sora(
+                fontWeight: FontWeight.w500,
+                color: blackColor,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -303,10 +311,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             rating == 0.0
                                 ? 'Unrated'
                                 : rating.toStringAsFixed(1),
-                            style: GoogleFonts.interTight(
-                              fontSize: 15,
+                            style: GoogleFonts.sora(
+                              fontSize: 14,
                               color: whiteColor,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(
@@ -314,7 +322,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                           const Icon(
                             Ionicons.star,
-                            size: 15,
+                            size: 12,
                             color: whiteColor,
                           ),
                         ],
@@ -333,10 +341,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   maxLines: 1,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     color: blackColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -410,9 +418,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               maxLines: 3,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 color: blackColor,
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -441,9 +449,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         color: blackColor,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -463,7 +471,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     border: greyBorder,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  height: size.height * 0.12,
+                  height: size.height * 0.1,
                   child: Stack(
                     children: [
                       ClipRRect(
@@ -481,11 +489,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: AutoSizeText(
                             'How to use BechDe?',
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               color: whiteColor,
-                              fontSize: 28,
+                              fontSize: 27,
                               shadows: [customShadow],
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                         ),
@@ -510,7 +518,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   children: [
                     // To activate listings
                     // CustomButton(
-                    //   text: 'check',
+                    //   text: 'activate',
                     //   isFullWidth: true,
                     //   onPressed: () => services.activateListings(),
                     //   icon: Ionicons.checkbox,
@@ -518,9 +526,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     //   borderColor: blueColor,
                     //   textIconColor: whiteColor,
                     // ),
-                    CustomListTileWithSubtitle(
+                    CustomListTileNoImage(
                       text: 'My Listings',
-                      subTitle: 'Manage your listings',
                       icon: Ionicons.bag_outline,
                       trailingIcon: Ionicons.chevron_forward,
                       isEnabled: true,
@@ -533,9 +540,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: fadedColor,
                       indent: 15,
                     ),
-                    CustomListTileWithSubtitle(
+                    CustomListTileNoImage(
                       text: 'My Favorites',
-                      subTitle: 'Manage your favorites',
                       icon: Ionicons.heart_outline,
                       trailingIcon: Ionicons.chevron_forward,
                       isEnabled: true,
@@ -548,9 +554,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: fadedColor,
                       indent: 15,
                     ),
-                    CustomListTileWithSubtitle(
+                    CustomListTileNoImage(
                       text: 'Settings',
-                      subTitle: 'Edit profile, location and log out',
                       icon: Ionicons.cog_outline,
                       trailingIcon: Ionicons.chevron_forward,
                       isEnabled: true,
@@ -563,9 +568,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: fadedColor,
                       indent: 15,
                     ),
-                    CustomListTileWithSubtitle(
+                    CustomListTileNoImage(
                       text: 'Help & Support',
-                      subTitle: 'Contact us, read guidelines and more',
                       icon: Ionicons.help_outline,
                       trailingIcon: Ionicons.chevron_forward,
                       isEnabled: true,
@@ -581,9 +585,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             color: fadedColor,
                             indent: 15,
                           ),
-                          CustomListTileWithSubtitle(
+                          CustomListTileNoImage(
                             text: 'Remove Ads',
-                            subTitle: 'Remove all ads from the app',
                             icon: Ionicons.diamond_outline,
                             trailingIcon: Ionicons.chevron_forward,
                             isEnabled: true,
@@ -598,9 +601,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: fadedColor,
                       indent: 15,
                     ),
-                    CustomListTileWithSubtitle(
+                    CustomListTileNoImage(
                       text: 'Follow us',
-                      subTitle: 'Follow us on social media',
                       icon: Ionicons.people_circle_outline,
                       trailingIcon: Ionicons.chevron_forward,
                       isEnabled: true,
@@ -613,9 +615,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       color: fadedColor,
                       indent: 15,
                     ),
-                    CustomListTileWithSubtitle(
-                      text: 'Rate our app',
-                      subTitle: 'Rate our app on the Play Store',
+                    CustomListTileNoImage(
+                      text: 'Rate Our App',
                       icon: Ionicons.star_outline,
                       isEnabled: true,
                       onTap: () => _showRatingDialog(),
@@ -649,7 +650,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               //             maxLines: 2,
               //             softWrap: true,
               //             overflow: TextOverflow.ellipsis,
-              //             style: GoogleFonts.interTight(
+              //             style: GoogleFonts.sora(
               //               color: blackColor,
               //               fontWeight: FontWeight.w600,
               //               fontSize: 15,
@@ -676,7 +677,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               //                   maxLines: 2,
               //                   softWrap: true,
               //                   overflow: TextOverflow.ellipsis,
-              //                   style: GoogleFonts.interTight(
+              //                   style: GoogleFonts.sora(
               //                     fontSize: 14,
               //                     fontWeight: FontWeight.w500,
               //                     color: blackColor,
@@ -701,7 +702,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               //                   maxLines: 2,
               //                   softWrap: true,
               //                   overflow: TextOverflow.ellipsis,
-              //                   style: GoogleFonts.interTight(
+              //                   style: GoogleFonts.sora(
               //                     fontSize: 14,
               //                     fontWeight: FontWeight.w500,
               //                     color: blackColor,
@@ -856,7 +857,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 //                 maxLines: 1,
 //                 overflow: TextOverflow.ellipsis,
 //                 softWrap: true,
-//                 style: GoogleFonts.interTight(
+//                 style: GoogleFonts.sora(
 //                   fontWeight: FontWeight.w700,
 //                   fontSize: 16,
 //                 ),

@@ -42,7 +42,7 @@
 //   Widget build(BuildContext context) {
 //     final defaultPinTheme = PinTheme(
 //       height: 60,
-//       GoogleFonts.interTight: GoogleFonts.interTight(
+//       GoogleFonts.sora: GoogleFonts.sora(
 //         fontSize: 22,
 //         color: blackColor,
 //         fontWeight: FontWeight.w800,
@@ -118,7 +118,7 @@
 //         centerTitle: true,
 //         title: Text(
 //           'Verification code',
-//           style: GoogleFonts.interTight(
+//           style: GoogleFonts.sora(
 //             fontWeight: FontWeight.w500,
 //             color: blackColor,
 //             fontSize: 15,
@@ -138,7 +138,7 @@
 //               child: Center(
 //                 child: Text(
 //                   'Enter the code sent to ${widget.mobileNumber}.',
-//                   style: GoogleFonts.interTight(
+//                   style: GoogleFonts.sora(
 //                     color: lightBlackColor,
 //                     fontSize: 15,
 //                   ),
@@ -180,7 +180,7 @@
 //               onPressed: () => Get.back(),
 //               child: Text(
 //                 'Change mobile number',
-//                 style: GoogleFonts.interTight(
+//                 style: GoogleFonts.sora(
 //                   color: blueColor,
 //                   fontWeight: FontWeight.w600,
 //                   fontSize: 15,
@@ -193,7 +193,7 @@
 //               child: Text(
 //                 'Didn\'t receive the code?',
 //                 textAlign: TextAlign.center,
-//                 style: GoogleFonts.interTight(
+//                 style: GoogleFonts.sora(
 //                   fontWeight: FontWeight.w500,
 //                   fontSize: 16,
 //                 ),

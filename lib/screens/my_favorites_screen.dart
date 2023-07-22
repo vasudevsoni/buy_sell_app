@@ -39,7 +39,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           softWrap: true,
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -69,7 +69,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       ),
@@ -107,7 +107,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
+                        style: GoogleFonts.sora(
                           fontWeight: FontWeight.w800,
                           fontSize: 20,
                         ),
@@ -124,7 +124,7 @@ class _MyFavoritesScreenState extends State<MyFavoritesScreen> {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.interTight(
+                        style: GoogleFonts.sora(
                           color: lightBlackColor,
                           fontWeight: FontWeight.w500,
                           fontSize: 13,

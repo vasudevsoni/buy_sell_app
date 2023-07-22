@@ -46,7 +46,7 @@ class ErrorScreen extends StatelessWidget {
               child: Text(
                 'Uh-oh! Looks like you are lost in space!',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: blackColor,

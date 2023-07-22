@@ -74,7 +74,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -107,7 +107,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -220,7 +220,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w800,
                             fontSize: 24,
                             color: blueColor,
@@ -232,10 +232,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
-                            fontSize: 15,
+                            fontSize: 14,
                           ),
                         ),
                       ],
@@ -297,7 +297,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "Continue with",
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w500,
                         color: lightBlackColor,
                         fontSize: 12,
@@ -410,9 +410,9 @@ class _LandingScreenState extends State<LandingScreen> {
                               ),
                               mode: LaunchMode.externalApplication,
                             ),
-                      style: GoogleFonts.interTight(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.sora(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
                         color: blackColor,
                         decoration: TextDecoration.underline,
                         decorationStyle: TextDecorationStyle.dotted,
@@ -427,9 +427,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                   'https://www.bechdeapp.com/privacy-policy'),
                               mode: LaunchMode.externalApplication,
                             ),
-                      style: GoogleFonts.interTight(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.sora(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
                         color: blackColor,
                         decoration: TextDecoration.underline,
                         decorationStyle: TextDecorationStyle.dotted,
@@ -437,10 +437,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                     const TextSpan(text: '.'),
                   ],
-                  style: GoogleFonts.interTight(
-                    fontSize: 11,
+                  style: GoogleFonts.sora(
+                    fontSize: 10,
                     fontWeight: FontWeight.w400,
-                    color: blackColor,
+                    color: lightBlackColor,
                   ),
                 ),
               ),

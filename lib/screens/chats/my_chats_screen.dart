@@ -72,7 +72,7 @@ class _MyChatsScreenState extends State<MyChatsScreen>
         centerTitle: true,
         title: Text(
           'Inbox',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -83,16 +83,16 @@ class _MyChatsScreenState extends State<MyChatsScreen>
           indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
-          labelStyle: GoogleFonts.interTight(
+          labelStyle: GoogleFonts.sora(
             fontWeight: FontWeight.w700,
             fontSize: 14,
           ),
-          unselectedLabelStyle: GoogleFonts.interTight(
-            fontWeight: FontWeight.w500,
+          unselectedLabelStyle: GoogleFonts.sora(
+            fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
           labelColor: blueColor,
-          unselectedLabelColor: lightBlackColor,
+          unselectedLabelColor: blackColor,
           tabs: const [
             Tab(child: Text('All')),
             Tab(child: Text('Buying')),
@@ -153,7 +153,7 @@ class _ChatStreamBuilderState extends State<ChatStreamBuilder> {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -191,7 +191,7 @@ class _ChatStreamBuilderState extends State<ChatStreamBuilder> {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
@@ -210,7 +210,7 @@ class _ChatStreamBuilderState extends State<ChatStreamBuilder> {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     color: lightBlackColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
@@ -479,7 +479,7 @@ class _ChatCardState extends State<ChatCard> {
                           widget.chatData['users'][0] == _services.user!.uid
                               ? Text(
                                   buyerName == '' ? 'BechDe User' : buyerName,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w700,
                                     color: blackColor,
                                     fontSize: 14,
@@ -490,7 +490,7 @@ class _ChatCardState extends State<ChatCard> {
                                 )
                               : Text(
                                   sellerName == '' ? 'BechDe User' : sellerName,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w700,
                                     color: blackColor,
                                     fontSize: 14,
@@ -507,10 +507,10 @@ class _ChatCardState extends State<ChatCard> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
+                            style: GoogleFonts.sora(
+                              fontWeight: FontWeight.w400,
                               color: blackColor,
-                              fontSize: 13,
+                              fontSize: 12,
                             ),
                           ),
                           if (widget.chatData['lastChat'] != null)
@@ -525,12 +525,12 @@ class _ChatCardState extends State<ChatCard> {
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
                                   style: widget.chatData['read'] == false
-                                      ? GoogleFonts.interTight(
+                                      ? GoogleFonts.sora(
                                           fontWeight: FontWeight.w700,
                                           color: blueColor,
                                           fontSize: 13,
                                         )
-                                      : GoogleFonts.interTight(
+                                      : GoogleFonts.sora(
                                           fontWeight: FontWeight.w500,
                                           color: blackColor,
                                           fontSize: 13,
@@ -550,7 +550,7 @@ class _ChatCardState extends State<ChatCard> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     fontWeight: FontWeight.w500,
                     color: redColor,
                     fontSize: 14,

@@ -106,7 +106,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         centerTitle: true,
         title: Text(
           'Rate ${widget.name}',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -124,9 +124,9 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
               softWrap: true,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.interTight(
-                fontWeight: FontWeight.w800,
-                fontSize: 20,
+              style: GoogleFonts.sora(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
             ),
             const SizedBox(
@@ -182,10 +182,10 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
             ),
             Text(
               feedbackText,
-              style: GoogleFonts.interTight(
+              style: GoogleFonts.sora(
                 fontWeight: FontWeight.w600,
                 color: textColor,
-                fontSize: 25,
+                fontSize: 16,
               ),
             ),
             const Spacer(),

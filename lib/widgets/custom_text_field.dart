@@ -55,10 +55,10 @@ class CustomTextField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       maxLines: maxLines,
       obscureText: isObscured,
-      style: GoogleFonts.interTight(
-        fontWeight: FontWeight.w600,
+      style: GoogleFonts.sora(
+        fontWeight: FontWeight.w500,
         color: blackColor,
-        fontSize: 16,
+        fontSize: 14,
       ),
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -70,10 +70,10 @@ class CustomTextField extends StatelessWidget {
         fillColor: greyColor,
         filled: true,
         counterText: showCounterText ? null : '',
-        counterStyle: GoogleFonts.interTight(
+        counterStyle: GoogleFonts.sora(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: fadedColor,
+          fontWeight: FontWeight.w500,
+          color: lightBlackColor,
         ),
         border: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -115,16 +115,16 @@ class CustomTextField extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(5),
         ),
-        hintStyle: GoogleFonts.interTight(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
+        hintStyle: GoogleFonts.sora(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
           color: fadedColor,
         ),
-        labelStyle: GoogleFonts.interTight(
+        labelStyle: GoogleFonts.sora(
           fontWeight: FontWeight.normal,
           fontSize: 16,
         ),
-        errorStyle: GoogleFonts.interTight(
+        errorStyle: GoogleFonts.sora(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: redColor,

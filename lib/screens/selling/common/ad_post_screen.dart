@@ -113,7 +113,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -146,7 +146,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -294,7 +294,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   Center(
                     child: Text(
                       'Ready to post?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -351,7 +351,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                           child: Text(
                                             '+${(provider.imagesCount - 1).toString()}',
                                             textAlign: TextAlign.center,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w800,
                                               fontSize: 30,
                                               color: whiteColor,
@@ -379,7 +379,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                   children: [
                                     Text(
                                       titleController.text,
-                                      style: GoogleFonts.interTight(
+                                      style: GoogleFonts.sora(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
                                       ),
@@ -394,7 +394,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                                       maxLines: 1,
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
+                                      style: GoogleFonts.sora(
                                         fontWeight: FontWeight.w700,
                                         color: blueColor,
                                         fontSize: 15,
@@ -412,7 +412,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -578,7 +578,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   Center(
                     child: Text(
                       'Are you sure?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -596,7 +596,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     ),
                     child: Text(
                       'All your product details will be removed and you\'ll have to start fresh.',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -688,7 +688,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   Center(
                     child: Text(
                       'Warning',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -706,7 +706,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     ),
                     child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -781,7 +781,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
               onPressed: isLoading ? null : resetAll,
               child: Text(
                 'Reset all',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: redColor,
                   fontSize: 12,
@@ -791,7 +791,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
           ],
           title: Text(
             'Create your product listing',
-            style: GoogleFonts.interTight(
+            style: GoogleFonts.sora(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -814,7 +814,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   child: Text(
                     'Step 1 - User Details',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -847,7 +847,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
                     'Location can be changed from Settings > Change Location',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: lightBlackColor,
                       fontSize: 13,
                     ),
@@ -864,7 +864,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   child: Text(
                     'Step 2 - Product Details',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -972,7 +972,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -1010,7 +1010,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: GoogleFonts.interTight(
+                      errorStyle: GoogleFonts.sora(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -1032,12 +1032,12 @@ class _AdPostScreenState extends State<AdPostScreen> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      hintStyle: GoogleFonts.interTight(
+                      hintStyle: GoogleFonts.sora(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: GoogleFonts.interTight(
+                      labelStyle: GoogleFonts.sora(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -1055,7 +1055,7 @@ class _AdPostScreenState extends State<AdPostScreen> {
                   child: Text(
                     'Step 3 - Product Images',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,

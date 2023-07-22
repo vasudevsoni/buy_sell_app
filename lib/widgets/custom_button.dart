@@ -55,7 +55,7 @@ class CustomButton extends StatelessWidget {
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           color: textIconColor,
           fontSize: 14,
           fontWeight: FontWeight.w600,

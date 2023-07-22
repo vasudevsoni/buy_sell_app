@@ -96,7 +96,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                   Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -129,7 +129,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -282,7 +282,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                   Center(
                     child: Text(
                       'Ready to update?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -307,7 +307,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                           children: [
                             Text(
                               titleController.text,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -322,7 +322,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -335,7 +335,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -364,7 +364,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                                 ),
                                 Text(
                                   salaryPeriodSelectedValue.toString(),
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -390,7 +390,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                                 ),
                                 Text(
                                   positionTypeSelectedValue.toString(),
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                     color: lightBlackColor,
@@ -409,7 +409,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -558,7 +558,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                   Center(
                     child: Text(
                       'Warning',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -576,7 +576,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                     ),
                     child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -641,7 +641,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
           centerTitle: true,
           title: Text(
             'Edit your job listing',
-            style: GoogleFonts.interTight(
+            style: GoogleFonts.sora(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -664,7 +664,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                   child: Text(
                     'Step 1 - Job Details',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -717,7 +717,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -755,7 +755,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: GoogleFonts.interTight(
+                      errorStyle: GoogleFonts.sora(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -777,12 +777,12 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: GoogleFonts.interTight(
+                      hintStyle: GoogleFonts.sora(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: GoogleFonts.interTight(
+                      labelStyle: GoogleFonts.sora(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -817,7 +817,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -855,7 +855,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: GoogleFonts.interTight(
+                      errorStyle: GoogleFonts.sora(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: redColor,
@@ -877,12 +877,12 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: GoogleFonts.interTight(
+                      hintStyle: GoogleFonts.sora(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: GoogleFonts.interTight(
+                      labelStyle: GoogleFonts.sora(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
@@ -911,12 +911,12 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         itemHeight: 50,
                         hint: Text(
                           '--Select--',
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.normal,
                             fontSize: 16,
                           ),
                         ),
-                        style: GoogleFonts.interTight(
+                        style: GoogleFonts.sora(
                           fontWeight: FontWeight.normal,
                           color: fadedColor,
                         ),
@@ -930,7 +930,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                                 value: item,
                                 child: Text(
                                   item,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
                                     color: blackColor,
                                     fontSize: 16,
@@ -971,12 +971,12 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                         itemHeight: 50,
                         hint: Text(
                           '--Select--',
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.normal,
                             fontSize: 16,
                           ),
                         ),
-                        style: GoogleFonts.interTight(
+                        style: GoogleFonts.sora(
                           fontWeight: FontWeight.normal,
                           color: fadedColor,
                         ),
@@ -990,7 +990,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                                 value: item,
                                 child: Text(
                                   item,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
                                     color: blackColor,
                                     fontSize: 16,
@@ -1020,7 +1020,7 @@ class _EditJobAdScreenState extends State<EditJobAdScreen> {
                   child: Text(
                     'Step 2 - Listing Details',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,

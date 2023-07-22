@@ -1,13 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/widgets/survey_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/providers.dart';
 import '../services/admob_services.dart';
-import '../widgets/custom_button_without_icon.dart';
 import '/utils/utils.dart';
 
 class FullBioScreen extends StatefulWidget {
@@ -76,7 +74,7 @@ class _FullBioScreenState extends State<FullBioScreen> {
         centerTitle: true,
         title: Text(
           'Bio',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -85,99 +83,31 @@ class _FullBioScreenState extends State<FullBioScreen> {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Text(
                 widget.bio,
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
-              const SizedBox(
-                height: 15,
+            ),
+            const SurveyCard(),
+            const SizedBox(
+              height: 20,
+            ),
+            if (!mainProv.adsRemoved)
+              SmallNativeAd(
+                nativeAd: _nativeAd,
+                isAdLoaded: _isAdLoaded,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: whiteColor,
-                  border: greyBorder,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Ionicons.flash_outline,
-                              color: greenColor,
-                              size: 16,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Participate in our survey',
-                              style: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w600,
-                                color: blackColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: AutoSizeText(
-                            'Help us improve BechDe by filling this survey.',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
-                              color: blackColor,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    CustomButtonWithoutIcon(
-                      text: 'Let\'s go',
-                      onPressed: () => showSurveyPopUp(context),
-                      borderColor: blueColor,
-                      bgColor: blueColor,
-                      textIconColor: whiteColor,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              if (!mainProv.adsRemoved)
-                SmallNativeAd(
-                  nativeAd: _nativeAd,
-                  isAdLoaded: _isAdLoaded,
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );

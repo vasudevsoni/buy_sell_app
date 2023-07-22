@@ -65,7 +65,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         centerTitle: true,
         title: Text(
           'Forgot password',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -104,9 +104,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               Text(
                 'We\'ll send you a link to reset your password on this email',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w400,
-                  color: lightBlackColor,
+                  color: blackColor,
                   fontSize: 13,
                 ),
               ),

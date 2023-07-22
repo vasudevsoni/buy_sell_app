@@ -26,7 +26,7 @@ class SellerCategoriesListScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Select a category',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

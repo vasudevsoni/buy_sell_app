@@ -89,7 +89,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   Center(
                     child: Text(
                       'Network Connection Lost',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -122,7 +122,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                       maxLines: 2,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -272,7 +272,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   Center(
                     child: Text(
                       'Ready to update?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -297,7 +297,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                           children: [
                             Text(
                               titleController.text,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
@@ -312,7 +312,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w700,
                                 color: blueColor,
                                 fontSize: 15,
@@ -326,7 +326,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         Text(
                           'Description - ${descriptionController.text}',
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w600,
                             color: blackColor,
                             fontSize: 14,
@@ -468,7 +468,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   Center(
                     child: Text(
                       'Warning',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -486,7 +486,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     ),
                     child: Text(
                       'Are you sure you want to leave? Your progress will not be saved.',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -551,7 +551,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
           centerTitle: true,
           title: Text(
             'Edit your product listing',
-            style: GoogleFonts.interTight(
+            style: GoogleFonts.sora(
               fontWeight: FontWeight.w500,
               color: blackColor,
               fontSize: 15,
@@ -574,7 +574,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                   child: Text(
                     'Step 1 - Product Details',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: whiteColor,
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -682,7 +682,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w600,
                       color: blackColor,
                       fontSize: 16,
@@ -720,7 +720,7 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      errorStyle: GoogleFonts.interTight(
+                      errorStyle: GoogleFonts.sora(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
@@ -742,12 +742,12 @@ class _EditAdScreenState extends State<EditAdScreen> {
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      hintStyle: GoogleFonts.interTight(
+                      hintStyle: GoogleFonts.sora(
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         color: fadedColor,
                       ),
-                      labelStyle: GoogleFonts.interTight(
+                      labelStyle: GoogleFonts.sora(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),

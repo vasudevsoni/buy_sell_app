@@ -28,16 +28,14 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Future getImageFromGallery() async {
     final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (pickedFile != null && mounted) {
-      final compressedFile =
-          await services.compressImage(File(pickedFile.path));
-      if (compressedFile.lengthSync() >= 2000000) {
+      if (File(pickedFile.path).lengthSync() >= 2000000) {
         showSnackBar(
             color: redColor, content: 'Maximum image size allowed is 2MB');
       } else {
         setState(() {
-          reportImage = compressedFile;
+          reportImage = File(pickedFile.path);
         });
       }
     }
@@ -106,7 +104,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 Center(
                   child: Text(
                     'Are you sure?',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -125,7 +123,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                   child: Text(
                     'Are you sure you want to send this report?',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -197,7 +195,7 @@ class _ReportScreenState extends State<ReportScreen> {
         centerTitle: true,
         title: Text(
           'Report a problem',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

@@ -1,3 +1,4 @@
+import 'package:buy_sell_app/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/loading_screen.dart';
 import 'provider/providers.dart';
 import 'utils/utils.dart';
 import 'error.dart';

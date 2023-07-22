@@ -15,9 +15,9 @@ class TextFieldLabel extends StatelessWidget {
       children: [
         Text(
           labelText,
-          style: GoogleFonts.interTight(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
+          style: GoogleFonts.sora(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
         ),
         const SizedBox(

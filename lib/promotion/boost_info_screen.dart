@@ -19,7 +19,7 @@ class BoostInfoScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Learn more about Boosts',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -36,10 +36,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'What is a Boost?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -48,10 +48,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'We want to help you sell better and fast!\n\nBoost help increase the visibility of your listings on the marketplace by updation your listing time to the time when you buy the boost. As listing time is a significant component in our search and browse algorithms, boosted listings get ranked higher. After which, it will behave like a normal listing and be moved down as new listings are added to the marketplace.\n\nBy doing so, Boost can provide your listing with increased exposure.\n\nGet your listings noticed now with a Boost!',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -71,10 +71,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'How to buy a Boost?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -83,10 +83,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 '1) Click \'Promote Listing\' on the listing you want to boost.\n2) Click \'Buy Now\' on  the \'Boost to Top\' package.\n3) Make payment and you are good to go!',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -95,10 +95,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'How long does a Boost last?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -107,10 +107,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'A Boost is an instant effect that brings your listing to the top of the marketplace. After which, it will behave like a normal listing and be moved down as new listings are added.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -119,10 +119,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'Does a Boost guarantee a sale?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -131,10 +131,10 @@ class BoostInfoScreen extends StatelessWidget {
               Text(
                 'Boost provides your listing with more visibility. However, we cannot guarantee that a Boost will lead to a like, chat or offer. To make sure you get the most out of Boosts, use them on good-quality listings.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
             ],

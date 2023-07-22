@@ -132,10 +132,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                         maxLines: 1,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w800,
+                                        style: GoogleFonts.sora(
+                                          fontWeight: FontWeight.w700,
                                           color: blackColor,
-                                          fontSize: 15,
+                                          fontSize: 14,
                                         ),
                                       )
                                     : Text(
@@ -144,10 +144,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                         maxLines: 1,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w800,
+                                        style: GoogleFonts.sora(
+                                          fontWeight: FontWeight.w700,
                                           color: blackColor,
-                                          fontSize: 15,
+                                          fontSize: 14,
                                         ),
                                       ),
                                 if (widget.data['catName'] == 'Jobs')
@@ -158,10 +158,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                         maxLines: 1,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontWeight: FontWeight.w500,
                                           color: blackColor,
-                                          fontSize: 13,
+                                          fontSize: 12,
                                         ),
                                       ),
                                       const SizedBox(
@@ -174,22 +174,22 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w600,
                                     color: blackColor,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   ),
                                 ),
                                 const Spacer(),
                                 Text(
                                   '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                                  maxLines: 2,
+                                  maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.start,
-                                  style: GoogleFonts.interTight(
-                                    color: lightBlackColor,
-                                    fontWeight: FontWeight.w500,
+                                  style: GoogleFonts.sora(
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w400,
                                     fontSize: 11,
                                   ),
                                 ),

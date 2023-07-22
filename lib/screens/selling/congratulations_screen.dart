@@ -69,43 +69,44 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
+                const Spacer(),
                 Text(
-                  '🎉 Well Done!',
+                  '🎉 Well Done! 🎉',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     fontSize: 30,
                     fontWeight: FontWeight.w800,
                     color: blueColor,
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Text(
-                  'We will review your product and then publish it',
+                  'Your listing is under review',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.interTight(
-                    fontSize: 15,
+                  style: GoogleFonts.sora(
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: blackColor,
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: redColor,
+                    color: blackColor,
                     border: greyBorder,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Note: Reviewing usually takes up to 24 hours to complete.\nMay take longer than 24 hours during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
+                    'Note: Review usually takes up to 24 hours to complete.\nMay take longer during weekends or holidays when our team is not fully staffed.\nThank you for your patience.',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.interTight(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                    style: GoogleFonts.sora(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: whiteColor,
                     ),
                   ),

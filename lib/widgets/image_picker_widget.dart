@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:buy_sell_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +29,6 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   final ImagePicker picker = ImagePicker();
-  final FirebaseServices _services = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +45,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       final XFile? pickedFile =
           await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null && mounted) {
-        final compressedImage =
-            await _services.compressImage(File(pickedFile.path));
-        if (compressedImage.lengthSync() >= 2000000) {
+        if (File(pickedFile.path).lengthSync() >= 2000000) {
           showSnackBar(
               color: redColor, content: 'Maximum image size allowed is 2MB');
         } else {
-          provider.addImageToPaths(compressedImage);
+          setState(() {
+            provider.addImageToPaths(File(pickedFile.path));
+          });
         }
       }
     }
@@ -68,12 +66,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         return;
       }
       for (var i in pickedFiles) {
-        final compressedImage = await _services.compressImage(File(i.path));
-        if (compressedImage.lengthSync() >= 2000000) {
+        if (File(i.path).lengthSync() >= 2000000) {
           showSnackBar(
               color: redColor, content: 'Maximum image size allowed is 2MB');
         } else {
-          await provider.addImageToPaths(compressedImage);
+          await provider.addImageToPaths(File(i.path));
         }
       }
     }
@@ -195,10 +192,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   ),
                                   child: Text(
                                     index == 0 ? 'Cover' : '${index + 1}',
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       color: whiteColor,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                      fontSize: 10,
                                     ),
                                   ),
                                 ),
@@ -251,7 +248,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -267,10 +264,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ),
               if (provider.imagePaths.isNotEmpty)
                 Text(
-                  '${provider.imagePaths.length} / 8',
-                  style: GoogleFonts.interTight(
+                  '${provider.imagePaths.length}/8',
+                  style: GoogleFonts.sora(
                     fontWeight: FontWeight.w500,
-                    color: fadedColor,
+                    color: lightBlackColor,
                     fontSize: 12,
                   ),
                 ),

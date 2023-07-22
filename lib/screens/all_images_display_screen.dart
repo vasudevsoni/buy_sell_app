@@ -1,4 +1,4 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:buy_sell_app/widgets/survey_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../provider/providers.dart';
 import '../services/admob_services.dart';
-import '../widgets/custom_button_without_icon.dart';
 import '../widgets/custom_loading_indicator.dart';
 import '/utils/utils.dart';
 
@@ -80,7 +79,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
         centerTitle: true,
         title: Text(
           'Images',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -150,9 +149,9 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                         child: Text(
                           index == 0 ? 'Cover' : '${index + 1}',
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.interTight(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 27,
+                          style: GoogleFonts.sora(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 25,
                             shadows: [
                               const Shadow(
                                 offset: Offset(0, 2),
@@ -169,73 +168,7 @@ class _AllImagesDisplayScreenState extends State<AllImagesDisplayScreen> {
                 },
                 physics: const NeverScrollableScrollPhysics(),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                width: size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: whiteColor,
-                  border: greyBorder,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Ionicons.flash_outline,
-                              color: greenColor,
-                              size: 16,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Participate in our survey',
-                              style: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w600,
-                                color: blackColor,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: size.width * 0.6,
-                          child: AutoSizeText(
-                            'Help us improve BechDe by filling this survey.',
-                            maxLines: 2,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
-                              color: blackColor,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    CustomButtonWithoutIcon(
-                      text: 'Let\'s go',
-                      onPressed: () => showSurveyPopUp(context),
-                      borderColor: blueColor,
-                      bgColor: blueColor,
-                      textIconColor: whiteColor,
-                    ),
-                  ],
-                ),
-              ),
+              const SurveyCard(),
             ],
           ),
         ),

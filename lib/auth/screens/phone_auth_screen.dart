@@ -60,7 +60,7 @@
 //         centerTitle: true,
 //         title: Text(
 //           'Login with your mobile',
-//           style: GoogleFonts.interTight(
+//           style: GoogleFonts.sora(
 //             fontWeight: FontWeight.w500,
 //             color: blackColor,
 //             fontSize: 15,
@@ -111,7 +111,7 @@
 //                       inputFormatters: <TextInputFormatter>[
 //                         FilteringTextInputFormatter.digitsOnly
 //                       ],
-//                       style: GoogleFonts.interTight(
+//                       style: GoogleFonts.sora(
 //                         fontWeight: FontWeight.w600,
 //                         color: blackColor,
 //                         fontSize: 16,
@@ -149,7 +149,7 @@
 //                           ),
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
-//                         errorStyle: GoogleFonts.interTight(
+//                         errorStyle: GoogleFonts.sora(
 //                           fontSize: 12,
 //                           fontWeight: FontWeight.w600,
 //                           color: redColor,
@@ -171,12 +171,12 @@
 //                           borderRadius: BorderRadius.circular(5),
 //                         ),
 //                         floatingLabelBehavior: FloatingLabelBehavior.never,
-//                         hintStyle: GoogleFonts.interTight(
+//                         hintStyle: GoogleFonts.sora(
 //                           fontSize: 16,
 //                           fontWeight: FontWeight.normal,
 //                           color: fadedColor,
 //                         ),
-//                         labelStyle: GoogleFonts.interTight(
+//                         labelStyle: GoogleFonts.sora(
 //                           fontWeight: FontWeight.normal,
 //                           fontSize: 16,
 //                         ),
@@ -190,7 +190,7 @@
 //               ),
 //               Text(
 //                 'We\'ll send a verification code to this number.',
-//                 style: GoogleFonts.interTight(
+//                 style: GoogleFonts.sora(
 //                   color: lightBlackColor,
 //                   fontSize: 15,
 //                 ),

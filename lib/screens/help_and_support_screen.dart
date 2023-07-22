@@ -10,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '/widgets/custom_list_tile_no_image.dart';
 import '/utils/utils.dart';
-import '/widgets/custom_list_tile_with_subtitle.dart';
 import 'report_screen.dart';
 
 class HelpAndSupportScreen extends StatefulWidget {
@@ -77,7 +76,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
         centerTitle: true,
         title: Text(
           'Help and support',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -93,7 +92,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
                 'Actions',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -111,11 +110,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Participate in our survey',
-                    subTitle: 'Help us improve BechDe by filling this survey',
                     icon: Ionicons.flash_outline,
-                    textColor: blackColor,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
                     onTap: () => showSurveyPopUp(context),
@@ -125,11 +122,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                     color: fadedColor,
                     indent: 15,
                   ),
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Contact Us',
-                    subTitle: 'Contact us for any issues you are facing',
                     icon: Ionicons.mail_open_outline,
-                    textColor: blackColor,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
                     onTap: () => openMail(contactUsEmail),
@@ -139,12 +134,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                     color: fadedColor,
                     indent: 15,
                   ),
-                  CustomListTileWithSubtitle(
+                  CustomListTileNoImage(
                     text: 'Report a problem',
-                    subTitle:
-                        'If something is not right, please report it here',
                     icon: Ionicons.bug_outline,
-                    textColor: redColor,
                     trailingIcon: Ionicons.chevron_forward,
                     isEnabled: true,
                     onTap: () => Get.to(
@@ -162,7 +154,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               width: size.width,
               child: Text(
                 'About',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -254,9 +246,8 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                     color: fadedColor,
                     indent: 15,
                   ),
-                  CustomListTileWithSubtitle(
-                    text: 'Version',
-                    subTitle: version,
+                  CustomListTileNoImage(
+                    text: 'Version $version',
                     icon: Ionicons.phone_portrait_outline,
                     isEnabled: false,
                     onTap: () {},
@@ -272,7 +263,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               width: size.width,
               child: Text(
                 'Data',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -285,12 +276,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                 border: greyBorder,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: CustomListTileWithSubtitle(
+              child: CustomListTileNoImage(
                 text: 'Request Account Deletion',
-                subTitle:
-                    'If you would like to delete your account and data, leave us a request here',
                 icon: Ionicons.trash_outline,
-                textColor: redColor,
                 trailingIcon: Ionicons.chevron_forward,
                 isEnabled: true,
                 onTap: () => openMail(dataDeleteEmail),

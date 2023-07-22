@@ -55,9 +55,9 @@ class CustomListTile extends StatelessWidget {
                 maxLines: 1,
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
+                  fontSize: 16,
                   color: blackColor,
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:buy_sell_app/screens/profile_screen.dart';
+import 'package:buy_sell_app/widgets/survey_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,7 +62,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int currentImage = 0;
   bool isActive = true;
   bool isSold = false;
-  bool isLoading = false;
+  bool isLoading = true;
   String profileImage = '';
   String sellerName = '';
   String location = '';
@@ -108,7 +109,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     if (mounted) {
       setState(() {
-        isLoading = true;
         final locationData = widget.productData['location'];
         location =
             '${locationData['area']}, ${locationData['city']}, ${locationData['state']}';
@@ -246,7 +246,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Center(
                     child: Text(
                       'Report this listing',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -276,7 +276,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         TextSpan(
                           text: " go to Help and Support",
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             color: blueColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -289,13 +289,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         TextSpan(
                           text: " section and report from there.",
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             color: lightBlackColor,
                             fontSize: 14,
                           ),
                         ),
                       ],
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         color: lightBlackColor,
                         fontSize: 14,
                       ),
@@ -356,38 +356,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: false,
-              title: Column(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Product',
-                    style: GoogleFonts.interTight(
-                      fontWeight: FontWeight.w600,
+                    'Views • ',
+                    style: GoogleFonts.sora(
+                      fontWeight: FontWeight.w400,
                       color: blackColor,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Views • ',
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w400,
-                          color: blackColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        numberFormat.format(widget.productData['views'].length),
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: blackColor,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    numberFormat.format(widget.productData['views'].length),
+                    style: GoogleFonts.sora(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: blackColor,
+                    ),
                   ),
                 ],
               ),
@@ -400,7 +387,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   children: [
                     Text(
                       'This listing is currently unavailable.',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         color: blackColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -424,7 +411,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         children: [
                           Text(
                             'The reasons for this may include but are not limited to -',
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               color: whiteColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
@@ -435,14 +422,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                           Text(
                             '1) The product is currently under review and will be activated once it is found valid.',
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               color: whiteColor,
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             '2) The product goes against our guidelines and has been disabled temporarily or permanently.',
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               color: whiteColor,
                               fontSize: 14,
                             ),
@@ -479,38 +466,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               elevation: 0.2,
               iconTheme: const IconThemeData(color: blackColor),
               centerTitle: true,
-              title: Column(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    widget.productData['catName'] == 'Jobs' ? 'Job' : 'Product',
-                    style: GoogleFonts.interTight(
-                      fontWeight: FontWeight.w600,
+                    'Views • ',
+                    style: GoogleFonts.sora(
+                      fontWeight: FontWeight.w400,
                       color: blackColor,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Views • ',
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w400,
-                          color: blackColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        numberFormat.format(widget.productData['views'].length),
-                        style: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: blackColor,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    numberFormat.format(widget.productData['views'].length),
+                    style: GoogleFonts.sora(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: blackColor,
+                    ),
                   ),
                 ],
               ),
@@ -685,10 +659,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   child: Text(
                                     '${currentImage + 1}/${widget.productData['images'].length}',
-                                    style: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
+                                    style: GoogleFonts.sora(
+                                      fontWeight: FontWeight.w400,
                                       color: whiteColor,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                     ),
                                   ),
                                 ),
@@ -740,7 +714,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Text(
                                     'This listing has been sold',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.interTight(
+                                    style: GoogleFonts.sora(
                                       color: whiteColor,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700,
@@ -772,10 +746,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   maxLines: 3,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w500,
+                                  style: GoogleFonts.sora(
+                                    fontWeight: FontWeight.w600,
                                     color: blackColor,
-                                    fontSize: 17,
+                                    fontSize: 16,
                                     decoration: isSold
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
@@ -902,10 +876,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           maxLines: 1,
                                           softWrap: true,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.interTight(
-                                            fontWeight: FontWeight.w400,
+                                          style: GoogleFonts.sora(
+                                            fontWeight: FontWeight.w500,
                                             color: blackColor,
-                                            fontSize: 14,
+                                            fontSize: 13,
                                             decoration:
                                                 TextDecoration.underline,
                                           ),
@@ -928,7 +902,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   maxLines: 2,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 19,
                                     color: blackColor,
@@ -944,7 +918,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 19,
                                     color: blackColor,
@@ -955,7 +929,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
                         widget.productData['sellerUid'] == services.user!.uid &&
                                 isSold == false
@@ -1064,10 +1038,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               fontWeight: FontWeight.w700,
                               color: blackColor,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -1108,7 +1082,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         maxLines: 1,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontWeight: FontWeight.w500,
                                           color: blackColor,
                                           fontSize: 13,
@@ -1140,7 +1114,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         maxLines: 1,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontWeight: FontWeight.w500,
                                           color: blackColor,
                                           fontSize: 13,
@@ -1188,14 +1162,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                       transition:
                                                           Transition.downToUp,
                                                     ),
-                                              style: GoogleFonts.interTight(
-                                                fontWeight: FontWeight.w600,
+                                              style: GoogleFonts.sora(
+                                                fontWeight: FontWeight.w500,
                                                 color: blueColor,
                                                 fontSize: 13,
                                               ),
                                             ),
                                           ],
-                                          style: GoogleFonts.interTight(
+                                          style: GoogleFonts.sora(
                                             fontWeight: FontWeight.w500,
                                             color: blackColor,
                                             fontSize: 13,
@@ -1223,10 +1197,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w700,
                                     color: blackColor,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 const SizedBox(
@@ -1253,10 +1227,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           Text(
                                             'Brand - ',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           Expanded(
@@ -1265,10 +1239,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
+                                              style: GoogleFonts.sora(
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ),
@@ -1285,10 +1259,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           Text(
                                             'Model - ',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           Expanded(
@@ -1297,10 +1271,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
+                                              style: GoogleFonts.sora(
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ),
@@ -1317,10 +1291,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           Text(
                                             'Color - ',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           Expanded(
@@ -1329,10 +1303,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
+                                              style: GoogleFonts.sora(
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ),
@@ -1358,19 +1332,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                           Text(
                                             'Owner',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           const Spacer(),
                                           Text(
                                             widget.productData['noOfOwners'],
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w600,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                         ],
@@ -1394,19 +1368,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                           Text(
                                             'Fuel Type',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           const Spacer(),
                                           Text(
                                             widget.productData['fuelType'],
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w600,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                         ],
@@ -1430,20 +1404,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                           Text(
                                             'Year of Reg.',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           const Spacer(),
                                           Text(
                                             widget.productData['yearOfReg']
                                                 .toString(),
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w600,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                         ],
@@ -1467,10 +1441,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           ),
                                           Text(
                                             'Kms Driven',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           const Spacer(),
@@ -1481,10 +1455,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             maxLines: 2,
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.interTight(
+                                            style: GoogleFonts.sora(
                                               fontWeight: FontWeight.w600,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                         ],
@@ -1517,10 +1491,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   maxLines: 1,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w700,
                                     color: blackColor,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 const SizedBox(
@@ -1547,10 +1521,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           Text(
                                             'Salary Period - ',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           Expanded(
@@ -1560,10 +1534,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
+                                              style: GoogleFonts.sora(
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ),
@@ -1580,10 +1554,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         children: [
                                           Text(
                                             'Position Type - ',
-                                            style: GoogleFonts.interTight(
-                                              fontWeight: FontWeight.w400,
+                                            style: GoogleFonts.sora(
+                                              fontWeight: FontWeight.w500,
                                               color: blackColor,
-                                              fontSize: 14,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           Expanded(
@@ -1593,10 +1567,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.interTight(
+                                              style: GoogleFonts.sora(
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ),
@@ -1623,10 +1597,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               fontWeight: FontWeight.w700,
                               color: blackColor,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -1657,13 +1631,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               children: [
                                 Text(
                                   widget.productData['description'],
-                                  maxLines: 5,
+                                  maxLines: 10,
                                   softWrap: true,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.interTight(
+                                  style: GoogleFonts.sora(
                                     fontWeight: FontWeight.w500,
                                     color: blackColor,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                   ),
                                 ),
                                 const SizedBox(
@@ -1671,8 +1645,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                                 Text(
                                   'Show full description...',
-                                  style: GoogleFonts.interTight(
-                                    fontWeight: FontWeight.w600,
+                                  style: GoogleFonts.sora(
+                                    fontWeight: FontWeight.w500,
                                     color: blueColor,
                                     fontSize: 13,
                                   ),
@@ -1706,10 +1680,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             maxLines: 2,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               fontWeight: FontWeight.w700,
                               color: blackColor,
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -1748,9 +1722,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         padding: const EdgeInsets.all(3),
                                         child: Text(
                                           'Location is approximate',
-                                          style: GoogleFonts.interTight(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                                          style: GoogleFonts.sora(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),
@@ -1764,8 +1738,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         padding: const EdgeInsets.all(3),
                                         child: Text(
                                           '© OpenStreetMap',
-                                          style: GoogleFonts.interTight(
+                                          style: GoogleFonts.sora(
                                             fontSize: 11,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),
@@ -1801,7 +1776,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1810,83 +1785,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             maxLines: 1,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.interTight(
-                              fontWeight: FontWeight.w500,
+                            style: GoogleFonts.sora(
+                              fontWeight: FontWeight.w400,
                               color: blackColor,
-                              fontSize: 13,
+                              fontSize: 12,
                             ),
                           ),
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          width: size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: whiteColor,
-                            border: greyBorder,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Ionicons.flash_outline,
-                                        color: greenColor,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'Participate in our survey',
-                                        style: GoogleFonts.interTight(
-                                          fontWeight: FontWeight.w600,
-                                          color: blackColor,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.6,
-                                    child: AutoSizeText(
-                                      'Help us improve BechDe by filling this survey.',
-                                      maxLines: 2,
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.interTight(
-                                        fontWeight: FontWeight.w500,
-                                        color: blackColor,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              CustomButtonWithoutIcon(
-                                text: 'Let\'s go',
-                                onPressed: () => showSurveyPopUp(context),
-                                borderColor: blueColor,
-                                bgColor: blueColor,
-                                textIconColor: whiteColor,
-                              ),
-                            ],
-                          ),
-                        ),
+                        const SurveyCard(),
                         const SizedBox(
                           height: 20,
                         ),
@@ -1901,7 +1810,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.interTight(
+                                style: GoogleFonts.sora(
                                   fontWeight: FontWeight.w700,
                                   color: blackColor,
                                   fontSize: 16,
@@ -1966,7 +1875,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -1984,7 +1893,7 @@ class _MoreLikeThisProductsListState extends State<MoreLikeThisProductsList> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),

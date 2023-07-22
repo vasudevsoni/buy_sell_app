@@ -64,7 +64,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
         centerTitle: true,
         title: Text(
           'Login with your email',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

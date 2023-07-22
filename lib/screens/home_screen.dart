@@ -110,14 +110,6 @@ class _HomeScreenState extends State<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(
-              Ionicons.location_outline,
-              size: 20,
-              color: blackColor,
-            ),
-            const SizedBox(
-              width: 3,
-            ),
             Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -133,16 +125,16 @@ class _HomeScreenState extends State<HomeScreen>
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: GoogleFonts.interTight(
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.sora(
+                        fontWeight: FontWeight.w600,
                         fontSize: 13,
                         color: blackColor,
                       ),
                     ),
                     const Icon(
                       Ionicons.chevron_down,
-                      size: 18,
-                      color: whiteColor,
+                      size: 12,
+                      color: blackColor,
                     ),
                   ],
                 ),
@@ -166,17 +158,17 @@ class _HomeScreenState extends State<HomeScreen>
           indicatorColor: blueColor,
           indicatorWeight: 3,
           splashFactory: InkRipple.splashFactory,
-          indicatorSize: TabBarIndicatorSize.label,
-          labelStyle: GoogleFonts.interTight(
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: GoogleFonts.sora(
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+          ),
+          unselectedLabelStyle: GoogleFonts.sora(
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
-          unselectedLabelStyle: GoogleFonts.interTight(
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
           labelColor: blueColor,
-          unselectedLabelColor: lightBlackColor,
+          unselectedLabelColor: blackColor,
           tabs: const [
             Tab(
               text: 'Nearby',
@@ -263,7 +255,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                     ),
@@ -274,10 +266,10 @@ class _AllProductsScreenState extends State<AllProductsScreen>
                   onTap: () => mainProv.switchToPage(2),
                   child: Text(
                     'See all',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: blueColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -295,7 +287,7 @@ class _AllProductsScreenState extends State<AllProductsScreen>
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.interTight(
+              style: GoogleFonts.sora(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -366,7 +358,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                     ),
@@ -377,10 +369,10 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
                   onTap: () => mainProv.switchToPage(2),
                   child: Text(
                     'See all',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       color: blueColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -398,7 +390,7 @@ class _NearbyProductsScreenState extends State<NearbyProductsScreen>
               maxLines: 1,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.interTight(
+              style: GoogleFonts.sora(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -431,7 +423,7 @@ class CategoriesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: size.width,
-      height: size.height * 0.1,
+      height: size.height * 0.07,
       child: StreamBuilder<QuerySnapshot>(
         stream: _services.categories
             .orderBy('sortId', descending: false)
@@ -444,7 +436,7 @@ class CategoriesListView extends StatelessWidget {
                 padding: const EdgeInsets.all(15.0),
                 child: Text(
                   'Something has gone wrong. Please try again',
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
@@ -485,13 +477,17 @@ class CategoriesListView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     border: greyBorder,
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-                  width: size.height * 0.14,
-                  child: Column(
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: greyColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                         child: CachedNetworkImage(
                           imageUrl: doc['image'],
                           fit: BoxFit.fitHeight,
@@ -511,17 +507,17 @@ class CategoriesListView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 5,
+                        width: 7,
                       ),
                       Text(
                         doc['catName'],
                         maxLines: 1,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.interTight(
-                          fontSize: 13,
+                        style: GoogleFonts.sora(
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: lightBlackColor,
+                          color: blackColor,
                         ),
                       ),
                     ],
@@ -592,7 +588,7 @@ class _ProductsListState extends State<ProductsList> {
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,
                     ),
@@ -655,7 +651,7 @@ class _ProductsListState extends State<ProductsList> {
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'Something has gone wrong. Please try again',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
                       ),
@@ -695,7 +691,7 @@ class _ProductsListState extends State<ProductsList> {
                           softWrap: true,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
                           ),

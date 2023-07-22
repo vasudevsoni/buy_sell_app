@@ -157,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: Text(
                     'Report this user',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -318,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         title: Text(
           name,
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -413,10 +413,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           rating == 0 ? 'Unrated' : rating.toStringAsFixed(1),
-                          style: GoogleFonts.interTight(
-                            fontSize: 15,
+                          style: GoogleFonts.sora(
+                            fontSize: 14,
                             color: whiteColor,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(
@@ -424,7 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const Icon(
                           Ionicons.star,
-                          size: 15,
+                          size: 12,
                           color: whiteColor,
                         ),
                       ],
@@ -442,10 +442,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   maxLines: 2,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.interTight(
+                  style: GoogleFonts.sora(
                     color: blackColor,
                     fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -521,9 +521,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.interTight(
+                                style: GoogleFonts.sora(
                                   color: blackColor,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -554,9 +554,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         color: blackColor,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -585,9 +585,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
-                            style: GoogleFonts.interTight(
+                            style: GoogleFonts.sora(
                               color: blackColor,
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -670,10 +670,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //           textIconColor: whiteColor,
               //         ),
               // ),
-              const Divider(
+              const SizedBox(
                 height: 20,
-                thickness: 3,
-                color: greyColor,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,7 +684,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'Currently Selling',
                       maxLines: 1,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                       ),
@@ -814,7 +812,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Something has gone wrong. Please try again',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),
@@ -832,7 +830,7 @@ class _SellerProductsListState extends State<SellerProductsList> {
                 softWrap: true,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                 ),

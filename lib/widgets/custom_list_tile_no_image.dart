@@ -24,9 +24,9 @@ class CustomListTileNoImage extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           fontWeight: FontWeight.w600,
-          fontSize: 15,
+          fontSize: 14,
         ),
       ),
       onTap: isEnabled ? onTap : null,

@@ -92,7 +92,7 @@ class _TimerButtonState extends State<TimerButton> {
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: GoogleFonts.interTight(
+              style: GoogleFonts.sora(
                 color: whiteColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -118,7 +118,7 @@ class _TimerButtonState extends State<TimerButton> {
               softWrap: true,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: GoogleFonts.interTight(
+              style: GoogleFonts.sora(
                 color: blackColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,

@@ -72,7 +72,7 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
         centerTitle: true,
         title: Text(
           'Full description',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -89,10 +89,10 @@ class _FullDescriptionScreenState extends State<FullDescriptionScreen> {
               Text(
                 widget.desc,
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w600,
+                style: GoogleFonts.sora(
+                  fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(

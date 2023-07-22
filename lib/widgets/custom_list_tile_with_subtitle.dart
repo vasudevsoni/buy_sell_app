@@ -28,9 +28,9 @@ class CustomListTileWithSubtitle extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           fontWeight: FontWeight.w600,
-          fontSize: 15,
+          fontSize: 14,
           color: textColor,
         ),
       ),
@@ -43,9 +43,9 @@ class CustomListTileWithSubtitle extends StatelessWidget {
       ),
       subtitle: Text(
         subTitle,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           fontWeight: FontWeight.w500,
-          color: lightBlackColor,
+          color: blackColor,
           fontSize: 12,
         ),
       ),

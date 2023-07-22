@@ -100,7 +100,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         centerTitle: true,
         title: Text(
           'Verify your email',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -123,9 +123,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 'Click on the link you received on your registered email address to verify your email.',
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w400,
-                  color: lightBlackColor,
+                style: GoogleFonts.sora(
+                  fontWeight: FontWeight.w500,
+                  color: blackColor,
                   fontSize: 14,
                 ),
               ),
@@ -136,7 +136,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 width: size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: greyColor,
+                  color: blackColor,
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,
@@ -144,8 +144,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
                 child: Text(
                   'Note - Check your spam folder if you cannot find the verification email.',
-                  style: GoogleFonts.interTight(
-                    color: blackColor,
+                  style: GoogleFonts.sora(
+                    color: whiteColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -156,7 +156,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Center(
               child: Text(
                 'Did not receive the mail yet?',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
                   fontSize: 15,
@@ -173,7 +173,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 timeOutInSeconds: 30,
                 onPressed: () => sendVerificationEmail(),
                 disabledColor: greyColor,
-                color: blackColor,
+                color: blueColor,
               ),
             ),
           ],

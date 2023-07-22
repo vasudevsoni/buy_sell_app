@@ -73,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
                 Center(
                   child: Text(
                     'Network Connection Lost',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -274,8 +274,8 @@ class _MainScreenState extends State<MainScreen> {
                   AutoSizeText(
                     titlesList[index],
                     maxLines: 1,
-                    style: GoogleFonts.interTight(
-                      fontSize: 12,
+                    style: GoogleFonts.sora(
+                      fontSize: 11,
                       fontWeight: FontWeight.w400,
                       color:
                           selectedIndex == index ? blackColor : lightBlackColor,

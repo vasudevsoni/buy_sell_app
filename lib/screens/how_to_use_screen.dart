@@ -23,7 +23,7 @@ class HowToUseScreen extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           softWrap: true,
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -57,7 +57,7 @@ class HowToUseScreen extends StatelessWidget {
                     Text(
                       'Learn to use the app',
                       textAlign: TextAlign.start,
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontWeight: FontWeight.w800,
                         color: whiteColor,
                         fontSize: 18,
@@ -72,10 +72,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 'BechDe is designed to provide a seamless and user-friendly experience, connecting buyers and sellers in a safe and efficient marketplace.\nWhether you\'re looking to buy or sell, BechDe offers a convenient platform to discover great deals and connect with like-minded individuals.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -84,10 +84,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 'How to list a product?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -111,10 +111,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 '1) Click the + button on the bottom of the screen.\n2) Select a Category for the product.\n3) Select a Sub-Category.\n4) Fill all the required listing details.\n5) Click on Proceed to submit the listing.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -123,10 +123,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 'How to edit a product?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -150,10 +150,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 '1) Go to the Account Section.\n2) Click on My Listings.\n3) Tap the three dots on the product you want to edit.\n4) Click on Edit Product.\n5) Edit the details that you want to change.\n6) Click on Proceed to submit the changes.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -162,10 +162,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 'How to contact a seller?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -189,10 +189,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 '1) Open a product listing.\n2) Click on Chat now or Make an offer.\n3) You can now chat with the seller and talk about your deal.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(
@@ -201,10 +201,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 'How to report a user?',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w800,
                   color: blackColor,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(
@@ -228,10 +228,10 @@ class HowToUseScreen extends StatelessWidget {
               Text(
                 '1) Go to the user profile page from a chat screen or from a listing screen by tapping on the user\'s name.\n2) Click on the three dots on the top right corner.\n3) Click on Report user.\n4) Enter details about why you are reporting the user.\n5) Click on Report.\nWe will reveiw the report and take neccessary actions if required.',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
             ],

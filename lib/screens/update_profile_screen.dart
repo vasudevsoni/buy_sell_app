@@ -147,7 +147,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   Center(
                     child: Text(
                       'Ready to update?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -166,7 +166,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     child: Text(
                       'Are you sure you want to update your details?',
-                      style: GoogleFonts.interTight(
+                      style: GoogleFonts.sora(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -244,7 +244,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         centerTitle: true,
         title: Text(
           'Edit your profile',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

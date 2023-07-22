@@ -74,7 +74,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
         centerTitle: true,
         title: Text(
           'Follow Us',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -90,7 +90,7 @@ class _FollowUsScreenState extends State<FollowUsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
                 'Our Social Media',
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   color: blackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,

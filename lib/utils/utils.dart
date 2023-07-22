@@ -19,7 +19,7 @@ void showSnackBar({
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         softWrap: true,
-        style: GoogleFonts.interTight(
+        style: GoogleFonts.sora(
           fontSize: 13,
           fontWeight: FontWeight.w600,
           color: whiteColor,
@@ -51,16 +51,16 @@ void showSurveyPopUp(BuildContext context) async {
         return AlertDialog(
           title: Text(
             "👋 Hey! Do you have a minute to spare?",
-            style: GoogleFonts.interTight(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+            style: GoogleFonts.sora(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
               color: blackColor,
             ),
           ),
           content: Text(
             "We would love to hear your feedback. Please take a moment to fill out our survey. 😊",
-            style: GoogleFonts.interTight(
-              fontSize: 16,
+            style: GoogleFonts.sora(
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: blackColor,
             ),
@@ -73,7 +73,7 @@ void showSurveyPopUp(BuildContext context) async {
             OutlinedButton(
               child: Text(
                 "Maybe later",
-                style: GoogleFonts.interTight(
+                style: GoogleFonts.sora(
                   fontWeight: FontWeight.w500,
                   color: blackColor,
                 ),
@@ -86,9 +86,9 @@ void showSurveyPopUp(BuildContext context) async {
                 elevation: 0,
               ),
               child: Text(
-                "Take Survey",
-                style: GoogleFonts.interTight(
-                  fontWeight: FontWeight.w600,
+                "Go",
+                style: GoogleFonts.sora(
+                  fontWeight: FontWeight.w500,
                   color: whiteColor,
                 ),
               ),

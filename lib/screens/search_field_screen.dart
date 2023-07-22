@@ -75,7 +75,7 @@ class _SearchFieldScreenState extends State<SearchFieldScreen> {
         centerTitle: true,
         title: Text(
           'Search',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,

@@ -139,7 +139,7 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                   color: whiteColor,
-                                  borderRadius: BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                                 child: Icon(
                                   widget.data['favorites']
@@ -234,7 +234,7 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: GoogleFonts.interTight(
+                        style: GoogleFonts.sora(
                           fontWeight: FontWeight.w600,
                           color: blackColor,
                           fontSize: 13,
@@ -252,10 +252,10 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w700,
                                 color: blackColor,
-                                fontSize: 15,
+                                fontSize: 14,
                               ),
                             )
                           : Text(
@@ -263,10 +263,10 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w700,
                                 color: blackColor,
-                                fontSize: 15,
+                                fontSize: 14,
                               ),
                             ),
                     ),
@@ -284,7 +284,7 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                               maxLines: 1,
                               softWrap: true,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.interTight(
+                              style: GoogleFonts.sora(
                                 fontWeight: FontWeight.w500,
                                 color: blackColor,
                                 fontSize: 12,
@@ -301,15 +301,15 @@ class _CustomProductCardGridState extends State<CustomProductCardGrid> {
                           left: 10, right: 10, bottom: 10),
                       child: AutoSizeText(
                         '${widget.data['location']['area']}, ${widget.data['location']['city']}',
-                        maxLines: 2,
+                        maxLines: 1,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
-                        minFontSize: 8,
+                        minFontSize: 11,
                         maxFontSize: 11,
-                        style: GoogleFonts.interTight(
-                          color: lightBlackColor,
-                          fontWeight: FontWeight.w500,
+                        style: GoogleFonts.sora(
+                          color: blackColor,
+                          fontWeight: FontWeight.w400,
                           fontSize: 11,
                         ),
                       ),

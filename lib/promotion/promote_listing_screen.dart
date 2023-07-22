@@ -71,7 +71,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
         centerTitle: true,
         title: Text(
           'Promote your product',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
@@ -133,7 +133,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 maxLines: 1,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.interTight(
+                                style: GoogleFonts.sora(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: whiteColor,
@@ -158,9 +158,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
-                          style: GoogleFonts.interTight(
+                          style: GoogleFonts.sora(
                             fontWeight: FontWeight.w800,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
                         ),
                         const SizedBox(
@@ -200,8 +200,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                 Expanded(
                                   child: Text(
                                     product!.title.toString(),
-                                    style: GoogleFonts.interTight(
-                                      fontSize: 18,
+                                    style: GoogleFonts.sora(
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                       color: whiteColor,
                                     ),
@@ -214,7 +214,7 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       Text(
                                         product!.priceString.toString(),
                                         textAlign: TextAlign.end,
-                                        style: GoogleFonts.interTight(
+                                        style: GoogleFonts.sora(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
@@ -223,8 +223,8 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                       Text(
                                         '₹100.00',
                                         textAlign: TextAlign.end,
-                                        style: GoogleFonts.interTight(
-                                          fontSize: 18,
+                                        style: GoogleFonts.sora(
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w800,
                                           color: whiteColor,
                                           decoration:
@@ -261,9 +261,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     maxLines: 2,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
+                                    style: GoogleFonts.sora(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
                                       color: greyColor,
                                     ),
                                   ),
@@ -289,9 +289,9 @@ class _PromoteListingScreenState extends State<PromoteListingScreen> {
                                     maxLines: 2,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.interTight(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
+                                    style: GoogleFonts.sora(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
                                       color: greyColor,
                                     ),
                                   ),

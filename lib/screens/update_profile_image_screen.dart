@@ -29,6 +29,7 @@ class UpdateProfileImageScreen extends StatefulWidget {
 
 class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   final FirebaseServices _services = FirebaseServices();
+  final ImagePicker picker = ImagePicker();
   final uuid = const Uuid();
   String profileImage = '';
   File? pickedImage;
@@ -115,32 +116,30 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
   // }
 
   choosePhoto() async {
-    final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null && mounted) {
-      final compressedImage = await _services.compressImage(File(picked.path));
-      if (compressedImage.lengthSync() >= 2000000) {
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    if (pickedFile != null && mounted) {
+      if (File(pickedFile.path).lengthSync() >= 2000000) {
         showSnackBar(
             color: redColor, content: 'Maximum image size allowed is 2MB');
       } else {
         setState(() {
-          pickedImage = compressedImage;
+          pickedImage = File(pickedFile.path);
         });
       }
     }
   }
 
   takePhoto() async {
-    final ImagePicker picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.camera);
-    if (picked != null && mounted) {
-      final compressedImage = await _services.compressImage(File(picked.path));
-      if (compressedImage.lengthSync() >= 2000000) {
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    if (pickedFile != null && mounted) {
+      if (File(pickedFile.path).lengthSync() >= 2000000) {
         showSnackBar(
             color: redColor, content: 'Maximum image size allowed is 2MB');
       } else {
         setState(() {
-          pickedImage = compressedImage;
+          pickedImage = File(pickedFile.path);
         });
       }
     }
@@ -231,7 +230,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                 Center(
                   child: Text(
                     'Ready to update?',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     ),
@@ -250,7 +249,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
                   ),
                   child: Text(
                     'Are you sure you want to update your profile image?',
-                    style: GoogleFonts.interTight(
+                    style: GoogleFonts.sora(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -312,7 +311,7 @@ class _UpdateProfileImageScreenState extends State<UpdateProfileImageScreen> {
         centerTitle: true,
         title: Text(
           'Update profile image',
-          style: GoogleFonts.interTight(
+          style: GoogleFonts.sora(
             fontWeight: FontWeight.w500,
             color: blackColor,
             fontSize: 15,
